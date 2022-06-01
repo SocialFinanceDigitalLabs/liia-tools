@@ -1,0 +1,375 @@
+datasources:
+    List 1:
+        Child Unique ID:
+            &child-id
+                regex:
+                  - /.*child.*id.*/i
+                canbeblank: false
+        Gender:
+            &gen
+                canbeblank: false
+        Ethnicity:
+            &eth
+                canbeblank: false
+        Date of Birth:
+            &dob
+                type: date
+                regex:
+                  - /.*date.*birth.*/i
+                canbeblank: true
+        Age of Child (Years):
+            &age
+                type: integer
+                regex: 
+                  - /.*age.*/i
+                canbeblank: true
+        Date of Contact:
+            type: date
+            canbeblank: false
+            regex:
+              - /.*date.*contact.*/i
+        Contact Source:
+            canbeblank: false
+            regex:
+              - /.*contact.*source.*/i
+
+    List 2:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Assessment start date:
+            type: date
+            canbeblank: false
+        Assessment completion date:
+            type: date
+            canbeblank: true
+        Organisation completing assessment:
+            canbeblank: false
+
+    List 3:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Date of referral:
+            regex: 
+              - /.*date of.*referral.*/i
+            type: date
+            canbeblank: false
+        Referral Source:
+            canbeblank: false
+        Referral NFA?:
+            canbeblank: false
+        Number of Referrals in Last 12 Months:
+            type: integer
+            canbeblank: false
+        Allocated Team:
+            &allt
+                canbeblank: false
+        Allocated Worker:
+            &allw
+                canbeblank: false
+
+    List 4:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability:
+            &dis
+                canbeblank: false
+        Continuous Assessment Start Date:
+            type: date
+            canbeblank: false
+        Child Seen During Continuous Assessment:
+            canbeblank: false
+        Continuous Assessment Date of Authorisation:
+            type: date
+            canbeblank: true
+        "Was the child assessed as requiring LA children's social care support?":
+            regex:
+              - /.*was the child assessed.*social care support.*/i
+            canbeblank: true
+        Allocated Team: *allt
+        Allocated Worker: *allw
+
+    List 5:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability: *dis
+        Strategy discussion initiating Section 47 Enquiry Start Date:
+            type: date
+            canbeblank: false
+        Was an Initial Child Protection Conference deemed unnecessary?:
+            canbeblank: true
+        Date of Initial Child Protection Conference:
+            type: date
+            canbeblank: true
+        Did the Initial Child Protection Conference Result in a Child Protection Plan:
+            canbeblank: true
+        Number of Section 47 Enquiries in the last 12 months:
+            type: integer
+            canbeblank: false
+        Number of ICPCs in the last 12 months:
+            type: integer
+            canbeblank: false
+        Allocated Team: *allt
+        Allocated Worker: *allw
+
+    List 6:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability: *dis
+        CIN Start Date:
+            type: date
+            canbeblank: true
+        Primary Need Code:
+            canbeblank: false
+        Date Child Was Last Seen:
+            type: date
+            canbeblank: true
+        CIN Closure Date:
+            type: date
+            canbeblank: true
+        Reason for Closure:
+            canbeblank: true
+        Case Status:
+            canbeblank: false
+        Allocated Team: *allt
+        Allocated Worker: *allw
+
+    List 7:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability: *dis
+        Child Protection Plan Start Date:
+            type: date
+            canbeblank: false
+        Initial Category of Abuse:
+            canbeblank: false
+        Latest Category of Abuse:
+            canbeblank: false
+        Date of the Last Statutory Visit:
+            type: date
+            canbeblank: true
+        Was the Child Seen Alone?:
+            canbeblank: true
+        Date of latest review conference:
+            type: date
+            canbeblank: true
+        Child Protection Plan End Date:
+            type: date
+            canbeblank: true
+        Subject to Emergency Protection Order or Protected Under Police Powers in Last Six Months (Y/N):
+            regex: 
+              - /.*Subject to Emergency Protection Order.*/i
+            canbeblank: false
+        Number of Previous Child Protection Plans:
+            type: integer
+            canbeblank: false
+        Allocated Team: *allt
+        Allocated Worker: *allw
+
+    List 8:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        "Unaccompanied Asylum Seeking Child (UASC) within the Last 12 Months (Y/N)":
+            regex:
+              - /.*Unaccompanied Asylum Seeking Child.*/i
+            canbeblank: false
+        Does the Child have a Disability: *dis
+        Date Started to be Looked After:
+            type: date
+            canbeblank: false
+        "Child's Category of Need":
+            regex:
+              - /.*child.*category of need.*/i
+            canbeblank: false
+        Is this a second or subsequent period of being a Looked After Child within the last 12 months (Y/N):
+            regex: 
+              - /.*second or subsequent .* of being a Looked After Child.*/i
+            canbeblank: false
+        Start date of current legal status:
+            type: date
+            canbeblank: false
+        "Child's Legal Status":
+            regex:
+              - /.*child.*legal status.*/i
+            canbeblank: false
+        Date of Latest Statutory Review:
+            type: date
+            canbeblank: true
+        Date of Last Social Work Visit:
+            type: date
+            canbeblank: true
+        What is the permanence plan for this child?:
+            canbeblank: true
+        Date of Last IRO Visit / Contact to the Child:
+            type: date
+            canbeblank: true
+        Date of Last Health Assessment:
+            type: date
+            canbeblank: true
+        Date of Last Dental Check:
+            type: date
+            canbeblank: true
+        Number of Placements in the Last 12 months:
+            type: integer
+            canbeblank: false
+        Date Ceased to be Looked After:
+            type: date
+            canbeblank: true
+        Reason Ceased to be Looked After:
+            canbeblank: true
+        Start Date of Most Recent Placement:
+            type: date
+            canbeblank: false
+        Placement Type:
+            canbeblank: false
+        Placement Provider:
+            canbeblank: false
+        Placement postcode:
+            canbeblank: false
+        URN of Placement:
+            canbeblank: true
+        Placement Location:
+            canbeblank: false
+        LA of Placement:
+            canbeblank: false
+        "Number of Episodes the Child has been 'Missing' from their Placement in the last 12 months":
+            type: integer
+            regex:
+              - /.*Number of Episodes the Child has been.*Missing.*from their Placement in the last 12 months.*/i
+            canbeblank: false
+        "Number of Episodes the Child has been 'Absent' from their Placement in the last 12 months":
+            type: integer
+            regex:
+              - /.*Number of Episodes the Child has been.*Absent.*from their Placement in the last 12 months.*/i
+            canbeblank: false
+        Was the child offered a Return Interview after their last missing episode (Y/N)?:
+            canbeblank: true
+        Did the child accept a Return Interview after their last missing episode (Y/N)?:
+            canbeblank: true
+        Allocated Team: *allt
+        Allocated Worker: *allw
+
+    List 9:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability: *dis
+        Allocated Team: *allt
+        Allocated Worker: *allw
+        Eligibility Category:
+            canbeblank: false
+        LA in Touch:
+            canbeblank: false
+        Type of Accommodation:
+            canbeblank: true
+        Suitability of Accommodation:
+            canbeblank: true
+        Activity Status:
+            canbeblank: true
+
+    List 10:
+        Child Unique ID: *child-id
+        Family identifier:
+            canbeblank: true
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability: *dis
+        Date the Child Entered Care:
+            type: date
+            canbeblank: false
+        Date of Decision that Child Should be Placed for Adoption:
+            type: date
+            canbeblank: false
+        Date of Placement Order:
+            type: date
+            canbeblank: true
+        Date of Matching Child and Prospective Adopters:
+            type: date
+            canbeblank: true
+        Date Placed for Adoption:
+            type: date
+            canbeblank: true
+        Date of Adoption Order:
+            type: date
+            canbeblank: true
+        Date of Decision that Child Should No Longer be Placed for Adoption:
+            type: date
+            canbeblank: true
+        Reason Why Child No Longer Placed for Adoption:
+            canbeblank: true
+        Date the child was placed for fostering in FFA or concurrent planning placement:
+            type: date
+            canbeblank: true
+
+    List 11:
+        Individual adopter identifier:
+            canbeblank: false
+        Family identifier:
+            canbeblank: true
+        Gender: *gen
+        Ethnicity: *eth
+        Disability: *dis
+        Is the (prospective) adopter fostering for adoption?:
+            canbeblank: false
+        Date enquiry received:
+            type: date
+            canbeblank: false
+        Date Stage 1 started:
+            type: date
+            canbeblank: true
+        Date Stage 1 ended:
+            type: date
+            canbeblank: true
+        Date Stage 2 started:
+            type: date
+            canbeblank: true
+        Date Stage 2 ended:
+            type: date
+            canbeblank: true
+        Date application submitted:
+            type: date
+            canbeblank: true
+        Date application approved:
+            type: date
+            canbeblank: true
+        Date adopter matched with child(ren):
+            type: date
+            canbeblank: true
+        Date child/children placed with adopter(s):
+            type: date
+            canbeblank: true
+        No. of children placed:
+            type: integer
+            canbeblank: true
+        Date of Adoption Order:
+            type: date
+            canbeblank: true
+        Date of leaving adoption process:
+            type: date
+            canbeblank: true
+        Reason for leaving adoption process:
+            canbeblank: true
