@@ -7,6 +7,7 @@ from string import Template
 
 from liiatools.datasets.annex_a.lds_annexa_clean.regex import parse_regex
 from liiatools.spec import annex_a as annex_a_asset_dir
+from liiatools.spec import common as common_asset_dir
 
 from sfdata_stream_parser import events, checks
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
@@ -161,7 +162,7 @@ def match_other_config_to_cell(event, config):
 
 
 DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
-
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 class Config(dict):
 
@@ -177,7 +178,7 @@ class Config(dict):
             elif file == "DEFAULT_DATA_MAP":
                 file = DEFAULT_CONFIG_DIR / "data-map.yml"
             elif file == "DEFAULT_DATA_CODES":
-                file = DEFAULT_CONFIG_DIR / "LA-codes.yml"
+                file = COMMON_CONFIG_DIR / "LA-codes.yml"
             self.load_config(file, conditional=False)
 
         self['config_date'] = datetime.datetime.now().isoformat()
