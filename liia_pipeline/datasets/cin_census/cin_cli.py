@@ -3,8 +3,8 @@ import click as click
 # Dependencies for cleanfile()
 from sfdata_stream_parser.parser.xml import parse
 
-from csdatatools.datasets.cincensus.config import Schema
-from csdatatools.datasets.cincensus import filters
+from liiatools.datasets.cincensus.config import Schema
+from liiatools.datasets.cincensus import filters
 
 from liia_pipeline.datasets.cin_census.lds_cin_clean import cin_record
 from liia_pipeline.datasets.cin_census.lds_cin_clean import file_creator
