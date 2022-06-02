@@ -1,7 +1,7 @@
 from sfdata_stream_parser import events
 
 from liiatools.datasets.annex_a.lds_annexa_clean.configuration import identify_cell_header, add_sheet_name, Config, \
-    _match_column_name
+    _match_column_name, match_other_config_to_cell
 
 list_1_columns = [
     'Child Unique ID',
@@ -108,4 +108,25 @@ def test_identify_cell_header():
     assert stream[1].column_header == 'b'
     assert stream[2].column_header == 'c'
 
+# Test inherit property
 
+# Test identify cell header
+
+# Test convert column header to match
+
+# Test match property config to cell
+def test_match_property_config_to_cell():
+    cfg = Config()
+    stream = [
+        events.Cell(column_header="Child Unique ID", sheet_name="List 1"),
+        events.Cell(column_header="Gender", sheet_name="List 0")
+    ]
+    stream = match_other_config_to_cell(
+        stream,
+        cfg["datasources"],
+        "other_config"
+    )
+
+    stream = list(stream)
+    assert stream[0].category_config == {'canbeblank': False}
+    assert stream[1] == events.Cell(column_header="Gender", sheet_name="List 0")

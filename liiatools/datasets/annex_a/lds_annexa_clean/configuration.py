@@ -14,6 +14,8 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 log = logging.getLogger(__name__)
 
+DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 def _match_column_name(actual_value, expected_value, expected_expressions=None):
     """
@@ -132,7 +134,7 @@ def convert_column_header_to_match(event, config):
     return event
 
 @streamfilter(check=checks.type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
-def match_category_config_to_cell(event, config):
+def match_property_config_to_cell(event, config, prop_name):
     """
     Match the cell to the config file given the sheet name and cell header
     the config file should be a set of dictionaries for each sheet, headers within those sheets
@@ -141,28 +143,10 @@ def match_category_config_to_cell(event, config):
     try:
         sheet_config = config[event.sheet_name]
         config_dict = sheet_config[event.column_header]
-        return event.from_event(event, category_config=config_dict)
-    except KeyError:  # Raised in case there is no config item for the given sheet name and cell header
+        return event.from_event(event, **{prop_name: config_dict})
+    except KeyError:  # Raised in case there is no property item for the given sheet name and cell header
         return event
 
-
-@streamfilter(check=checks.type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
-def match_other_config_to_cell(event, config):
-    """
-    Match the cell to the config file given the sheet name and cell header
-    the config file should be a set of dictionaries for each sheet, headers within those sheets
-    and config rules for those headers
-    """
-    try:
-        sheet_config = config[event.sheet_name]
-        config_dict = sheet_config[event.column_header]
-        return event.from_event(event, other_config=config_dict)
-    except KeyError:  # Raised in case there is no config item for the given sheet name and cell header
-        return event
-
-
-DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 class Config(dict):
 
