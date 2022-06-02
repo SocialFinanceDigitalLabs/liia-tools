@@ -66,8 +66,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = configuration.convert_column_header_to_match(stream, config=sheet_config)
     stream = configuration.match_property_config_to_cell(stream, config=cell_config, prop_name="category_config")
     stream = configuration.match_property_config_to_cell(stream, config=sheet_config, prop_name="other_config")
-    #stream = configuration.match_category_config_to_cell(stream, config=cell_config)
-    #stream = configuration.match_other_config_to_cell(stream, config=sheet_config)
     stream = cleaner.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
