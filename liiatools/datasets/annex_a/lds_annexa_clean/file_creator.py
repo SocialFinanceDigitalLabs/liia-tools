@@ -2,6 +2,7 @@ import tablib
 import functools
 import logging
 import os
+import random
 
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
@@ -97,14 +98,18 @@ def save_tables(stream, output):
     Save the data events as Excel files in the London Datastore/Cleaned files directory
     """
     book = tablib.Databook()
+    sheet_name = ""
     for event in stream:
         if isinstance(event, events.StartContainer):
             book = tablib.Databook()
         elif isinstance(event, events.EndContainer):
             with open(f"{os.path.join(output, event.filename)}_clean.xlsx", "wb") as f:
                 f.write(book.export("xlsx"))
+        elif isinstance(event, events.StartTable):
+            sheet_name = event.name
         elif isinstance(event, TableEvent) and event.data is not None:
             dataset = event.data
+            dataset.title = sheet_name
             book.add_sheet(dataset)
         yield event
 
