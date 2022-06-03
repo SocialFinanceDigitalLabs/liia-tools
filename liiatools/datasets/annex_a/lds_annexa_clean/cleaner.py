@@ -11,12 +11,17 @@ from liiatools.datasets.annex_a.lds_annexa_clean.regex import parse_regex
 log = logging.getLogger(__name__)
 
 
-@streamfilter(check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
+@streamfilter(
+    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
+)
 def clean_cell_category(event):
     """
     Checks the values of a cell against the config file using code, name and regex matching
     returns the matched value for a successful match and blank if not
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
+
     try:
         for c in event.category_config:
             if c["code"] in str(event.value):
@@ -31,19 +36,29 @@ def clean_cell_category(event):
 
         else:
             return event.from_event(event, value="", error="1")
-    except (AttributeError, KeyError):  # Raised in case there is no config item for the given cell
+    except (
+        AttributeError,
+        KeyError,
+    ):  # Raised in case there is no config item for the given cell
         return event
 
 
-@streamfilter(check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
+@streamfilter(
+    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
+)
 def clean_integers(event):
     """
     Convert all values that should be integers into integers based on the annex-a-merge.yaml file
     if they cannot be converted record this as event.error = 1
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     try:
         numeric = event.other_config["type"]
-    except (AttributeError, KeyError):  # Raised in case there is no config item for the given cell
+    except (
+        AttributeError,
+        KeyError,
+    ):  # Raised in case there is no config item for the given cell
         return event
 
     if numeric == "integer":
@@ -56,12 +71,15 @@ def clean_integers(event):
         return event
 
 
-
-@streamfilter(check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
+@streamfilter(
+    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
+)
 def clean_dates(event):
     """
     Convert all values that should be dates to dates based on the annex-a-merge.yaml file
     if they cannot be converted record this as event.error = 1
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     date = event.other_config["type"]
     if date == "date":
@@ -74,11 +92,16 @@ def clean_dates(event):
         return event
 
 
-@streamfilter(check=lambda x: x.get("column_header") in ["Placement postcode"], fail_function=pass_event)
+@streamfilter(
+    check=lambda x: x.get("column_header") in ["Placement postcode"],
+    fail_function=pass_event,
+)
 def clean_postcodes(event):
     """
     Check that all values that should be postcodes are postcodes
     if they are not postcodes record this as event.error = 1
+    :param event: A filtered list of event objects which have a column header of "Placement postcode"
+    :return: An updated list of event objects
     """
     error = "0"
     text = ""
@@ -88,9 +111,12 @@ def clean_postcodes(event):
         error = "1"
     return event.from_event(event, value=text, error=error)
 
+
 def clean(stream):
     """
     Compile cleaning functions
+    :param event: A filtered list of event objects
+    :return: An updated list of event objects
     """
     stream = clean_cell_category(stream)
     stream = clean_integers(stream)

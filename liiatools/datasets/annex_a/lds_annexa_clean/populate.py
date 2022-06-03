@@ -5,8 +5,11 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 log = logging.getLogger(__name__)
 
 
-@streamfilter(check=lambda x: x.get("column_header") in ["Child Unique ID", "Individual adopter identifier"],
-              fail_function=pass_event)
+@streamfilter(
+    check=lambda x: x.get("column_header")
+    in ["Child Unique ID", "Individual adopter identifier"],
+    fail_function=pass_event,
+)
 def create_la_child_id(event, la_code):
     """
     Creates an identifier from a combination of the Child Unique ID and Local Authority so matching child IDs

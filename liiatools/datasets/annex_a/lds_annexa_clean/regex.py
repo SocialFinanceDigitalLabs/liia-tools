@@ -17,7 +17,9 @@ def parse_regex(regex: str) -> Pattern:
     Parse a regex pattern '/{pattern}/{modifiers}'
     """
     separator = re.escape(regex[0])
-    pattern = re.compile('{separator}(.+)({separator}([imsulx]+)?)'.format(separator=separator))
+    pattern = re.compile(
+        "{separator}(.+)({separator}([imsulx]+)?)".format(separator=separator)
+    )
     match = pattern.match(regex)
     if match is None:
         raise Exception("Failed to parse regular expression: '{}'".format(regex))

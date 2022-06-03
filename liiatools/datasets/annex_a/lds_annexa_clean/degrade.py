@@ -2,12 +2,18 @@ import logging
 
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
-from liiatools.datasets.shared_functions.common import to_short_postcode, to_month_only_dob
+from liiatools.datasets.shared_functions.common import (
+    to_short_postcode,
+    to_month_only_dob,
+)
 
 log = logging.getLogger(__name__)
 
 
-@streamfilter(check=lambda x: x.get("column_header") in ["Date of Birth"], fail_function=pass_event)
+@streamfilter(
+    check=lambda x: x.get("column_header") in ["Date of Birth"],
+    fail_function=pass_event,
+)
 def degrade_dob(event):
     """
     Convert all values that should be dates of birth to months and year of birth
@@ -16,7 +22,10 @@ def degrade_dob(event):
     return event.from_event(event, value=text)
 
 
-@streamfilter(check=lambda x: x.get("column_header") in ["Placement postcode"], fail_function=pass_event)
+@streamfilter(
+    check=lambda x: x.get("column_header") in ["Placement postcode"],
+    fail_function=pass_event,
+)
 def degrade_postcodes(event):
     """
     Convert all values that should be postcodes to shorter postcodes

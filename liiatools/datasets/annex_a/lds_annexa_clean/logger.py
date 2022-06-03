@@ -160,10 +160,7 @@ def save_errors_la(stream, la_log_dir):
             pass
 
         try:
-            if (
-                isinstance(event, events.StartTable)
-                and event.match_error is not None
-            ):
+            if isinstance(event, events.StartTable) and event.match_error is not None:
                 with open(
                     f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                     "a",
