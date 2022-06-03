@@ -7,11 +7,15 @@ from string import Template
 
 from liiatools.datasets.annex_a.lds_annexa_clean.regex import parse_regex
 from liiatools.spec import annex_a as annex_a_asset_dir
+from liiatools.spec import common as common_asset_dir
 
 from sfdata_stream_parser import events, checks
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 log = logging.getLogger(__name__)
+
+DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
 def _match_column_name(actual_value, expected_value, expected_expressions=None):
@@ -37,7 +41,28 @@ def _match_column_name(actual_value, expected_value, expected_expressions=None):
     return None
 
 
-@streamfilter(check=checks.type_check(events.StartTable), fail_function=pass_event, error_function=pass_event)
+def configure_stream(stream, config):
+    sheet_config = config["datasources"]
+    cell_config = config["data_config"]
+    stream = add_sheet_name(stream, config=sheet_config)
+    stream = inherit_property(stream, "sheet_name")
+    stream = inherit_property(stream, "column_headers")
+    stream = identify_cell_header(stream)
+    stream = convert_column_header_to_match(stream, config=sheet_config)
+    stream = match_property_config_to_cell(
+        stream, config=cell_config, prop_name="category_config"
+    )
+    stream = match_property_config_to_cell(
+        stream, config=sheet_config, prop_name="other_config"
+    )
+    return stream
+
+
+@streamfilter(
+    check=checks.type_check(events.StartTable),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
 def add_sheet_name(event, config):
     """
     Match the loaded table against one of the Annex A sheet names using fuzzy matching with regex
@@ -52,11 +77,15 @@ def add_sheet_name(event, config):
         extra_columns = set()
 
         # Creates a list of tuples holding (column_name, column_regex_list) for each configured column
-        header_config = [(name, cfg.get('regex', [])) for name, cfg in table_cfg.items()]
+        header_config = [
+            (name, cfg.get("regex", [])) for name, cfg in table_cfg.items()
+        ]
 
         for actual_column in event.column_headers:
             # Check the actual value against each of the configured columns and store values
-            header_matches = [_match_column_name(actual_column, c[0], c[1]) for c in header_config]
+            header_matches = [
+                _match_column_name(actual_column, c[0], c[1]) for c in header_config
+            ]
 
             # Filter checks to only those that matched
             matching_configs = [c for c in header_matches if c is not None]
@@ -67,12 +96,18 @@ def add_sheet_name(event, config):
             elif len(matching_configs) == 1:
                 matched_names.add(matching_configs[0])
             else:
-                raise ValueError("The actual column name matched multiple configured columns")
+                raise ValueError(
+                    "The actual column name matched multiple configured columns"
+                )
 
         # If all of the expected columns are present, then we have a match
         if set(table_cfg.keys()) - matched_names == set():
-            return events.StartTable.from_event(event, sheet_name=table_name,
-                                                extra_columns=extra_columns, matched_column_headers=matched_names)
+            return events.StartTable.from_event(
+                event,
+                sheet_name=table_name,
+                extra_columns=extra_columns,
+                matched_column_headers=matched_names,
+            )
     return event
 
 
@@ -104,13 +139,19 @@ def identify_cell_header(event):
 
     Provides: column_header
     """
-    column_headers = event.get('column_headers')
+    column_headers = event.get("column_headers")
     if column_headers:
-        event = event.from_event(event, column_header=column_headers[event.column_index])
+        event = event.from_event(
+            event, column_header=column_headers[event.column_index]
+        )
     return event
 
 
-@streamfilter(check=checks.type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
+@streamfilter(
+    check=checks.type_check(events.Cell),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
 def convert_column_header_to_match(event, config):
     """
     Converts the column header to the correct column header it was matched with e.g. Age -> Age of Child (Years)
@@ -130,8 +171,13 @@ def convert_column_header_to_match(event, config):
                 pass
     return event
 
-@streamfilter(check=checks.type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
-def match_category_config_to_cell(event, config):
+
+@streamfilter(
+    check=checks.type_check(events.Cell),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
+def match_property_config_to_cell(event, config, prop_name):
     """
     Match the cell to the config file given the sheet name and cell header
     the config file should be a set of dictionaries for each sheet, headers within those sheets
@@ -140,36 +186,21 @@ def match_category_config_to_cell(event, config):
     try:
         sheet_config = config[event.sheet_name]
         config_dict = sheet_config[event.column_header]
-        return event.from_event(event, category_config=config_dict)
-    except KeyError:  # Raised in case there is no config item for the given sheet name and cell header
+        return event.from_event(event, **{prop_name: config_dict})
+    except KeyError:  # Raised in case there is no property item for the given sheet name and cell header
         return event
-
-
-@streamfilter(check=checks.type_check(events.Cell), fail_function=pass_event, error_function=pass_event)
-def match_other_config_to_cell(event, config):
-    """
-    Match the cell to the config file given the sheet name and cell header
-    the config file should be a set of dictionaries for each sheet, headers within those sheets
-    and config rules for those headers
-    """
-    try:
-        sheet_config = config[event.sheet_name]
-        config_dict = sheet_config[event.column_header]
-        return event.from_event(event, other_config=config_dict)
-    except KeyError:  # Raised in case there is no config item for the given sheet name and cell header
-        return event
-
-
-DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
 
 
 class Config(dict):
-
     def __init__(self, *config_files):
         super().__init__()
 
         if not config_files:
-            config_files = ['DEFAULT_DATA_SOURCES', 'DEFAULT_DATA_MAP', 'DEFAULT_DATA_CODES']
+            config_files = [
+                "DEFAULT_DATA_SOURCES",
+                "DEFAULT_DATA_MAP",
+                "DEFAULT_DATA_CODES",
+            ]
 
         for file in config_files:
             if file == "DEFAULT_DATA_SOURCES":
@@ -177,12 +208,12 @@ class Config(dict):
             elif file == "DEFAULT_DATA_MAP":
                 file = DEFAULT_CONFIG_DIR / "data-map.yml"
             elif file == "DEFAULT_DATA_CODES":
-                file = DEFAULT_CONFIG_DIR / "LA-codes.yml"
+                file = COMMON_CONFIG_DIR / "LA-codes.yml"
             self.load_config(file, conditional=False)
 
-        self['config_date'] = datetime.datetime.now().isoformat()
+        self["config_date"] = datetime.datetime.now().isoformat()
         try:
-            self['username'] = os.getlogin()
+            self["username"] = os.getlogin()
         except OSError:
             # This happens when tests are not run under a login shell, e.g. CI pipeline
             pass
@@ -204,22 +235,26 @@ class Config(dict):
         """
         if conditional and not os.path.isfile(filename):
             if warn:
-                log.warning('Missing optional file {}'.format(filename))
+                log.warning("Missing optional file {}".format(filename))
 
             return
 
         with open(filename) as FILE:
             user_config = yaml.load(FILE, Loader=yaml.FullLoader)
 
-        log.info("Loading {} configuration values from '{}'.".format(len(user_config), filename))
+        log.info(
+            "Loading {} configuration values from '{}'.".format(
+                len(user_config), filename
+            )
+        )
 
-        environment_dict = {'os_environ_{}'.format(k): v for k, v in os.environ.items()}
+        environment_dict = {"os_environ_{}".format(k): v for k, v in os.environ.items()}
 
         variables = dict(self)
         variables.update(user_config)
         variables.update(environment_dict)
 
-        with open(filename, 'rt') as FILE:
+        with open(filename, "rt") as FILE:
             user_config_string = FILE.read()
 
         user_config_template = Template(user_config_string)

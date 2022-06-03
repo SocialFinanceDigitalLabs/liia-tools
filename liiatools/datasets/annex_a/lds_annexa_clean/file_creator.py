@@ -25,13 +25,19 @@ def coalesce_row(stream):
         elif isinstance(event, events.EndRow):
             yield RowEvent.from_event(event, row=row)
             row = None
-        elif row is not None and isinstance(event, events.Cell) and event.column_header != "Unknown":
+        elif (
+            row is not None
+            and isinstance(event, events.Cell)
+            and event.column_header != "Unknown"
+        ):
             row[event.column_header] = event.value
         else:
             yield event
 
 
-@streamfilter(check=type_check(RowEvent), fail_function=pass_event, error_function=pass_event)
+@streamfilter(
+    check=type_check(RowEvent), fail_function=pass_event, error_function=pass_event
+)
 def filter_rows(event):
     """
     Filter out all the rows that contain blank values in columns that need to be populated for data retention
@@ -44,10 +50,13 @@ def filter_rows(event):
         "List 5": "Strategy discussion initiating Section 47 Enquiry Start Date",
         "List 9": "Date of Birth",
         "List 10": "Date of Decision that Child Should be Placed for Adoption",
-        "List 11": "Date enquiry received"
+        "List 11": "Date enquiry received",
     }
 
-    if event.sheet_name in event_types and event.row[event_types[event.sheet_name]] == "":
+    if (
+        event.sheet_name in event_types
+        and event.row[event_types[event.sheet_name]] == ""
+    ):
         yield event.from_event(event, filter=1)
     else:
         yield event.from_event(event, filter=0)
