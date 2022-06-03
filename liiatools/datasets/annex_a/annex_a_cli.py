@@ -11,7 +11,8 @@ from liiatools.datasets.annex_a.lds_annexa_clean import (
     populate,
     file_creator,
 )
-from liiatools.spec import common as common_asset_dir, flip_dict
+from liiatools.spec import common as common_asset_dir
+from liiatools.datasets.shared_functions.common import flip_dict
 from sfdata_stream_parser.filters.column_headers import promote_first_row
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
