@@ -32,25 +32,25 @@ def annex_a():
     "input",
     default="empty",
     type=str,
-    help="Location of the input file to clean",
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
 )
 @click.option(
     "--la_code",
     type=click.Choice(la_list, case_sensitive=False),
-    help="LA code to use. See README for matching LA name to code",
+    help="A LA code, specifying the local authority that deposited the file",
 )
 @click.option(
     "--la_log_dir",
     default="empty",
     type=str,
-    help="Log directory where output of fixes is to be placed",
+    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
 )
 @click.option(
     "--o",
     "output",
     default="empty",
     type=str,
-    help="Directory where the output file is to be saved",
+    help="A string specifying the output directory location",
 )
 def cleanfile(input, la_code, la_log_dir, output):
     """
