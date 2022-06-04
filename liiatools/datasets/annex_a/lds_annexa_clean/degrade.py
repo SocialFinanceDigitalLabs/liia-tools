@@ -17,6 +17,9 @@ log = logging.getLogger(__name__)
 def degrade_dob(event):
     """
     Convert all values that should be dates of birth to months and year of birth
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     text = to_month_only_dob(event.value)
     return event.from_event(event, value=text)
@@ -29,6 +32,9 @@ def degrade_dob(event):
 def degrade_postcodes(event):
     """
     Convert all values that should be postcodes to shorter postcodes
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     text = to_short_postcode(event.value)
     return event.from_event(event, value=text)
@@ -37,6 +43,9 @@ def degrade_postcodes(event):
 def degrade(stream):
     """
     Compile the degrading functions
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     stream = degrade_postcodes(stream)
     stream = degrade_dob(stream)

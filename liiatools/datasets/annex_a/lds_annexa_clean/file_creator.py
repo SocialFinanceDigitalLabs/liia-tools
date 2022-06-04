@@ -15,9 +15,25 @@ class RowEvent(events.ParseEvent):
     pass
 
 
+def save_stream(stream, la_name, output):
+    """
+    Outputs stream to file
+    :param stream: The stream to output
+    :param la_name: Full name of the LA
+    :param output: Location to write the ouput
+    :return: Updated stream
+    """
+    stream = coalesce_row(stream)
+    stream = filter_rows(stream)
+    stream = create_tables(stream, la_name=la_name)
+    stream = save_tables(stream, output=output)
+    return stream
+
 def coalesce_row(stream):
     """
     Create a list of the cell values for a whole row excluding those with unknown column headers
+    :param stream: The stream to output
+    :return: Updated stream
     """
     row = None
     for event in stream:
@@ -43,6 +59,8 @@ def filter_rows(event):
     """
     Filter out all the rows that contain blank values in columns that need to be populated for data retention
     responsibilities
+    :param stream: The stream to output
+    :return: Updated stream
     """
     # May have to move this somewhere else once I better understand the pattern
     event_types = {
@@ -72,6 +90,9 @@ def create_tables(stream, la_name):
     Append all the rows for a given table to create one concatenated data event for tables with column headers
     that matched the config file
     Ignore any tables that did not have column headers matching the config file
+    :param stream: The stream to output
+    :param la_name: The name of the local authority
+    :return: Updated stream
     """
     data = None
     for event in stream:
@@ -96,6 +117,9 @@ def create_tables(stream, la_name):
 def save_tables(stream, output):
     """
     Save the data events as Excel files in the London Datastore/Cleaned files directory
+    :param stream: The stream to output
+    :param output: The location of the output file
+    :return: updated stream object.
     """
     book = tablib.Databook()
     sheet_name = ""
