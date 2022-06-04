@@ -22,6 +22,10 @@ def _match_column_name(actual_value, expected_value, expected_expressions=None):
     """
     Matches an actual column name against an expected values. Can optionally take a list of expressions to test.
     Returns the expected value if a match is found, or None if no match is found.
+    :param actual_value: Value that exists currently
+    :param expected_value: Value that we expect
+    :param expected_expressions: Optional list of (regex) expressions to test as well
+    :return: The expected Value or None
     """
     assert actual_value is not None, "Must test a value"
     assert expected_value is not None, "Must test against a value"
@@ -42,6 +46,12 @@ def _match_column_name(actual_value, expected_value, expected_expressions=None):
 
 
 def configure_stream(stream, config):
+    """
+    Loading and matching the configuration with the loaded stream
+    :param stream: Set of events to parse
+    :param config: The loaded configuration
+    :return: An updated set of events/stream with matched configuration
+    """
     sheet_config = config["datasources"]
     cell_config = config["data_config"]
     stream = add_sheet_name(stream, config=sheet_config)
@@ -71,6 +81,9 @@ def add_sheet_name(event, config):
     If columns are matched but there are more columns than expected this will save those extra columns
     as event.extra_columns
     If no columns are matched for a table this will save the sheet name and column headers as event.match_error
+
+    :param event: A filtered list of event objects of type StartTable
+    :return: An updated list of event objects
     """
     for table_name, table_cfg in config.items():
         matched_names = set()
@@ -115,6 +128,10 @@ def inherit_property(stream, prop_name):
     """
     Reads a property from StartTable and sets that property (if it exists) on every event between this event
     and the next EndTable event.
+
+    :param event: A filtered list of event objects of type StartTable
+    :param prop_name: The property name to inherit
+    :return: An updated list of event objects
     """
     prop_value = None
     for event in stream:
@@ -138,6 +155,8 @@ def identify_cell_header(event):
     Based on the cell's 'column_index' it looks up the corresponding header value in column_headers.
 
     Provides: column_header
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     column_headers = event.get("column_headers")
     if column_headers:
@@ -155,6 +174,9 @@ def identify_cell_header(event):
 def convert_column_header_to_match(event, config):
     """
     Converts the column header to the correct column header it was matched with e.g. Age -> Age of Child (Years)
+    :param event: A filtered list of event objects of type Cell
+    :param config: The loaded configuration to use
+    :return: An updated list of event objects
     """
     column_config = config[event.sheet_name]
     for c in column_config:
@@ -182,6 +204,11 @@ def match_property_config_to_cell(event, config, prop_name):
     Match the cell to the config file given the sheet name and cell header
     the config file should be a set of dictionaries for each sheet, headers within those sheets
     and config rules for those headers
+
+    :param event: A filtered list of event objects of type Cell
+    :param config: The loaded configuration to use
+    :param prop_name: The property name to match with the configuration
+    :return: An updated list of event objects
     """
     try:
         sheet_config = config[event.sheet_name]

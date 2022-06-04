@@ -68,19 +68,20 @@ def cleanfile(input, la_code, la_log_dir, output):
     config = configuration.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
 
+    # Open & Parse file
     stream = openpyxl.parse_sheets(input)
-
     stream = [ev.from_event(ev, la_code=la_code, filename=filename) for ev in stream]
     stream = promote_first_row(stream)
+
+    # Configure Stream
     stream = configuration.configure_stream(stream, config)
 
+    # Clean stream
     stream = cleaner.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
     stream = populate.create_la_child_id(stream, la_code=la_code)
-    stream = file_creator.coalesce_row(stream)
-    stream = file_creator.filter_rows(stream)
-    stream = file_creator.create_tables(stream, la_name=la_name)
+
+    # Output result
+    stream = file_creator.save_stream(stream, la_name, la_log_dir, output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
-    stream = file_creator.save_tables(stream, output=output)
-    list(stream)
