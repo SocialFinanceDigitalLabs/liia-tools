@@ -18,8 +18,8 @@ def create_formatting_error_count(stream):
     """
     Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
 
-    :param event: A filtered list of event objects
-    :return: An updated list of event objects wtih error counts
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects with error counts
     """
     formatting_error_count = None
     for event in stream:
@@ -65,7 +65,7 @@ def create_blank_error_count(stream):
     Create a list of the column headers for cells with blank fields that should not be blank (event.blank_error = 1)
     for each table
 
-    :param event: A filtered list of event objects
+    :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
     blank_error_count = None
@@ -91,7 +91,7 @@ def inherit_extra_column_error(stream):
     """
     Add the extra_column_error value to the ErrorTable so these errors can be written to the log.txt file
 
-    :param event: A filtered list of event objects
+    :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
     extra_column_error = []
@@ -115,7 +115,7 @@ def save_errors_la(stream, la_log_dir):
     Count the error events and save them as a text file in the Local Authority Logs directory
     only save the error events if there is at least one error in said event
 
-    :param event: A filtered list of event objects
+    :param stream: A filtered list of event objects
     :param la_log_dir: Location to save the gathered error logs
     :return: An updated list of event objects
     """
@@ -194,7 +194,7 @@ def log_errors(stream):
     """
     Compile the log error functions
 
-    :param event: A filtered list of event objects
+    :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
     stream = blank_error_check(stream)

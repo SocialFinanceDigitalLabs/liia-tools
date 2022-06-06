@@ -115,7 +115,7 @@ def clean_postcodes(event):
 def clean(stream):
     """
     Compile cleaning functions
-    :param event: A filtered list of event objects
+    :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
     stream = clean_cell_category(stream)
