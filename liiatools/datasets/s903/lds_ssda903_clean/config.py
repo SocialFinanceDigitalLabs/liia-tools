@@ -9,11 +9,14 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
 
-from csdatatools.datasets.s903.lds_ssda903_clean.columns import column_names
-from csdatatools.spec import s903 as s903_asset_dir
-from csdatatools.spec import shared_spec as shared_spec_asset_dir
+from liiatools.datasets.s903.lds_ssda903_clean.columns import column_names
+from liiatools.spec import s903 as s903_asset_dir
+from liiatools.spec import common as common_asset_dir
 
 log = logging.getLogger(__name__)
+
+DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
+SHARED_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
 @streamfilter(check=type_check(events.StartTable), fail_function=pass_event)
@@ -71,13 +74,8 @@ def match_config_to_cell(event, config):
         AttributeError,
         KeyError,
         TypeError,
-    ):  # Raise in case there is no config item for the given
-        # table name and cell header
+    ):  # Raise in case there is no config item for the given table name and cell header
         return event
-
-
-DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
-SHARED_CONFIG_DIR = Path(shared_spec_asset_dir.__file__).parent
 
 
 class Config(dict):
