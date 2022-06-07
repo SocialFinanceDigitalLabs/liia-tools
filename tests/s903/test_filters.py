@@ -2,7 +2,6 @@ from liiatools.datasets.s903.lds_ssda903_clean import filters
 
 from sfdata_stream_parser import events
 from datetime import datetime
-import tablib
 
 
 def test_clean_dates():
