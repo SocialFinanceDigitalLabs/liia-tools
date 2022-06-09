@@ -110,6 +110,30 @@ def inherit_extra_column_error(stream):
             yield event
 
 
+@streamfilter(
+    check=type_check(events.StartTable),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
+def create_file_match_error(event):
+    """
+    Add a match_error to StartTables that do not have an event.sheet_name so these errors can be written to the log.txt
+    file. If there is no event.sheet_name for a given StartTable that means its headers did not match any of those
+    in the config file
+
+    :param event: A filtered list of event objects of type StartTable
+    :return: An updated list of event objects
+    """
+    try:
+        if event.sheet_name:
+            return event
+    except AttributeError:
+        return event.from_event(event, match_error=f"Failed to find a set of matching columns headers for sheet titled "
+                                                   f"'{event.name}' which contains column headers "
+                                                   f"{event.column_headers}",)
+    return event
+
+
 def save_errors_la(stream, la_log_dir):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
@@ -201,4 +225,5 @@ def log_errors(stream):
     stream = create_formatting_error_count(stream)
     stream = create_blank_error_count(stream)
     stream = inherit_extra_column_error(stream)
+    stream = create_file_match_error(stream)
     return stream
