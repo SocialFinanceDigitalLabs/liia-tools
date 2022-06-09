@@ -81,7 +81,14 @@ def clean_dates(event):
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-    date = event.other_config["type"]
+    try:
+        date = event.other_config["type"]
+    except (
+        AttributeError,
+        KeyError,
+    ):  # Raised in case there is no config item for the given cell
+        return event
+
     if date == "date":
         try:
             text = to_date(event.value)

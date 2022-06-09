@@ -22,15 +22,26 @@ def create_formatting_error_count(stream):
     :return: An updated list of event objects wtih error counts
     """
     formatting_error_count = None
+    sheet_name = None
     for event in stream:
         if isinstance(event, events.StartTable):
             formatting_error_count = []
+            try:
+                sheet_name = event.sheet_name
+            except AttributeError:
+                pass
         elif isinstance(event, events.EndTable):
             yield ErrorTable.from_event(
-                event, formatting_error_count=formatting_error_count
+                event,
+                sheet_name=sheet_name,
+                formatting_error_count=formatting_error_count,
             )
             formatting_error_count = None
-        elif formatting_error_count is not None and isinstance(event, events.Cell):
+        elif (
+            formatting_error_count is not None
+            and sheet_name is not None
+            and isinstance(event, events.Cell)
+        ):
             try:
                 if event.error == "1":
                     formatting_error_count.append(event.column_header)
@@ -137,8 +148,6 @@ def save_errors_la(stream, la_log_dir):
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
-                        f.write(f"{event.filename}_{start_time}")
-                        f.write("\n")
                         f.write("\n")
                         f.write(event.sheet_name)
                         f.write("\n")
