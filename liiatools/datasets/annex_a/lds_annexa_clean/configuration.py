@@ -87,8 +87,8 @@ def add_sheet_name(event, config):
     :return: An updated list of event objects
     """
     for table_name, table_cfg in config.items():
-        matched_names = set()
-        extra_columns = set()
+        matched_names = []
+        extra_columns = []
 
         # Creates a list of tuples holding (column_name, column_regex_list) for each configured column
         header_config = [
@@ -106,21 +106,20 @@ def add_sheet_name(event, config):
 
             # Check if we have no, one or multiple configurations that match the actual value
             if len(matching_configs) == 0:
-                extra_columns.add(actual_column)
+                extra_columns.append(actual_column)
             elif len(matching_configs) == 1:
-                matched_names.add(matching_configs[0])
+                matched_names.append(matching_configs[0])
             else:
                 raise ValueError(
                     "The actual column name matched multiple configured columns"
                 )
-
         # If all of the expected columns are present, then we have a match
-        if set(table_cfg.keys()) - matched_names == set():
+        if set(table_cfg.keys()) - set(matched_names) == set():
             return events.StartTable.from_event(
                 event,
                 sheet_name=table_name,
                 extra_columns=extra_columns,
-                matched_column_headers=list(table_cfg.keys()),
+                matched_column_headers=matched_names,
             )
     return event
 
