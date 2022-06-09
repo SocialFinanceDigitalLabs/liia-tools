@@ -130,7 +130,10 @@ def save_tables(stream, output):
             with open(f"{os.path.join(output, event.filename)}_clean.xlsx", "wb") as f:
                 f.write(book.export("xlsx"))
         elif isinstance(event, events.StartTable):
-            sheet_name = event.name
+            try:
+                sheet_name = event.sheet_name
+            except AttributeError:
+                sheet_name = ""
         elif isinstance(event, TableEvent) and event.data is not None:
             dataset = event.data
             dataset.title = sheet_name
