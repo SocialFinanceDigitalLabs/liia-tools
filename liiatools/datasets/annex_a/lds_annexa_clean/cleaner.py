@@ -24,15 +24,18 @@ def clean_cell_category(event):
 
     try:
         for c in event.category_config:
-            if c["code"] in str(event.value):
-                return event.from_event(event, value=c["code"], error="0")
-            elif c["name"] in str(event.value):
-                return event.from_event(event, value=c["code"], error="0")
-
-            for r in c.get("regex", []):
-                p = parse_regex(r)
-                if p.match(str(event.value)) is not None:
+            if event.value:
+                if c["code"] in str(event.value):
                     return event.from_event(event, value=c["code"], error="0")
+                elif c["name"] in str(event.value):
+                    return event.from_event(event, value=c["code"], error="0")
+
+                for r in c.get("regex", []):
+                    p = parse_regex(r)
+                    if p.match(str(event.value)) is not None:
+                        return event.from_event(event, value=c["code"], error="0")
+            else:
+                return event.from_event(event, value="", error="0")
 
         else:
             return event.from_event(event, value="", error="1")
