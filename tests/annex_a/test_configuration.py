@@ -44,8 +44,8 @@ def test_add_sheet_name_exact():
     )
     stream = list(stream)
     assert stream[0].sheet_name == "List 1"
-    assert stream[0].matched_column_headers == set(list_1_columns)
-    assert stream[0].extra_columns == set()
+    assert stream[0].matched_column_headers == list_1_columns
+    assert stream[0].extra_columns == []
 
 
 def test_add_sheet_name_extra_header():
@@ -60,8 +60,8 @@ def test_add_sheet_name_extra_header():
     )
     stream = list(stream)
     assert stream[0].sheet_name == "List 1"
-    assert stream[0].matched_column_headers == set(list_1_columns)
-    assert stream[0].extra_columns == {"Extra Header 1", "Extra Header 2"}
+    assert stream[0].matched_column_headers == list_1_columns
+    assert stream[0].extra_columns == ["Extra Header 1", "Extra Header 2"]
 
 
 def test_add_sheet_name_missing():
@@ -86,7 +86,7 @@ def test_add_sheet_name_regex():
     stream = list(stream)
 
     assert stream[0].sheet_name == "List 1"
-    assert stream[0].matched_column_headers == set(list_1_columns)
+    assert stream[0].matched_column_headers == list_1_columns
 
 
 def test_add_sheet_name_lower_case():

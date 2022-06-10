@@ -2,7 +2,6 @@ import tablib
 import functools
 import logging
 import os
-import random
 
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
@@ -28,6 +27,7 @@ def save_stream(stream, la_name, output):
     stream = create_tables(stream, la_name=la_name)
     stream = save_tables(stream, output=output)
     return stream
+
 
 def coalesce_row(stream):
     """
@@ -59,7 +59,7 @@ def filter_rows(event):
     """
     Filter out all the rows that contain blank values in columns that need to be populated for data retention
     responsibilities
-    :param stream: The stream to output
+    :param event: The stream to output
     :return: Updated stream
     """
     # May have to move this somewhere else once I better understand the pattern
@@ -98,7 +98,7 @@ def create_tables(stream, la_name):
     for event in stream:
         if isinstance(event, events.StartTable):
             try:
-                new_headers = event.matched_column_headers.add("LA")
+                new_headers = event.matched_column_headers + ["LA"]
                 data = tablib.Dataset(headers=new_headers)
             except AttributeError:
                 data = None
