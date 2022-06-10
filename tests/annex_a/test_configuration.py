@@ -118,6 +118,20 @@ def test_add_sheet_name_each_table():
     assert table_names == list(cfg["datasources"].keys())
 
 
+def test_add_sheet_name_duplicate_match():
+    cfg = Config()
+
+    stream = add_sheet_name(
+        [
+            events.StartTable(column_headers=list_1_columns + ["Child Unique ID"])
+        ],
+        config=cfg["datasources"],
+    )
+    stream = list(stream)
+    assert stream[0].sheet_name == "List 1"
+    assert stream[0].matched_column_headers == list_1_columns + ["Child Unique ID"]
+
+
 def test_identify_cell_header():
     stream = identify_cell_header(
         [
