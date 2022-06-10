@@ -110,6 +110,72 @@ def inherit_extra_column_error(stream):
             yield event
 
 
+def _duplicate_columns(columns_list):
+    """
+    Return a list of duplicate items within a given list
+
+    :param columns_list: A list of values
+    :return: A list of duplicated values
+    """
+    unique_columns = set()
+    duplicate_columns = []
+    for column in columns_list:
+        if column not in unique_columns:
+            unique_columns.add(column)
+        else:
+            duplicate_columns.append(column)
+    return duplicate_columns
+
+
+@streamfilter(
+    check=type_check(events.StartTable),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
+def duplicate_column_check(event):
+    """
+    Create a duplicate_columns_error object for any StartTable that has correctly matched columns but some duplicates
+
+    :param event: A filtered list of event objects of type StartTable
+    :return: An updated list of event objects
+    """
+    try:
+        column_headers = event.matched_column_headers
+        if len(set(column_headers)) == len(column_headers):
+            return event
+        else:
+            duplicate_columns = _duplicate_columns(column_headers)
+            duplicate_columns = str(duplicate_columns)[1:-1]  # "Remove [ and ] from string
+            return event.from_event(event, duplicate_column_error=f"Sheet with title {event.sheet_name} contained "
+                                                                  f"the following duplicate column(s): "
+                                                                  f"{duplicate_columns}")
+    except KeyError:  # Raised in case there is no matched_column_headers
+        pass
+
+
+def inherit_duplicate_column_error(stream):
+    """
+    Add the duplicate_columns_error value to the ErrorTable so these errors can be written to the log.txt file
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects
+    """
+    duplicate_column_error = []
+    for event in stream:
+        try:
+            if isinstance(event, events.StartTable):
+                duplicate_column_error = event.duplicate_columns_error
+            elif isinstance(event, events.EndTable):
+                duplicate_column_error = []
+            elif isinstance(event, ErrorTable):
+                yield ErrorTable.from_event(
+                    event, duplicate_column_error=duplicate_column_error
+                )
+            yield event
+        except AttributeError:
+            yield event
+
+
 def save_errors_la(stream, la_log_dir):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
@@ -127,11 +193,13 @@ def save_errors_la(stream, la_log_dir):
                 and event.blank_error_count is not None
                 and event.sheet_name is not None
                 and event.extra_column_error is not None
+                and event.duplicate_column_error is not None
             ):
                 if (
                     event.formatting_error_count
                     or event.blank_error_count
                     or event.extra_column_error
+                    or event.duplicate_column_error
                 ):
                     with open(
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
@@ -172,6 +240,9 @@ def save_errors_la(stream, la_log_dir):
                                 f"{extra_column_error_no_none}"
                             )
                             f.write("\n")
+                        if event.duplicate_column_error:
+                            f.write(event.duplicate_column_error)
+                            f.write("\n")
         except AttributeError:
             pass
 
@@ -201,4 +272,6 @@ def log_errors(stream):
     stream = create_formatting_error_count(stream)
     stream = create_blank_error_count(stream)
     stream = inherit_extra_column_error(stream)
+    stream = duplicate_column_check(stream)
+    stream = inherit_duplicate_column_error(stream)
     return stream
