@@ -22,15 +22,26 @@ def create_formatting_error_count(stream):
     :return: An updated list of event objects with error counts
     """
     formatting_error_count = None
+    sheet_name = None
     for event in stream:
         if isinstance(event, events.StartTable):
             formatting_error_count = []
+            try:
+                sheet_name = event.sheet_name
+            except AttributeError:
+                pass
         elif isinstance(event, events.EndTable):
             yield ErrorTable.from_event(
-                event, formatting_error_count=formatting_error_count
+                event,
+                sheet_name=sheet_name,
+                formatting_error_count=formatting_error_count,
             )
             formatting_error_count = None
-        elif formatting_error_count is not None and isinstance(event, events.Cell):
+        elif (
+            formatting_error_count is not None
+            and sheet_name is not None
+            and isinstance(event, events.Cell)
+        ):
             try:
                 if event.error == "1":
                     formatting_error_count.append(event.column_header)
@@ -110,6 +121,30 @@ def inherit_extra_column_error(stream):
             yield event
 
 
+@streamfilter(
+    check=type_check(events.StartTable),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
+def create_file_match_error(event):
+    """
+    Add a match_error to StartTables that do not have an event.sheet_name so these errors can be written to the log.txt
+    file. If there is no event.sheet_name for a given StartTable that means its headers did not match any of those
+    in the config file
+
+    :param event: A filtered list of event objects of type StartTable
+    :return: An updated list of event objects
+    """
+    try:
+        if event.sheet_name:
+            return event
+    except AttributeError:
+        return event.from_event(event, match_error=f"Failed to find a set of matching columns headers for sheet titled "
+                                                   f"'{event.name}' which contains column headers "
+                                                   f"{event.column_headers}",)
+    return event
+
+
 def save_errors_la(stream, la_log_dir):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
@@ -137,8 +172,6 @@ def save_errors_la(stream, la_log_dir):
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
-                        f.write(f"{event.filename}_{start_time}")
-                        f.write("\n")
                         f.write("\n")
                         f.write(event.sheet_name)
                         f.write("\n")
@@ -201,4 +234,5 @@ def log_errors(stream):
     stream = create_formatting_error_count(stream)
     stream = create_blank_error_count(stream)
     stream = inherit_extra_column_error(stream)
+    stream = create_file_match_error(stream)
     return stream
