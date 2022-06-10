@@ -10,10 +10,9 @@ def to_integer(value):
     :param value: Some value to convert to an integer
     :return: Either an integer value or a blank string
     """
-    try:
+    if value:
         return int(value)
-    except ValueError:
-        return ""
+    return ""
 
 
 def to_date(datevalue):
@@ -24,9 +23,6 @@ def to_date(datevalue):
     """
     if isinstance(datevalue, datetime):
         return datevalue.date()
-    elif isinstance(datevalue, str) and datevalue != "":
-        try:
-            return datetime.strptime(datevalue, "%d/%m/%Y").date()  # Check this is possible
-        except ValueError:
-            return ""
+    elif isinstance(datevalue, str) and datevalue:
+        return datetime.strptime(datevalue, "%d/%m/%Y").date()  # Check this is possible
     return ""
