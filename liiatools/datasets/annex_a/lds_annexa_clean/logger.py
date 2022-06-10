@@ -176,7 +176,7 @@ def inherit_duplicate_column_error(stream):
     for event in stream:
         try:
             if isinstance(event, events.StartTable):
-                duplicate_column_error = event.duplicate_columns_error
+                duplicate_column_error = event.duplicate_column_error
             elif isinstance(event, events.EndTable):
                 duplicate_column_error = []
             elif isinstance(event, ErrorTable):
