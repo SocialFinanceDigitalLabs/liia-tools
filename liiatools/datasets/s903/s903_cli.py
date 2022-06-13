@@ -1,25 +1,25 @@
 import click as click
+from pathlib import Path
+import yaml
 
 # dependencies for cleanfile()
-from csdatatools.datasets.s903.lds_ssda903_clean import config
-from csdatatools.datasets.s903.lds_ssda903_clean import parse
-from csdatatools.datasets.s903.lds_ssda903_clean import populate
-from csdatatools.datasets.s903.lds_ssda903_clean import filters
-from csdatatools.datasets.s903.lds_ssda903_clean import degrade
-from csdatatools.datasets.s903.lds_ssda903_clean import logger
-from csdatatools.datasets.s903.lds_ssda903_clean import file_creator
+from liiatools.datasets.s903.lds_ssda903_clean import ( configuration, parse, populate, filters, degrade, logger, file_creator )
 
 # dependencies for la_agg()
-from csdatatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg
+#from liiatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg
 
 # dependencies for pan_agg()
-from csdatatools.datasets.s903.lds_ssda903_pan_agg import s903_pan_agg
-from csdatatools.datasets.s903.lds_ssda903_pan_agg import s903_pan_agg_config
+#from liiatools.datasets.s903.lds_ssda903_pan_agg import ( s903_pan_agg, s903_pan_agg_config )
 
 # dependencies for suff_min()
-from csdatatools.datasets.s903.lds_ssda903_suff_min import s903_suff_min
-from csdatatools.datasets.s903.lds_ssda903_suff_min import s903_suff_min_config
+#from liiatools.datasets.s903.lds_ssda903_suff_min import ( s903_suff_min, s903_suff_min_config )
 
+from liiatools.spec import common as common_asset_dir
+from liiatools.datasets.shared_functions.common import flip_dict
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
+
+with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
+    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 @click.group()
 def s903():
@@ -27,29 +27,54 @@ def s903():
     pass
 
 @s903.command()
-@click.argument('input', type=click.Path(exists=True))
-@click.argument('la_name', type=str)
-@click.argument('la_log_dir', type=click.Path(exists=True))
-@click.argument('lds_log_dir', type=click.Path(exists=True))
-@click.argument('output', type=click.Path(exists=True))
-def cleanfile(input, la_name, la_log_dir, lds_log_dir, output):
+@click.option(
+    "--i",
+    "input",
+    default="empty",
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--la_code",
+    type=click.Choice(la_list, case_sensitive=False),
+    help="A LA code, specifying the local authority that deposited the file",
+)
+@click.option(
+    "--la_log_dir",
+    default="empty",
+    type=str,
+    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
+)
+@click.option(
+    "--o",
+    "output",
+    default="empty",
+    type=str,
+    help="A string specifying the output directory location",
+)
+def cleanfile(input, la_code, la_log_dir, output):
     """Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
     'input' should specify the input file location, including file name and suffix, and be usable by a Path function
     'la_name' should be a string of the name of the local authority that deposited the file
     'la_log_dir' should specify the path to the local authority's log folder
     'lds_log_dir' should specify the path to the LDS log folder
     'output' should specify the path to the output folder"""
+    config = configuration.Config()
+    column_config = config["column_map"]
 
-    column_config = config.Config()["column_map"]
-    la_config = config.Config()["la_map"]
-    parse.log_config(lds_log_dir)
+    # No such thing as la_map
+    la_config = config["data_codes"]
+    la_name = flip_dict(la_config)[la_code]
+
+    #parse.log_config(lds_log_dir)
+
     stream = parse.findfiles(input)
     stream = parse.add_filename(stream)
     stream = populate.add_year_column(stream)
     stream = parse.parse_csv(stream, input=input)
-    stream = config.add_table_name(stream)
-    stream = config.inherit_table_name(stream)
-    stream = config.match_config_to_cell(stream, config=column_config)
+    stream = configuration.add_table_name(stream)
+    stream = configuration.inherit_table_name(stream)
+    stream = configuration.match_config_to_cell(stream, config=column_config)
     stream = filters.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
