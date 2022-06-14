@@ -116,7 +116,7 @@ def create_tables(stream, la_name):
 
 def save_tables(stream, output):
     """
-    Save the data events as Excel files in the London Datastore/Cleaned files directory
+    Save the data events as Excel files in the output directory as long as there are exactly 11 sheets
     :param stream: The stream to output
     :param output: The location of the output file
     :return: updated stream object.
@@ -126,7 +126,7 @@ def save_tables(stream, output):
     for event in stream:
         if isinstance(event, events.StartContainer):
             book = tablib.Databook()
-        elif isinstance(event, events.EndContainer):
+        elif isinstance(event, events.EndContainer) and len(book.sheets()) == 11:
             with open(f"{os.path.join(output, event.filename)}_clean.xlsx", "wb") as f:
                 f.write(book.export("xlsx"))
         elif isinstance(event, events.StartTable):
