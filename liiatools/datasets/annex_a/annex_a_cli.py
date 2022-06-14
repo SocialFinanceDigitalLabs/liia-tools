@@ -128,8 +128,9 @@ def la_agg(input, output):
     dates = config["dates"]
     index_date = config["index_date"]
     aa_dict = process.deduplicate(aa_dict, dedup)
-    aa_dict = process.convert_dates(aa_dict, dates)
+    aa_dict = process.convert_datetimes(aa_dict, dates)
     aa_dict = process.remove_old_data(aa_dict, index_date)
+    aa_dict = process.convert_dates(aa_dict, dates)
 
     # Output result
     process.export_file(output, aa_dict)

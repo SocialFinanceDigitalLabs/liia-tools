@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
 
 class Config(dict):
-    def __init__(self, *config_file):
+    def __init__(self, config_file=None):
         super().__init__()
 
         if not config_file:
