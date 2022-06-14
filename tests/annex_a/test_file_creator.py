@@ -45,10 +45,3 @@ def test_save_tables():
     stream = list(stream)
     if isinstance(stream, file_creator.TableEvent):
         assert stream.data is not None
-    if isinstance(stream, events.EndContainer):
-        open_mock = mock_open()
-        with patch("builtins.open", open_mock, create=True):
-            file_creator.save_tables("test-data", output)
-        open_mock.assert_called_with(
-            f"{os.path.join(output, stream.filename)}_clean.xlsx", "wb"
-        )
