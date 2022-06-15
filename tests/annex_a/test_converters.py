@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from liiatools.datasets.annex_a.lds_annexa_clean.convertors import (
-    to_integer, to_date
+    to_integer
 )
+
+from liiatools.datasets.shared_functions.converters import ( to_date )
 
 def test_conversion_to_integer():
     assert to_integer("1") == 1

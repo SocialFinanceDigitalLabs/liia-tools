@@ -1,8 +1,10 @@
 from liiatools.datasets.shared_functions.common import (
-    to_short_postcode,
     check_postcode,
     flip_dict,
-    to_month_only_dob,
+)
+from liiatools.datasets.shared_functions.converters import (
+    to_short_postcode,
+    to_month_only_dob
 )
 import datetime
 

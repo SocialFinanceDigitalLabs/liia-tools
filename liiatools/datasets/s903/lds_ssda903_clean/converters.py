@@ -40,18 +40,3 @@ def to_integer(string, config):
         return ""
     else:
         return string
-
-
-def to_date(string, dateformat):
-    """
-    Convert a string to a date based on the config (%d/%m/%Y for example) and convert a datetime to a date
-    """
-    if isinstance(string, datetime):
-        string = string.date()
-    elif isinstance(string, str) and string != "":
-        string = datetime.strptime(string, dateformat).date()  # Check this is possible
-    elif string is None:
-        string = ""
-    elif string == "":
-        string = ""
-    return string

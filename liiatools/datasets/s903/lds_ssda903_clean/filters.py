@@ -6,9 +6,10 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 from liiatools.datasets.s903.lds_ssda903_clean.converters import (
     to_category,
-    to_integer,
-    to_date,
+    to_integer
 )
+
+from liiatools.datasets.shared_functions.converters import to_date
 from liiatools.datasets.shared_functions.common import check_postcode
 
 log = logging.getLogger(__name__)
