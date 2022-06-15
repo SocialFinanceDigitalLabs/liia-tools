@@ -25,16 +25,11 @@ def add_year_column(event):
 
 
 @streamfilter(check=lambda x: x.get("header") in ["CHILD"], fail_function=pass_event)
-def create_la_child_id(event, config, la_name):
+def create_la_child_id(event, la_code):
     """
     Creates an identifier from a combination of the Child Unique ID and Local Authority so matching child IDs
     are not removed in the merging a de-duping steps
     """
-    try:
-        la_child_id = f"{config[la_name]}_{event.cell}"
-        yield event.from_event(event, cell=la_child_id)
-    except KeyError as ex:
-        log.exception(
-            f"Local Authority {la_name} does not exist in the Local Authority config file"
-        )
-        raise ex
+    la_child_id = f"{event.cell}_{la_code}"
+    yield event.from_event(event, cell=la_child_id)
+

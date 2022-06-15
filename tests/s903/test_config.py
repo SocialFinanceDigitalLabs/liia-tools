@@ -1,4 +1,4 @@
-from liiatools.datasets.s903.lds_ssda903_clean import config
+from liiatools.datasets.s903.lds_ssda903_clean import configuration as config
 
 from sfdata_stream_parser import events
 
