@@ -74,11 +74,11 @@ def filter_rows(event):
 
     if (
         event.sheet_name in event_types
-        and event.row[event_types[event.sheet_name]] == ""
+        and event.row[event_types[event.sheet_name]]
     ):
-        yield event.from_event(event, filter=1)
-    else:
         yield event.from_event(event, filter=0)
+    else:
+        yield event.from_event(event, filter=1)
 
 
 class TableEvent(events.ParseEvent):
