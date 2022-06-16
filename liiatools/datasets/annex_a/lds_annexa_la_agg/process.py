@@ -47,6 +47,7 @@ def deduplicate(aa_dict, dedup):
 
 
 def convert_datetimes(aa_dict, dates):
+    today = pd.to_datetime('today')
     for key in aa_dict.keys():
         df = aa_dict[key]
         for date_field in dates[key]:
@@ -55,7 +56,8 @@ def convert_datetimes(aa_dict, dates):
     return aa_dict
 
 
-def _remove_years(d, years):
+def _remove_years(years):
+    d = pd.to_datetime('today')
     try:
         return d.replace(year=d.year - years)
     except ValueError:
@@ -63,17 +65,15 @@ def _remove_years(d, years):
 
 
 def remove_old_data(aa_dict, index_date):
-    today = pd.to_datetime('today')
-    six_years_ago = _remove_years(today, 6)
-    thirty_years_ago = _remove_years(today, 30)
     for key in aa_dict.keys():
+        index_date_key = index_date[key]
         df = aa_dict[key]
         if key == 'List 9':
-            df = df[df[index_date[key]] >= thirty_years_ago]
+            df = df[df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])]
         elif key == 'List 10':
-            df = df[(df[index_date[key]] >= six_years_ago).any(axis=1)]
+            df = df[(df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])).any(axis=1)]
         else:
-            df = df[(df[index_date[key]] >= six_years_ago) | (df[index_date[key]].isnull())]
+            df = df[(df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])) | (df[index_date_key["ref_date"]].isnull())]
         aa_dict[key] = df
     return aa_dict
 

@@ -48,39 +48,33 @@ def test_deduplicate():
 
 
 def test_remove_old_data():
-    today = pd.to_datetime('today')
-    five_years_ago = process._remove_years(today, 5)
-    seven_years_ago = process._remove_years(today, 7)
-    thirty_one_years_ago = process._remove_years(today, 31)
+    five_years_ago = process._remove_years(5)
+    seven_years_ago = process._remove_years(7)
+    thirty_one_years_ago = process._remove_years(31)
     test_df_1 = pd.DataFrame({"Date 1": [thirty_one_years_ago]})
-    test_df_1["Date 1"] = pd.to_datetime(test_df_1["Date 1"], format="%d/%m/%Y")
     test_dict_1 = {"List 9": test_df_1}
-    index_date_1 = {"List 9": "Date 1"}
+    index_date_1 = {"List 9": {"ref_date": "Date 1", "years": 30}}
     output_dict_1 = process.remove_old_data(test_dict_1, index_date_1)
     output_df_1 = output_dict_1["List 9"]
     assert output_df_1.shape[0] == 0
     test_df_2 = pd.DataFrame({"Date 1": [seven_years_ago]})
-    test_df_2["Date 1"] = pd.to_datetime(test_df_2["Date 1"], format="%d/%m/%Y")
     test_dict_2 = {"List 9": test_df_2}
     output_dict_2 = process.remove_old_data(test_dict_2, index_date_1)
     output_df_2 = output_dict_2["List 9"]
     assert output_df_2.shape[0] == 1
     test_df_3 = pd.DataFrame({"Date 1": [seven_years_ago, seven_years_ago], "Date 2": [five_years_ago, seven_years_ago]})
-    test_df_3["Date 1"] = pd.to_datetime(test_df_3["Date 1"], format="%d/%m/%Y")
     test_dict_3 = {"List 10": test_df_3}
-    index_date_2 = {"List 10": ["Date 1", "Date 2"]}
+    index_date_2 = {"List 10": {"ref_date": ["Date 1", "Date 2"], "years": 6}}
     output_dict_3 = process.remove_old_data(test_dict_3, index_date_2)
     output_df_3 = output_dict_3["List 10"]
     assert output_df_3.shape[0] == 1
     test_df_4 = pd.DataFrame({"Date 1": [seven_years_ago, five_years_ago, None]})
-    test_df_4["Date 1"] = pd.to_datetime(test_df_4["Date 1"], format="%d/%m/%Y")
     test_dict_4 = {"List 1": test_df_4}
-    index_date_3 = {"List 1": "Date 1"}
+    index_date_3 = {"List 1": {"ref_date": "Date 1", "years": 6}}
     output_dict_4 = process.remove_old_data(test_dict_4, index_date_3)
     output_df_4 = output_dict_4["List 1"]
     assert output_df_4.shape[0] == 2
     test_df_5 = pd.DataFrame({"Date 1": [None, None, None]})
-    test_df_5["Date 1"] = pd.to_datetime(test_df_5["Date 1"], format="%d/%m/%Y")
     test_dict_5 = {"List 1": test_df_5}
     output_dict_5 = process.remove_old_data(test_dict_5, index_date_3)
     output_df_5 = output_dict_5["List 1"]

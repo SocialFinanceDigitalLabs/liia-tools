@@ -293,17 +293,39 @@ dates:
         - Date of leaving adoption process
 
 index_date:
-    List 1: Date of Contact
-    List 2: Assessment completion date
-    List 3: Date of referral
-    List 4: Continuous Assessment Date of Authorisation
-    List 5: Strategy discussion initiating Section 47 Enquiry Start Date
-    List 6: CIN Closure Date
-    List 7: Child Protection Plan End Date
-    List 8: Date Ceased to be Looked After
-    List 9: Date of Birth
+    List 1:
+        ref_date: Date of Contact
+        years: 6
+    List 2:
+        ref_date: Assessment completion date
+        years: 6
+    List 3:
+        ref_date: Date of referral
+        years: 6
+    List 4:
+        ref_date: Continuous Assessment Date of Authorisation
+        years: 6
+    List 5:
+        ref_date: Strategy discussion initiating Section 47 Enquiry Start Date
+        years: 6
+    List 6:
+        ref_date: CIN Closure Date
+        years: 6
+    List 7:
+        ref_date: Child Protection Plan End Date
+        years: 6
+    List 8:
+        ref_date: Date Ceased to be Looked After
+        years: 6
+    List 9:
+        ref_date: Date of Birth
+        years: 30
     List 10:
-        - Date of Decision that Child Should be Placed for Adoption
-        - Date of Adoption Order
-        - Date of Decision that Child Should No Longer be Placed for Adoption
-    List 11: Date enquiry received
+        ref_date:
+            - Date of Decision that Child Should be Placed for Adoption
+            - Date of Adoption Order
+            - Date of Decision that Child Should No Longer be Placed for Adoption
+        years: 6
+    List 11:
+        ref_date: Date enquiry received
+        years: 6
