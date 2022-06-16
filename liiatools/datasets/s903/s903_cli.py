@@ -60,25 +60,22 @@ def cleanfile(input, la_code, la_log_dir, output):
     'lds_log_dir' should specify the path to the LDS log folder
     'output' should specify the path to the output folder"""
     config = configuration.Config()
-    column_config = config["column_map"]
-
-    # No such thing as la_map
-    la_config = config["data_codes"]
-    la_name = flip_dict(la_config)[la_code]
-
-    #parse.log_config(lds_log_dir)
+    la_name = flip_dict(config["data_codes"])[la_code]
 
     stream = parse.findfiles(input)
     stream = parse.add_filename(stream)
     stream = populate.add_year_column(stream)
     stream = parse.parse_csv(stream, input=input)
+
     stream = configuration.add_table_name(stream)
     stream = configuration.inherit_table_name(stream)
-    stream = configuration.match_config_to_cell(stream, config=column_config)
+    stream = configuration.match_config_to_cell(stream, config=config["column_map"])
+
     stream = filters.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
-    stream = populate.create_la_child_id(stream, config=la_config, la_name=la_name)
+    stream = populate.create_la_child_id(stream, config=config["data_codes"], la_name=la_name)
+
     stream = file_creator.coalesce_row(stream)
     stream = file_creator.create_tables(stream, la_name=la_name)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)

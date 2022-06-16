@@ -4,8 +4,9 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
 
-from liiatools.datasets.annex_a.lds_annexa_clean.convertors import to_integer, to_date
-from liiatools.datasets.shared_functions.common import check_postcode
+from liiatools.datasets.annex_a.lds_annexa_clean.convertors import to_integer
+from liiatools.datasets.shared_functions.common import ( check_postcode )
+from liiatools.datasets.shared_functions.converters import ( to_date )
 from liiatools.datasets.annex_a.lds_annexa_clean.regex import parse_regex
 
 log = logging.getLogger(__name__)
