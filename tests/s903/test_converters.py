@@ -1,7 +1,5 @@
 from liiatools.datasets.s903.lds_ssda903_clean import converters
 
-from datetime import datetime
-
 
 def test_to_category():
     category_dict = [
@@ -29,13 +27,3 @@ def test_to_integer():
     assert converters.to_integer("date", "") == "date"
     assert converters.to_integer("", "integer") == ""
     assert converters.to_integer(None, "integer") == ""
-
-
-def test_to_date():
-    assert converters.to_date("15/01/2001", "%d/%m/%Y") == datetime(2001, 1, 15).date()
-    assert (
-        converters.to_date(datetime(2001, 1, 15), "%d/%m/%Y")
-        == datetime(2001, 1, 15).date()
-    )
-    assert converters.to_date(None, "%d/%m/%Y") == ""
-    assert converters.to_date("", "%d/%m/%Y") == ""

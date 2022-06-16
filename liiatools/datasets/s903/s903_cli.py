@@ -62,10 +62,8 @@ def cleanfile(input, la_code, la_log_dir, output):
     config = configuration.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
 
-    stream = parse.findfiles(input)
-    stream = parse.add_filename(stream)
+    stream = parse.parse_csv(input=input)
     stream = populate.add_year_column(stream)
-    stream = parse.parse_csv(stream, input=input)
 
     stream = configuration.add_table_name(stream)
     stream = configuration.inherit_table_name(stream)
@@ -74,7 +72,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
-    stream = populate.create_la_child_id(stream, config=config["data_codes"], la_name=la_name)
+    stream = populate.create_la_child_id(stream, la_code=la_code)
 
     stream = file_creator.coalesce_row(stream)
     stream = file_creator.create_tables(stream, la_name=la_name)

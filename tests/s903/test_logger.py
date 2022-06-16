@@ -1,3 +1,8 @@
+import tempfile as tmp
+from unittest.mock import patch
+from pathlib import Path
+from datetime import datetime
+
 from liiatools.datasets.s903.lds_ssda903_clean import logger
 
 from sfdata_stream_parser import events
@@ -157,5 +162,25 @@ def test_inherit_extra_column_error():
             assert event.extra_column_error == []
 
 
-# def test_save_errors_la():
-# logger.save_errors_la()
+@patch("builtins.open", create=True)
+def test_save_errors_la(mock_save):
+    la_log_dir = tmp.gettempdir()
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+
+    stream = logger.save_errors_la(
+        [
+            logger.ErrorTable(
+                filename="test_file",
+                formatting_error_count=["CHILD", "CHILD", "AGE"],
+                blank_error_count=["POSTCODE", "POSTCODE", "DATE"],
+                table_name="List 1",
+                extra_column_error=["list", "of", "headers"],
+                              ),
+        ],
+        la_log_dir
+    )
+    stream = list(stream)
+
+    mock_save.assert_called_once_with(f"{Path(la_log_dir, 'test_file')}_error_log_{start_time}.txt", "a")
+    mock_save.write.assert_called_once_with(f"test_file_{start_time}")
+

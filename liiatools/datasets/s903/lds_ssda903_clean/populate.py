@@ -7,7 +7,7 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 log = logging.getLogger(__name__)
 
 
-@streamfilter(check=checks.type_check(events.StartContainer), fail_function=pass_event)
+@streamfilter(check=checks.type_check(events.EndRow), fail_function=pass_event)
 def add_year_column(event):
     """
     Searches the filename for the year by finding any four-digit number starting with 20
