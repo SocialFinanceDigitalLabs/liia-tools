@@ -9,33 +9,33 @@ def test_clean_dates():
         cell=datetime(2019, 1, 15).date(), config_dict={"date": "%d/%m/%Y"}
     )
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.as_dict()["cell"] == datetime(2019, 1, 15).date()
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == datetime(2019, 1, 15).date()
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell="2019/1/15", config_dict={"date": "%d/%m/%Y"})
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(
         cell=datetime(2019, 1, 15).date(), config_dict={"not_date": "%d/%m/%Y"}
     )
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.as_dict()["cell"] == datetime(2019, 1, 15).date()
+    assert cleaned_event.cell == datetime(2019, 1, 15).date()
 
     event = events.Cell(cell="string", config_dict={"not_date": "%d/%m/%Y"})
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.as_dict()["cell"] == "string"
+    assert cleaned_event.cell == "string"
 
     event = events.Cell(cell=None, config_dict={"date": "%d/%m/%Y"})
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell="", config_dict={"date": "%d/%m/%Y"})
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
 
 
 def test_clean_categories():
@@ -46,8 +46,8 @@ def test_clean_categories():
         },
     )
     cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.as_dict()["cell"] == "0"
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == "0"
+    assert cleaned_event.error == "0"
 
     event = events.Cell(
         cell="false",
@@ -56,8 +56,8 @@ def test_clean_categories():
         },
     )
     cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.as_dict()["cell"] == "0"
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == "0"
+    assert cleaned_event.error == "0"
 
     event = events.Cell(
         cell=123,
@@ -66,8 +66,8 @@ def test_clean_categories():
         },
     )
     cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(
         cell="string",
@@ -76,8 +76,8 @@ def test_clean_categories():
         },
     )
     cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(
         cell="string",
@@ -89,74 +89,74 @@ def test_clean_categories():
         },
     )
     cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.as_dict()["cell"] == "string"
+    assert cleaned_event.cell == "string"
 
 
 def test_clean_integers():
     event = events.Cell(cell=123, config_dict={"numeric": "integer"})
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == 123
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == 123
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell="", config_dict={"numeric": "integer"})
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell=None, config_dict={"numeric": "integer"})
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell="123", config_dict={"numeric": "integer"})
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == 123
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == 123
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell="string", config_dict={"numeric": "integer"})
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(cell=datetime(2017, 3, 17), config_dict={"numeric": "integer"})
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(
         cell=datetime(2017, 3, 17), config_dict={"not_numeric": "integer"}
     )
     cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.as_dict()["cell"] == datetime(2017, 3, 17)
+    assert cleaned_event.cell == datetime(2017, 3, 17)
 
 
 def test_clean_postcodes():
     event = events.Cell(header="HOME_POST", cell="G62 7PS")
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    assert cleaned_event.as_dict()["cell"] == "G62 7PS"
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == "G62 7PS"
+    assert cleaned_event.error == "0"
 
     event = events.Cell(header="PL_POST", cell="CW3 9PU")
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    assert cleaned_event.as_dict()["cell"] == "CW3 9PU"
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == "CW3 9PU"
+    assert cleaned_event.error == "0"
 
     event = events.Cell(header="PL_POST", cell="string")
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(header="PL_POST", cell=123)
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "1"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
 
     event = events.Cell(header="PL_POST", cell="")
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
 
     event = events.Cell(header="PL_POST", cell=None)
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    assert cleaned_event.as_dict()["cell"] == ""
-    assert cleaned_event.as_dict()["error"] == "0"
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"

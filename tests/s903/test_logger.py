@@ -1,8 +1,6 @@
 from liiatools.datasets.s903.lds_ssda903_clean import logger
 
 from sfdata_stream_parser import events
-from datetime import datetime
-import tablib
 
 
 def test_create_formatting_error_count():
@@ -18,7 +16,7 @@ def test_create_formatting_error_count():
     )
     for event in events_with_formatting_error_count:
         if isinstance(event, logger.ErrorTable):
-            assert event.as_dict()["formatting_error_count"] == [
+            assert event.formatting_error_count == [
                 "some_header",
                 "some_header",
             ]
@@ -35,7 +33,7 @@ def test_create_formatting_error_count():
     )
     for event in events_with_formatting_error_count:
         if isinstance(event, logger.ErrorTable):
-            assert event.as_dict()["formatting_error_count"] == [
+            assert event.formatting_error_count == [
                 "some_header",
                 "some_other_header",
             ]
@@ -53,35 +51,35 @@ def test_create_formatting_error_count():
     )
     for event in events_with_formatting_error_count:
         if isinstance(event, logger.ErrorTable):
-            assert event.as_dict()["formatting_error_count"] == ["some_header"]
+            assert event.formatting_error_count == ["some_header"]
 
 
 def test_blank_error_check():
     event = events.Cell(cell=None, config_dict={"canbeblank": False})
     checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.as_dict()["cell"] is None
-    assert checked_event.as_dict()["blank_error"] == "1"
+    assert checked_event.cell is None
+    assert checked_event.blank_error == "1"
 
     event = events.Cell(cell="", config_dict={"canbeblank": False})
     checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.as_dict()["cell"] == ""
-    assert checked_event.as_dict()["blank_error"] == "1"
+    assert checked_event.cell == ""
+    assert checked_event.blank_error == "1"
 
     event = events.Cell(cell="string", config_dict={"canbeblank": False})
     checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.as_dict()["cell"] == "string"
+    assert checked_event.cell == "string"
 
     event = events.Cell(cell="", config_dict={"canbeblank": True})
     checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.as_dict()["cell"] == ""
+    assert checked_event.cell == ""
 
     event = events.Cell(cell=None, config_dict={"canbeblank": True})
     checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.as_dict()["cell"] is None
+    assert checked_event.cell is None
 
     event = events.Cell(cell="string", config_dict={"no_canbeblank": False})
     checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.as_dict()["cell"] == "string"
+    assert checked_event.cell == "string"
 
 
 def test_create_blank_error_count():
@@ -97,7 +95,7 @@ def test_create_blank_error_count():
     events_with_blank_error_count = list(logger.create_blank_error_count(stream))
     for event in events_with_blank_error_count:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.as_dict()["blank_error_count"] == ["some_header"]
+            assert event.blank_error_count == ["some_header"]
 
     stream = (
         events.StartTable(),
@@ -110,7 +108,7 @@ def test_create_blank_error_count():
     events_with_blank_error_count = list(logger.create_blank_error_count(stream))
     for event in events_with_blank_error_count:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.as_dict()["blank_error_count"] == [
+            assert event.blank_error_count == [
                 "some_header",
                 "some_header_2",
             ]
@@ -125,7 +123,7 @@ def test_inherit_extra_column_error():
     events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
     for event in events_with_extra_column_error:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.as_dict()["extra_column_error"] == [
+            assert event.extra_column_error == [
                 "list",
                 "of",
                 "extra",
@@ -140,7 +138,7 @@ def test_inherit_extra_column_error():
     events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
     for event in events_with_extra_column_error:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.as_dict()["extra_column_error"] is None
+            assert event.extra_column_error is None
 
     stream = (
         events.StartTable(extra_columns=""),
@@ -150,13 +148,13 @@ def test_inherit_extra_column_error():
     events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
     for event in events_with_extra_column_error:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.as_dict()["extra_column_error"] == ""
+            assert event.extra_column_error == ""
 
     stream = (events.StartTable(), logger.ErrorTable(), events.EndTable())
     events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
     for event in events_with_extra_column_error:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.as_dict()["extra_column_error"] == []
+            assert event.extra_column_error == []
 
 
 # def test_save_errors_la():
