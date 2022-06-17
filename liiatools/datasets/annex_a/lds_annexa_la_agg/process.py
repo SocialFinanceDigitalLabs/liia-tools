@@ -31,9 +31,9 @@ def _merge_dfs(aa_dict, old_dict):
 
 
 def merge_la_files(output, aa_dict):
-    file_list = Path(output).glob('*.xlsx')
-    for file in file_list:
-        old_dict = pd.read_excel(file, sheet_name=None, index_col=None, dtype=object)
+    output_file = Path(output, f"AnnexA_merged.xlsx")
+    if output_file.is_file():
+        old_dict = pd.read_excel(output_file, sheet_name=None, index_col=None, dtype=object)
         _merge_dfs(aa_dict, old_dict)
     return aa_dict
 
