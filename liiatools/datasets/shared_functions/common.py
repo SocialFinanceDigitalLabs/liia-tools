@@ -21,12 +21,10 @@ def check_postcode(postcode):
     :param postcode: A string with a UK-style post code
     :return: a post code, or if incorrect a blank string
     """
-    if postcode != "":
-        try:
-            match = re.search(
-                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-            )
-            return match.group(0)
-        except AttributeError as ex:
-            return ""
-    return ""
+    if postcode:
+        match = re.search(
+            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+        )
+        return match.group(0)
+    else:
+        return ""

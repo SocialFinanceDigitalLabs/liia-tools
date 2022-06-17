@@ -1,22 +1,21 @@
-import datetime
+from datetime import datetime
 import re
-
 
 
 def to_date(datevalue, dateformat="%d/%m/%Y"):
     """
     Convert a string to a date based on the dateformat %d/%m/%Y and convert a datetime to a date
     :param datevalue: A value to test and make sure it's a datetime object
+    :param dateformat: A format for the date to be read correctly, default to %d/%m/%Y
     :return: Either the specified date, converted to a datetime, or an empty string
     """
-    if isinstance(datevalue, datetime):
-        return datevalue.date()
-    elif isinstance(datevalue, str) and datevalue != "":
-        try:
-            return datetime.strptime(datevalue, dateformat).date()  # Check this is possible
-        except ValueError:
-            return ""
-    return ""
+    if datevalue:
+        if isinstance(datevalue, datetime):
+            return datevalue.date()
+        elif isinstance(datevalue, str):
+            return datetime.strptime(datevalue, dateformat).date()
+    else:
+        return ""
 
 
 def to_short_postcode(postcode):

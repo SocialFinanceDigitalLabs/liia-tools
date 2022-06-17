@@ -4,7 +4,8 @@ from liiatools.datasets.shared_functions.common import (
 )
 from liiatools.datasets.shared_functions.converters import (
     to_short_postcode,
-    to_month_only_dob
+    to_month_only_dob,
+    to_date,
 )
 import datetime
 
@@ -37,3 +38,8 @@ def test_to_month_only_dob():
         2020, 5, 1
     )
     assert to_month_only_dob("Non Date Thing") == ""
+
+
+def test_to_date():
+    assert to_date(datetime.datetime(2020, 3, 19)) == datetime.datetime(2020, 3, 19).date()
+    assert to_date("15/03/2017") == datetime.datetime(2017, 3, 15).date()

@@ -6,7 +6,7 @@ from datetime import datetime
 
 def test_clean_dates():
     event = events.Cell(
-        cell=datetime(2019, 1, 15).date(), config_dict={"date": "%d/%m/%Y"}
+        cell=datetime(2019, 1, 15), config_dict={"date": "%d/%m/%Y"}
     )
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == datetime(2019, 1, 15).date()
@@ -18,10 +18,10 @@ def test_clean_dates():
     assert cleaned_event.error == "1"
 
     event = events.Cell(
-        cell=datetime(2019, 1, 15).date(), config_dict={"not_date": "%d/%m/%Y"}
+        cell=datetime(2019, 1, 15), config_dict={"not_date": "%d/%m/%Y"}
     )
     cleaned_event = list(filters.clean_dates(event))[0]
-    assert cleaned_event.cell == datetime(2019, 1, 15).date()
+    assert cleaned_event.cell == datetime(2019, 1, 15)
 
     event = events.Cell(cell="string", config_dict={"not_date": "%d/%m/%Y"})
     cleaned_event = list(filters.clean_dates(event))[0]

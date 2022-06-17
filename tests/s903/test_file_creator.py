@@ -22,10 +22,11 @@ def test_coalesce_row():
         events.StartRow(),
         events.Cell(cell=125),
         events.Cell(cell=341),
-        events.EndRow(),
+        events.EndRow(year=2019),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))[0]
     assert events_complete_rows.row == [125, 341]
+    assert events_complete_rows.year == 2019
 
     stream = (
         events.StartRow(),
@@ -81,7 +82,7 @@ def test_create_tables():
     row = [12345, datetime(2019, 4, 15).date()]
     year = 2019
     data = tablib.Dataset(headers=headers + ["LA", "YEAR"])
-    data.append((row, la_name, year))
+    data.append(row + [la_name, year])
 
     stream = (
         events.StartTable(headers=headers),
@@ -108,7 +109,7 @@ def test_create_tables():
     row = [12345, None, ""]
     year = 2019
     data = tablib.Dataset(headers=headers + ["LA", "YEAR"])
-    data.append([row, la_name, year])
+    data.append(row + [la_name, year])
 
     stream = (
         events.StartTable(headers=headers),

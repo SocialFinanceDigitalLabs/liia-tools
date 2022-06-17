@@ -6,8 +6,8 @@ from sfdata_stream_parser import events
 def test_add_year_column():
     stream = populate.add_year_column(
         [
-            events.StartContainer(filename="test_file_2022"),
-            events.StartContainer(filename="test_file_no_year"),
+            events.EndRow(filename="test_file_2022"),
+            events.EndRow(filename="test_file_no_year"),
         ]
     )
     stream = list(stream)
