@@ -8,8 +8,8 @@ log = logging.getLogger(__name__)
 
 def split_file(input):
     '''Reads xlsx file as dictionary of dataframes'''
-    dict = pd.read_excel(input, sheet_name=None, index_col=None, dtype=object)
-    return dict
+    aa_dict = pd.read_excel(input, sheet_name=None, index_col=None, dtype=object)
+    return aa_dict
 
 
 def sort_dict(aa_dict, sort_order):
@@ -39,20 +39,19 @@ def merge_la_files(output, aa_dict):
 
 
 def deduplicate(aa_dict, dedup):
-    for key in aa_dict.keys():
-        df = aa_dict[key]
-        df = df.drop_duplicates(subset=dedup[key], keep = 'first')
-        aa_dict[key] = df
+    for k in aa_dict.keys():
+        df = aa_dict[k]
+        df = df.drop_duplicates(subset=dedup[k], keep = 'first')
+        aa_dict[k] = df
     return aa_dict
 
 
 def convert_datetimes(aa_dict, dates):
-    today = pd.to_datetime('today')
-    for key in aa_dict.keys():
-        df = aa_dict[key]
-        for date_field in dates[key]:
+    for k in aa_dict.keys():
+        df = aa_dict[k]
+        for date_field in dates[k]:
             df[date_field] = pd.to_datetime(df[date_field], format="%d/%m/%Y")
-        aa_dict[key] = df
+        aa_dict[k] = df
     return aa_dict
 
 
@@ -65,25 +64,25 @@ def _remove_years(years):
 
 
 def remove_old_data(aa_dict, index_date):
-    for key in aa_dict.keys():
-        index_date_key = index_date[key]
-        df = aa_dict[key]
-        if key == 'List 9':
+    for k in aa_dict.keys():
+        index_date_key = index_date[k]
+        df = aa_dict[k]
+        if k == 'List 9':
             df = df[df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])]
-        elif key == 'List 10':
+        elif k == 'List 10':
             df = df[(df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])).any(axis=1)]
         else:
             df = df[(df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])) | (df[index_date_key["ref_date"]].isnull())]
-        aa_dict[key] = df
+        aa_dict[k] = df
     return aa_dict
 
 
 def convert_dates(aa_dict, dates):
-    for key in aa_dict.keys():
-        df = aa_dict[key]
-        for date_field in dates[key]:
+    for k in aa_dict.keys():
+        df = aa_dict[k]
+        for date_field in dates[k]:
             df[date_field] = pd.to_datetime(df[date_field], format="%d/%m/%Y").dt.date
-        aa_dict[key] = df
+        aa_dict[k] = df
     return aa_dict
 
 
