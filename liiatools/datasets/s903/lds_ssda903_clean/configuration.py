@@ -24,6 +24,9 @@ SHARED_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 def add_table_name(event):
     """
     Match the loaded table name against one of the 10 903 file names
+
+    :param event: A filtered list of event objects of type StartTable
+    :return: An updated list of event objects
     """
     for table_name, expected_columns in column_names.items():
         if set(event.headers) == set(expected_columns):
@@ -36,6 +39,10 @@ def match_config_to_cell(event, config):
     Match the cell to the config file given the table name and cell header
     the config file should be a set of dictionaries for each table, headers within those tables
     and config rules for those headers
+
+    :param event: A filtered list of event objects of type Cell
+    :param config: The loaded configuration to use
+    :return: An updated list of event objects
     """
     try:
         table_config = config[event.table_name]
@@ -52,6 +59,7 @@ def match_config_to_cell(event, config):
 def configure_stream(stream, config):
     """
     Loading and matching the configuration with the loaded stream
+
     :param stream: Set of events to parse
     :param config: The loaded configuration
     :return: An updated set of events/stream with matched configuration

@@ -15,6 +15,9 @@ class RowEvent(events.ParseEvent):
 def coalesce_row(stream):
     """
     Create a list of the cell values for a whole row
+
+    :param stream: The stream to output
+    :return: Updated stream
     """
     row = None
     for event in stream:
@@ -36,6 +39,10 @@ class TableEvent(events.ParseEvent):
 def create_tables(stream, la_name):
     """
     Append all the rows for a given table to create one concatenated data event
+
+    :param stream: The stream to output
+    :param la_name: The name of the local authority
+    :return: Updated stream
     """
     data = None
     for event in stream:
@@ -60,6 +67,10 @@ def create_tables(stream, la_name):
 def save_tables(stream, output):
     """
     Save the data events as csv files in the Outputs directory
+
+    :param stream: The stream to output
+    :param output: The location of the output file
+    :return: updated stream object.
     """
     for event in stream:
         if isinstance(event, TableEvent) and event.data is not None:
@@ -74,9 +85,10 @@ def save_tables(stream, output):
 def save_stream(stream, la_name, output):
     """
     Outputs stream to file
+
     :param stream: The stream to output
     :param la_name: Full name of the LA
-    :param output: Location to write the ouput
+    :param output: Location to write the output
     :return: Updated stream
     """
     stream = coalesce_row(stream)

@@ -21,6 +21,9 @@ log = logging.getLogger(__name__)
 def clean_dates(event):
     """
     Convert all values that should be dates to dates based on the config.yaml file
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     date = event.config_dict["date"]
     try:
@@ -36,6 +39,9 @@ def clean_dates(event):
 def clean_categories(event):
     """
     Convert all values that should be categories to categories based on the config.yaml file
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     category = event.config_dict["category"]
     try:
@@ -54,6 +60,9 @@ def clean_categories(event):
 def clean_integers(event):
     """
     Convert all values that should be integers into integers based on the config.yaml file
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     numeric = event.config_dict["numeric"]
     try:
@@ -70,6 +79,9 @@ def clean_integers(event):
 def clean_postcodes(event):
     """
     Check that all values that should be postcodes are postcodes
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     error = "0"
     text = ""

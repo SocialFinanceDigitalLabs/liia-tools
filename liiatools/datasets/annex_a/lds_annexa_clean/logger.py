@@ -19,7 +19,7 @@ def create_formatting_error_count(stream):
     Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
 
     :param event: A filtered list of event objects
-    :return: An updated list of event objects wtih error counts
+    :return: An updated list of event objects with error counts
     """
     formatting_error_count = None
     for event in stream:

@@ -10,6 +10,9 @@ log = logging.getLogger(__name__)
 def parse_csv(input):
     """
     Parse the csv and return the row number, column number, header name and cell value
+
+    :param input: Location of file to be cleaned
+    :return: List of event objects containing filename, header and cell information
     """
     filename = str(Path(input).resolve().stem)
     with open(input, "rt") as f:

@@ -11,6 +11,9 @@ log = logging.getLogger(__name__)
 def add_year_column(event):
     """
     Searches the filename for the year by finding any four-digit number starting with 20
+
+    :param event: A filtered list of event objects of type EndRow
+    :return: An updated list of event objects
     """
     try:
         file_dir = event.filename
@@ -29,6 +32,10 @@ def create_la_child_id(event, la_code):
     """
     Creates an identifier from a combination of the Child Unique ID and Local Authority so matching child IDs
     are not removed in the merging a de-duping steps
+
+    :param event: A filtered list of event objects
+    :param la_code: The 3-character LA code used to identify a local authority
+    :return: An updated list of event objects
     """
     la_child_id = f"{event.cell}_{la_code}"
     yield event.from_event(event, cell=la_child_id)

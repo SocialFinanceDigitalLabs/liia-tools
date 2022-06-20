@@ -17,6 +17,9 @@ class ErrorTable(events.ParseEvent):
 def create_formatting_error_count(stream):
     """
     Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects with error counts
     """
     formatting_error_count = None
     table_name = None
@@ -54,6 +57,9 @@ def blank_error_check(event):
     """
     Check all the values against the config to see if they are allowed to be blank
     if they are blank but should not be, record this as event.blank_error = 1
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
     """
     try:
         blank = event.config_dict["canbeblank"]
@@ -71,6 +77,9 @@ def create_blank_error_count(stream):
     """
     Create a list of the column headers for cells with blank fields that should not be blank (event.blank_error = 1)
     for each table
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects
     """
     blank_error_count = None
     for event in stream:
@@ -93,6 +102,9 @@ def create_blank_error_count(stream):
 def inherit_extra_column_error(stream):
     """
     Add the extra_column_error value to the ErrorTable so these errors can be written to the log.txt file
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects
     """
     extra_column_error = []
     for event in stream:
@@ -139,6 +151,10 @@ def save_errors_la(stream, la_log_dir):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
     only save the error events if there is at least one error in said event
+
+    :param stream: A filtered list of event objects
+    :param la_log_dir: Location to save the gathered error logs
+    :return: An updated list of event objects
     """
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     for event in stream:
@@ -229,6 +245,9 @@ def save_errors_la(stream, la_log_dir):
 def log_errors(stream):
     """
     Compile the log error functions
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects
     """
     stream = blank_error_check(stream)
     stream = create_formatting_error_count(stream)

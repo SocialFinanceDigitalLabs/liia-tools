@@ -19,7 +19,7 @@ def save_stream(stream, la_name, output):
     Outputs stream to file
     :param stream: The stream to output
     :param la_name: Full name of the LA
-    :param output: Location to write the ouput
+    :param output: Location to write the output
     :return: Updated stream
     """
     stream = coalesce_row(stream)
