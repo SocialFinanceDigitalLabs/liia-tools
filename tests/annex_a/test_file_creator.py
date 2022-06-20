@@ -56,9 +56,15 @@ def test_filter_rows():
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": "some value"}),
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": ""}),
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": None}),
+            file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": "some value"}),
+            file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": ""}),
+            file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": None}),
         ]
     )
     stream = list(stream)
     assert stream[0].filter == 0
     assert stream[1].filter == 1
     assert stream[2].filter == 1
+    assert stream[3].filter == 0
+    assert stream[4].filter == 0
+    assert stream[5].filter == 0

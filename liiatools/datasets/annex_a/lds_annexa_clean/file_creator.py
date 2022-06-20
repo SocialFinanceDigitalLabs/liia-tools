@@ -72,13 +72,13 @@ def filter_rows(event):
         "List 11": "Date enquiry received",
     }
 
-    if (
-        event.sheet_name in event_types
-        and event.row[event_types[event.sheet_name]]
-    ):
-        yield event.from_event(event, filter=0)
+    if event.sheet_name in event_types:
+        if event.row[event_types[event.sheet_name]]:
+            yield event.from_event(event, filter=0)
+        else:
+            yield event.from_event(event, filter=1)
     else:
-        yield event.from_event(event, filter=1)
+        yield event.from_event(event, filter=0)
 
 
 class TableEvent(events.ParseEvent):
