@@ -1,4 +1,3 @@
-from datetime import datetime
 import logging
 
 log = logging.getLogger(__name__)

@@ -1,21 +1,8 @@
 import tablib
-from datetime import datetime
 import logging
-import os
 from pathlib import Path
 
-from sfdata_stream_parser import events, checks
-from sfdata_stream_parser.filters.generic import streamfilter, pass_event
-
-start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-
-
-def log_config(lds_log_dir):
-    return logging.basicConfig(
-        filename=os.path.join(lds_log_dir, f"SSDA903_error_log_{start_time}.txt"),
-        format="\n%(name)s: %(levelname)s: %(message)s",
-    )
-
+from sfdata_stream_parser import events
 
 log = logging.getLogger(__name__)
 

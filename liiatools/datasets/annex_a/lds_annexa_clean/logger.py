@@ -70,21 +70,18 @@ def create_blank_error_count(stream):
     """
     blank_error_count = None
     for event in stream:
-        try:
-            if isinstance(event, events.StartTable):
-                blank_error_count = []
-            elif isinstance(event, ErrorTable):
-                yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
-                blank_error_count = None
-            elif blank_error_count is not None and isinstance(event, events.Cell):
-                try:
-                    if event.blank_error == "1":
-                        blank_error_count.append(event.column_header)
-                except AttributeError:
-                    pass
-            yield event
-        except Exception as ex:
-            log.exception(f"Error occurred in {event.filename}")
+        if isinstance(event, events.StartTable):
+            blank_error_count = []
+        elif isinstance(event, ErrorTable):
+            yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
+            blank_error_count = None
+        elif blank_error_count is not None and isinstance(event, events.Cell):
+            try:
+                if event.blank_error == "1":
+                    blank_error_count.append(event.column_header)
+            except AttributeError:
+                pass
+        yield event
 
 
 def inherit_extra_column_error(stream):

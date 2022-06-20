@@ -71,6 +71,20 @@ def save_tables(stream, output):
         yield event
 
 
+def save_stream(stream, la_name, output):
+    """
+    Outputs stream to file
+    :param stream: The stream to output
+    :param la_name: Full name of the LA
+    :param output: Location to write the ouput
+    :return: Updated stream
+    """
+    stream = coalesce_row(stream)
+    stream = create_tables(stream, la_name=la_name)
+    stream = save_tables(stream, output=output)
+    return stream
+
+
 @functools.cache
 def lookup_column_config(table_name, column_name):
     return None

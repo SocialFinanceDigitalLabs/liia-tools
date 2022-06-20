@@ -91,6 +91,16 @@ def test_clean_categories():
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == "string"
 
+    event = events.Cell(
+        cell=None,
+        config_dict={
+            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
+        },
+    )
+    cleaned_event = list(filters.clean_categories(event))[0]
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "1"
+
 
 def test_clean_integers():
     event = events.Cell(cell=123, config_dict={"numeric": "integer"})
@@ -143,6 +153,7 @@ def test_clean_postcodes():
 
     event = events.Cell(header="PL_POST", cell="string")
     cleaned_event = list(filters.clean_postcodes(event))[0]
+    print(cleaned_event.as_dict())
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 

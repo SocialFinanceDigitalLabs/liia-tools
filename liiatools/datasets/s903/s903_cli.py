@@ -59,25 +59,27 @@ def cleanfile(input, la_code, la_log_dir, output):
     'la_log_dir' should specify the path to the local authority's log folder
     'lds_log_dir' should specify the path to the LDS log folder
     'output' should specify the path to the output folder"""
+
+    # Configuration
     config = configuration.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
 
+    # Open & Parse file
     stream = parse.parse_csv(input=input)
     stream = populate.add_year_column(stream)
 
-    stream = configuration.add_table_name(stream)
-    stream = configuration.inherit_table_name(stream)
-    stream = configuration.match_config_to_cell(stream, config=config["column_map"])
+    # Configure stream
+    stream = configuration.configure_stream(stream, config)
 
+    # Clean stream
     stream = filters.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
     stream = populate.create_la_child_id(stream, la_code=la_code)
 
-    stream = file_creator.coalesce_row(stream)
-    stream = file_creator.create_tables(stream, la_name=la_name)
+    # Output result
+    stream = file_creator.save_stream(stream, la_name=la_name, output=output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
-    stream = file_creator.save_tables(stream, output)
     list(stream)
 
 

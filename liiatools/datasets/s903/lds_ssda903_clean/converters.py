@@ -1,5 +1,3 @@
-from datetime import datetime
-import re
 import logging
 
 log = logging.getLogger(__name__)
@@ -19,9 +17,7 @@ def to_category(string, categories):
                 return code["code"]
             else:
                 return "error"
-        elif string is None:
-            return ""
-        elif string == "":
+        elif not string:
             return ""
         else:
             return "error"
@@ -31,12 +27,11 @@ def to_integer(string, config):
     """
     Convert any strings that should be integers based on the config into integers
     """
-    if config == "integer" and string != "" and string is not None:
-        string = int(string)
-        return string
-    elif config == "integer" and string == "":
-        return string
-    elif config == "integer" and string is None:
-        return ""
+    if config == "integer":
+        if string:
+            return int(string)
+        else:
+            return ""
     else:
         return string
+

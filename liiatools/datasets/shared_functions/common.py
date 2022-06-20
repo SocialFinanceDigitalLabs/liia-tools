@@ -1,6 +1,8 @@
 import re
 import logging
 
+from sfdata_stream_parser import events
+
 log = logging.getLogger(__name__)
 
 
@@ -28,3 +30,25 @@ def check_postcode(postcode):
         return match.group(0)
     else:
         return ""
+
+
+def inherit_property(stream, prop_name):
+    """
+    Reads a property from StartTable and sets that property (if it exists) on every event between this event
+    and the next EndTable event.
+
+    :param event: A filtered list of event objects of type StartTable
+    :param prop_name: The property name to inherit
+    :return: An updated list of event objects
+    """
+    prop_value = None
+    for event in stream:
+        if isinstance(event, events.StartTable):
+            prop_value = getattr(event, prop_name, None)
+        elif isinstance(event, events.EndTable):
+            prop_value = None
+
+        if prop_value and not hasattr(event, prop_name):
+            event = event.from_event(event, **{prop_name: prop_value})
+
+        yield event

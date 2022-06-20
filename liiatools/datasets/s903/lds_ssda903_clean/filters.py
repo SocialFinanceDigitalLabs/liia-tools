@@ -71,11 +71,13 @@ def clean_postcodes(event):
     """
     Check that all values that should be postcodes are postcodes
     """
+    error = "0"
+    text = ""
     try:
         text = check_postcode(event.cell)
-        return event.from_event(event, cell=text, error="0")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, cell="", error="1")
+        error = "1"
+    return event.from_event(event, cell=text, error=error)
 
 
 def clean(stream):

@@ -10,6 +10,7 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
 
 from liiatools.datasets.s903.lds_ssda903_clean.columns import column_names
+from liiatools.datasets.shared_functions.common import inherit_property
 from liiatools.spec import s903 as s903_asset_dir
 from liiatools.spec import common as common_asset_dir
 
@@ -24,39 +25,9 @@ def add_table_name(event):
     """
     Match the loaded table name against one of the 10 903 file names
     """
-    failed_matches = []
     for table_name, expected_columns in column_names.items():
         if set(event.headers) == set(expected_columns):
             return event.from_event(event, table_name=table_name)
-
-        else:
-            failed_matches.append("failed")
-
-        if len(failed_matches) == len(column_names.items()):
-            return event.from_event(
-                event,
-                match_error=f"Failed to find a set of matching columns headers for "
-                f"file '{event.filename}' which contains column headers "
-                f"{event.headers}",
-            )
-
-
-def inherit_table_name(stream):
-    """
-    Return the table name associated to a table to identify each row's table name
-    """
-    table_name = None
-    for event in stream:
-        try:
-            if isinstance(event, events.StartTable):
-                table_name = event.table_name
-            elif isinstance(event, events.EndTable):
-                event = event.from_event(event, table_name=table_name)
-            elif table_name is not None:
-                event = event.from_event(event, table_name=table_name)
-            yield event
-        except AttributeError:
-            yield event
 
 
 @streamfilter(check=type_check(events.Cell), fail_function=pass_event)
@@ -76,6 +47,19 @@ def match_config_to_cell(event, config):
         TypeError,
     ):  # Raise in case there is no config item for the given table name and cell header
         return event
+
+
+def configure_stream(stream, config):
+    """
+    Loading and matching the configuration with the loaded stream
+    :param stream: Set of events to parse
+    :param config: The loaded configuration
+    :return: An updated set of events/stream with matched configuration
+    """
+    stream = add_table_name(stream)
+    stream = inherit_property(stream, "table_name")
+    stream = match_config_to_cell(stream, config=config["column_map"])
+    return stream
 
 
 class Config(dict):

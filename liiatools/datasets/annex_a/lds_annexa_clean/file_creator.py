@@ -2,7 +2,6 @@ import tablib
 import functools
 import logging
 import os
-import random
 
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
@@ -28,6 +27,7 @@ def save_stream(stream, la_name, output):
     stream = create_tables(stream, la_name=la_name)
     stream = save_tables(stream, output=output)
     return stream
+
 
 def coalesce_row(stream):
     """

@@ -117,83 +117,16 @@ def test_add_table_name():
     event = events.StartTable(
         headers=["incorrect", "header", "values"], filename="SSDA903_AD1.csv"
     )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert (
-        event_with_table_name.match_error
-        == f"Failed to find a set of matching columns headers for "
-        f"file '{event.filename}' which contains column headers "
-        f"{event.headers}"
-    )
+    event_with_table_name = list(config.add_table_name(event))
+    assert event_with_table_name == []
 
     event = events.StartTable(headers=[""], filename="SSDA903_AD1.csv")
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert (
-        event_with_table_name.match_error
-        == f"Failed to find a set of matching columns headers for "
-        f"file '{event.filename}' which contains column headers "
-        f"{event.headers}"
-    )
+    event_with_table_name = list(config.add_table_name(event))
+    assert event_with_table_name == []
 
     event = events.StartTable(headers=[None], filename="SSDA903_AD1.csv")
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert (
-        event_with_table_name.match_error
-        == f"Failed to find a set of matching columns headers for "
-        f"file '{event.filename}' which contains column headers "
-        f"{event.headers}"
-    )
-
-
-def test_inherit_table_name():
-    stream = (
-        events.StartTable(table_name="AD1"),
-        events.StartRow(),
-        events.Cell(),
-        events.EndRow(),
-        events.EndTable(),
-    )
-    events_with_table_name = list(config.inherit_table_name(stream))
-    for event in events_with_table_name:
-        assert event.table_name == "AD1"
-
-    stream = (
-        events.StartTable(table_name=""),
-        events.StartRow(),
-        events.Cell(),
-        events.EndRow(),
-        events.EndTable(),
-    )
-    events_with_table_name = list(config.inherit_table_name(stream))
-    for event in events_with_table_name:
-        assert event.table_name == ""
-
-    stream = (
-        events.StartTable(table_name=None),
-        events.StartRow(),
-        events.Cell(),
-        events.EndRow(),
-        events.EndTable(),
-    )
-    events_with_table_name = list(config.inherit_table_name(stream))
-    for event in events_with_table_name:
-        if isinstance(event, events.StartTable) or isinstance(event, events.EndTable):
-            assert event.table_name is None
-        else:
-            assert event.as_dict() == {}
-
-    stream = (
-        events.StartTable(),
-        events.StartRow(),
-        events.Cell(),
-        events.EndRow(),
-        events.EndTable(),
-    )
-    events_with_table_name = list(config.inherit_table_name(stream))
-    for event in events_with_table_name:
-        if isinstance(event, events.EndTable):
-            assert event.table_name is None
-        else:
-            assert event.as_dict() == {}
+    event_with_table_name = list(config.add_table_name(event))
+    assert event_with_table_name == []
 
 
 def test_match_config_to_cell():

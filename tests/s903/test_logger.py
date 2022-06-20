@@ -10,7 +10,7 @@ from sfdata_stream_parser import events
 
 def test_create_formatting_error_count():
     stream = (
-        events.StartTable(),
+        events.StartTable(table_name="AD1"),
         events.Cell(header="some_header", error="1"),
         events.Cell(header="some_header", error="1"),
         events.Cell(header="some_header", error="0"),
@@ -27,7 +27,7 @@ def test_create_formatting_error_count():
             ]
 
     stream = (
-        events.StartTable(),
+        events.StartTable(table_name="AD1"),
         events.Cell(header="some_header", error="1"),
         events.Cell(header="some_other_header", error="1"),
         events.Cell(header="some_header"),
@@ -44,7 +44,7 @@ def test_create_formatting_error_count():
             ]
 
     stream = (
-        events.StartTable(),
+        events.StartTable(table_name="AD1"),
         events.Cell(header="some_header", error="1"),
         events.Cell(header="some_header_2", error=None),
         events.Cell(header="some_header_3", error=""),

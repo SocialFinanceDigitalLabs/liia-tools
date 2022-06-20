@@ -19,15 +19,26 @@ def create_formatting_error_count(stream):
     Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
     """
     formatting_error_count = None
+    table_name = None
     for event in stream:
         if isinstance(event, events.StartTable):
             formatting_error_count = []
+            try:
+                table_name = event.table_name
+            except AttributeError:
+                pass
         elif isinstance(event, events.EndTable):
             yield ErrorTable.from_event(
-                event, formatting_error_count=formatting_error_count
+                event,
+                table_name=table_name,
+                formatting_error_count=formatting_error_count,
             )
             formatting_error_count = None
-        elif formatting_error_count is not None and isinstance(event, events.Cell):
+        elif (
+            formatting_error_count is not None
+            and table_name is not None
+            and isinstance(event, events.Cell)
+        ):
             try:
                 if event.error == "1":
                     formatting_error_count.append(event.header)
@@ -97,6 +108,31 @@ def inherit_extra_column_error(stream):
             yield event
         except AttributeError:
             yield event
+
+
+@streamfilter(
+    check=type_check(events.StartTable),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
+def create_file_match_error(event):
+    """
+    Add a match_error to StartTables that do not have an event.sheet_name so these errors can be written to the log.txt
+    file. If there is no event.sheet_name for a given StartTable that means its headers did not match any of those
+    in the config file
+
+    :param event: A filtered list of event objects of type StartTable
+    :return: An updated list of event objects
+    """
+    try:
+        if event.table_name:
+            return event
+    except AttributeError:
+        return event.from_event(
+            event, match_error=f"Failed to find a set of matching columns headers for sheet titled "
+                               f"'{event.filename}' which contains column headers {event.headers}",
+        )
+    return event
 
 
 def save_errors_la(stream, la_log_dir):
@@ -198,4 +234,5 @@ def log_errors(stream):
     stream = create_formatting_error_count(stream)
     stream = create_blank_error_count(stream)
     stream = inherit_extra_column_error(stream)
+    stream = create_file_match_error(stream)
     return stream
