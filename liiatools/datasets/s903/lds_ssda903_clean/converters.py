@@ -23,8 +23,7 @@ def to_category(string, categories):
                 return "error"
         elif not string:
             return ""
-        else:
-            return "error"
+    return "error"
 
 
 def to_integer(value, config):
