@@ -24,10 +24,13 @@ def check_postcode(postcode):
     :return: a post code, or if incorrect a blank string
     """
     if postcode:
-        match = re.search(
-            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-        )
-        return match.group(0)
+        try:
+            match = re.search(
+                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+            )
+            return match.group(0)
+        except AttributeError:
+            return ""
     return ""
 
 
@@ -38,14 +41,15 @@ def to_short_postcode(postcode):
     :param postcode: A string with a UK-style post code
     :return: a shortened post code with the area, district, and sector. The units is removed
     """
-    try:
-        match = re.search(
-            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-        )
-        return match.group(0)
-    except AttributeError:
-        return ""
-
+    if postcode:
+        try:
+            match = re.search(
+                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+            )
+            return match.group(0)
+        except AttributeError:
+            return ""
+    return ""
 
 def inherit_property(stream, prop_name):
     """
