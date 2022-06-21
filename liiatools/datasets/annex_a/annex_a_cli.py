@@ -190,5 +190,4 @@ def pan_agg(input, la_code, output):
     dates = config["dates"]
     pan_dict = pan_process.convert_dates(pan_dict, dates=dates)
     pan_process.export_file(output, pan_dict)
-    list(stream)
 
