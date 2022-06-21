@@ -62,8 +62,8 @@ def blank_error_check(event):
     :return: An updated list of event objects
     """
     try:
-        blank = event.config_dict["canbeblank"]
-        if blank is False and not event.cell and event.error != "1":
+        allowed_blank = event.config_dict["canbeblank"]
+        if not allowed_blank and not event.cell and event.error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
