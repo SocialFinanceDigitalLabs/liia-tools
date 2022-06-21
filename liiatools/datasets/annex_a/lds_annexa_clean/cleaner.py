@@ -4,11 +4,7 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
 
-<<<<<<< HEAD
 from liiatools.datasets.annex_a.lds_annexa_clean.converters import to_integer
-=======
-from liiatools.datasets.annex_a.lds_annexa_clean.convertors import to_integer, to_date
->>>>>>> main
 from liiatools.datasets.shared_functions.common import check_postcode
 from liiatools.datasets.shared_functions.converters import to_date
 
