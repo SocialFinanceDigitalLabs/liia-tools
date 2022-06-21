@@ -60,31 +60,21 @@ def test_create_formatting_error_count():
 
 
 def test_blank_error_check():
-    event = events.Cell(cell=None, config_dict={"canbeblank": False})
-    checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.cell is None
-    assert checked_event.blank_error == "1"
-
-    event = events.Cell(cell="", config_dict={"canbeblank": False})
-    checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.cell == ""
-    assert checked_event.blank_error == "1"
-
-    event = events.Cell(cell="string", config_dict={"canbeblank": False})
-    checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.cell == "string"
-
-    event = events.Cell(cell="", config_dict={"canbeblank": True})
-    checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.cell == ""
-
-    event = events.Cell(cell=None, config_dict={"canbeblank": True})
-    checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.cell is None
-
-    event = events.Cell(cell="string", config_dict={"no_canbeblank": False})
-    checked_event = list(logger.blank_error_check(event))[0]
-    assert checked_event.cell == "string"
+    stream = logger.blank_error_check(
+        [
+            events.Cell(config_dict={"canbeblank": False}, cell="", error="0"),
+            events.Cell(config_dict={"canbeblank": False}, cell=None, error="0"),
+            events.Cell(config_dict={"canbeblank": False}, cell="", error="1"),
+            events.Cell(config_dict={"canbeblank": False}, cell="string", error="0"),
+            events.Cell(config_dict={"canbeblank": True}, cell="", error="0"),
+        ]
+    )
+    stream = list(stream)
+    assert stream[0].blank_error == "1"
+    assert stream[1].blank_error == "1"
+    assert "blank_error" not in stream[2].as_dict()
+    assert "blank_error" not in stream[3].as_dict()
+    assert "blank_error" not in stream[4].as_dict()
 
 
 def test_create_blank_error_count():

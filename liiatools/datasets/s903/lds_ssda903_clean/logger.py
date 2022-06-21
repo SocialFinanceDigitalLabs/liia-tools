@@ -63,9 +63,7 @@ def blank_error_check(event):
     """
     try:
         blank = event.config_dict["canbeblank"]
-        if blank is False and event.cell is None:
-            return event.from_event(event, blank_error="1")
-        elif blank is False and event.cell == "":
+        if blank is False and not event.cell and event.error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
