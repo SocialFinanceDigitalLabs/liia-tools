@@ -59,7 +59,7 @@ def filter_rows(event):
     """
     Filter out all the rows that contain blank values in columns that need to be populated for data retention
     responsibilities
-    :param stream: The stream to output
+    :param event: The stream to output
     :return: Updated stream
     """
     # May have to move this somewhere else once I better understand the pattern
@@ -72,11 +72,11 @@ def filter_rows(event):
         "List 11": "Date enquiry received",
     }
 
-    if (
-        event.sheet_name in event_types
-        and event.row[event_types[event.sheet_name]] == ""
-    ):
-        yield event.from_event(event, filter=1)
+    if event.sheet_name in event_types:
+        if event.row[event_types[event.sheet_name]]:
+            yield event.from_event(event, filter=0)
+        else:
+            yield event.from_event(event, filter=1)
     else:
         yield event.from_event(event, filter=0)
 
@@ -98,7 +98,7 @@ def create_tables(stream, la_name):
     for event in stream:
         if isinstance(event, events.StartTable):
             try:
-                new_headers = event.matched_column_headers.add("LA")
+                new_headers = event.matched_column_headers + ["LA"]
                 data = tablib.Dataset(headers=new_headers)
             except AttributeError:
                 data = None
@@ -116,7 +116,7 @@ def create_tables(stream, la_name):
 
 def save_tables(stream, output):
     """
-    Save the data events as Excel files in the London Datastore/Cleaned files directory
+    Save the data events as Excel files in the output directory as long as there are exactly 11 sheets
     :param stream: The stream to output
     :param output: The location of the output file
     :return: updated stream object.
@@ -126,11 +126,14 @@ def save_tables(stream, output):
     for event in stream:
         if isinstance(event, events.StartContainer):
             book = tablib.Databook()
-        elif isinstance(event, events.EndContainer):
+        elif isinstance(event, events.EndContainer) and len(book.sheets()) == 11:
             with open(f"{os.path.join(output, event.filename)}_clean.xlsx", "wb") as f:
                 f.write(book.export("xlsx"))
         elif isinstance(event, events.StartTable):
-            sheet_name = event.name
+            try:
+                sheet_name = event.sheet_name
+            except AttributeError:
+                sheet_name = ""
         elif isinstance(event, TableEvent) and event.data is not None:
             dataset = event.data
             dataset.title = sheet_name

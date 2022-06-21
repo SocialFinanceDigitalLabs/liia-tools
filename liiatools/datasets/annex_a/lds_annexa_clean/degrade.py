@@ -44,7 +44,7 @@ def degrade(stream):
     """
     Compile the degrading functions
 
-    :param event: A filtered list of event objects of type Cell
+    :param stream: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
     stream = degrade_postcodes(stream)

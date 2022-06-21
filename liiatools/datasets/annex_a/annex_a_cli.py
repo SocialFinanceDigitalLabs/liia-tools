@@ -83,5 +83,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = populate.create_la_child_id(stream, la_code=la_code)
 
     # Output result
-    stream = file_creator.save_stream(stream, la_name, la_log_dir, output)
+    stream = file_creator.save_stream(stream, la_name, output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
+    list(stream)

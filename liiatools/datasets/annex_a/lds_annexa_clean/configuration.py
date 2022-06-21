@@ -84,11 +84,12 @@ def add_sheet_name(event, config):
     If no columns are matched for a table this will save the sheet name and column headers as event.match_error
 
     :param event: A filtered list of event objects of type StartTable
+    :param config: A dictionary of keys containing sheet names and values containing headers
     :return: An updated list of event objects
     """
     for table_name, table_cfg in config.items():
-        matched_names = set()
-        extra_columns = set()
+        matched_names = []
+        extra_columns = []
 
         # Creates a list of tuples holding (column_name, column_regex_list) for each configured column
         header_config = [
@@ -104,18 +105,17 @@ def add_sheet_name(event, config):
             # Filter checks to only those that matched
             matching_configs = [c for c in header_matches if c is not None]
 
-            # Check if we have no, one or multiple confiugrations that match the actual value
+            # Check if we have no, one or multiple configurations that match the actual value
             if len(matching_configs) == 0:
-                extra_columns.add(actual_column)
+                extra_columns.append(actual_column)
             elif len(matching_configs) == 1:
-                matched_names.add(matching_configs[0])
+                matched_names.append(matching_configs[0])
             else:
                 raise ValueError(
                     "The actual column name matched multiple configured columns"
                 )
-
         # If all of the expected columns are present, then we have a match
-        if set(table_cfg.keys()) - matched_names == set():
+        if set(table_cfg.keys()) - set(matched_names) == set():
             return events.StartTable.from_event(
                 event,
                 sheet_name=table_name,
@@ -123,6 +123,29 @@ def add_sheet_name(event, config):
                 matched_column_headers=matched_names,
             )
     return event
+
+
+def inherit_property(stream, prop_name):
+    """
+    Reads a property from StartTable and sets that property (if it exists) on every event between this event
+    and the next EndTable event.
+
+    :param stream: A filtered list of event objects of type StartTable
+    :param prop_name: The property name to inherit
+    :return: An updated list of event objects
+    """
+    prop_value = None
+    for event in stream:
+        if isinstance(event, events.StartTable):
+            prop_value = getattr(event, prop_name, None)
+        elif isinstance(event, events.EndTable):
+            prop_value = None
+
+        if prop_value and not hasattr(event, prop_name):
+            event = event.from_event(event, **{prop_name: prop_value})
+
+        yield event
+
 
 
 @streamfilter(check=checks.type_check(events.Cell), fail_function=pass_event)

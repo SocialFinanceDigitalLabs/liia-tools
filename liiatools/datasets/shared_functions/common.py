@@ -28,6 +28,21 @@ def check_postcode(postcode):
             r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
         )
         return match.group(0)
+    return ""
+
+
+def to_short_postcode(postcode):
+    """
+    Remove whitespace from the beginning and end of postcodes and the last two digits for anonymity
+    return blank if not in the right format
+    :param postcode: A string with a UK-style post code
+    :return: a shortened post code with the area, district, and sector. The units is removed
+    """
+    try:
+        match = re.search(
+            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+        )
+        return match.group(0)
     else:
         return ""
 
