@@ -62,8 +62,8 @@ def blank_error_check(event):
     :return: An updated list of event objects
     """
     try:
-        blank = event.other_config["canbeblank"]
-        if blank is False and not event.value and event.error != "1":
+        allowed_blank = event.other_config["canbeblank"]
+        if not allowed_blank and not event.value and event.error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
