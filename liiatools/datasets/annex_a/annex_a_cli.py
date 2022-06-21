@@ -94,6 +94,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
 
 
+
 @annex_a.command()
 @click.option(
     "--i",
@@ -139,6 +140,7 @@ def la_agg(input, output):
 
     # Output result
     agg_process.export_file(output, aa_dict)
+    list(stream)
 
 
 @annex_a.command()
@@ -189,3 +191,5 @@ def pan_agg(input, la_code, output):
     dates = config["dates"]
     pan_dict = pan_process.convert_dates(pan_dict, dates=dates)
     pan_process.export_file(output, pan_dict)
+    list(stream)
+
