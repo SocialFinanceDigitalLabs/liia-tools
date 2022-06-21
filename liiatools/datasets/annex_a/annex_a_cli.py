@@ -140,7 +140,6 @@ def la_agg(input, output):
 
     # Output result
     agg_process.export_file(output, aa_dict)
-    list(stream)
 
 
 @annex_a.command()
