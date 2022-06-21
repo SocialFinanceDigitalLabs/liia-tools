@@ -153,7 +153,6 @@ def test_clean_postcodes():
 
     event = events.Cell(header="PL_POST", cell="string")
     cleaned_event = list(filters.clean_postcodes(event))[0]
-    print(cleaned_event.as_dict())
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 

@@ -24,13 +24,10 @@ def check_postcode(postcode):
     :return: a post code, or if incorrect a blank string
     """
     if postcode:
-        try:
-            match = re.search(
-                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-            )
-            return match.group(0)
-        except AttributeError:
-            return ""
+        match = re.search(
+            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+        )
+        return match.group(0)
     return ""
 
 
@@ -50,6 +47,7 @@ def to_short_postcode(postcode):
         except AttributeError:
             return ""
     return ""
+
 
 def inherit_property(stream, prop_name):
     """
