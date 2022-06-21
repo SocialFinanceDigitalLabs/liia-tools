@@ -43,7 +43,7 @@ def to_short_postcode(postcode):
             r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
         )
         return match.group(0)
-    else:
+    except AttributeError:
         return ""
 
 
