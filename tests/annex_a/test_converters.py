@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from liiatools.datasets.annex_a.lds_annexa_clean.converters import (
+from liiatools.datasets.annex_a.lds_annexa_clean.convertors import (
     to_integer, to_date
 )
 
