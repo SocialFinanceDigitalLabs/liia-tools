@@ -36,7 +36,10 @@ def to_integer(value, config):
     """
     if config == "integer":
         if value:
-            return int(value)
+            try:
+                return int(value)
+            except ValueError:
+                return ""
         else:
             return ""
     else:
