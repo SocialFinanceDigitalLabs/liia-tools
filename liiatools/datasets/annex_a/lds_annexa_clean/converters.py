@@ -9,6 +9,7 @@ def to_integer(value):
     :param value: Some value to convert to an integer
     :return: Either an integer value or a blank string
     """
-    if value:
+    try:
         return int(value)
-    return ""
+    except ValueError:
+        return ""
