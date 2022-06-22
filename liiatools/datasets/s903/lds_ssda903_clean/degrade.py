@@ -11,22 +11,7 @@ log = logging.getLogger(__name__)
 
 
 @streamfilter(
-    check=lambda x: x.get("column_header") in ["Date of Birth"],
-    fail_function=pass_event,
-)
-def degrade_dob(event):
-    """
-    Convert all values that should be dates of birth to months and year of birth
-
-    :param event: A filtered list of event objects of type Cell
-    :return: An updated list of event objects
-    """
-    text = to_month_only_dob(event.value)
-    return event.from_event(event, value=text)
-
-
-@streamfilter(
-    check=lambda x: x.get("column_header") in ["Placement postcode"],
+    check=lambda x: x.get("header") in ["HOME_POST", "PL_POST"],
     fail_function=pass_event,
 )
 def degrade_postcodes(event):
@@ -36,16 +21,27 @@ def degrade_postcodes(event):
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-    text = to_short_postcode(event.value)
-    return event.from_event(event, value=text)
+    text = to_short_postcode(event.cell)
+    return event.from_event(event, cell=text)
+
+
+@streamfilter(
+    check=lambda x: x.get("header") in ["DOB", "MC_DOB"], fail_function=pass_event
+)
+def degrade_dob(event):
+    """
+    Convert all values that should be dates of birth to months and year of birth
+
+    :param event: A filtered list of event objects of type Cell
+    :return: An updated list of event objects
+    """
+    text = to_month_only_dob(event.cell)
+    return event.from_event(event, cell=text)
 
 
 def degrade(stream):
     """
     Compile the degrading functions
-
-    :param stream: A filtered list of event objects of type Cell
-    :return: An updated list of event objects
     """
     stream = degrade_postcodes(stream)
     stream = degrade_dob(stream)

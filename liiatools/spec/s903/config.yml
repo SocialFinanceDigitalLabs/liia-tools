@@ -1,0 +1,488 @@
+column_map:
+    AD1:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      DATE_INT:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      DATE_MATCH:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      FOSTER_CARE:
+       category:
+       - code: "0"
+         name: "False"
+       - code: "1"
+         name: "True"
+       dictionary: {"False" : "0", "True" : "1", False: "0", True : "1", "FALSE" : "0", "TRUE" : "1"}
+       canbeblank: no
+      NB_ADOPTR:
+       numeric: "integer"
+       canbeblank: no
+      SEX_ADOPTR:
+       category:
+       - code: "M1"
+       - code: "F1"
+       - code: "MM"
+       - code: "FF"
+       - code: "MF"
+       canbeblank: no
+      LS_ADOPTR:
+       category:
+       - code: "L0"
+       - code: "L11"
+       - code: "L12"
+       - code: "L2"
+       - code: "L3"
+       - code: "L4"
+       canbeblank: no
+
+    Episodes:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DECOM:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      RNE:
+       category:
+       - code: "S"
+       - code: "L"
+       - code: "P"
+       - code: "T"
+       - code: "B"
+       - code: "U"
+       canbeblank: no
+      LS:
+       category:
+       - code: "C1"
+       - code: "C2"
+       - code: "D1"
+       - code: "E1"
+       - code: "V2"
+       - code: "V3"
+       - code: "V4"
+       - code: "L1"
+       - code: "L2"
+       - code: "L3"
+       - code: "J1"
+       - code: "J2"
+       - code: "J3"
+       canbeblank: no
+      CIN:
+       category:
+       - code: "N1"
+       - code: "N2"
+       - code: "N3"
+       - code: "N4"
+       - code: "N5"
+       - code: "N6"
+       - code: "N7"
+       - code: "N8"
+       canbeblank: no
+      PLACE:
+       category:
+       - code: "A3"
+       - code: "A4"
+       - code: "A5"
+       - code: "A6"
+       - code: "H5"
+       - code: "K1"
+       - code: "K2"
+       - code: "P1"
+       - code: "P2"
+       - code: "P3"
+       - code: "R1"
+       - code: "R2"
+       - code: "R3"
+       - code: "R5"
+       - code: "S1"
+       - code: "T0"
+       - code: "T1"
+       - code: "T2"
+       - code: "T3"
+       - code: "T4"
+       - code: "U1"
+       - code: "U2"
+       - code: "U3"
+       - code: "U4"
+       - code: "U5"
+       - code: "U6"
+       - code: "Z1"
+       canbeblank: no
+      PLACE_PROVIDER:
+       category:
+       - code: "PR0"
+       - code: "PR1"
+       - code: "PR2"
+       - code: "PR3"
+       - code: "PR4"
+       - code: "PR5"
+       canbeblank: no
+      DEC:
+       date: "%d/%m/%Y"
+       canbeblank: yes
+      REC:
+       category:
+       - code: "X1"
+       - code: "E11"
+       - code: "E12"
+       - code: "E2"
+       - code: "E3"
+       - code: "E4A"
+       - code: "E4B"
+       - code: "E13"
+       - code: "E41"
+       - code: "E45"
+       - code: "E46"
+       - code: "E47"
+       - code: "E48"
+       - code: "E5"
+       - code: "E6"
+       - code: "E7"
+       - code: "E9"
+       - code: "E14"
+       - code: "E15"
+       - code: "E16"
+       - code: "E17"
+       - code: "E8"
+       canbeblank: yes
+      REASON_PLACE_CHANGE:
+       category:
+       - code: "CARPL"
+       - code: "CLOSE"
+       - code: "ALLEG"
+       - code: "STAND"
+       - code: "APPRR"
+       - code: "CREQB"
+       - code: "CREQO"
+       - code: "CHILD"
+       - code: "LAREQ"
+       - code: "PLACE"
+       - code: "CUSTOD"
+       - code: "OTHER"
+       canbeblank: yes
+      HOME_POST:
+       string: "alphanumeric"
+       canbeblank: yes
+      PL_POST:
+       string: "alphanumeric"
+       canbeblank: yes
+      URN:
+       string: "alphanumeric"
+       canbeblank: yes
+
+    Header:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      SEX:
+       category:
+       - code: "1"
+         name: "Male"
+       - code: "2"
+         name: "Female"
+       dictionary: {"Male" : "1", "Female" : "2"}
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      ETHNIC:
+       category:
+       - code: "WBRI"
+         name: "White British"
+       - code: "WIRI"
+         name: "White Irish"
+       - code: "WOTH"
+         name: "Any other White background"
+       - code: "WIRT"
+         name: "Traveller of Irish heritage"
+       - code: "WROM"
+         name: "Gypsy/Roma"
+       - code: "MWBC"
+         name: "White and Black Caribbean"
+       - code: "MWBA"
+         name: "White and Black African"
+       - code: "MWAS"
+         name: "White and Asian"
+       - code: "MOTH"
+         name: "Any other Mixed background"
+       - code: "AIND"
+         name: "Indian"
+       - code: "APKN"
+         name: "Pakistani"
+       - code: "ABAN"
+         name: "Bangladeshi"
+       - code: "AOTH"
+         name: "Any other Asian background"
+       - code: "BCRB"
+         name: "Caribbean"
+       - code: "BAFR"
+         name: "African"
+       - code: "BOTH"
+         name: "Any other Black background"
+       - code: "CHNE"
+         name: "Chinese"
+       - code: "OOTH"
+         name: "Any other ethnic group"
+       - code: "REFU"
+         name: "Refused"
+       - code: "NOBT"
+         name: "Information not yet obtained"
+       dictionary: {"White British" : "WBRI",
+                    "White Irish" : "WIRI",
+                    "Any other White background" : "WOTH",
+                    "Traveller of Irish heritage" : "WIRT",
+                    "Gypsy/Roma" : "WROM",
+                    "White and Black Caribbean" : "MWBC",
+                    "White and Black African" : "MWBA",
+                    "White and Asian" : "MWAS",
+                    "Any other Mixed background" : "MOTH",
+                    "Indian" : "AIND",
+                    "Pakistani" : "APKN",
+                    "Bangladeshi" : "ABAN",
+                    "Any other Asian background" : "AOTH",
+                    "Caribbean" : "BCRB",
+                    "African" : "BAFR",
+                    "Any other Black background" : "BOTH",
+                    "Chinese" : "CHNE",
+                    "Any other ethnic group" : "OOTH",
+                    "Refused" : "REFU",
+                    "Information not yet obtained" : "NOBT"}
+       canbeblank: no
+      UPN:
+       string: "alphanumeric"
+       canbeblank: no
+      MOTHER:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: yes
+      MC_DOB:
+       date: "%d/%m/%Y"
+       canbeblank: yes
+    Missing:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      MISSING:
+       category:
+       - code: "M"
+       - code: "A"
+       canbeblank: no
+      MIS_START:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      MIS_END:
+       date: "%d/%m/%Y"
+       canbeblank: yes
+    OC2:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      SDQ_SCORE:
+       numeric: "integer"
+       canbeblank: yes
+      SDQ_REASON:
+       category:
+       - code: "SDQ1"
+       - code: "SDQ2"
+       - code: "SDQ3"
+       - code: "SDQ4"
+       - code: "SDQ5"
+       canbeblank: yes
+      CONVICTED:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      HEALTH_CHECK:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      IMMUNISATIONS:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      TEETH_CHECK:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      HEALTH_ASSESSMENT:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      SUBSTANCE_MISUSE:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      INTERVENTION_RECEIVED:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+      INTERVENTION_OFFERED:
+       category:
+       - code: "0"
+       - code: "1"
+       canbeblank: no
+    OC3:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      IN_TOUCH:
+       category:
+       - code: "YES"
+       - code: "NO"
+       - code: "DIED"
+       - code: "REFU"
+       - code: "NREQ"
+       - code: "RHOM"
+       canbeblank: no
+      ACTIV:
+       category:
+       - code: "F1"
+       - code: "P1"
+       - code: "F2"
+       - code: "P2"
+       - code: "F4"
+       - code: "P4"
+       - code: "F5"
+       - code: "P5"
+       - code: "G4"
+       - code: "G5"
+       - code: "G6"
+       - code: "0"
+       canbeblank: no
+      ACCOM:
+       category:
+       - code: "B1"
+       - code: "B2"
+       - code: "C1"
+       - code: "C2"
+       - code: "D1"
+       - code: "D2"
+       - code: "E1"
+       - code: "E2"
+       - code: "G1"
+       - code: "G2"
+       - code: "H1"
+       - code: "H2"
+       - code: "R1"
+       - code: "R2"
+       - code: "S1"
+       - code: "S2"
+       - code: "T1"
+       - code: "T2"
+       - code: "U1"
+       - code: "U2"
+       - code: "V1"
+       - code: "V2"
+       - code: "W1"
+       - code: "W2"
+       - code: "X1"
+       - code: "X2"
+       - code: "Y1"
+       - code: "Y2"
+       - code: "Z1"
+       - code: "Z2"
+       - code: "0"
+       canbeblank: no
+    PlacedAdoption:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      DATE_PLACED:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      DATE_PLACED_CEASED:
+       date: "%d/%m/%Y"
+       canbeblank: yes
+      REASON_PLACED_CEASED:
+       category:
+       - code: "RD1"
+       - code: "RD2"
+       - code: "RD3"
+       - code: "RD4"
+       canbeblank: yes
+    PrevPerm:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      PREV_PERM:
+       category:
+       - code: "P1"
+       - code: "P2"
+       - code: "P3"
+       - code: "P4"
+       - code: "Z1"
+       canbeblank: no
+      LA_PERM:
+       string: "alphanumeric"
+       canbeblank: yes
+      DATE_PERM:
+       date: "%d/%m/%Y"
+       canbeblank: yes
+    Reviews:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      REVIEW:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      REVIEW_CODE:
+       category:
+       - code: "PN0"
+       - code: "PN1"
+       - code: "PN2"
+       - code: "PN3"
+       - code: "PN4"
+       - code: "PN5"
+       - code: "PN6"
+       - code: "PN7"
+       canbeblank: no
+    UASC:
+      CHILD:
+       string: "alphanumeric"
+       canbeblank: no
+      DOB:
+       date: "%d/%m/%Y"
+       canbeblank: no
+      SEX:
+       category:
+       - code: "1"
+         name: "Male"
+       - code: "2"
+         name: "Female"
+       dictionary: {"Male" : "1", "Female" : "2"}
+       canbeblank: no
+      DUC:
+       date: "%d/%m/%Y"
+       canbeblank: yes   

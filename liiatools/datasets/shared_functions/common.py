@@ -1,6 +1,7 @@
-from datetime import datetime
 import re
 import logging
+
+from sfdata_stream_parser import events
 
 log = logging.getLogger(__name__)
 
@@ -22,14 +23,11 @@ def check_postcode(postcode):
     :param postcode: A string with a UK-style post code
     :return: a post code, or if incorrect a blank string
     """
-    if postcode != "":
-        try:
-            match = re.search(
-                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-            )
-            return match.group(0)
-        except AttributeError as ex:
-            return ""
+    if postcode:
+        match = re.search(
+            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+        )
+        return match.group(0)
     return ""
 
 
@@ -40,25 +38,34 @@ def to_short_postcode(postcode):
     :param postcode: A string with a UK-style post code
     :return: a shortened post code with the area, district, and sector. The units is removed
     """
-    try:
-        match = re.search(
-            r"([A-Z]+\d\d?[A-Z]?)\s*(\d+)([A-Z]{2})", postcode, re.IGNORECASE
-        )
-        postcode = match.group(1) + " " + match.group(2)
-    except (AttributeError, TypeError, ValueError):
-        postcode = ""
-    return postcode
+    if postcode:
+        try:
+            match = re.search(
+                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+            )
+            return match.group(0)
+        except AttributeError:
+            return ""
+    return ""
 
 
-def to_month_only_dob(dob):
+def inherit_property(stream, prop_name):
     """
-    Convert dates of birth into month and year of birth starting from 1st of each month for anonymity
-    return blank if not in the right format
-    :param dob: A date of birth datetime object
-    :return: A date of birth datetime object with the month rounded to the first day
+    Reads a property from StartTable and sets that property (if it exists) on every event between this event
+    and the next EndTable event.
+
+    :param event: A filtered list of event objects of type StartTable
+    :param prop_name: The property name to inherit
+    :return: An updated list of event objects
     """
-    try:
-        dob = dob.replace(day=1)
-    except (AttributeError, TypeError, ValueError):
-        dob = ""
-    return dob
+    prop_value = None
+    for event in stream:
+        if isinstance(event, events.StartTable):
+            prop_value = getattr(event, prop_name, None)
+        elif isinstance(event, events.EndTable):
+            prop_value = None
+
+        if prop_value and not hasattr(event, prop_name):
+            event = event.from_event(event, **{prop_name: prop_value})
+
+        yield event

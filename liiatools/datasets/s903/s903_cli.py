@@ -2,32 +2,31 @@ import click as click
 from pathlib import Path
 import yaml
 
-from sfdata_stream_parser.parser import openpyxl
-from liiatools.datasets.annex_a.lds_annexa_clean import (
-    configuration,
-    cleaner,
-    degrade,
-    logger,
-    populate,
-    file_creator,
-)
+# dependencies for cleanfile()
+from liiatools.datasets.s903.lds_ssda903_clean import ( configuration, parse, populate, filters, degrade, logger, file_creator )
+
+# dependencies for la_agg()
+#from liiatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg
+
+# dependencies for pan_agg()
+#from liiatools.datasets.s903.lds_ssda903_pan_agg import ( s903_pan_agg, s903_pan_agg_config )
+
+# dependencies for suff_min()
+#from liiatools.datasets.s903.lds_ssda903_suff_min import ( s903_suff_min, s903_suff_min_config )
+
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
-from sfdata_stream_parser.filters.column_headers import promote_first_row
-
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
-# Get all the possible LA codes that could be used
+
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
 
-
 @click.group()
-def annex_a():
-    """Functions for cleaning, minimising and aggregating Annex A files"""
+def s903():
+    """Functions for cleaning, minimising and aggregating SSDA903 files"""
     pass
 
-
-@annex_a.command()
+@s903.command()
 @click.option(
     "--i",
     "input",
@@ -54,35 +53,31 @@ def annex_a():
     help="A string specifying the output directory location",
 )
 def cleanfile(input, la_code, la_log_dir, output):
-    """
-    Cleans input Annex A xlsx files according to config and outputs cleaned xlsx files.
-    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
-    :param la_code: should be a string of the name of the local authority that deposited the file
-    :param la_log_dir: should specify the path to the local authority's log folder
-    :param output: should specify the path to the output folder
-    :return: None
-    """
+    """Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
+    'input' should specify the input file location, including file name and suffix, and be usable by a Path function
+    'la_name' should be a string of the name of the local authority that deposited the file
+    'la_log_dir' should specify the path to the local authority's log folder
+    'lds_log_dir' should specify the path to the LDS log folder
+    'output' should specify the path to the output folder"""
 
     # Configuration
-    filename = Path(input).resolve().stem
     config = configuration.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
 
     # Open & Parse file
-    stream = openpyxl.parse_sheets(input)
-    stream = [ev.from_event(ev, la_code=la_code, filename=filename) for ev in stream]
-    stream = promote_first_row(stream)
+    stream = parse.parse_csv(input=input)
+    stream = populate.add_year_column(stream)
 
-    # Configure Stream
+    # Configure stream
     stream = configuration.configure_stream(stream, config)
 
     # Clean stream
-    stream = cleaner.clean(stream)
+    stream = filters.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
     stream = populate.create_la_child_id(stream, la_code=la_code)
 
     # Output result
-    stream = file_creator.save_stream(stream, la_name, output)
+    stream = file_creator.save_stream(stream, la_name=la_name, output=output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
     list(stream)
