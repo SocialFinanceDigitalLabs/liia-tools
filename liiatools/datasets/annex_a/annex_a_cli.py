@@ -3,8 +3,8 @@ from pathlib import Path
 import yaml
 
 from sfdata_stream_parser.parser import openpyxl
-from liiatools.datasets.annex_a.lds_annexa_clean import configuration as clean_config
 from liiatools.datasets.annex_a.lds_annexa_clean import (
+    configuration as clean_config,
     cleaner,
     degrade,
     logger,
@@ -43,7 +43,6 @@ def annex_a():
 )
 @click.option(
     "--la_code",
-    required=True,
     type=click.Choice(la_list, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
@@ -92,7 +91,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Output result
     stream = file_creator.save_stream(stream, la_name, output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
-
+    list(stream)
 
 
 @annex_a.command()
@@ -190,4 +189,3 @@ def pan_agg(input, la_code, output):
     dates = config["dates"]
     pan_dict = pan_process.convert_dates(pan_dict, dates=dates)
     pan_process.export_file(output, pan_dict)
-

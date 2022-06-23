@@ -19,7 +19,7 @@ def test_clean_integers():
     assert stream[1].value == ''
     assert stream[1].error == "0"
     assert stream[2].value == ''
-    assert stream[2].error == "0"
+    assert stream[2].error == "1"
     assert stream[3].value == "3"
     assert stream[4].value == ""
     assert stream[4].error == "1"
