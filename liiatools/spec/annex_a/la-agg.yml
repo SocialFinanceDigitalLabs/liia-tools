@@ -1,0 +1,331 @@
+sort_order:
+    List 1:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Date of Contact
+        - Contact Source
+        - LA
+    List 2:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Assessment start date
+        - Assessment completion date
+        - Organisation completing assessment
+        - LA
+    List 3:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Date of referral
+        - Referral Source
+        - "Referral NFA?"
+        - Number of Referrals in Last 12 Months
+        - Allocated Team
+        - Allocated Worker
+        - LA
+    List 4:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - Continuous Assessment Start Date
+        - Child Seen During Continuous Assessment
+        - Continuous Assessment Date of Authorisation
+        - "Was the child assessed as requiring LA children's social care support?"
+        - Allocated Team
+        - Allocated Worker
+        - LA
+    List 5:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - Strategy discussion initiating Section 47 Enquiry Start Date
+        - "Was an Initial Child Protection Conference deemed unnecessary?"
+        - Date of Initial Child Protection Conference
+        - Did the Initial Child Protection Conference Result in a Child Protection Plan
+        - Number of Section 47 Enquiries in the last 12 months
+        - Number of ICPCs in the last 12 months
+        - Allocated Team
+        - Allocated Worker
+        - LA
+    List 6:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - CIN Start Date
+        - Primary Need Code
+        - Date Child Was Last Seen
+        - CIN Closure Date
+        - Reason for Closure
+        - Case Status
+        - Allocated Team
+        - Allocated Worker
+        - LA
+    List 7:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - Child Protection Plan Start Date
+        - Initial Category of Abuse
+        - Latest Category of Abuse
+        - Date of the Last Statutory Visit
+        - "Was the Child Seen Alone?"
+        - Date of latest review conference
+        - Child Protection Plan End Date
+        - "Subject to Emergency Protection Order or Protected Under Police Powers in Last Six Months (Y/N)"
+        - Number of Previous Child Protection Plans
+        - Allocated Team
+        - Allocated Worker
+        - LA
+    List 8:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - Date Started to be Looked After
+        - "Child's Category of Need"
+        - "Is this a second or subsequent period of being a Looked After Child within the last 12 months (Y/N)"
+        - Start date of current legal status
+        - "Child's Legal Status"
+        - Date of Latest Statutory Review
+        - Date of Last Social Work Visit
+        - "What is the permanence plan for this child?"
+        - "Date of Last IRO Visit / Contact to the Child"
+        - Date of Last Health Assessment
+        - Date of Last Dental Check
+        - Number of Placements in the Last 12 months
+        - Date Ceased to be Looked After
+        - Reason Ceased to be Looked After
+        - Start Date of Most Recent Placement
+        - Placement Type
+        - Placement Provider
+        - Placement postcode
+        - URN of Placement
+        - Placement Location
+        - LA of Placement
+        - "Number of Episodes the Child has been 'Missing' from their Placement in the last 12 months"
+        - "Number of Episodes the Child has been 'Absent' from their Placement in the last 12 months"
+        - "Was the child offered a Return Interview after their last missing episode (Y/N)?"
+        - "Did the child accept a Return Interview after their last missing episode (Y/N)?"
+        - Allocated Team
+        - Allocated Worker
+        - LA
+    List 9:
+        - Child Unique ID
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - Allocated Team
+        - Allocated Worker
+        - Eligibility Category
+        - LA in Touch
+        - Type of Accommodation
+        - Suitability of Accommodation
+        - Activity Status
+        - LA
+    List 10:
+        - Child Unique ID
+        - Family identifier
+        - Gender
+        - Ethnicity
+        - Date of Birth
+        - "Age of Child (Years)"
+        - Does the Child have a Disability
+        - Date the Child Entered Care
+        - Date of Decision that Child Should be Placed for Adoption
+        - Date of Placement Order
+        - Date of Matching Child and Prospective Adopters
+        - Date Placed for Adoption
+        - Date of Adoption Order
+        - Date of Decision that Child Should No Longer be Placed for Adoption
+        - Reason Why Child No Longer Placed for Adoption
+        - Date the child was placed for fostering in FFA or concurrent planning placement
+        - LA
+    List 11:
+        - Individual adopter identifier
+        - Family identifier
+        - Gender
+        - Ethnicity
+        - Disability
+        - "Is the (prospective) adopter fostering for adoption?"
+        - Date enquiry received
+        - Date Stage 1 started
+        - Date Stage 1 ended
+        - Date Stage 2 started
+        - Date Stage 2 ended
+        - Date application submitted
+        - Date application approved
+        - "Date adopter matched with child(ren)"
+        - "Date child/children placed with adopter(s)"
+        - "No. of children placed"
+        - Date of Adoption Order
+        - Date of leaving adoption process
+        - Reason for leaving adoption process
+        - LA
+
+dedup:
+    List 1:
+        - Child Unique ID
+        - Date of Contact
+        - Contact Source
+    List 2:
+        - Child Unique ID
+        - Assessment start date
+    List 3:
+        - Child Unique ID
+        - Date of referral
+        - Referral Source
+    List 4:
+        - Child Unique ID
+        - Continuous Assessment Start Date
+    List 5:
+        - Child Unique ID
+        - Strategy discussion initiating Section 47 Enquiry Start Date
+    List 6:
+        - Child Unique ID
+        - CIN Start Date
+    List 7:
+        - Child Unique ID
+        - Child Protection Plan Start Date
+    List 8:
+        - Child Unique ID
+        - Date Started to be Looked After
+        - "Child's Legal Status"
+        - Placement Type
+        - Placement Provider
+        - Placement postcode
+    List 9:
+        - Child Unique ID
+    List 10:
+        - Child Unique ID
+        - Date of Decision that Child Should be Placed for Adoption
+    List 11:
+        - Individual adopter identifier
+        - Date enquiry received
+
+dates:
+    List 1:
+        - Date of Birth
+        - Date of Contact
+    List 2:
+        - Date of Birth
+        - Assessment start date
+        - Assessment completion date
+    List 3:
+        - Date of Birth
+        - Date of referral
+    List 4:
+        - Date of Birth
+        - Continuous Assessment Start Date
+        - Continuous Assessment Date of Authorisation
+    List 5:
+        - Date of Birth
+        - Strategy discussion initiating Section 47 Enquiry Start Date
+        - Date of Initial Child Protection Conference
+    List 6:
+        - Date of Birth
+        - CIN Start Date
+        - Date Child Was Last Seen
+        - CIN Closure Date
+    List 7:
+        - Date of Birth
+        - Child Protection Plan Start Date
+        - Date of the Last Statutory Visit
+        - Date of latest review conference
+        - Child Protection Plan End Date
+    List 8:
+        - Date of Birth
+        - Date Started to be Looked After
+        - Start date of current legal status
+        - Date of Latest Statutory Review
+        - Date of Last Social Work Visit
+        - "Date of Last IRO Visit / Contact to the Child"
+        - Date of Last Health Assessment
+        - Date of Last Dental Check
+        - Date Ceased to be Looked After
+        - Start Date of Most Recent Placement
+    List 9:
+        - Date of Birth
+    List 10:
+        - Date of Birth
+        - Date the Child Entered Care
+        - Date of Decision that Child Should be Placed for Adoption
+        - Date of Placement Order
+        - Date of Matching Child and Prospective Adopters
+        - Date Placed for Adoption
+        - Date of Adoption Order
+        - Date of Decision that Child Should No Longer be Placed for Adoption
+        - Date the child was placed for fostering in FFA or concurrent planning placement
+    List 11:
+        - Date enquiry received
+        - Date Stage 1 started
+        - Date Stage 1 ended
+        - Date Stage 2 started
+        - Date Stage 2 ended
+        - Date application submitted
+        - Date application approved
+        - "Date adopter matched with child(ren)"
+        - "Date child/children placed with adopter(s)"
+        - Date of Adoption Order
+        - Date of leaving adoption process
+
+index_date:
+    List 1:
+        ref_date: Date of Contact
+        years: 6
+    List 2:
+        ref_date: Assessment completion date
+        years: 6
+    List 3:
+        ref_date: Date of referral
+        years: 6
+    List 4:
+        ref_date: Continuous Assessment Date of Authorisation
+        years: 6
+    List 5:
+        ref_date: Strategy discussion initiating Section 47 Enquiry Start Date
+        years: 6
+    List 6:
+        ref_date: CIN Closure Date
+        years: 6
+    List 7:
+        ref_date: Child Protection Plan End Date
+        years: 6
+    List 8:
+        ref_date: Date Ceased to be Looked After
+        years: 6
+    List 9:
+        ref_date: Date of Birth
+        years: 30
+    List 10:
+        ref_date:
+            - Date of Decision that Child Should be Placed for Adoption
+            - Date of Adoption Order
+            - Date of Decision that Child Should No Longer be Placed for Adoption
+        years: 6
+    List 11:
+        ref_date: Date enquiry received
+        years: 6

@@ -2,7 +2,7 @@ import logging
 
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
-from liiatools.datasets.shared_functions.converters import (
+from liiatools.datasets.shared_functions.common import (
     to_short_postcode,
     to_month_only_dob,
 )
@@ -44,7 +44,7 @@ def degrade(stream):
     """
     Compile the degrading functions
 
-    :param stream: A filtered list of event objects of type Cell
+    :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
     stream = degrade_postcodes(stream)

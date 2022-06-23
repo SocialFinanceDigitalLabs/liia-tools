@@ -18,30 +18,19 @@ def create_formatting_error_count(stream):
     """
     Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
 
-    :param stream: A filtered list of event objects
-    :return: An updated list of event objects with error counts
+    :param event: A filtered list of event objects
+    :return: An updated list of event objects wtih error counts
     """
     formatting_error_count = None
-    sheet_name = None
     for event in stream:
         if isinstance(event, events.StartTable):
             formatting_error_count = []
-            try:
-                sheet_name = event.sheet_name
-            except AttributeError:
-                pass
         elif isinstance(event, events.EndTable):
             yield ErrorTable.from_event(
-                event,
-                sheet_name=sheet_name,
-                formatting_error_count=formatting_error_count,
+                event, formatting_error_count=formatting_error_count
             )
             formatting_error_count = None
-        elif (
-            formatting_error_count is not None
-            and sheet_name is not None
-            and isinstance(event, events.Cell)
-        ):
+        elif formatting_error_count is not None and isinstance(event, events.Cell):
             try:
                 if event.error == "1":
                     formatting_error_count.append(event.column_header)
@@ -62,8 +51,8 @@ def blank_error_check(event):
     :return: An updated list of event objects
     """
     try:
-        blank = event.other_config["canbeblank"]
-        if blank is False and event.value is None:
+        allowed_blank = event.other_config["canbeblank"]
+        if not allowed_blank and not event.value and event.error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
@@ -76,30 +65,33 @@ def create_blank_error_count(stream):
     Create a list of the column headers for cells with blank fields that should not be blank (event.blank_error = 1)
     for each table
 
-    :param stream: A filtered list of event objects
+    :param event: A filtered list of event objects
     :return: An updated list of event objects
     """
     blank_error_count = None
     for event in stream:
-        if isinstance(event, events.StartTable):
-            blank_error_count = []
-        elif isinstance(event, ErrorTable):
-            yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
-            blank_error_count = None
-        elif blank_error_count is not None and isinstance(event, events.Cell):
-            try:
-                if event.blank_error == "1":
-                    blank_error_count.append(event.column_header)
-            except AttributeError:
-                pass
-        yield event
+        try:
+            if isinstance(event, events.StartTable):
+                blank_error_count = []
+            elif isinstance(event, ErrorTable):
+                yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
+                blank_error_count = None
+            elif blank_error_count is not None and isinstance(event, events.Cell):
+                try:
+                    if event.blank_error == "1":
+                        blank_error_count.append(event.column_header)
+                except AttributeError:
+                    pass
+            yield event
+        except Exception as ex:
+            log.exception(f"Error occurred in {event.filename}")
 
 
 def inherit_extra_column_error(stream):
     """
     Add the extra_column_error value to the ErrorTable so these errors can be written to the log.txt file
 
-    :param stream: A filtered list of event objects
+    :param event: A filtered list of event objects
     :return: An updated list of event objects
     """
     extra_column_error = []
@@ -118,103 +110,12 @@ def inherit_extra_column_error(stream):
             yield event
 
 
-def _duplicate_columns(columns_list):
-    """
-    Return a list of duplicate items within a given list
-
-    :param columns_list: A list of values
-    :return: A list of duplicated values
-    """
-    unique_columns = set()
-    duplicate_columns = []
-    for column in columns_list:
-        if column not in unique_columns:
-            unique_columns.add(column)
-        else:
-            duplicate_columns.append(column)
-    return duplicate_columns
-
-
-@streamfilter(
-    check=type_check(events.StartTable),
-    fail_function=pass_event,
-    error_function=pass_event,
-)
-def duplicate_column_check(event):
-    """
-    Create a duplicate_columns_error object for any StartTable that has correctly matched columns but some duplicates
-
-    :param event: A filtered list of event objects of type StartTable
-    :return: An updated list of event objects
-    """
-    try:
-        column_headers = event.matched_column_headers
-        if len(set(column_headers)) == len(column_headers):
-            return event
-        else:
-            duplicate_columns = _duplicate_columns(column_headers)
-            duplicate_columns = str(duplicate_columns)[1:-1]  # "Remove [ and ] from string
-            return event.from_event(event, duplicate_column_error=f"Sheet with title {event.sheet_name} contained "
-                                                                  f"the following duplicate column(s): "
-                                                                  f"{duplicate_columns}")
-    except KeyError:  # Raised in case there is no matched_column_headers
-        pass
-    return event
-
-
-def inherit_duplicate_column_error(stream):
-    """
-    Add the duplicate_columns_error value to the ErrorTable so these errors can be written to the log.txt file
-
-    :param stream: A filtered list of event objects
-    :return: An updated list of event objects
-    """
-    duplicate_column_error = []
-    for event in stream:
-        try:
-            if isinstance(event, events.StartTable):
-                duplicate_column_error = event.duplicate_column_error
-            elif isinstance(event, events.EndTable):
-                duplicate_column_error = []
-            elif isinstance(event, ErrorTable):
-                yield ErrorTable.from_event(
-                    event, duplicate_column_error=duplicate_column_error
-                )
-            yield event
-        except AttributeError:
-            yield event
-
-
-@streamfilter(
-    check=type_check(events.StartTable),
-    fail_function=pass_event,
-    error_function=pass_event,
-)
-def create_file_match_error(event):
-    """
-    Add a match_error to StartTables that do not have an event.sheet_name so these errors can be written to the log.txt
-    file. If there is no event.sheet_name for a given StartTable that means its headers did not match any of those
-    in the config file
-
-    :param event: A filtered list of event objects
-    :return: An updated list of event objects
-    """
-    try:
-        if event.sheet_name:
-            return event
-    except AttributeError:
-        return event.from_event(event, match_error=f"Failed to find a set of matching columns headers for sheet titled "
-                                                   f"'{event.name}' which contains column headers "
-                                                   f"{event.column_headers}",)
-    return event
-
-
 def save_errors_la(stream, la_log_dir):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
     only save the error events if there is at least one error in said event
 
-    :param stream: A filtered list of event objects
+    :param event: A filtered list of event objects
     :param la_log_dir: Location to save the gathered error logs
     :return: An updated list of event objects
     """
@@ -226,18 +127,18 @@ def save_errors_la(stream, la_log_dir):
                 and event.blank_error_count is not None
                 and event.sheet_name is not None
                 and event.extra_column_error is not None
-                and event.duplicate_column_error is not None
             ):
                 if (
                     event.formatting_error_count
                     or event.blank_error_count
                     or event.extra_column_error
-                    or event.duplicate_column_error
                 ):
                     with open(
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
+                        f.write(f"{event.filename}_{start_time}")
+                        f.write("\n")
                         f.write("\n")
                         f.write(event.sheet_name)
                         f.write("\n")
@@ -271,9 +172,6 @@ def save_errors_la(stream, la_log_dir):
                                 f"{extra_column_error_no_none}"
                             )
                             f.write("\n")
-                        if event.duplicate_column_error:
-                            f.write(event.duplicate_column_error)
-                            f.write("\n")
         except AttributeError:
             pass
 
@@ -296,14 +194,11 @@ def log_errors(stream):
     """
     Compile the log error functions
 
-    :param stream: A filtered list of event objects
+    :param event: A filtered list of event objects
     :return: An updated list of event objects
     """
     stream = blank_error_check(stream)
     stream = create_formatting_error_count(stream)
     stream = create_blank_error_count(stream)
     stream = inherit_extra_column_error(stream)
-    stream = duplicate_column_check(stream)
-    stream = inherit_duplicate_column_error(stream)
-    stream = create_file_match_error(stream)
     return stream
