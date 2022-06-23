@@ -31,7 +31,7 @@ def annex_a():
 @click.option(
     "--i",
     "input",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
 )
