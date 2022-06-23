@@ -43,6 +43,7 @@ def annex_a():
 )
 @click.option(
     "--la_code",
+    required=True,
     type=click.Choice(la_list, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
