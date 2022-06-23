@@ -16,7 +16,7 @@ def parse_regex(regex: str) -> Pattern:
     """
     Parse a regex pattern '/{pattern}/{modifiers}'
 
-    :param regex: regex expression
+    :param event: regex expression
     :return: Compiled regex
     """
     separator = re.escape(regex[0])
