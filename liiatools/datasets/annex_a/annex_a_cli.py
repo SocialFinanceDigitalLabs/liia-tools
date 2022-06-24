@@ -53,7 +53,7 @@ def annex_a():
     type=str,
     help="A string specifying the output directory location",
 )
-def cleanfile(input, la_code, la_log_dir, output):
+def cleanfile(input, la_code, la_piplog_dir, output):
     """
     Cleans input Annex A xlsx files according to config and outputs cleaned xlsx files.
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function

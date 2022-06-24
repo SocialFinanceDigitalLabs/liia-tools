@@ -7,16 +7,15 @@ import yaml
 
 
 # Dependencies for cleanfile()
-from sfdata_stream_parser.parser.xml import parse
 from sfdata_stream_parser.stream import events
 
+from csdatatools.util.xml import dom_parse
 from csdatatools.datasets.cincensus.schema import Schema
 from csdatatools.datasets.cincensus import filters, cin_record
 
-from liiatools.datasets.cin_census.lds_cin_clean import file_creator
+from liiatools.datasets.cin_census.lds_cin_clean import file_creator, configuration
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
-from liiatools.datasets.cin_census.lds_cin_clean import configuration
 
 # Dependencies for la_agg()
 from liiatools.datasets.cin_census.lds_cin_la_agg import cc_la_agg
@@ -32,13 +31,14 @@ COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
 
+
 @click.group()
-def cin_liia():
+def cin_census():
     """Functions for cleaning, minimising and aggregating CIN Census files"""
     pass
 
 
-@cin_liia.command()
+@cin_census.command()
 @click.option(
     "--i",
     "input",
@@ -74,21 +74,23 @@ def cleanfile(input, la_code, la_log_dir, output):
     'output' should specify the path to the output folder"""
 
     # Open & Parse file
-    stream = parse(input)
+    stream = dom_parse(input)
 
     # Configure stream
     config = configuration.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
-    stream = filters.add_schema(stream, Schema().schema)
+    stream = filters.add_schema(stream, schema=Schema().schema)
 
-    # Clean stream
+    # Validate stream
     stream = filters.validate_elements(stream)
     counter_context = defaultdict(lambda: 0)
     stream = filters.counter(stream,
                              counter_check=lambda e: isinstance(e, events.StartElement) and not
                              getattr(e, 'valid', True), context=counter_context)
+
+    # Clean stream
     stream = filters.remove_invalid(stream, tag_name="Child")
 
     # Output result
@@ -96,9 +98,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     data = cin_record.export_table(stream)
     data = file_creator.add_fields(input, data, la_name)
     file_creator.export_file(input, output, data)
+    # for e in stream:
+    #     print(e, "----", e.as_dict())
+    # list(stream)
 
 
-@cin_liia.command()
+@cin_census.command()
 @click.argument("input", type=click.Path(exists=True))
 @click.argument("la_log_dir", type=click.Path(exists=True))
 @click.argument("flat_output", type=click.Path(exists=True))
@@ -136,7 +141,7 @@ def la_agg(input, la_log_dir, flat_output, analysis_output):
     cc_la_agg.export_journeyfile(analysis_output, s47_journey)
 
 
-@cin_liia.command()
+@cin_census.command()
 @click.argument("input", type=click.Path(exists=True))
 @click.argument("la_name", type=str)
 @click.argument("flat_output", type=click.Path(exists=True))

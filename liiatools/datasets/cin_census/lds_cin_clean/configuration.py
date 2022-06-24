@@ -18,8 +18,6 @@ class Config(dict):
 
         if not config_files:
             config_files = [
-                "DEFAULT_DATA_SOURCES",
-                "DEFAULT_DATA_MAP",
                 "DEFAULT_DATA_CODES",
             ]
 
