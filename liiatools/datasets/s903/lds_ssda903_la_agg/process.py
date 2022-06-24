@@ -14,7 +14,7 @@ def read_file(file):
     Reads the csv file as a pandas DataFrame
     """
     filepath = Path(file)
-    df = pd.read_csv(filepath, index_col=None, dtype=object)
+    df = pd.read_csv(filepath, index_col=None)
     return df
 
 
@@ -33,7 +33,7 @@ def merge_la_files(output, s903_df, table_name):
     '''
     old_file = Path(output, f"SSDA903_{table_name}_merged.csv")
     if old_file.is_file():
-        old_df = pd.read_csv(old_file, index_col=None, dtype=object)
+        old_df = pd.read_csv(old_file, index_col=None)
         merged_df = pd.concat([s903_df, old_df], axis=0)
     else:
         merged_df = s903_df
@@ -54,7 +54,7 @@ def deduplicate(df, table_name, sort_order, dedup):
     Sorts and removes duplicate records from merged files following schema
     '''
     if table_name in sort_order.keys():
-        df = df.sort_values(sort_order[table_name], ascending = False)
+        df = df.sort_values(sort_order[table_name], ascending = False, ignore_index = True)
     if table_name in dedup.keys():
         df = df.drop_duplicates(subset=dedup[table_name], keep = 'first')
     return df

@@ -29,7 +29,7 @@ column_names:
         - CHILD
         - DOB
         - REVIEW
-        - REVIEW_CODE'
+        - REVIEW_CODE
         - LA
         - YEAR
     UASC:

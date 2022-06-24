@@ -144,8 +144,9 @@ def la_agg(input, la_log_dir, output):
     dedup = config["dedup"]
     s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
     s903_df = agg_process.remove_old_data(s903_df, years=6)
-    agg_process.log_missing_years(s903_df, table_name, la_log_dir)
-    s903_df = agg_process.convert_dates(s903_df, dates, table_name)
 
-    # Export merged file
-    agg_process.export_la_file(output, table_name, s903_df)
+    # If file still has data, after removing old data: log errors, re-format and export merged file
+    if len(s903_df) > 0:
+        agg_process.log_missing_years(s903_df, table_name, la_log_dir)
+        s903_df = agg_process.convert_dates(s903_df, dates, table_name)
+        agg_process.export_la_file(output, table_name, s903_df)
