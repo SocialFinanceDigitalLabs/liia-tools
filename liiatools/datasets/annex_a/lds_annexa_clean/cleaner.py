@@ -26,9 +26,9 @@ def clean_cell_category(event):
     try:
         for c in event.category_config:
             if event.value:
-                if c["code"] in str(event.value):
+                if str(c["code"]).lower() in str(event.value).lower():
                     return event.from_event(event, value=c["code"], error="0")
-                elif c["name"] in str(event.value):
+                elif str(c["name"]).lower() == str(event.value).lower():
                     return event.from_event(event, value=c["code"], error="0")
 
                 for r in c.get("regex", []):
