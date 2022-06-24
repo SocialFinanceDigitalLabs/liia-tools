@@ -3,10 +3,19 @@ from pathlib import Path
 import yaml
 
 # dependencies for cleanfile()
-from liiatools.datasets.s903.lds_ssda903_clean import ( configuration, parse, populate, filters, degrade, logger, file_creator )
+from liiatools.datasets.s903.lds_ssda903_clean import (
+    configuration as clean_config,
+    parse,
+    populate,
+    filters,
+    degrade,
+    logger,
+    file_creator
+)
 
 # dependencies for la_agg()
-#from liiatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg
+from liiatools.datasets.s903.lds_ssda903_la_agg import configuration as agg_config
+from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
 
 # dependencies for pan_agg()
 #from liiatools.datasets.s903.lds_ssda903_pan_agg import ( s903_pan_agg, s903_pan_agg_config )
@@ -16,8 +25,9 @@ from liiatools.datasets.s903.lds_ssda903_clean import ( configuration, parse, po
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
+# Get all the possible LA codes that could be used
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
 
@@ -30,38 +40,41 @@ def s903():
 @click.option(
     "--i",
     "input",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
 )
 @click.option(
     "--la_code",
+    required=True,    
     type=click.Choice(la_list, case_sensitive=False),
-    help="A LA code, specifying the local authority that deposited the file",
+    help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(
     "--la_log_dir",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
 )
 @click.option(
     "--o",
     "output",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the output directory location",
 )
 def cleanfile(input, la_code, la_log_dir, output):
-    """Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
-    'input' should specify the input file location, including file name and suffix, and be usable by a Path function
-    'la_name' should be a string of the name of the local authority that deposited the file
-    'la_log_dir' should specify the path to the local authority's log folder
-    'lds_log_dir' should specify the path to the LDS log folder
-    'output' should specify the path to the output folder"""
+    """
+    Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
+    :param output: should specify the path to the output folder
+    :return: None
+    """
 
     # Configuration
-    config = configuration.Config()
+    config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
 
     # Open & Parse file
@@ -69,7 +82,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = populate.add_year_column(stream)
 
     # Configure stream
-    stream = configuration.configure_stream(stream, config)
+    stream = clean_config.configure_stream(stream, config)
 
     # Clean stream
     stream = filters.clean(stream)
@@ -81,3 +94,58 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = file_creator.save_stream(stream, la_name=la_name, output=output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
     list(stream)
+
+
+@s903.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--la_log_dir",
+    required=True,
+    type=str,
+    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
+)
+@click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+def la_agg(input, la_log_dir, output):
+    """
+    Joins data from newly cleaned SSDA903 file (output of cleanfile()) to existing SSDA903 data for the depositing local authority
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
+
+    # Open file as DataFrame and match file type
+    s903_df = agg_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = agg_process.match_load_file(s903_df, column_names)
+
+    # Merge file with existing file of the same type in LA output folder
+    s903_df = agg_process.merge_la_files(output, s903_df, table_name)
+
+    # De-duplicate and remove old data according to schema
+    dates = config["dates"]
+    s903_df = agg_process.convert_datetimes(s903_df, dates, table_name)
+    sort_order = config["sort_order"]
+    dedup = config["dedup"]
+    s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
+    s903_df = agg_process.remove_old_data(s903_df, years=6)
+    agg_process.log_missing_years(s903_df, table_name, la_log_dir)
+    s903_df = agg_process.convert_dates(s903_df, dates, table_name)
+
+    # Export merged file
+    agg_process.export_la_file(output, table_name, s903_df)
