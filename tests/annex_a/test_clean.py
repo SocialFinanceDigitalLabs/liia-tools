@@ -35,6 +35,12 @@ def test_clean_integers():
                 category_config={"canbeblank": False},
                 other_config={"type": "integer"},
             ),
+            events.Cell(
+                column_index=5,
+                category_config={"canbeblank": False},
+                other_config={"type": "integer"},
+                value=0
+            ),
         ]
     )
     stream = list(stream)
@@ -47,6 +53,8 @@ def test_clean_integers():
     assert stream[3].value == "3"
     assert stream[4].value == ""
     assert stream[4].error == "1"
+    assert stream[5].value == 0
+    assert stream[5].error == "0"
 
 
 def test_clean_cell_category():

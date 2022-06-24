@@ -63,7 +63,7 @@ def blank_error_check(event):
     """
     try:
         allowed_blank = event.other_config["canbeblank"]
-        if not allowed_blank and not event.value and event.error != "1":
+        if not allowed_blank and not event.value and event.value != 0 and event.error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event

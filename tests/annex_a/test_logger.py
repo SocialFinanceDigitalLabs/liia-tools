@@ -38,3 +38,29 @@ def test_duplicate_columns_error():
     stream = list(stream)
     assert stream[0] == events.StartTable(sheet_name="List 1")
 
+
+def test_blank_error_check():
+    stream = logger.blank_error_check(
+        [
+            events.Cell(
+                other_config={"canbeblank": False},
+                value="string",
+                error="0",
+            ),
+            events.Cell(
+                other_config={"canbeblank": False},
+                value=0,
+                error="0",
+            ),
+            events.Cell(
+                other_config={"canbeblank": False},
+                value="",
+                error="0",
+            ),
+        ]
+    )
+    stream = list(stream)
+    assert stream[0].value == "string"
+    assert stream[1].value == 0
+    assert stream[2].value == ""
+    assert stream[2].blank_error == "1"
