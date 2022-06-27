@@ -107,7 +107,17 @@ def test_clean_cell_category():
             ),
             events.Cell(
                 value="random_value"
-            )
+            ),
+            events.Cell(
+                value="Monkey",
+                category_config=[
+                    {
+                        "code": "a) Male",
+                        "name": "M",
+                        "regex": ["/^mal.*/i", "/a\\).*/i"],
+                    },
+                ],
+            ),
         ]
     )
     stream = list(stream)
@@ -120,3 +130,5 @@ def test_clean_cell_category():
     assert stream[3].value == ""
     assert stream[3].error == "1"
     assert stream[4].value == "random_value"
+    assert stream[5].value == ""
+    assert stream[5].error == "1"
