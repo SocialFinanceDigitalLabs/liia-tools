@@ -18,7 +18,8 @@ from liiatools.datasets.s903.lds_ssda903_la_agg import configuration as agg_conf
 from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
 
 # dependencies for pan_agg()
-#from liiatools.datasets.s903.lds_ssda903_pan_agg import ( s903_pan_agg, s903_pan_agg_config )
+from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_config
+from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for suff_min()
 #from liiatools.datasets.s903.lds_ssda903_suff_min import ( s903_suff_min, s903_suff_min_config )
@@ -121,7 +122,7 @@ def la_agg(input, la_log_dir, output):
     """
     Joins data from newly cleaned SSDA903 file (output of cleanfile()) to existing SSDA903 data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
-    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
     :param output: should specify the path to the output folder
     :return: None
     """
@@ -150,3 +151,49 @@ def la_agg(input, la_log_dir, output):
         agg_process.log_missing_years(s903_df, table_name, la_log_dir)
         s903_df = agg_process.convert_dates(s903_df, dates, table_name)
         agg_process.export_la_file(output, table_name, s903_df)
+
+
+@s903.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--la_code",
+    required=True,    
+    type=click.Choice(la_list, case_sensitive=False),
+    help="A three letter code, specifying the local authority that deposited the file",
+)
+@click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+def pan_agg(input, la_code, output):
+    """
+    Joins data from newly merged SSDA903 file (output of la-agg()) to existing pan-London SSDA903 data
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = pan_config.Config()
+    
+    # Read file and match type
+    s903_df = pan_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = pan_process.match_load_file(s903_df, column_names)
+
+    # Remove unwanted datasets and merge wanted with existing output
+    pan_data_kept = config["pan_data_kept"]
+    if table_name in pan_data_kept:
+        la_name = flip_dict(config["data_codes"])[la_code]
+        s903_df = pan_process.merge_agg_files(output, table_name, s903_df, la_name)
+        pan_process.export_pan_file(output, table_name, s903_df)

@@ -14,8 +14,8 @@ def read_file(file):
     Reads the csv file as a pandas DataFrame
     """
     filepath = Path(file)
-    df = pd.read_csv(filepath, index_col=None)
-    return df
+    s903_df = pd.read_csv(filepath, index_col=None)
+    return s903_df
 
 
 def match_load_file(s903_df, column_names):
@@ -49,15 +49,15 @@ def convert_datetimes(s903_df, dates, table_name):
     return s903_df
 
 
-def deduplicate(df, table_name, sort_order, dedup):
+def deduplicate(s903_df, table_name, sort_order, dedup):
     '''
     Sorts and removes duplicate records from merged files following schema
     '''
     if table_name in sort_order.keys():
-        df = df.sort_values(sort_order[table_name], ascending = False, ignore_index = True)
+        s903_df = s903_df.sort_values(sort_order[table_name], ascending = False, ignore_index = True)
     if table_name in dedup.keys():
-        df = df.drop_duplicates(subset=dedup[table_name], keep = 'first')
-    return df
+        s903_df = s903_df.drop_duplicates(subset=dedup[table_name], keep = 'first')
+    return s903_df
 
 
 def remove_old_data(s903_df, years):
