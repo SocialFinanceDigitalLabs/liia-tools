@@ -39,4 +39,3 @@ def create_la_child_id(event, la_code):
     """
     la_child_id = f"{event.cell}_{la_code}"
     yield event.from_event(event, cell=la_child_id)
-

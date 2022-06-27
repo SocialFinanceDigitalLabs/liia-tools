@@ -25,15 +25,19 @@ def clean_cell_category(event):
 
     try:
         for c in event.category_config:
-            if c["code"] in str(event.value):
-                return event.from_event(event, value=c["code"], error="0")
-            elif c["name"] in str(event.value):
-                return event.from_event(event, value=c["code"], error="0")
-
-            for r in c.get("regex", []):
-                p = parse_regex(r)
-                if p.match(str(event.value)) is not None:
+            if event.value:
+                if str(c["code"]).lower() in str(event.value).lower():
                     return event.from_event(event, value=c["code"], error="0")
+                elif str(c["name"]).lower() == str(event.value).lower():
+                    return event.from_event(event, value=c["code"], error="0")
+
+                for r in c.get("regex", []):
+                    p = parse_regex(r)
+                    if p.match(str(event.value)) is not None:
+                        return event.from_event(event, value=c["code"], error="0")
+
+            else:
+                return event.from_event(event, value="", error="0")
 
         else:
             return event.from_event(event, value="", error="1")
@@ -82,7 +86,13 @@ def clean_dates(event):
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-    date = event.other_config["type"]
+    try:
+        date = event.other_config["type"]
+    except (
+            AttributeError,
+            KeyError,
+    ):  # Raised in case there is no config item for the given cell
+        return event
     if date == "date":
         try:
             text = to_date(event.value)
@@ -116,7 +126,7 @@ def clean_postcodes(event):
 def clean(stream):
     """
     Compile cleaning functions
-    :param event: A filtered list of event objects
+    :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
     stream = clean_cell_category(stream)

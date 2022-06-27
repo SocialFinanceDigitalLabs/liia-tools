@@ -139,8 +139,9 @@ def create_file_match_error(event):
             return event
     except AttributeError:
         return event.from_event(
-            event, match_error=f"Failed to find a set of matching columns headers for sheet titled "
-                               f"'{event.filename}' which contains column headers {event.headers}",
+            event,
+            match_error=f"Failed to find a set of matching columns headers for sheet titled "
+            f"'{event.filename}' which contains column headers {event.headers}",
         )
     return event
 
