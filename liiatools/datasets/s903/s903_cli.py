@@ -21,8 +21,9 @@ from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
 from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_config
 from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
 
-# dependencies for suff_min()
-#from liiatools.datasets.s903.lds_ssda903_suff_min import ( s903_suff_min, s903_suff_min_config )
+# dependencies for sufficiency_output()
+from liiatools.datasets.s903.lds_ssda893_sufficiency import configuration as suff_config
+from liiatools.datasets.s903.lds_ssda893_sufficiency import process as suff_process
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
@@ -197,3 +198,42 @@ def pan_agg(input, la_code, output):
         la_name = flip_dict(config["data_codes"])[la_code]
         s903_df = pan_process.merge_agg_files(output, table_name, s903_df, la_name)
         pan_process.export_pan_file(output, table_name, s903_df)
+
+
+@s903.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+def sufficiency_output(input, output):
+    """
+    Applies data minimisation to data from aggregated SSDA903 file (output of pan-agg()) and outputs to Sufficiency analysis folder
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = suff_config.Config()
+
+    # Read file and match type
+    s903_df = suff_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = suff_process.match_load_file(s903_df, column_names)
+
+    # Minimises output following schema and exports file
+    suff_data_kept = config["suff_data_kept"]
+    if table_name in suff_data_kept:
+        minimise = config["minimise"]
+        s903_df = suff_process.data_min(s903_df, minimise, table_name)
+        suff_process.export_suff_file(output, table_name, s903_df)

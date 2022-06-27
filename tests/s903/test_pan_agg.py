@@ -1,9 +1,6 @@
 import pandas as pd
 
-from liiatools.datasets.s903.lds_ssda903_pan_agg import (
-    configuration,
-    process,
-)
+from liiatools.datasets.s903.lds_ssda903_pan_agg import process
 
 
 def test_match_load_file():
