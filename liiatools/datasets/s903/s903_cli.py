@@ -3,7 +3,15 @@ from pathlib import Path
 import yaml
 
 # dependencies for cleanfile()
-from liiatools.datasets.s903.lds_ssda903_clean import ( configuration, parse, populate, filters, degrade, logger, file_creator )
+from liiatools.datasets.s903.lds_ssda903_clean import (
+    configuration,
+    parse,
+    populate,
+    filters,
+    degrade,
+    logger,
+    file_creator,
+)
 
 # dependencies for la_agg()
 #from liiatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg

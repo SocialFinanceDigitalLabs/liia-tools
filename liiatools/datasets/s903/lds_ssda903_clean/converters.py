@@ -19,8 +19,8 @@ def to_category(string, categories):
         elif "name" in code:
             if str(code["name"]).lower() in str(string).lower():
                 return code["code"]
-            else:
-                return "error"
+            elif not string:
+                return ""
         elif not string:
             return ""
     return "error"
