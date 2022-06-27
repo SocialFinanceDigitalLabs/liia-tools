@@ -16,6 +16,8 @@ def to_category(string, categories):
     for code in categories:
         if str(string).lower() == str(code["code"]).lower():
             return code["code"]
+        if str(string).lower() == (str(code["code"]).lower() + ".0"):  # In case integers are read as floats
+            return code["code"]
         elif "name" in code:
             if str(code["name"]).lower() in str(string).lower():
                 return code["code"]
