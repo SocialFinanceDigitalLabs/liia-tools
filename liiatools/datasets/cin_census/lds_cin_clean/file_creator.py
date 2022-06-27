@@ -2,7 +2,7 @@ from pathlib import Path
 import re
 
 from liiatools.datasets.cin_census.lds_cin_clean import la_codes
-from liiatools.datasets.shared_functions import common
+from liiatools.datasets.shared_functions import converters
 
 
 def get_year(input, data):
@@ -36,13 +36,13 @@ def la_prefix(data, la_name):
 
 def degrade_dob(data):
     if data["PersonBirthDate"] is not None:
-        data["PersonBirthDate"] = common.to_month_only_dob(data["PersonBirthDate"])
+        data["PersonBirthDate"] = converters.to_month_only_dob(data["PersonBirthDate"])
     return data
 
 
 def degrade_expected_dob(data):
     if data["ExpectedPersonBirthDate"] is not None:
-        data["ExpectedPersonBirthDate"] = common.to_month_only_dob(
+        data["ExpectedPersonBirthDate"] = converters.to_month_only_dob(
             data["ExpectedPersonBirthDate"]
         )
     return data
@@ -50,7 +50,7 @@ def degrade_expected_dob(data):
 
 def degrade_death_date(data):
     if data["PersonDeathDate"] is not None:
-        data["PersonDeathDate"] = common.to_month_only_dob(data["PersonDeathDate"])
+        data["PersonDeathDate"] = converters.to_month_only_dob(data["PersonDeathDate"])
     return data
 
 
