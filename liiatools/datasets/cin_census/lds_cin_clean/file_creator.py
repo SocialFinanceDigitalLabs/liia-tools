@@ -1,8 +1,14 @@
 from pathlib import Path
 import re
+import pandas as pd
 
 from liiatools.datasets.cin_census.lds_cin_clean import la_codes
 from liiatools.datasets.shared_functions import converters
+
+
+def convert_to_dataframe(data):
+    data = data.export("df")
+    return data
 
 
 def get_year(input, data):
@@ -13,13 +19,27 @@ def get_year(input, data):
     return data
 
 
-def get_person_school_year(data):
-    if data["PersonBirthDate"].dt.month >= 9:
-        data["PersonSchoolYear"] = data["PersonBirthDate"].dt.year
-    elif data["PersonBirthDate"].dt.month <= 8:
-        data["PersonSchoolYear"] = data["PersonBirthDate"].dt.year - 1
+def convert_to_datetime(data):
+    data[["PersonBirthDate", "PersonSchoolYear"]] = data[
+        ["PersonBirthDate", "PersonSchoolYear"]
+    ].apply(pd.to_datetime)
+    return data
+
+
+def _get_person_school_year(datevalue):
+    if datevalue.month >= 9:
+        new_date = datevalue.year
+    elif datevalue.month <= 8:
+        new_date = datevalue.year - 1
     else:
-        data["PersonSchoolYear"] = None
+        new_date = None
+    return new_date
+
+
+def add_school_year(data):
+    data["PersonSchoolYear"] = data["PersonBirthDate"].apply(
+        lambda row: _get_person_school_year(row)
+    )
     return data
 
 
@@ -36,30 +56,35 @@ def la_prefix(data, la_name):
 
 def degrade_dob(data):
     if data["PersonBirthDate"] is not None:
-        data["PersonBirthDate"] = converters.to_month_only_dob(data["PersonBirthDate"])
-    return data
+        data["PersonBirthDate"] = data["PersonBirthDate"].apply(
+            lambda row: converters.to_month_only_dob(row)
+        )
+        return data
 
 
 def degrade_expected_dob(data):
     if data["ExpectedPersonBirthDate"] is not None:
-        data["ExpectedPersonBirthDate"] = converters.to_month_only_dob(
-            data["ExpectedPersonBirthDate"]
+        data["ExpectedPersonBirthDate"] = data["ExpectedPersonBirthDate"].apply(
+            lambda row: converters.to_month_only_dob(row)
         )
-    return data
+        return data
 
 
 def degrade_death_date(data):
     if data["PersonDeathDate"] is not None:
-        data["PersonDeathDate"] = converters.to_month_only_dob(data["PersonDeathDate"])
-    return data
+        data["PersonDeathDate"] = data["PersonDeathDate"].apply(
+            lambda row: converters.to_month_only_dob(row)
+        )
+        return data
 
 
 def add_fields(input, data, la_name):
     """Adds YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
     Appends LA_code from config to LAChildID"""
-
+    data = convert_to_dataframe(data)
     data = get_year(input, data)
-    data = get_person_school_year(data)
+    data = convert_to_datetime(data)
+    data = add_school_year(data)
     data = add_la_name(data, la_name)
     data = la_prefix(data, la_name)
     data = degrade_dob(data)

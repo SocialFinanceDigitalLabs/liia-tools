@@ -43,4 +43,6 @@ def coerce_date(value):
         return parser.parse(value, dayfirst=True).date()
 
     if isinstance(value, numbers.Number):
-        return datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(value) - 2).date()
+        return datetime.fromordinal(
+            datetime(1900, 1, 1).toordinal() + int(value) - 2
+        ).date()

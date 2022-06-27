@@ -13,7 +13,10 @@ from csdatatools.util.xml import dom_parse
 from csdatatools.datasets.cincensus.schema import Schema
 from csdatatools.datasets.cincensus import filters, cin_record
 
-from liiatools.datasets.cin_census.lds_cin_clean import file_creator, configuration
+from liiatools.datasets.cin_census.lds_cin_clean import (
+    file_creator,
+    configuration,
+)
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
 
@@ -98,9 +101,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     data = cin_record.export_table(stream)
     data = file_creator.add_fields(input, data, la_name)
     file_creator.export_file(input, output, data)
-    # for e in stream:
-    #     print(e, "----", e.as_dict())
-    # list(stream)
 
 
 @cin_census.command()

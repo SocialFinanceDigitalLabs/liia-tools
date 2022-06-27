@@ -5,7 +5,6 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
 
 
-
 log = logging.getLogger(__name__)
 
 
