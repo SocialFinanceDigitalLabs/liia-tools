@@ -28,12 +28,12 @@ def convert_to_datetime(data):
 
 def _get_person_school_year(datevalue):
     if datevalue.month >= 9:
-        new_date = datevalue.year
+        school_year = datevalue.year
     elif datevalue.month <= 8:
-        new_date = datevalue.year - 1
+        school_year = datevalue.year - 1
     else:
-        new_date = None
-    return new_date
+        school_year = None
+    return school_year
 
 
 def add_school_year(data):
