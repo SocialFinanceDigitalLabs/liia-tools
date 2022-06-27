@@ -50,13 +50,13 @@ def test_clean_categories():
     assert cleaned_event.error == "0"
 
     event = events.Cell(
-        cell="false",
+        cell="true",
         config_dict={
             "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
         },
     )
     cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.cell == "0"
+    assert cleaned_event.cell == "1"
     assert cleaned_event.error == "0"
 
     event = events.Cell(
@@ -99,7 +99,17 @@ def test_clean_categories():
     )
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert cleaned_event.error == "0"
+
+    event = events.Cell(
+        cell="",
+        config_dict={
+            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
+        },
+    )
+    cleaned_event = list(filters.clean_categories(event))[0]
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
 
 
 def test_clean_integers():

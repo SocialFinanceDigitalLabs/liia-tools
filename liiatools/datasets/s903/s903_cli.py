@@ -3,28 +3,39 @@ from pathlib import Path
 import yaml
 
 # dependencies for cleanfile()
-from liiatools.datasets.s903.lds_ssda903_clean import ( configuration, parse, populate, filters, degrade, logger, file_creator )
+from liiatools.datasets.s903.lds_ssda903_clean import (
+    configuration,
+    parse,
+    populate,
+    filters,
+    degrade,
+    logger,
+    file_creator,
+)
 
 # dependencies for la_agg()
-#from liiatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg
+# from liiatools.datasets.s903.lds_ssda903_la_agg import s903_la_agg
 
 # dependencies for pan_agg()
-#from liiatools.datasets.s903.lds_ssda903_pan_agg import ( s903_pan_agg, s903_pan_agg_config )
+# from liiatools.datasets.s903.lds_ssda903_pan_agg import ( s903_pan_agg, s903_pan_agg_config )
 
 # dependencies for suff_min()
-#from liiatools.datasets.s903.lds_ssda903_suff_min import ( s903_suff_min, s903_suff_min_config )
+# from liiatools.datasets.s903.lds_ssda903_suff_min import ( s903_suff_min, s903_suff_min_config )
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
+
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
 
+
 @click.group()
 def s903():
     """Functions for cleaning, minimising and aggregating SSDA903 files"""
     pass
+
 
 @s903.command()
 @click.option(
