@@ -23,7 +23,11 @@ def parse_csv(input):
             yield events.StartRow(filename=filename)
             for c_ix, cell in enumerate(row):
                 yield events.Cell(
-                    filename=filename, r_ix=r_ix, c_ix=c_ix, header=data.headers[c_ix], cell=cell
+                    filename=filename,
+                    r_ix=r_ix,
+                    c_ix=c_ix,
+                    header=data.headers[c_ix],
+                    cell=cell,
                 )
             yield events.EndRow(filename=filename)
         yield events.EndTable(filename=filename)
