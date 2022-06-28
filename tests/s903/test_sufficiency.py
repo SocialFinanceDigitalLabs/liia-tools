@@ -1,6 +1,6 @@
 import pandas as pd
 
-from liiatools.datasets.s903.lds_ssda893_sufficiency import process
+from liiatools.datasets.s903.lds_ssda903_sufficiency import process
 
 def test_match_load_file():
     test_df_1 = pd.DataFrame({"Column 1": [], "Column 2": []})

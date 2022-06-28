@@ -22,8 +22,8 @@ from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_con
 from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for sufficiency_output()
-from liiatools.datasets.s903.lds_ssda893_sufficiency import configuration as suff_config
-from liiatools.datasets.s903.lds_ssda893_sufficiency import process as suff_process
+from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suff_config
+from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
