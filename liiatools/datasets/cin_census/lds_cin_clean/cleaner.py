@@ -1,74 +1,58 @@
 import logging
+from xmlschema import XMLSchemaValidatorError
 
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
 
+from liiatools.datasets.cin_census.lds_cin_clean.converters import to_date, to_category
 
 log = logging.getLogger(__name__)
 
 
+def _get_validation_error(schema, node) -> XMLSchemaValidatorError:
+    try:
+        schema.validate(node)
+        return None
+    except XMLSchemaValidatorError as e:
+        return e
+
+
+@streamfilter(check=type_check(events.StartElement), fail_function=pass_event)
+def validate_elements(event):
+    """
+    Validates each element, and if not valid, sets the properties:
+
+    * valid - (always False)
+    * validation_message - a descriptive validation message
+    """
+    validation_error = _get_validation_error(event.schema, event.node)
+    if validation_error is None:
+        return event
+
+    message = validation_error.reason if hasattr(validation_error, 'reason') else validation_error.message
+    return events.StartElement.from_event(event, valid=False, validation_message=message)
+
+
 @streamfilter(
     check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
 )
-def clean_cell_category(event):
+def clean_categories(event):
     """
-    Checks the values of a cell against the config file using code, name and regex matching
-    returns the matched value for a successful match and blank if not
+    Convert all values that should be categories to categories based on the config.yaml file
+
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-
+    category = event.config_dict["category"]
     try:
-        for c in event.category_config:
-            if event.value:
-                if c["code"] in str(event.value):
-                    return event.from_event(event, value=c["code"], error="0")
-                elif c["name"] in str(event.value):
-                    return event.from_event(event, value=c["code"], error="0")
-
-                for r in c.get("regex", []):
-                    p = parse_regex(r)
-                    if p.match(str(event.value)) is not None:
-                        return event.from_event(event, value=c["code"], error="0")
-            else:
-                return event.from_event(event, value="", error="0")
-
+        text = to_category(event.cell, category)
+        if text != "error":
+            return event.from_event(event, cell=text, error="0")
         else:
-            return event.from_event(event, value="", error="1")
-    except (
-        AttributeError,
-        KeyError,
-    ):  # Raised in case there is no config item for the given cell
-        return event
-
-
-@streamfilter(
-    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
-)
-def clean_integers(event):
-    """
-    Convert all values that should be integers into integers based on the annex-a-merge.yaml file
-    if they cannot be converted record this as event.error = 1
-    :param event: A filtered list of event objects of type Cell
-    :return: An updated list of event objects
-    """
-    try:
-        numeric = event.other_config["type"]
-    except (
-        AttributeError,
-        KeyError,
-    ):  # Raised in case there is no config item for the given cell
-        return event
-
-    if numeric == "integer":
-        try:
-            text = to_integer(event.value)
-            return event.from_event(event, value=text, error="0")
-        except (AttributeError, TypeError, ValueError):
-            return event.from_event(event, value="", error="1")
-    else:
-        return event
+            return event.from_event(event, cell="", error="1")
+    except (AttributeError, TypeError, ValueError):
+        return event.from_event(event, cell="", error="1")
 
 
 @streamfilter(
@@ -76,47 +60,17 @@ def clean_integers(event):
 )
 def clean_dates(event):
     """
-    Convert all values that should be dates to dates based on the annex-a-merge.yaml file
-    if they cannot be converted record this as event.error = 1
+    Convert all values that should be dates to dates based on the config.yaml file
+
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
+    date = event.config_dict["date"]
     try:
-        date = event.other_config["type"]
-    except (
-        AttributeError,
-        KeyError,
-    ):  # Raised in case there is no config item for the given cell
-        return event
-
-    if date == "date":
-        try:
-            text = to_date(event.value)
-            return event.from_event(event, value=text, error="0")
-        except (AttributeError, TypeError, ValueError):
-            return event.from_event(event, value="", error="1")
-    else:
-        return event
-
-
-@streamfilter(
-    check=lambda x: x.get("column_header") in ["Placement postcode"],
-    fail_function=pass_event,
-)
-def clean_postcodes(event):
-    """
-    Check that all values that should be postcodes are postcodes
-    if they are not postcodes record this as event.error = 1
-    :param event: A filtered list of event objects which have a column header of "Placement postcode"
-    :return: An updated list of event objects
-    """
-    error = "0"
-    text = ""
-    try:
-        text = check_postcode(event.value)
+        text = to_date(event.cell, date)
+        return event.from_event(event, cell=text, error="0")
     except (AttributeError, TypeError, ValueError):
-        error = "1"
-    return event.from_event(event, value=text, error=error)
+        return event.from_event(event, cell="", error="1")
 
 
 def clean(stream):
@@ -125,8 +79,6 @@ def clean(stream):
     :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
-    stream = clean_cell_category(stream)
-    stream = clean_integers(stream)
+    stream = clean_categories(stream)
     stream = clean_dates(stream)
-    stream = clean_postcodes(stream)
     return stream
