@@ -16,11 +16,15 @@ def to_category(string, categories):
     for code in categories:
         if str(string).lower() == str(code["code"]).lower():
             return code["code"]
+        if (
+            str(string).lower() == str(code["code"]).lower() + ".0"
+        ):  # In case integers are read as floats
+            return code["code"]
         elif "name" in code:
             if str(code["name"]).lower() in str(string).lower():
                 return code["code"]
-            else:
-                return "error"
+            elif not string:
+                return ""
         elif not string:
             return ""
     return "error"
@@ -29,7 +33,7 @@ def to_category(string, categories):
 def to_integer(value, config):
     """
     Convert any strings that should be integers based on the config into integers
-    
+
     :param value: Some value to convert to an integer
     :param config: The loaded configuration
     :return: Either an integer value or a blank string
@@ -41,4 +45,3 @@ def to_integer(value, config):
             return ""
     else:
         return value
-

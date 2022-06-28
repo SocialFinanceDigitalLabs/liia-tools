@@ -33,10 +33,12 @@ COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
 
+
 @click.group()
 def s903():
     """Functions for cleaning, minimising and aggregating SSDA903 files"""
     pass
+
 
 @s903.command()
 @click.option(
