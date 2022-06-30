@@ -30,8 +30,14 @@ def validate_elements(event):
     if validation_error is None:
         return event
 
-    message = validation_error.reason if hasattr(validation_error, 'reason') else validation_error.message
-    return events.StartElement.from_event(event, valid=False, validation_message=message)
+    message = (
+        validation_error.reason
+        if hasattr(validation_error, "reason")
+        else validation_error.message
+    )
+    return events.StartElement.from_event(
+        event, valid=False, validation_message=message
+    )
 
 
 @streamfilter(

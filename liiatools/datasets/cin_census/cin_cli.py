@@ -16,6 +16,7 @@ from csdatatools.datasets.cincensus import filters, cin_record
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
     configuration,
+    cleaner,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
@@ -87,7 +88,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_schema(stream, schema=Schema().schema)
 
     # Validate stream
-    stream = filters.validate_elements(stream)
+    stream = cleaner.validate_elements(stream)
     counter_context = defaultdict(lambda: 0)
     stream = filters.counter(stream,
                              counter_check=lambda e: isinstance(e, events.StartElement) and not

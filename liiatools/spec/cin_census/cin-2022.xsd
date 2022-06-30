@@ -166,10 +166,12 @@
 
   <xs:simpleType name="yesnotype">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="true" />
-      <xs:enumeration value="false" />
       <xs:enumeration value="0" />
+		<xs:annotation><xs:documentation>false</xs:documentation></xs:annotation>
+      </xs:enumeration/>	
       <xs:enumeration value="1" />
+		<xs:annotation><xs:documentation>true</xs:documentation></xs:annotation>
+      </xs:enumeration/>		
     </xs:restriction>
   </xs:simpleType>
 
