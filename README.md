@@ -56,38 +56,6 @@ their statutory duties. In v0.1 the datasets that can be processed are:
 The package is designed to process data that is deposited by LAs into a folder directory to be created on the London 
 DataStore for this purpose.Page Break 
 
-## Suggested Folder Structure
-
-![Suggested Folder Structure](/docs/images/folder_structure.png)
-
-*LA x – represents a single instance of 33 folders, one for each of the 33 LAs 
-
-In the rest of this document, the folder structure is referenced from the root folder, LIIA project folder, using the 
-following convention: 
-
-
-    LIIA project folder/LA folders/{LA name}/CIN Census/Inputs 
-
-
-Use of curly brackets e.g. {LA name} denotes a variable reference
-
-### Use of the folder structure 
-
-The diagram above is a proposed folder structure. The liiatools package is agnostic to this folder structure, so 
-changes can be made to it without any code changes required. Explicit reference to the folder structure is only required 
-in the inputs to the CLI commands used to run the functions within liiatools. Please see 
-[Configuring liiatools](#Configuring liiatools) for guidance on how to derive these inputs. 
-
-The only element of the folder structure created on London DataStore that must adhere to the proposal in this document 
-is in the use of the names of LAs.
-
-### Use of LA Names
-The folder structure makes use of the names of the 33 LAs, in organising where LAs deposit and retrieve data, and where 
-cleaned outputs are stored. The code in liiatools makes specific reference to these names. As such, you should make 
-sure you use the correct LA code for each LA.  Please refer to the 
-[LA code definitions](/liiatools/spec/common/LA-codes.yml) to make sure you're using the correct code.
-
-
 ### Installing liiatools
 Liiatools can be installed using the following:
 
