@@ -1,9 +1,12 @@
 from pathlib import Path
 import re
 import pandas as pd
+import logging
 
 from liiatools.datasets.cin_census.lds_cin_clean import la_codes
 from liiatools.datasets.shared_functions import converters
+
+log = logging.getLogger(__name__)
 
 
 def convert_to_dataframe(data):
@@ -50,7 +53,7 @@ def add_la_name(data, la_name):
 
 def la_prefix(data, la_name):
     la_prefix = la_codes.la_codes[la_name]
-    data["LAchildID"] = la_prefix + "_" + data["LAchildID"]
+    data["LAchildID"] = data["LAchildID"] + "_" + la_prefix
     return data
 
 

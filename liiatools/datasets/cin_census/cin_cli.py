@@ -1,7 +1,6 @@
 import logging
 import click_log
 import click as click
-from collections import defaultdict
 from pathlib import Path
 import yaml
 
@@ -16,6 +15,8 @@ from csdatatools.datasets.cincensus import filters, cin_record
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
     configuration,
+    logger,
+    validator,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
@@ -26,8 +27,8 @@ from liiatools.datasets.cin_census.lds_cin_la_agg import cc_la_agg
 # Dependencies for pan_agg()
 from liiatools.datasets.cin_census.lds_cin_pan_agg import cc_pan_agg
 
-logger = logging.getLogger()
-click_log.basic_config(logger)
+log = logging.getLogger()
+click_log.basic_config(log)
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
@@ -67,7 +68,7 @@ def cin_census():
     type=str,
     help="A string specifying the output directory location",
 )
-@click_log.simple_verbosity_option(logger)
+@click_log.simple_verbosity_option(log)
 def cleanfile(input, la_code, la_log_dir, output):
     """Cleans an input CIN Census xml file according to config and outputs a cleaned csv file.
     'input' should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -85,13 +86,19 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema().schema)
+    stream = logger.inherit_child_id(stream)
 
     # Validate stream
-    stream = filters.validate_elements(stream)
-    counter_context = defaultdict(lambda: 0)
-    stream = filters.counter(stream,
-                             counter_check=lambda e: isinstance(e, events.StartElement) and not
-                             getattr(e, 'valid', True), context=counter_context)
+    stream = validator.validate_elements(stream)
+    value_error = []
+    structural_error = []
+    stream = logger.counter(
+        stream,
+        counter_check=lambda e: isinstance(e, events.StartElement)
+        and hasattr(e, "valid"),
+        value_error=value_error,
+        structural_error=structural_error,
+    )
 
     # Clean stream
     stream = filters.remove_invalid(stream, tag_name="Child")
@@ -101,6 +108,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     data = cin_record.export_table(stream)
     data = file_creator.add_fields(input, data, la_name)
     file_creator.export_file(input, output, data)
+    logger.save_errors_la(
+        input,
+        value_error=value_error,
+        structural_error=structural_error,
+        la_log_dir=la_log_dir,
+    )
 
 
 @cin_census.command()
