@@ -89,7 +89,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = logger.inherit_child_id(stream)
 
     # Validate stream
-    stream = validator.validate_elements(stream)
+    stream = validator.validate_elements(stream, input=input, la_log_dir=la_log_dir)
     value_error = []
     structural_error = []
     stream = logger.counter(
