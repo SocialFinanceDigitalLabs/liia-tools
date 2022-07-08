@@ -10,6 +10,29 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 log = logging.getLogger(__name__)
 
 
+def _save_error(input, la_log_dir, error):
+    """
+    Save errors to a text file in the LA log directory
+
+    :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param la_log_dir: Path to the local authority's log folder
+    :param error: The error information
+    :return: Text file containing the error information
+    """
+    filename = str(Path(input).resolve().stem)
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    with open(
+            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+            "a",
+    ) as f:
+        f.write(
+            f"Could not process {filename} because it is missing a required element(s) as described below"
+        )
+        f.write("\n")
+        f.write(str(error))
+        f.write("\n")
+
+
 def _get_validation_error(event, schema, node, input, la_log_dir) -> XMLSchemaValidatorError:
     """
     Validate an event
@@ -18,24 +41,14 @@ def _get_validation_error(event, schema, node, input, la_log_dir) -> XMLSchemaVa
     :param schema: The xml schema attached to a given event
     :param node: The node attached to a given event
     :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param la_log_dir: Path to the local authority's log folder
     :return: None if valid, error log if XMLSchemaValidatorError, event if AttributeError
     """
     try:
         schema.validate(node)
         return None
     except XMLSchemaValidatorError as e:
-        filename = str(Path(input).resolve().stem)
-        start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-        with open(
-            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-            "a",
-        ) as f:
-            f.write(
-                f"Could not process {filename} because it is missing a required element(s) as described below"
-            )
-            f.write("\n")
-            f.write(str(e))
-            f.write("\n")
+        _save_error(input, la_log_dir, error=e)
         raise e
     except AttributeError:  # Return event information, so it can be written to a log for the Local Authority
         return event
