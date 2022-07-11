@@ -4,7 +4,6 @@ import pandas as pd
 import logging
 from datetime import datetime
 
-from liiatools.datasets.cin_census.lds_cin_clean import la_codes
 from liiatools.datasets.shared_functions import converters
 
 log = logging.getLogger(__name__)
@@ -48,8 +47,8 @@ def get_year(input, data, la_log_dir):
 
 
 def convert_to_datetime(data):
-    data[["PersonBirthDate", "PersonSchoolYear", "PersonDeathDate", "ExpectedPersonBirthDate"]] = data[
-        ["PersonBirthDate", "PersonSchoolYear", "PersonDeathDate", "ExpectedPersonBirthDate"]
+    data[["PersonBirthDate", "PersonDeathDate", "ExpectedPersonBirthDate"]] = data[
+        ["PersonBirthDate", "PersonDeathDate", "ExpectedPersonBirthDate"]
     ].apply(pd.to_datetime)
     return data
 
@@ -76,9 +75,8 @@ def add_la_name(data, la_name):
     return data
 
 
-def la_prefix(data, la_name):
-    la_prefix = la_codes.la_codes[la_name]
-    data["LAchildID"] = data["LAchildID"] + "_" + la_prefix
+def la_prefix(data, la_code):
+    data["LAchildID"] = data["LAchildID"] + "_" + la_code
     return data
 
 
@@ -106,7 +104,7 @@ def degrade_death_date(data):
         return data
 
 
-def add_fields(input, data, la_name, la_log_dir):
+def add_fields(input, data, la_name, la_log_dir, la_code):
     """Adds YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
     Appends LA_code from config to LAChildID"""
     data = convert_to_dataframe(data)
@@ -114,7 +112,7 @@ def add_fields(input, data, la_name, la_log_dir):
     data = convert_to_datetime(data)
     data = add_school_year(data)
     data = add_la_name(data, la_name)
-    data = la_prefix(data, la_name)
+    data = la_prefix(data, la_code)
     data = degrade_dob(data)
     data = degrade_expected_dob(data)
     data = degrade_death_date(data)

@@ -47,25 +47,26 @@ def cin_census():
 @click.option(
     "--i",
     "input",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
 )
 @click.option(
     "--la_code",
+    required=True,
     type=click.Choice(la_list, case_sensitive=False),
-    help="A LA code, specifying the local authority that deposited the file",
+    help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(
     "--la_log_dir",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
 )
 @click.option(
     "--o",
     "output",
-    default="empty",
+    required=True,
     type=str,
     help="A string specifying the output directory location",
 )
@@ -107,7 +108,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Output result
     stream = cin_record.message_collector(stream)
     data = cin_record.export_table(stream)
-    data = file_creator.add_fields(input, data, la_name, la_log_dir)
+    data = file_creator.add_fields(input, data, la_name, la_log_dir, la_code)
     file_creator.export_file(input, output, data)
     logger.save_errors_la(
         input,

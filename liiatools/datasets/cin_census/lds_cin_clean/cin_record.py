@@ -1,17 +1,9 @@
 from typing import Iterator
-
+import tablib
 from more_itertools import peekable
 
 from sfdata_stream_parser import events
-from sfdata_stream_parser.checks import (
-    EventCheck,
-    and_check,
-    type_check,
-    property_check,
-)
 from sfdata_stream_parser.collectors import xml_collector
-
-import tablib
 
 
 class CINEvent(events.ParseEvent):
@@ -171,7 +163,6 @@ def event_to_records(event: CINEvent) -> Iterator[dict]:
     for cin_item in _maybe_list(record.get("CINdetails")):
         yield from cin_event({**child, **cin_item}, "CINreferralDate")
         yield from cin_event({**child, **cin_item}, "CINclosureDate")
-        yield from cin_event({**child, **cin_item}, "DateOfInitialCPC")
 
         for assessment in _maybe_list(cin_item.get("Assessments")):
             assessment["Factors"] = ",".join(
