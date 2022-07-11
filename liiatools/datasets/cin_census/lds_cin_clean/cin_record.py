@@ -1,4 +1,4 @@
-from typing import Generator, Iterator
+from typing import Iterator
 
 from more_itertools import peekable
 
@@ -9,7 +9,7 @@ from sfdata_stream_parser.checks import (
     type_check,
     property_check,
 )
-from sfdata_stream_parser.collectors import collector, xml_collector
+from sfdata_stream_parser.collectors import xml_collector
 
 import tablib
 
@@ -20,16 +20,6 @@ class CINEvent(events.ParseEvent):
 
 class HeaderEvent(events.ParseEvent):
     pass
-
-
-def xml_prop_check(event_type, **kwargs) -> EventCheck:
-    """
-    Checks for xml event with the given type and properties.
-    """
-    return and_check(
-        type_check(event_type),
-        property_check(**kwargs),
-    )
 
 
 def _reduce_dict(dict_instance):
