@@ -1,12 +1,8 @@
 from pathlib import Path
 import pandas as pd
 import logging
-from datetime import datetime
-import numpy as np
-import os
 
 log = logging.getLogger(__name__)
-start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
 
 
 def read_file(file):
@@ -72,23 +68,6 @@ def remove_old_data(s903_df, years):
     return s903_df
 
 
-def log_missing_years(s903_df, table_name, la_log_dir):
-    """
-    Output a log of the missing years for merged dataframes
-    """
-    expected_years = pd.Series(np.arange(s903_df["YEAR"].min(), s903_df["YEAR"].max()+1))
-    actual_years = s903_df["YEAR"].unique()
-    missing_years = expected_years[~expected_years.isin(actual_years)]
-    clean_missing_years = str(missing_years.values)[1:-1]  # Remove brackets from missing_years
-
-    if clean_missing_years:
-        with open(f"{os.path.join(la_log_dir, table_name)}_error_log_{start_time}.txt", 'a') as f:
-            f.write(f"{table_name}_{start_time}")
-            f.write("\n")
-            f.write(f"Years missing from dataset: {clean_missing_years}")
-            f.write("\n")
-
-
 def convert_dates(s903_df, dates, table_name):
     '''
     Ensures that all date fields have been parsed as dates
@@ -99,5 +78,8 @@ def convert_dates(s903_df, dates, table_name):
 
 
 def export_la_file(output, table_name, s903_df):
+    '''
+    Writes the output as a csv
+    '''
     output_path = Path(output, f"SSDA903_{table_name}_merged.csv")
     s903_df.to_csv(output_path, index=False)

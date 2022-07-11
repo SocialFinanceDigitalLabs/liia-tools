@@ -14,7 +14,7 @@ from csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
-    configuration,
+    configuration as clean_config,
     logger,
     validator,
     cin_record,
@@ -23,7 +23,8 @@ from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
 
 # Dependencies for la_agg()
-from liiatools.datasets.cin_census.lds_cin_la_agg import cc_la_agg
+from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
+from liiatools.datasets.cin_census.lds_cin_la_agg import process as agg_process
 
 # Dependencies for pan_agg()
 from liiatools.datasets.cin_census.lds_cin_pan_agg import cc_pan_agg
@@ -85,7 +86,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = dom_parse(input)
 
     # Configure stream
-    config = configuration.Config()
+    config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
@@ -162,41 +163,67 @@ def cleanfile(input, la_code, la_log_dir, output):
 
 
 @cin_census.command()
-@click.argument("input", type=click.Path(exists=True))
-@click.argument("la_log_dir", type=click.Path(exists=True))
-@click.argument("flat_output", type=click.Path(exists=True))
-@click.argument("analysis_output", type=click.Path(exists=True))
-def la_agg(input, la_log_dir, flat_output, analysis_output):
-    """Aggregates all CIN Census files that have been uploaded by a local authority
-    'input' should specify the input file location, including file name and suffix, and be usable by a Path function
-    'la_log_dir' should specify the path to the local authority's log folder
-    'flat_output' should specify the output directory for the flatfile output, and be usable by a Path function
-    'analysis_output should specify the output directory for the analysis outputs, and be usable by a Path function"""
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--flat_output",
+    required=True,
+    type=str,
+    help="A string specifying the directory location for the main flatfile output"
+)
+@click.option(
+    "--analysis_output",
+    required=True,
+    type=str,
+    help="A string specifying the directory location for the additional analysis outputs"
+)
+def la_agg(input, flat_output, analysis_output):
+    """
+    Joins data from newly cleaned CIN Census file (output of cleanfile()) to existing CIN Census data for the depositing local authority
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param flat_output: should specify the path to the folder for the main flatfile output
+    :param analysis_output: should specify the path to the folder for the additional analytical outputs
+    :return: None
+    """
 
-    # Create flat file
-    flatfile = cc_la_agg.read_file(input)
-    flatfile = cc_la_agg.merge_la_files(flat_output, flatfile, input)
-    flatfile = cc_la_agg.deduplicate(flatfile, input)
-    flatfile = cc_la_agg.remove_old_data(flatfile, input)
-    flatfile = cc_la_agg.log_missing_years(flatfile, input, la_log_dir)
-    cc_la_agg.export_flatfile(flat_output, flatfile, input)
+    # Configuration
+    config = agg_config.Config()
 
-    # Create fact file
-    factors = cc_la_agg.factors_inputs(flatfile)
-    factors = cc_la_agg.split_factors(factors)
-    cc_la_agg.export_factfile(analysis_output, factors)
+    # Open file as Dataframe
+    dates = config["dates"]
+    flatfile = agg_process.read_file(input, dates)
+
+    # Merge with existing data, de-duplicate and apply data retention policy
+    flatfile = agg_process.merge_la_files(flat_output, dates, flatfile)
+    sort_order = config["sort_order"]
+    dedup = config["dedup"]
+    flatfile = agg_process.deduplicate(flatfile, sort_order, dedup)
+    flatfile = agg_process.remove_old_data(flatfile, years = 6)
+
+    # Output flatfile
+    agg_process.export_flatfile(flat_output, flatfile)
+
+    # Create and output factors file
+    factors = agg_process.filter_flatfile(flatfile, filter="AssessmentAuthorisationDate")
+    factors = agg_process.split_factors(factors)
+    agg_process.export_factfile(analysis_output, factors)
 
     # Create referral file
-    ref, s17, s47 = cc_la_agg.referral_inputs(flatfile)
-    ref_s17 = cc_la_agg.merge_ref_s17(ref, s17)
-    ref_s47 = cc_la_agg.merge_ref_s47(ref, s47)
-    ref_outs = cc_la_agg.ref_outcomes(ref, ref_s17, ref_s47)
-    cc_la_agg.export_reffile(analysis_output, ref_outs)
+    ref, s17, s47 = process.referral_inputs(flatfile)
+    ref_s17 = process.merge_ref_s17(ref, s17)
+    ref_s47 = process.merge_ref_s47(ref, s47)
+    ref_outs = process.ref_outcomes(ref, ref_s17, ref_s47)
+    process.export_reffile(analysis_output, ref_outs)
 
     # Create journey file
-    s47_outs = cc_la_agg.journey_inputs(flatfile)
-    s47_journey = cc_la_agg.s47_paths(s47_outs)
-    cc_la_agg.export_journeyfile(analysis_output, s47_journey)
+    s47_outs = process.journey_inputs(flatfile)
+    s47_journey = process.s47_paths(s47_outs)
+    process.export_journeyfile(analysis_output, s47_journey)
 
 
 @cin_census.command()
