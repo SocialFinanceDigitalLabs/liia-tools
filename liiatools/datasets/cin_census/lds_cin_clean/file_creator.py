@@ -23,8 +23,8 @@ def get_year(input, data):
 
 
 def convert_to_datetime(data):
-    data[["PersonBirthDate", "PersonSchoolYear"]] = data[
-        ["PersonBirthDate", "PersonSchoolYear"]
+    data[["PersonBirthDate", "PersonSchoolYear", "PersonDeathDate", "ExpectedPersonBirthDate"]] = data[
+        ["PersonBirthDate", "PersonSchoolYear", "PersonDeathDate", "ExpectedPersonBirthDate"]
     ].apply(pd.to_datetime)
     return data
 

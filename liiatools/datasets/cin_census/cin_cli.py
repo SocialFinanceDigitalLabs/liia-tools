@@ -10,13 +10,14 @@ from sfdata_stream_parser.stream import events
 
 from csdatatools.util.xml import dom_parse
 from csdatatools.datasets.cincensus.schema import Schema
-from csdatatools.datasets.cincensus import filters, cin_record
+from csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
     configuration,
     logger,
     validator,
+    cin_record
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
