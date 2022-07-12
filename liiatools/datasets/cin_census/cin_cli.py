@@ -214,16 +214,21 @@ def la_agg(input, flat_output, analysis_output):
     agg_process.export_factfile(analysis_output, factors)
 
     # Create referral file
-    ref, s17, s47 = process.referral_inputs(flatfile)
-    ref_s17 = process.merge_ref_s17(ref, s17)
-    ref_s47 = process.merge_ref_s47(ref, s47)
-    ref_outs = process.ref_outcomes(ref, ref_s17, ref_s47)
-    process.export_reffile(analysis_output, ref_outs)
+    ref, s17, s47 = agg_process.referral_inputs(flatfile)
+    ref_assessment = config["ref_assessment"]
+    ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
+    ref_s47 = agg_process.merge_ref_s47(ref, s47, ref_assessment)
+    ref_outs = agg_process.ref_outcomes(ref, ref_s17, ref_s47)
+    agg_process.export_reffile(analysis_output, ref_outs)
 
     # Create journey file
-    s47_outs = process.journey_inputs(flatfile)
-    s47_journey = process.s47_paths(s47_outs)
-    process.export_journeyfile(analysis_output, s47_journey)
+    icpc_cpp_days = config["icpc_cpp_days"]
+    s47_cpp_days = config["s47_cpp_days"]
+    s47_outs = agg_process.journey_inputs(flatfile, icpc_cpp_days, s47_cpp_days)
+    s47_day_limit = config["s47_day_limit"]
+    icpc_day_limit = config["icpc_day_limit"]
+    s47_journey = agg_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
+    agg_process.export_journeyfile(analysis_output, s47_journey)
 
 
 @cin_census.command()
@@ -259,3 +264,11 @@ def pan_agg(input, la_name, flat_output, analysis_output):
     s47_outs = cc_pan_agg.journey_inputs(flatfile)
     s47_journey = cc_pan_agg.s47_paths(s47_outs)
     cc_pan_agg.export_journeyfile(analysis_output, s47_journey)
+
+# input = r"C:\Users\Michael.Hanks\OneDrive - Social Finance Ltd\Desktop\Fake LDS 2\LDS folders\Bromley\CIN Census\CIN_Census_2021_factors_clean.csv"
+# config = agg_config.Config()
+# dates = config["dates"]
+# flatfile = agg_process.read_file(input, dates)
+# ref, s17, s47 = agg_process.referral_inputs(flatfile)
+# ref_assessment = config["ref_assessment"]
+# ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
