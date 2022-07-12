@@ -1,8 +1,8 @@
+import logging
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
 import numpy as np
-import logging
 
 log = logging.getLogger(__name__)
 
@@ -15,45 +15,30 @@ def read_file(input, dates):
     return flatfile
 
 
-def merge_la_files(flat_output, dates, flatfile):
+def _merge_dfs(flatfile, old_df, la_name):
     '''
-    Looks for existing file of the same type and merges with new file if found
+    Deletes existing data for new LA from pan file
+    Merges new LA data to pan file
     '''
-    old_file = Path(flat_output, f"CIN_Census_merged_flatfile.csv")
-    if old_file.is_file():
-        old_df = pd.read_csv(old_file, parse_dates=dates, dayfirst=True)
-        merged_df = pd.concat([flatfile, old_df], axis=0)
-    else:
-        merged_df = flatfile
-    return merged_df
-
-
-def deduplicate(flatfile, sort_order, dedup):
-    '''
-    Sorts and removes duplicate records from merged files following schema
-    '''
-    flatfile = flatfile.sort_values(sort_order, ascending=False, ignore_index=True)
-    flatfile = flatfile.drop_duplicates(subset=dedup, keep="first")
+    old_df = old_df.drop(old_df[old_df['LA'] == la_name].index)
+    flatfile = pd.concat([flatfile, old_df], axis=0, ignore_index=True)
     return flatfile
 
 
-def remove_old_data(flatfile, years):
+def merge_agg_files(flat_output, dates, la_name, flatfile):
     '''
-    Removes data older than a specified number of years
+    Checks if pan file exists
+    Passes old and new file to function to be merged
     '''
-    year = pd.to_datetime("today").year
-    month = pd.to_datetime("today").month
-    if month <= 6:
-        year = year - 1
-    flatfile = flatfile[flatfile["YEAR"] >= year - years]
+    output_file = Path(flat_output, f"pan_London_CIN_flatfile.csv")
+    if output_file.is_file():
+        old_df = pd.read_csv(output_file, parse_dates=dates, dayfirst=True)
+        flatfile = _merge_dfs(flatfile, old_df, la_name)
     return flatfile
 
 
 def export_flatfile(flat_output, flatfile):
-    '''
-    Writes the flatfile output as a csv
-    '''
-    output_path = Path(flat_output, f"CIN_Census_merged_flatfile.csv")
+    output_path = Path(flat_output, f"pan_London_CIN_flatfile.csv")
     flatfile.to_csv(output_path, index=False)
 
 
