@@ -6,19 +6,29 @@ import yaml
 from string import Template
 
 from liiatools.spec import cin_census as cin_asset_dir
+from liiatools.spec import common as common_asset_dir
 
 log = logging.getLogger(__name__)
 
 DEFAULT_CONFIG_DIR = Path(cin_asset_dir.__file__).parent
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 class Config(dict):
-    def __init__(self, config_file=None):
+    def __init__(self, config_files=None):
         super().__init__()
 
-        if not config_file:
-            config_file = DEFAULT_CONFIG_DIR / "agg.yml"
+        if not config_files:
+            config_files = [
+                "PAN_AGG_CONFIG",
+                "LA_CODES_CONFIG",
+            ]
 
-        self.load_config(config_file, conditional=False)
+        for file in config_files:
+            if file == "PAN_AGG_CONFIG":
+                file = DEFAULT_CONFIG_DIR / "agg.yml"
+            elif file == "LA_CODES_CONFIG":
+                file = COMMON_CONFIG_DIR / "LA-codes.yml"
+            self.load_config(file, conditional=False)
 
         self["config_date"] = datetime.datetime.now().isoformat()
         try:

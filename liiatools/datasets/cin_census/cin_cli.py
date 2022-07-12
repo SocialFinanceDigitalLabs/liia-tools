@@ -1,4 +1,5 @@
 import logging
+from tkinter import N
 import click_log
 import click as click
 from pathlib import Path
@@ -22,12 +23,14 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
 
-# Dependencies for la_agg()
+# Configuration for aggregation process (la-agg & pan-agg)
 from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
+
+# Dependencies for la_agg()
 from liiatools.datasets.cin_census.lds_cin_la_agg import process as agg_process
 
 # Dependencies for pan_agg()
-from liiatools.datasets.cin_census.lds_cin_pan_agg import cc_pan_agg
+from liiatools.datasets.cin_census.lds_cin_pan_agg import process as pan_process
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -232,43 +235,73 @@ def la_agg(input, flat_output, analysis_output):
 
 
 @cin_census.command()
-@click.argument("input", type=click.Path(exists=True))
-@click.argument("la_name", type=str)
-@click.argument("flat_output", type=click.Path(exists=True))
-@click.argument("analysis_output", type=click.Path(exists=True))
-def pan_agg(input, la_name, flat_output, analysis_output):
-    """Adds new data from one local authority to the existing pan-London aggregated files
-    'input' should specify the input file location, including file name and suffix, and be usable by a Path function
-    'la_name' should be a string of the name of the local authority whose data is being aggregated
-    'flat_output' should specify the output directory for the flatfile output, and be usable by a Path function
-    'analysis_output should specify the output directory for the analysis outputs, and be usable by a Path function"""
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--la_code",
+    required=True,    
+    type=click.Choice(la_list, case_sensitive=False),
+    help="A three letter code, specifying the local authority that deposited the file",
+)
+@click.option(
+    "--flat_output",
+    required=True,
+    type=str,
+    help="A string specifying the directory location for the main flatfile output"
+)
+@click.option(
+    "--analysis_output",
+    required=True,
+    type=str,
+    help="A string specifying the directory location for the additional analysis outputs"
+)
+def pan_agg(input, la_code, flat_output, analysis_output):
+    """
+    Joins data from newly merged CIN Census file (output of la-agg()) to existing pan-London CIN Census data and creates analytical outputs
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param flat_output: should specify the path to the folder for the main flatfile output
+    :param analysis_output: should specify the path to the folder for the additional analytical outputs
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
 
     # Create flat file
-    flatfile = cc_pan_agg.read_file(input)
-    flatfile = cc_pan_agg.merge_agg_files(flat_output, la_name, flatfile)
-    cc_pan_agg.export_flatfile(flat_output, flatfile)
+    dates = config["dates"]
+    flatfile = pan_process.read_file(input, dates)
 
-    # Create fact file
-    factors = cc_pan_agg.factors_inputs(flatfile)
-    factors = cc_pan_agg.split_factors(factors)
-    cc_pan_agg.export_factfile(analysis_output, factors)
+    # Merge with existing pan-London data
+    la_name = flip_dict(config["data_codes"])[la_code]
+    flatfile = pan_process.merge_agg_files(flat_output, dates, la_name, flatfile)
+
+    # Output flatfile
+    pan_process.export_flatfile(flat_output, flatfile)
+
+    # Create and output factors file
+    factors = pan_process.filter_flatfile(flatfile, filter="AssessmentAuthorisationDate")
+    factors = pan_process.split_factors(factors)
+    pan_process.export_factfile(analysis_output, factors)
 
     # Create referral file
-    ref, s17, s47 = cc_pan_agg.referral_inputs(flatfile)
-    ref_s17 = cc_pan_agg.merge_ref_s17(ref, s17)
-    ref_s47 = cc_pan_agg.merge_ref_s47(ref, s47)
-    ref_outs = cc_pan_agg.ref_outcomes(ref, ref_s17, ref_s47)
-    cc_pan_agg.export_reffile(analysis_output, ref_outs)
+    ref, s17, s47 = pan_process.referral_inputs(flatfile)
+    ref_assessment = config["ref_assessment"]
+    ref_s17 = pan_process.merge_ref_s17(ref, s17, ref_assessment)
+    ref_s47 = pan_process.merge_ref_s47(ref, s47, ref_assessment)
+    ref_outs = pan_process.ref_outcomes(ref, ref_s17, ref_s47)
+    pan_process.export_reffile(analysis_output, ref_outs)
 
     # Create journey file
-    s47_outs = cc_pan_agg.journey_inputs(flatfile)
-    s47_journey = cc_pan_agg.s47_paths(s47_outs)
-    cc_pan_agg.export_journeyfile(analysis_output, s47_journey)
-
-# input = r"C:\Users\Michael.Hanks\OneDrive - Social Finance Ltd\Desktop\Fake LDS 2\LDS folders\Bromley\CIN Census\CIN_Census_2021_factors_clean.csv"
-# config = agg_config.Config()
-# dates = config["dates"]
-# flatfile = agg_process.read_file(input, dates)
-# ref, s17, s47 = agg_process.referral_inputs(flatfile)
-# ref_assessment = config["ref_assessment"]
-# ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
+    icpc_cpp_days = config["icpc_cpp_days"]
+    s47_cpp_days = config["s47_cpp_days"]
+    s47_outs = pan_process.journey_inputs(flatfile, icpc_cpp_days, s47_cpp_days)
+    s47_day_limit = config["s47_day_limit"]
+    icpc_day_limit = config["icpc_day_limit"]
+    s47_journey = pan_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
+    pan_process.export_journeyfile(analysis_output, s47_journey)
