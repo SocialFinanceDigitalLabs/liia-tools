@@ -23,13 +23,12 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
 
-# Configuration for aggregation process (la-agg & pan-agg)
-from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
-
 # Dependencies for la_agg()
+from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
 from liiatools.datasets.cin_census.lds_cin_la_agg import process as agg_process
 
 # Dependencies for pan_agg()
+from liiatools.datasets.cin_census.lds_cin_pan_agg import configuration as pan_config
 from liiatools.datasets.cin_census.lds_cin_pan_agg import process as pan_process
 
 log = logging.getLogger()
@@ -271,7 +270,7 @@ def pan_agg(input, la_code, flat_output, analysis_output):
     """
 
     # Configuration
-    config = agg_config.Config()
+    config = pan_config.Config()
 
     # Create flat file
     dates = config["dates"]

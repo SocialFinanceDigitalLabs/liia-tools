@@ -93,9 +93,20 @@ def _time_between_date_series(later_date_series, earlier_date_series, years=0, d
         return days_series
     
     elif years == 1:
-        years_series = (days_series / 365.25).apply(np.floor)
+        years_series = (days_series / 365).apply(np.floor)
         years_series = years_series.astype(int)
         return years_series    
+
+
+def _filter_event_series(dataset, days_series, max_days):
+
+    dataset = dataset[
+        (
+            (dataset[days_series] <= max_days)
+            & (dataset[days_series] >= 0)
+        )
+    ]
+    return dataset
 
 
 def merge_ref_s17(ref, s17, ref_assessment):
@@ -111,12 +122,7 @@ def merge_ref_s17(ref, s17, ref_assessment):
     ref_s17["days_to_s17"] = _time_between_date_series(ref_s17["AssessmentActualStartDate"], ref_s17["CINreferralDate"], days=1)
 
     # Only assessments within config-specifed period following referral are valid
-    ref_s17 = ref_s17[
-        (
-            (ref_s17["days_to_s17"] <= ref_assessment)
-            & (ref_s17["days_to_s17"] >= 0)
-        )
-    ]
+    ref_s17 = _filter_event_series(ref_s17, "days_to_s17", ref_assessment)
 
     # Reduces dataset to fields required for analysis
     ref_s17 = ref_s17[["Date", "LAchildID", "AssessmentActualStartDate", "days_to_s17"]]
@@ -129,20 +135,15 @@ def merge_ref_s47(ref, s47, ref_assessment):
     Merges ref and s47 views together, keeping only logically valid matches
     """
     # Merges referrals and S47s
-    data_s47 = ref.merge(
+    ref_s47 = ref.merge(
         s47[["LAchildID", "S47ActualStartDate"]], how="left", on="LAchildID"
     )
 
     # Calculates days between S47 and referral
-    data_s47["days_to_s47"] = _time_between_date_series(data_s47["S47ActualStartDate"], data_s47["CINreferralDate"], days=1)
+    ref_s47["days_to_s47"] = _time_between_date_series(ref_s47["S47ActualStartDate"], ref_s47["CINreferralDate"], days=1)
 
     # Only S47s within config-specifed period following referral are valid
-    ref_s47 = data_s47[
-        (
-            (data_s47["days_to_s47"] <= ref_assessment)
-            & (data_s47["days_to_s47"] >= 0)
-        )
-    ]
+    ref_s47 = _filter_event_series(ref_s47, "days_to_s47", ref_assessment)
 
     # Reduces dataset to fields required for analysis
     ref_s47 = ref_s47[["Date", "LAchildID", "S47ActualStartDate", "days_to_s47"]]
