@@ -44,8 +44,8 @@ def cin_collector(stream):
     last_tag = None
     while stream:
         event = stream.peek()
-        last_tag = event.get('tag', last_tag)
-        if event.get('tag') in (
+        last_tag = event.get("tag", last_tag)
+        if event.get("tag") in (
             "Assessments",
             "CINPlanDates",
             "Section47",
@@ -67,9 +67,9 @@ def child_collector(stream):
     assert stream.peek().tag == "Child"
     while stream:
         event = stream.peek()
-        if event.get('tag') in ("ChildIdentifiers", "ChildCharacteristics"):
+        if event.get("tag") in ("ChildIdentifiers", "ChildCharacteristics"):
             data_dict.setdefault(event.tag, []).append(text_collector(stream))
-        elif event.get('tag') == "CINdetails":
+        elif event.get("tag") == "CINdetails":
             data_dict.setdefault(event.tag, []).append(cin_collector(stream))
         else:
             next(stream)
@@ -85,11 +85,11 @@ def message_collector(stream):
     )
     while stream:
         event = stream.peek()
-        if event.get('tag') == "Header":
+        if event.get("tag") == "Header":
             header_record = text_collector(stream)
             if header_record:
                 yield HeaderEvent(record=header_record)
-        elif event.get('tag') == "Child":
+        elif event.get("tag") == "Child":
             cin_record = child_collector(stream)
             if cin_record:
                 yield CINEvent(record=cin_record)
@@ -108,6 +108,8 @@ __EXPORT_HEADERS = [
     "ReasonForClosure",
     "DateOfInitialCPC",
     "ReferralNFA",
+    "CINPlanStartDate",
+    "CINPlanEndDate",
     "S47ActualStartDate",
     "InitialCPCtarget",
     "ICPCnotRequired",
@@ -177,11 +179,10 @@ def event_to_records(event: CINEvent) -> Iterator[dict]:
 
         for cin in _maybe_list(cin_item.get("CINPlanDates")):
             yield from cin_event(
-                {**child, **cin_item, **cin}, "CINPlanStartDate",
+                {**child, **cin_item, **cin},
+                "CINPlanStartDate",
             )
-            yield from cin_event(
-                {**child, **cin_item, **cin}, "CINPlanEndDate"
-            )
+            yield from cin_event({**child, **cin_item, **cin}, "CINPlanEndDate")
 
         for s47 in _maybe_list(cin_item.get("Section47")):
             yield from cin_event({**child, **cin_item, **s47}, "S47ActualStartDate")
@@ -191,7 +192,9 @@ def event_to_records(event: CINEvent) -> Iterator[dict]:
             yield from cin_event({**child, **cin_item, **cpp}, "CPPendDate")
             for cpp_review in _maybe_list(cpp.get("CPPreviewDate")):
                 cpp_review = {"CPPreviewDate": cpp_review}
-                yield from cin_event({**child, **cin_item, **cpp, **cpp_review}, "CPPreviewDate")
+                yield from cin_event(
+                    {**child, **cin_item, **cpp, **cpp_review}, "CPPreviewDate"
+                )
 
 
 def export_table(stream):
@@ -199,5 +202,5 @@ def export_table(stream):
     for event in stream:
         if isinstance(event, CINEvent):
             for record in event_to_records(event):
-                data.append([record.get(k, '') for k in __EXPORT_HEADERS])
+                data.append([record.get(k, "") for k in __EXPORT_HEADERS])
     return data

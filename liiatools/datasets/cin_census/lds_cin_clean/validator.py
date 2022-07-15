@@ -1,71 +1,65 @@
 import logging
 from xmlschema import XMLSchemaValidatorError
-from pathlib import Path
-from datetime import datetime
 
 from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
+from sfdata_stream_parser.collectors import collector, block_check
 
 log = logging.getLogger(__name__)
 
 
-def _save_error(input, la_log_dir, error):
-    """
-    Save errors to a text file in the LA log directory
-
-    :param input: The input file location, including file name and suffix, and be usable by a Path function
-    :param la_log_dir: Path to the local authority's log folder
-    :param error: The error information
-    :return: Text file containing the error information
-    """
-    filename = str(Path(input).resolve().stem)
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-    with open(
-            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-            "a",
-    ) as f:
-        f.write(
-            f"Could not process {filename} because it is missing a required element(s) as described below"
-        )
-        f.write("\n")
-        f.write(str(error))
-        f.write("\n")
-
-
-def _get_validation_error(event, schema, node, input, la_log_dir) -> XMLSchemaValidatorError:
+def _get_validation_error(
+    event, schema, node, LAchildID_error, field_error
+) -> XMLSchemaValidatorError:
     """
     Validate an event
 
     :param event: A filtered list of event objects
     :param schema: The xml schema attached to a given event
     :param node: The node attached to a given event
-    :param input: The input file location, including file name and suffix, and be usable by a Path function
-    :param la_log_dir: Path to the local authority's log folder
-    :return: None if valid, error log if XMLSchemaValidatorError, event if AttributeError
+    :param LAchildID_error: An empty list to save child ID errors
+    :param field_error: An empty list to save field errors
+    :return: None if valid, event and error information if XMLSchemaValidatorError, event if AttributeError
     """
     try:
         schema.validate(node)
         return None
     except XMLSchemaValidatorError as e:
-        _save_error(input, la_log_dir, error=e)
-        raise e
+        if "Unexpected" and "LAchildID" in e.reason:
+            LAchildID_error.append(
+                "LAchildID is missing, other errors associated to this LAchildID will not be "
+                "shown because of this. See more information below"
+            )
+            LAchildID_error.append(str(e))
+            return event
+        if "Unexpected" in e.reason:
+            field_error.append(
+                f"Essential fields not found. See more information below"
+            )
+            field_error.append(str(e))
+            return event
+        else:
+            return event
     except AttributeError:  # Return event information, so it can be written to a log for the Local Authority
         return event
 
 
 @streamfilter(check=type_check(events.StartElement), fail_function=pass_event)
-def validate_elements(event, input, la_log_dir):
+def validate_elements(event, LAchildID_error, field_error):
     """
     Validates each element, and if not valid, sets the properties:
 
     :param event: A filtered list of event objects
-    :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param LAchildID_error: An empty list to save child ID errors
+    :param field_error: An empty list to save field errors
 
     * valid - (always False)
     * validation_message - a descriptive validation message
     """
-    validation_error = _get_validation_error(event, event.schema, event.node, input, la_log_dir)
+    validation_error = _get_validation_error(
+        event, event.schema, event.node, LAchildID_error, field_error
+    )
     if validation_error is None:
         return event
 
@@ -80,3 +74,28 @@ def validate_elements(event, input, la_log_dir):
         )
     except AttributeError:
         return events.StartElement.from_event(event, valid=False)
+
+
+@collector(check=block_check(events.StartElement), receive_stream=True)
+def remove_invalid(stream, tag_list):
+    """
+    Filters out events with the given tag name if they are not valid
+
+    :param stream: A filtered list of event objects
+    :param tag_list: A list of node tags
+    :return: An updated list of event objects
+    """
+    stream = list(stream)
+    first = stream[0]
+    last = stream[-1]
+    stream = stream[1:-1]
+
+    if first.tag in tag_list and not getattr(first, "valid", True):
+        yield from []
+    else:
+        yield first
+
+        if len(stream) > 0:
+            yield from remove_invalid(stream, tag_list=tag_list)
+
+        yield last

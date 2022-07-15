@@ -17,7 +17,7 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
     configuration,
     logger,
     validator,
-    cin_record
+    cin_record,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
@@ -88,10 +88,17 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema().schema)
-    stream = logger.inherit_child_id(stream)
+    stream = logger.create_child_uuid(stream)
+    map_dict = {}
+    stream = logger.create_uuid_to_LAchildID_map(stream, map_dict=map_dict)
+    stream = logger.map_uuid_to_LAchildID(stream, map_dict=map_dict)
 
     # Validate stream
-    stream = validator.validate_elements(stream, input=input, la_log_dir=la_log_dir)
+    field_error = []
+    LAchildID_error = []
+    stream = validator.validate_elements(
+        stream, LAchildID_error=LAchildID_error, field_error=field_error
+    )
     value_error = []
     structural_error = []
     stream = logger.counter(
@@ -100,10 +107,45 @@ def cleanfile(input, la_code, la_log_dir, output):
         and hasattr(e, "valid"),
         value_error=value_error,
         structural_error=structural_error,
+        LAchildID_error=LAchildID_error,
     )
 
     # Clean stream
-    stream = filters.remove_invalid(stream, tag_name="Child")
+    tags = [
+        "LAchildID",
+        "UPN",
+        "FormerUPN",
+        "UPNunknown",
+        "PersonBirthDate",
+        "GenderCurrent",
+        "PersonDeathDate",
+        "Ethnicity",
+        "Disability",
+        "CINreferralDate",
+        "ReferralSource",
+        "PrimaryNeedCode",
+        "CINclosureDate",
+        "ReasonForClosure",
+        "DateOfInitialCPC",
+        "AssessmentActualStartDate",
+        "AssessmentInternalReviewDate",
+        "AssessmentAuthorisationDate",
+        "AssessmentFactors",
+        "CINPlanStartDate",
+        "CINPlanEndDate",
+        "S47ActualStartDate",
+        "InitialCPCtarget",
+        "DateOfInitialCPC",
+        "ICPCnotRequired",
+        "ReferralNFA",
+        "CPPstartDate",
+        "CPPendDate",
+        "InitialCategoryOfAbuse",
+        "LatestCategoryOfAbuse",
+        "NumberOfPreviousCPP",
+        "CPPreviewDate",
+    ]
+    stream = validator.remove_invalid(stream, tag_list=tags)
 
     # Output result
     stream = cin_record.message_collector(stream)
@@ -114,6 +156,8 @@ def cleanfile(input, la_code, la_log_dir, output):
         input,
         value_error=value_error,
         structural_error=structural_error,
+        LAchildID_error=LAchildID_error,
+        field_error=field_error,
         la_log_dir=la_log_dir,
     )
 
