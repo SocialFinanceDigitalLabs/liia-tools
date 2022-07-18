@@ -88,10 +88,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema().schema)
-    stream = logger.create_child_uuid(stream)
-    map_dict = {}
-    stream = logger.create_uuid_to_LAchildID_map(stream, map_dict=map_dict)
-    stream = logger.map_uuid_to_LAchildID(stream, map_dict=map_dict)
+    stream = logger.inherit_LAchildID(stream)
 
     # Validate stream
     field_error = []

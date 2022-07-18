@@ -128,16 +128,6 @@
             </CINdetails>
         </Child>
 		<Child>
-            <ChildIdentifiers>
-			    <LAchildID>DfEX0000003</LAchildID>
-                <UPN>A123456789123</UPN>
-                <FormerUPN>X98765432123B</FormerUPN>
-                <UPNunknown>UN3</UPNunknown>
-                <PersonBirthDate>1966-03-24</PersonBirthDate>
-				<ExpectedPersonBirthDate>1966-03-22</ExpectedPersonBirthDate>
-                <GenderCurrent>1</GenderCurrent>
-                <PersonDeathDate>1980-10-08</PersonDeathDate>
-            </ChildIdentifiers>
             <ChildCharacteristics>
                 <Ethnicity>WBRI</Ethnicity>
                 <Disabilities>
@@ -184,6 +174,16 @@
                     </Reviews>
                 </ChildProtectionPlans>
             </CINdetails>
+			<ChildIdentifiers>
+			    <LAchildID>DfEX0000003</LAchildID>
+                <UPN>A123456789123</UPN>
+                <FormerUPN>X98765432123B</FormerUPN>
+                <UPNunknown>UN3</UPNunknown>
+                <PersonBirthDate>1966-03-24</PersonBirthDate>
+				<ExpectedPersonBirthDate>1966-03-22</ExpectedPersonBirthDate>
+                <GenderCurrent>1</GenderCurrent>
+                <PersonDeathDate>1980-10-08</PersonDeathDate>
+            </ChildIdentifiers>
         </Child>
     </Children>
 </Message>
