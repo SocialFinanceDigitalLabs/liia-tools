@@ -25,6 +25,9 @@ def add_year_column(stream):
             except AttributeError:
                 year_error = f"Unable to find year in {event.filename} so no output has been produced"
                 yield event.from_event(event, year_error=year_error)
+        elif isinstance(event, events.EndTable):
+            yield event
+            year = None
         elif isinstance(event, events.EndRow) and year is not None:
             yield event.from_event(event, year=year)
         else:
