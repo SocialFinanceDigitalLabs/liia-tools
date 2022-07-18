@@ -49,6 +49,26 @@ def create_uuid_to_LAchildID_map(stream, map_dict):
         yield event
 
 
+def list_child_events(stream):
+    """
+
+    """
+    start_event = None
+    child_events = []
+    for event in stream:
+        if isinstance(event, events.StartElement) and event.tag == "Child":
+            start_event = event
+            child_events.append(event)
+        elif isinstance(event, events.EndElement) and event.tag == "Child":
+            child_events.append(event)
+            yield from child_events
+            start_event = None
+            child_events = []
+        else:
+            if start_event:
+                child_events.append(event)
+
+
 def map_uuid_to_LAchildID(stream, map_dict):
     """
     Maps LAchildID to each element based on its unique_id
@@ -90,7 +110,7 @@ def map_uuid_to_LAchildID(stream, map_dict):
 
 
 @streamfilter(check=lambda x: True)
-def counter(event, counter_check, value_error, structural_error, LAchildID_error):
+def counter(event, counter_check, value_error, structural_error):
     """
     Count the invalid simple nodes storing their name and LAchildID data
 
@@ -101,6 +121,11 @@ def counter(event, counter_check, value_error, structural_error, LAchildID_error
     :return: The same filtered list of event objects
     """
     if counter_check(event) and len(event.node) == 0:
+        # try:
+        #     XMLNode = getattr(event, "node")
+        #     LAchildID = XMLNode.xpath('ancestor::Child/ChildIdentifiers/LAchildID/text()')[0]
+        # except IndexError:  # Raised in case there is no LAchildID
+        #     return event
         try:
             value_error.append(
                 f"LAchildID: {event.LAchildID}, Node: {event.schema.name}"
