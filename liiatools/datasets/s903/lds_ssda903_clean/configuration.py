@@ -31,6 +31,7 @@ def add_table_name(event):
     for table_name, expected_columns in column_names.items():
         if set(event.headers) == set(expected_columns):
             return event.from_event(event, table_name=table_name)
+    return event
 
 
 @streamfilter(check=type_check(events.Cell), fail_function=pass_event)
