@@ -89,8 +89,8 @@ def clean_dates(event):
     try:
         date = event.other_config["type"]
     except (
-            AttributeError,
-            KeyError,
+        AttributeError,
+        KeyError,
     ):  # Raised in case there is no config item for the given cell
         return event
     if date == "date":
