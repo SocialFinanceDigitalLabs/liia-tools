@@ -84,8 +84,7 @@ def save_errors_la(
             f.write("\n")
             if value_error:
                 f.write(
-                    "LAchildID and node information for data that has been removed because"
-                    " it was found to be invalid"
+                    "Node information for data that has been removed because it was found to be invalid"
                 )
                 f.write("\n")
                 for item in value_error:
@@ -94,8 +93,8 @@ def save_errors_la(
                 f.write("\n")
             if structural_error:
                 f.write(
-                    "LAchildID and node information for fields that has been removed because they did"
-                    " not match the expected structure"
+                    "Node information for fields that has been removed because they did not match the "
+                    "expected structure"
                 )
                 f.write("\n")
                 for item in structural_error:

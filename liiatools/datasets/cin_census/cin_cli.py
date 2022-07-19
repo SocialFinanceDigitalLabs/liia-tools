@@ -72,12 +72,14 @@ def cin_census():
 )
 @click_log.simple_verbosity_option(log)
 def cleanfile(input, la_code, la_log_dir, output):
-    """Cleans an input CIN Census xml file according to config and outputs a cleaned csv file.
-    'input' should specify the input file location, including file name and suffix, and be usable by a Path function
-    'la_name' should be a string of the name of the local authority that deposited the file
-    'la_log_dir' should specify the path to the local authority's log folder
-    'lds_log_dir' should specify the path to the LDS log folder
-    'output' should specify the path to the output folder"""
+    """
+    Cleans input CIN Census xml files according to config and outputs cleaned csv files.
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
+    :param output: should specify the path to the output folder
+    :return: None
+    """
 
     # Open & Parse file
     stream = dom_parse(input)
