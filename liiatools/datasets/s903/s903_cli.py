@@ -1,6 +1,8 @@
 import click as click
 from pathlib import Path
 import yaml
+import logging
+import click_log
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
@@ -27,6 +29,9 @@ from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_proc
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
+
+log = logging.getLogger()
+click_log.basic_config(log)
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
@@ -67,6 +72,7 @@ def s903():
     type=str,
     help="A string specifying the output directory location",
 )
+@click_log.simple_verbosity_option(log)
 def cleanfile(input, la_code, la_log_dir, output):
     """
     Cleans input SSDA903 csv files according to config and outputs cleaned csv files.

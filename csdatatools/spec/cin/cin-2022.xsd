@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="Message" type="messagetype"/>
+
+  <xs:complexType name="messagetype">
+    <xs:sequence>
+      <xs:element name="Header" type="headertype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Children" type="childrentype" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="headertype">
+    <xs:sequence>
+      <xs:element name="CollectionDetails" type="collectiondetailstype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Source" type="sourcetype" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="collectiondetailstype">
+    <xs:sequence>
+      <xs:element name="Collection" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="CIN"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Year" type="xs:gYear" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ReferenceDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="sourcetype">
+    <xs:sequence>
+      <xs:element name="SourceLevel" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="L"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="LEA" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{3}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="SoftwareCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Release" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SerialNo" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{3}\d*"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DateTime" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="childrentype">
+    <xs:sequence>
+      <xs:element name="Child" type="childtype" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="childtype">
+    <xs:sequence>
+      <xs:element name="ChildIdentifiers" type="childidentifierstype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ChildCharacteristics" type="childcharacteristicstype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CINdetails" type="cindetailstype" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="childidentifierstype">
+    <xs:sequence>
+      <xs:element name="LAchildID" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="UPN" type="upntype" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FormerUPN" type="upntype" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="UPNunknown" type="unknownupntype" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PersonBirthDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ExpectedPersonBirthDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="GenderCurrent" type="gendertype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PersonDeathDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="childcharacteristicstype">
+    <xs:sequence>
+      <xs:element name="Ethnicity" type="ethnicitytype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Disabilities" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Disability" type="disabilitytype"  minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cindetailstype">
+    <xs:sequence>
+      <xs:element name="CINreferralDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ReferralSource" type="referralsourcetype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PrimaryNeedCode" type="primaryneedcodetype" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CINclosureDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReasonForClosure" type="reasonforclosuretype" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DateOfInitialCPC" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Assessments" type="assessmentstype" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="CINPlanDates" type="cinplandatesttype" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Section47" type="section47type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="ReferralNFA" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ChildProtectionPlans" type="childprotectionplanstype" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="assessmentstype">
+    <xs:sequence>
+      <xs:element name="AssessmentActualStartDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AssessmentInternalReviewDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AssessmentAuthorisationDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FactorsIdentifiedAtAssessment" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="AssessmentFactors" type="assessmentfactorstype" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cinplandatesttype">
+    <xs:sequence>
+      <xs:element name="CINPlanStartDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CINPlanEndDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="section47type">
+    <xs:sequence>
+      <xs:element name="S47ActualStartDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="InitialCPCtarget" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DateOfInitialCPC" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ICPCnotRequired" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="childprotectionplanstype">
+    <xs:sequence>
+      <xs:element name="CPPstartDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CPPendDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="InitialCategoryOfAbuse" type="categoryofabuse" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="LatestCategoryOfAbuse" type="categoryofabuse" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="NumberOfPreviousCPP" type="xs:positiveInteger" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Reviews" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CPPreviewDate" type="xs:date" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="yesnotype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+      <xs:enumeration value="0" />
+      <xs:enumeration value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="upntype">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Za-z]\d{12}"/>
+      <xs:pattern value="[A-Za-z]\d{11}[A-Za-z]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="unknownupntype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UN1" />
+      <xs:enumeration value="UN2" />
+      <xs:enumeration value="UN3" />
+      <xs:enumeration value="UN4" />
+      <xs:enumeration value="UN5" />
+      <xs:enumeration value="UN6" />
+      <xs:enumeration value="UN7" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="gendertype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1">
+        <xs:annotation><xs:documentation>Male</xs:documentation></xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="2">
+        <xs:annotation><xs:documentation>Female</xs:documentation></xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="0">
+        <xs:annotation><xs:documentation>Not recorded or unborn</xs:documentation></xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9">
+        <xs:annotation><xs:documentation>Indeterminate</xs:documentation></xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="ethnicitytype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="WBRI"><xs:annotation><xs:documentation>White British</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WIRI"><xs:annotation><xs:documentation>White Irish</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WIRT"><xs:annotation><xs:documentation>Traveller of Irish heritage</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WOTH"><xs:annotation><xs:documentation>Any other White background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WROM"><xs:annotation><xs:documentation>Gypsy/Roma</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MWBC"><xs:annotation><xs:documentation>White and Black Caribbean</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MWBA"><xs:annotation><xs:documentation>White and Black African</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MWAS"><xs:annotation><xs:documentation>White and Asian</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MOTH"><xs:annotation><xs:documentation>Any other mixed background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="AIND"><xs:annotation><xs:documentation>Indian</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="APKN"><xs:annotation><xs:documentation>Pakistani</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="ABAN"><xs:annotation><xs:documentation>Bangladeshi</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="AOTH"><xs:annotation><xs:documentation>Any other Asian background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BCRB"><xs:annotation><xs:documentation>Caribbean</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BAFR"><xs:annotation><xs:documentation>African</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BOTH"><xs:annotation><xs:documentation>Any other black background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="CHNE"><xs:annotation><xs:documentation>Chinese</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="OOTH"><xs:annotation><xs:documentation>Any other ethnic group</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="REFU"><xs:annotation><xs:documentation>Refused</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="NOBT"><xs:annotation><xs:documentation>Information not yet obtained</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="disabilitytype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NONE"><xs:annotation><xs:documentation>No disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MOB"><xs:annotation><xs:documentation>Mobility</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="HAND"><xs:annotation><xs:documentation>Hand function</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="PC"><xs:annotation><xs:documentation>Personal care</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="INC"><xs:annotation><xs:documentation>Incontinence</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="COMM"><xs:annotation><xs:documentation>Communication</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="LD"><xs:annotation><xs:documentation>Learning</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="HEAR"><xs:annotation><xs:documentation>Hearing</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="VIS"><xs:annotation><xs:documentation>Vision</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BEH"><xs:annotation><xs:documentation>Behaviour</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="CON"><xs:annotation><xs:documentation>Consciousness</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="AUT"><xs:annotation><xs:documentation>Autism</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="DDA"><xs:annotation><xs:documentation>Other</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="referralsourcetype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1A"><xs:annotation><xs:documentation>INDIVIDUAL – family member, relative or carer</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="1B"><xs:annotation><xs:documentation>INDIVIDUAL – acquaintance (including neighbours and child minders)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="1C"><xs:annotation><xs:documentation>INDIVIDUAL – self</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="1D"><xs:annotation><xs:documentation>INDIVIDUAL – other (including strangers)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="2A"><xs:annotation><xs:documentation>SCHOOLS</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="2B"><xs:annotation><xs:documentation>EDUCATION SERVICES</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3A"><xs:annotation><xs:documentation>HEALTH SERVICES – general practitioner (GP)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3B"><xs:annotation><xs:documentation>HEALTH SERVICES – health visitor</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3C"><xs:annotation><xs:documentation>HEALTH SERVICES – school nurse</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3D"><xs:annotation><xs:documentation>HEALTH SERVICES – other primary health services</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3E"><xs:annotation><xs:documentation>HEALTH SERVICES – A&amp;E (accident and emergency department)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3F"><xs:annotation><xs:documentation>HEALTH SERVICES – other (for example hospice) </xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="4"><xs:annotation><xs:documentation>HOUSING - local authority housing or housing association</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5A"><xs:annotation><xs:documentation>LA SERVICES – social care for example adults social care services</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5B"><xs:annotation><xs:documentation>LA SERVICES – other internal (department other than social care in local authorities, for example, youth offending (excluding housing))</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5C"><xs:annotation><xs:documentation>LA SERVICES – external, for example, from another local authority’s adults social care services</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="6"><xs:annotation><xs:documentation>POLICE</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="7"><xs:annotation><xs:documentation>OTHER LEGAL AGENCY – including courts, probation, immigration, CAFCASS (Children and Family Court Advisory and Support Service) or prison</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8"><xs:annotation><xs:documentation>OTHER – including children’s centres, independent agency providers or voluntary organisations</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="9"><xs:annotation><xs:documentation>ANONYMOUS</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="10"><xs:annotation><xs:documentation>UNKNOWN</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="categoryofabuse">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NEG"><xs:annotation><xs:documentation>Neglect</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="PHY"><xs:annotation><xs:documentation>Physical abuse</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="SAB"><xs:annotation><xs:documentation>Sexual abuse</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="EMO"><xs:annotation><xs:documentation>Emotional abuse</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MUL"><xs:annotation><xs:documentation>Multiple/not recommended</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+    <xs:simpleType name="primaryneedcodetype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="N1"><xs:annotation><xs:documentation>Abuse or neglect</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N2"><xs:annotation><xs:documentation>Child's disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N3"><xs:annotation><xs:documentation>Parental disability or illness</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N4"><xs:annotation><xs:documentation>Family in acute stress</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N5"><xs:annotation><xs:documentation>Family dysfunction</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N6"><xs:annotation><xs:documentation>Socially unacceptable behaviour</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N7"><xs:annotation><xs:documentation>Low income</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N8"><xs:annotation><xs:documentation>Absent parenting</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N9"><xs:annotation><xs:documentation>Cases other than children in need</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N0"><xs:annotation><xs:documentation>Not stated</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="reasonforclosuretype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RC1"><xs:annotation><xs:documentation>Adopted</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC2"><xs:annotation><xs:documentation>Died</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC3"><xs:annotation><xs:documentation>Child arrangements order</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC4"><xs:annotation><xs:documentation>Special guardianship order</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC5"><xs:annotation><xs:documentation>Transferred to services of another local authority</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC6"><xs:annotation><xs:documentation>Transferred to adult social care services</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC7"><xs:annotation><xs:documentation>Services ceased for any other reason, including child no longer in need</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="RC8"><xs:annotation><xs:documentation>Case closed after assessment, no further action</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+    <xs:simpleType name="assessmentfactorstype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1A"><xs:annotation><xs:documentation>Alcohol misuse: concerns about alcohol misuse by the child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="1B"><xs:annotation><xs:documentation>Alcohol misuse: concerns about alcohol misuse by the parent(s)/carer(s)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="1C"><xs:annotation><xs:documentation>Alcohol misuse: concerns about alcohol misuse by another person living in the household</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="2A"><xs:annotation><xs:documentation>Drug misuse: concerns about drug misuse by the child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="2B"><xs:annotation><xs:documentation>Drug misuse: concerns about drug misuse by the parent(s)/carer(s)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="2C"><xs:annotation><xs:documentation>Drug misuse: concerns about drug misuse by another person living in the household</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3A"><xs:annotation><xs:documentation>Domestic violence: concerns about the child being the subject of domestic violence</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3B"><xs:annotation><xs:documentation>Domestic violence: concerns about the child’s parent(s)/carer(s) being the subject of domestic violence</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3C"><xs:annotation><xs:documentation>Domestic violence: concerns about another person living in the household being the subject of domestic violence</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="4A"><xs:annotation><xs:documentation>Mental health: concerns about the mental health of the child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="4B"><xs:annotation><xs:documentation>Mental health: concerns about the mental health of the parent(s)/carer(s)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="4C"><xs:annotation><xs:documentation>Mental health: concerns about the mental health of another person in the family/household</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5A"><xs:annotation><xs:documentation>Learning disability: concerns about the child’s learning disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5B"><xs:annotation><xs:documentation>Learning disability: concerns about the parent(s)/carer(s) learning disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5C"><xs:annotation><xs:documentation>Learning disability: concerns about another person in the family/household’s learning disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="6A"><xs:annotation><xs:documentation>Physical disability or illness: concerns about a physical disability or illness of the child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="6B"><xs:annotation><xs:documentation>Physical disability or illness: concerns about a physical disability or illness of the parent(s)/carer(s)</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="6C"><xs:annotation><xs:documentation>Physical disability or illness: concerns about a physical disability or illness of another person in the family/household</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="7A"><xs:annotation><xs:documentation>Young carer: concerns that services may be required or the child’s health or development may be impaired due to their caring responsibilities</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8B"><xs:annotation><xs:documentation>Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - overseas children who intend to return</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8C"><xs:annotation><xs:documentation>Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - overseas children who intend to stay</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8D"><xs:annotation><xs:documentation>Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - UK children in educational placements</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8E"><xs:annotation><xs:documentation>Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - UK children making alternative family arrangements</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8F"><xs:annotation><xs:documentation>Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - other</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="9A"><xs:annotation><xs:documentation>UASC: concerns that services may be required or the child may be at risk of harm as an unaccompanied asylum-seeking child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="10A"><xs:annotation><xs:documentation>Missing: concerns that services may be required or the child may be at risk of harm due to going/being missing</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="11A"><xs:annotation><xs:documentation>Child sexual exploitation: concerns that services may be required or the child may be at risk of harm due to child sexual exploitation</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="12A"><xs:annotation><xs:documentation>Trafficking: concerns that services may be required or the child may be at risk of harm due to trafficking</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="13A"><xs:annotation><xs:documentation>Gangs: concerns that services may be required or the child may be at risk of harm because of involvement in/with gangs</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="14A"><xs:annotation><xs:documentation>Socially unacceptable behaviour: concerns that services may be required or the child may be at risk due to their socially unacceptable behaviour</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="15A"><xs:annotation><xs:documentation>Self-harm: concerns that services may be required or due to suspected/actual self-harming child may be at risk of harm</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="16A"><xs:annotation><xs:documentation>Abuse or neglect – ‘NEGLECT’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="17A"><xs:annotation><xs:documentation>Abuse or neglect – ‘EMOTIONAL ABUSE’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="18B"><xs:annotation><xs:documentation>Abuse or neglect – ‘PHYSICAL ABUSE’ (child on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by another child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="18C"><xs:annotation><xs:documentation>Abuse or neglect – ‘PHYSICAL ABUSE’ (adult on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by an adult</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="19B"><xs:annotation><xs:documentation>Abuse or neglect – ‘SEXUAL ABUSE’ (child on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by another child</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="19C"><xs:annotation><xs:documentation>Abuse or neglect – ‘SEXUAL ABUSE’ (adult on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by an adult</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="20"><xs:annotation><xs:documentation>Other</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="21"><xs:annotation><xs:documentation>No factors identified - only use this if there is no evidence of any of the factors above and no further action is being taken</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="22A"><xs:annotation><xs:documentation>Female genital mutilation (FGM) - concerns that services may be required or the child may be at risk due to female genital mutilation</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="23A"><xs:annotation><xs:documentation>Abuse linked to faith or belief - concerns that services may be required or the child may be at risk due to abuse linked to faith or belief</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="24A"><xs:annotation><xs:documentation>Child criminal exploitation: concerns that services may be required or the child may be at risk of harm due to child criminal exploitation</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
