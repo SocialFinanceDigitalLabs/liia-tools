@@ -17,7 +17,7 @@ def test_add_year_column():
     assert stream[0].year == "2022"
     assert stream[1].year == "2022"
     assert not hasattr(stream[2], "year")
-    assert stream[3].year_error == f"Unable to find year in {stream[3].filename} so no output has been produced"
+    assert stream[3].year_error == f"Unable to find year in '{stream[3].filename}' so no output has been produced"
     assert not hasattr(stream[4], "year")
 
 
