@@ -118,15 +118,18 @@ def test_add_table_name():
         headers=["incorrect", "header", "values"], filename="SSDA903_AD1.csv"
     )
     event_with_table_name = list(config.add_table_name(event))
-    assert event_with_table_name == []
+    table_name = getattr(event_with_table_name, "table_name", [])
+    assert table_name == []
 
     event = events.StartTable(headers=[""], filename="SSDA903_AD1.csv")
     event_with_table_name = list(config.add_table_name(event))
-    assert event_with_table_name == []
+    table_name = getattr(event_with_table_name, "table_name", [])
+    assert table_name == []
 
     event = events.StartTable(headers=[None], filename="SSDA903_AD1.csv")
     event_with_table_name = list(config.add_table_name(event))
-    assert event_with_table_name == []
+    table_name = getattr(event_with_table_name, "table_name", [])
+    assert table_name == []
 
 
 def test_match_config_to_cell():

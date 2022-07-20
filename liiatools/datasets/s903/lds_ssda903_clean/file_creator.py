@@ -47,10 +47,11 @@ def create_tables(stream, la_name):
     data = None
     for event in stream:
         if isinstance(event, events.StartTable):
-            try:
-                if event.match_error is not None:
-                    data = None
-            except AttributeError:
+            match_error = getattr(event, "match_error", None)
+            year_error = getattr(event, "year_error", None)
+            if match_error or year_error is not None:
+                data = None
+            else:
                 data = tablib.Dataset(headers=event.headers + ["LA", "YEAR"])
         elif isinstance(event, events.EndTable):
             yield event

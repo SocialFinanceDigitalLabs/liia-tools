@@ -141,7 +141,7 @@ def create_file_match_error(event):
         return event.from_event(
             event,
             match_error=f"Failed to find a set of matching columns headers for sheet titled "
-            f"'{event.filename}' which contains column headers {event.headers}",
+            f"'{event.filename}' which contains column headers {event.headers} so no output has been produced",
         )
     return event
 
@@ -173,9 +173,6 @@ def save_errors_la(stream, la_log_dir):
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
-                        f.write(f"{event.filename}_{start_time}")
-                        f.write("\n")
-                        f.write("\n")
                         f.write(event.table_name)
                         f.write("\n")
                         if event.formatting_error_count:
@@ -211,32 +208,23 @@ def save_errors_la(stream, la_log_dir):
         except AttributeError:
             pass
 
-        try:
-            if isinstance(event, events.StartTable) and event.match_error is not None:
+        if isinstance(event, events.StartTable):
+            match_error = getattr(event, "match_error", None)
+            year_error = getattr(event, "year_error", None)
+            if match_error:
                 with open(
                     f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                     "a",
                 ) as f:
+                    f.write(match_error)
                     f.write("\n")
-                    f.write(event.match_error)
-                    f.write("\n")
-        except AttributeError:
-            pass
-
-        try:
-            if (
-                isinstance(event, events.StartContainer)
-                and event.year_error is not None
-            ):
+            if year_error:
                 with open(
                     f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                     "a",
                 ) as f:
+                    f.write(year_error)
                     f.write("\n")
-                    f.write(event.year_error)
-                    f.write("\n")
-        except AttributeError:
-            pass
 
         yield event
 

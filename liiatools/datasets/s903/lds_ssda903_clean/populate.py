@@ -1,30 +1,37 @@
 import re
 import logging
 
-from sfdata_stream_parser import events, checks
+from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 log = logging.getLogger(__name__)
 
 
-@streamfilter(check=checks.type_check(events.EndRow), fail_function=pass_event)
-def add_year_column(event):
+def add_year_column(stream):
     """
     Searches the filename for the year by finding any four-digit number starting with 20
 
-    :param event: A filtered list of event objects of type EndRow
+    :param event: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
     """
-    try:
-        file_dir = event.filename
-        match = re.search(r"20\d{2}", file_dir)
-        year = match.group(0)
-        return event.from_event(event, year=year)
-    except AttributeError:
-        log.exception(f"Unable to find year in {event.filename}")
-        return event.from_event(
-            event, year_error=f"Unable to find year in {event.filename}"
-        )
+    year = None
+    for event in stream:
+        if isinstance(event, events.StartTable):
+            try:
+                file_dir = event.filename
+                match = re.search(r"20\d{2}", file_dir)
+                year = match.group(0)
+                yield event.from_event(event, year=year)
+            except AttributeError:
+                year_error = f"Unable to find year in '{event.filename}' so no output has been produced"
+                yield event.from_event(event, year_error=year_error)
+        elif isinstance(event, events.EndTable):
+            yield event
+            year = None
+        elif isinstance(event, events.EndRow) and year is not None:
+            yield event.from_event(event, year=year)
+        else:
+            yield event
 
 
 @streamfilter(check=lambda x: x.get("header") in ["CHILD"], fail_function=pass_event)
