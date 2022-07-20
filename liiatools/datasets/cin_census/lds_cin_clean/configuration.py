@@ -1,25 +1,30 @@
-from pathlib import Path
-import logging
 import datetime
+import logging
 import os
+from pathlib import Path
 import yaml
 from string import Template
 
-from liiatools.spec import s903 as s903_asset_dir
+from liiatools.spec import common as common_asset_dir
 
 log = logging.getLogger(__name__)
 
-DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
 class Config(dict):
-    def __init__(self, config_file=None):
+    def __init__(self, *config_files):
         super().__init__()
 
-        if not config_file:
-            config_file = DEFAULT_CONFIG_DIR / "la-agg.yml"
+        if not config_files:
+            config_files = [
+                "DEFAULT_DATA_CODES",
+            ]
 
-        self.load_config(config_file, conditional=False)
+        for file in config_files:
+            if file == "DEFAULT_DATA_CODES":
+                file = COMMON_CONFIG_DIR / "LA-codes.yml"
+            self.load_config(file, conditional=False)
 
         self["config_date"] = datetime.datetime.now().isoformat()
         try:

@@ -1,6 +1,8 @@
 import click as click
 from pathlib import Path
 import yaml
+import logging
+import click_log
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
@@ -27,6 +29,9 @@ from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_proc
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import flip_dict
+
+log = logging.getLogger()
+click_log.basic_config(log)
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
@@ -67,6 +72,7 @@ def s903():
     type=str,
     help="A string specifying the output directory location",
 )
+@click_log.simple_verbosity_option(log)
 def cleanfile(input, la_code, la_log_dir, output):
     """
     Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
@@ -109,23 +115,16 @@ def cleanfile(input, la_code, la_log_dir, output):
     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
 )
 @click.option(
-    "--la_log_dir",
-    required=True,
-    type=str,
-    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
-)
-@click.option(
     "--o",
     "output",
     required=True,
     type=str,
     help="A string specifying the output directory location",
 )
-def la_agg(input, la_log_dir, output):
+def la_agg(input, output):
     """
     Joins data from newly cleaned SSDA903 file (output of cleanfile()) to existing SSDA903 data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
-    :param la_log_dir: should specify the path to the local authority's log folder
     :param output: should specify the path to the output folder
     :return: None
     """
@@ -149,9 +148,8 @@ def la_agg(input, la_log_dir, output):
     s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
     s903_df = agg_process.remove_old_data(s903_df, years=6)
 
-    # If file still has data, after removing old data: log errors, re-format and export merged file
+    # If file still has data, after removing old data: re-format and export merged file
     if len(s903_df) > 0:
-        agg_process.log_missing_years(s903_df, table_name, la_log_dir)
         s903_df = agg_process.convert_dates(s903_df, dates, table_name)
         agg_process.export_la_file(output, table_name, s903_df)
 

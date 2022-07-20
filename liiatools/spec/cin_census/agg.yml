@@ -1,0 +1,40 @@
+dates:
+    - Date
+    - CINreferralDate
+    - CINclosureDate
+    - DateOfInitialCPC
+    - CINPlanStartDate
+    - CINPlanEndDate
+    - S47ActualStartDate
+    - InitialCPCtarget
+    - AssessmentActualStartDate
+    - AssessmentInternalReviewDate
+    - AssessmentAuthorisationDate
+    - CPPstartDate
+    - CPPendDate
+    - PersonBirthDate
+    - ExpectedPersonBirthDate
+    - PersonDeathDate
+
+sort_order:
+    - InitialCPCtarget
+    - AssessmentInternalReviewDate
+    - YEAR
+
+dedup:
+    - Date
+    - Type
+    - LAchildID
+    - ReferralSource
+
+# Assumptions used in producing analytical outputs of CIN Census
+
+ref_assessment: 30
+
+icpc_cpp_days: 45
+
+s47_cpp_days: 60
+
+s47_day_limit: "60 days"
+
+icpc_day_limit: "45 days"

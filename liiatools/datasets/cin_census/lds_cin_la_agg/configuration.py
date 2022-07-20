@@ -5,19 +5,18 @@ import os
 import yaml
 from string import Template
 
-from liiatools.spec import s903 as s903_asset_dir
+from liiatools.spec import cin_census as cin_asset_dir
 
 log = logging.getLogger(__name__)
 
-DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
-
+DEFAULT_CONFIG_DIR = Path(cin_asset_dir.__file__).parent
 
 class Config(dict):
     def __init__(self, config_file=None):
         super().__init__()
 
         if not config_file:
-            config_file = DEFAULT_CONFIG_DIR / "la-agg.yml"
+            config_file = DEFAULT_CONFIG_DIR / "agg.yml"
 
         self.load_config(config_file, conditional=False)
 
