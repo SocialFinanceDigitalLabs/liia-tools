@@ -63,7 +63,12 @@ def blank_error_check(event):
     """
     try:
         allowed_blank = event.other_config["canbeblank"]
-        if not allowed_blank and not event.value and event.value != 0 and event.error != "1":
+        if (
+            not allowed_blank
+            and not event.value
+            and event.value != 0
+            and event.error != "1"
+        ):
             return event.from_event(event, blank_error="1")
         else:
             return event
@@ -153,10 +158,15 @@ def duplicate_column_check(event):
             return event
         else:
             duplicate_columns = _duplicate_columns(column_headers)
-            duplicate_columns = str(duplicate_columns)[1:-1]  # "Remove [ and ] from string
-            return event.from_event(event, duplicate_column_error=f"Sheet with title {event.sheet_name} contained "
-                                                                  f"the following duplicate column(s): "
-                                                                  f"{duplicate_columns}")
+            duplicate_columns = str(duplicate_columns)[
+                1:-1
+            ]  # "Remove [ and ] from string
+            return event.from_event(
+                event,
+                duplicate_column_error=f"Sheet with title {event.sheet_name} contained "
+                f"the following duplicate column(s): "
+                f"{duplicate_columns}",
+            )
     except KeyError:  # Raised in case there is no matched_column_headers
         pass
     return event
@@ -203,10 +213,72 @@ def create_file_match_error(event):
         if event.sheet_name:
             return event
     except AttributeError:
-        return event.from_event(event, match_error=f"Failed to find a set of matching columns headers for sheet titled "
-                                                   f"'{event.name}' which contains column headers "
-                                                   f"{event.column_headers}",)
+        return event.from_event(
+            event,
+            match_error=f"Failed to find a set of matching columns headers for sheet titled "
+            f"'{event.name}' which contains column headers "
+            f"{event.column_headers}",
+        )
     return event
+
+
+def _missing_sheet_match(sheet_names, expected_sheet_names):
+    """
+    Return a list of sheet_names missing from the expected_sheet_names
+
+    :param sheet_names: A list of sheet names
+    :param expected_sheet_names: A list of expected sheet names
+    :return: A list of sheet names missing from the expected sheet names
+    """
+    return list(set(expected_sheet_names).difference(sheet_names))
+
+
+def create_missing_sheet_error(stream):
+    """
+    Checks for any missing sheet names against a list of expected sheet names
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects and a list of missing sheets
+    """
+    sheet_names = []
+    expected_sheet_names = [
+        "List 1",
+        "List 2",
+        "List 3",
+        "List 4",
+        "List 5",
+        "List 6",
+        "List 7",
+        "List 8",
+        "List 9",
+        "List 10",
+        "List 11",
+    ]
+    for event in stream:
+        if isinstance(event, events.StartTable):
+            try:
+                sheet_names.append(event.sheet_name)
+                yield event
+            except AttributeError:
+                yield event
+        if isinstance(event, events.EndContainer):
+            missing_sheet_error = _missing_sheet_match(
+                sheet_names, expected_sheet_names
+            )
+            if missing_sheet_error:
+                missing_sheet_error = str(missing_sheet_error)[
+                    1:-1
+                ]  # Remove brackets [] from list
+                yield event.from_event(
+                    event,
+                    missing_sheet_error=f"The following sheets are missing: "
+                    f"{missing_sheet_error} so no output has been "
+                    f"created",
+                )
+            else:
+                yield event
+        else:
+            yield event
 
 
 def save_errors_la(stream, la_log_dir):
@@ -289,6 +361,21 @@ def save_errors_la(stream, la_log_dir):
         except AttributeError:
             pass
 
+        try:
+            if (
+                isinstance(event, events.EndContainer)
+                and event.missing_sheet_error is not None
+            ):
+                with open(
+                    f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
+                    "a",
+                ) as f:
+                    f.write("\n")
+                    f.write(event.missing_sheet_error)
+                    f.write("\n")
+        except AttributeError:
+            pass
+
         yield event
 
 
@@ -306,4 +393,5 @@ def log_errors(stream):
     stream = duplicate_column_check(stream)
     stream = inherit_duplicate_column_error(stream)
     stream = create_file_match_error(stream)
+    stream = create_missing_sheet_error(stream)
     return stream
