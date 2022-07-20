@@ -173,9 +173,6 @@ def save_errors_la(stream, la_log_dir):
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
-                        f.write(f"{event.filename}_{start_time}")
-                        f.write("\n")
-                        f.write("\n")
                         f.write(event.table_name)
                         f.write("\n")
                         if event.formatting_error_count:
