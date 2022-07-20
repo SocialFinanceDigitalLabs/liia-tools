@@ -23,7 +23,7 @@ def add_year_column(stream):
                 year = match.group(0)
                 yield event.from_event(event, year=year)
             except AttributeError:
-                year_error = f"Unable to find year in {event.filename} so no output has been produced"
+                year_error = f"Unable to find year in '{event.filename}' so no output has been produced"
                 yield event.from_event(event, year_error=year_error)
         elif isinstance(event, events.EndTable):
             yield event
