@@ -24,9 +24,9 @@ def match_load_file(s903_df, column_names):
 
 
 def merge_la_files(output, s903_df, table_name):
-    '''
+    """
     Looks for existing file of the same type and merges with new file if found
-    '''
+    """
     old_file = Path(output, f"SSDA903_{table_name}_merged.csv")
     if old_file.is_file():
         old_df = pd.read_csv(old_file, index_col=None)
@@ -37,43 +37,47 @@ def merge_la_files(output, s903_df, table_name):
 
 
 def convert_datetimes(s903_df, dates, table_name):
-    '''
+    """
     Ensures that all date fields have been parsed as dates
-    '''
+    """
     for date_field in dates[table_name]:
         s903_df[date_field] = pd.to_datetime(s903_df[date_field], format="%Y/%m/%d")
     return s903_df
 
 
 def deduplicate(s903_df, table_name, sort_order, dedup):
-    '''
+    """
     Sorts and removes duplicate records from merged files following schema
-    '''
+    """
     if table_name in sort_order.keys():
-        s903_df = s903_df.sort_values(sort_order[table_name], ascending = False, ignore_index = True)
+        s903_df = s903_df.sort_values(
+            sort_order[table_name], ascending=False, ignore_index=True
+        )
     if table_name in dedup.keys():
-        s903_df = s903_df.drop_duplicates(subset=dedup[table_name], keep = 'first')
+        s903_df = s903_df.drop_duplicates(subset=dedup[table_name], keep="first")
     return s903_df
 
 
 def remove_old_data(s903_df, years):
-    '''
+    """
     Removes data older than a specified number of years
-    '''
-    year = pd.to_datetime('today').year
-    month = pd.to_datetime('today').month
+    """
+    year = pd.to_datetime("today").year
+    month = pd.to_datetime("today").month
     if month <= 6:
         year = year - 1
-    s903_df = s903_df[s903_df['YEAR'] >= year - years]
+    s903_df = s903_df[s903_df["YEAR"] >= year - years]
     return s903_df
 
 
 def convert_dates(s903_df, dates, table_name):
-    '''
+    """
     Ensures that all date fields have been parsed as dates
-    '''
+    """
     for date_field in dates[table_name]:
-        s903_df[date_field] = pd.to_datetime(s903_df[date_field], format="%Y/%m/%d").dt.date
+        s903_df[date_field] = pd.to_datetime(
+            s903_df[date_field], format="%Y/%m/%d"
+        ).dt.date
     return s903_df
 
 
