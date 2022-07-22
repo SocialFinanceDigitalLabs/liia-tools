@@ -88,7 +88,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     la_name = flip_dict(config["data_codes"])[la_code]
 
     # Open & Parse file
-    stream = parse.parse_csv(input=input)
+    stream = parse.parse_csv(input=input, la_log_dir=la_log_dir)
     stream = populate.add_year_column(stream)
 
     # Configure stream
