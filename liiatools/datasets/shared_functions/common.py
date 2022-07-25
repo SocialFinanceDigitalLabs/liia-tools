@@ -88,7 +88,8 @@ def check_file_type(input, file_type, la_log_dir):
         ".xlsx",
         ".xlsm"
     ]
-    disallowed_file_types = list(set(all_allowed_file_types).difference([f".{file_type}"]))
+    disallowed_file_types = list(set(all_allowed_file_types).difference([f".{file_type}"]))  # Add "." to start of
+    # file_type and wrap in list so .difference works as expected
 
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     extension = str(Path(input).suffix)
