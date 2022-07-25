@@ -85,6 +85,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
 
     # Open & Parse file
+    clean_config.check_file_type(input, la_log_dir=la_log_dir)
     stream = dom_parse(input)
 
     # Configure stream
