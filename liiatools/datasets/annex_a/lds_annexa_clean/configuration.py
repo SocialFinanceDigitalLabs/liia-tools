@@ -19,6 +19,35 @@ DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
+def check_file_type(input, la_log_dir):
+    """
+    Check that the correct type of file is being used, i.e. xlsx or xlsm
+
+    :param input: Location of file to be cleaned
+    :param la_log_dir: Location to save the error log
+    :return: Continue if correct, error log if incorrect
+    """
+    start_time = f"{datetime.datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    extension = str(Path(input).suffix)
+    filename = str(Path(input).resolve().stem)
+
+    if extension in [".xml", ".csv"]:
+        assert extension in [".xlsx", "xlsm"], "File not in the expected .xlsx or .xlsm format"
+
+    elif extension in [".xlsx", ".xlsm"]:
+        pass
+
+    else:
+        with open(
+                f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+                "a",
+        ) as f:
+            f.write(
+                f"File: '{filename}{extension}' not in any of the expected formats (csv, xml, xlsx, xlsm)"
+            )
+        exit()
+
+
 def _match_column_name(actual_value, expected_value, expected_expressions=None):
     """
     Matches an actual column name against an expected values. Can optionally take a list of expressions to test.

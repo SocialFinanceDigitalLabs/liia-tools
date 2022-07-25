@@ -80,6 +80,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     filename = Path(input).resolve().stem
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
+    clean_config.check_file_type(input, la_log_dir=la_log_dir)
 
     # Open & Parse file
     stream = openpyxl.parse_sheets(input)
