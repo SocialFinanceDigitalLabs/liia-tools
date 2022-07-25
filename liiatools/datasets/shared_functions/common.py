@@ -1,5 +1,7 @@
 import re
 import logging
+from pathlib import Path
+from datetime import datetime
 
 from sfdata_stream_parser import events
 
@@ -69,3 +71,41 @@ def inherit_property(stream, prop_name):
             event = event.from_event(event, **{prop_name: prop_value})
 
         yield event
+
+
+def check_file_type(input, file_type, la_log_dir):
+    """
+    Check that the correct type of file is being used, e.g. xml
+
+    :param input: Location of file to be cleaned
+    :param file_type: A string of the expected file type extension e.g. "xml"
+    :param la_log_dir: Location to save the error log
+    :return: Continue if correct, error log if incorrect
+    """
+    all_allowed_file_types = [
+        ".xml",
+        ".csv",
+        ".xlsx",
+        ".xlsm"
+    ]
+    disallowed_file_types = list(set(all_allowed_file_types).difference([f".{file_type}"]))
+
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    extension = str(Path(input).suffix)
+    filename = str(Path(input).resolve().stem)
+
+    if extension in disallowed_file_types:
+        assert extension == f".{file_type}", f"File not in the expected .{file_type} format"
+
+    elif extension == f".{file_type}":
+        pass
+
+    else:
+        with open(
+                f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+                "a",
+        ) as f:
+            f.write(
+                f"File: '{filename}{extension}' not in any of the expected formats (csv, xml, xlsx, xlsm)"
+            )
+        exit()

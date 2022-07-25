@@ -12,35 +12,6 @@ log = logging.getLogger(__name__)
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
-def check_file_type(input, la_log_dir):
-    """
-    Check that the correct type of file is being used, i.e. xml
-
-    :param input: Location of file to be cleaned
-    :param la_log_dir: Location to save the error log
-    :return: Continue if correct, error log if incorrect
-    """
-    start_time = f"{datetime.datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-    extension = str(Path(input).suffix)
-    filename = str(Path(input).resolve().stem)
-
-    if extension in [".xlsx", "xlsm", ".csv"]:
-        assert extension == ".xml", "File not in the expected .xml format"
-
-    elif extension == ".xml":
-        pass
-
-    else:
-        with open(
-                f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-                "a",
-        ) as f:
-            f.write(
-                f"File: '{filename}{extension}' not in any of the expected formats (csv, xml, xlsx, xlsm)"
-            )
-        exit()
-
-
 class Config(dict):
     def __init__(self, *config_files):
         super().__init__()

@@ -21,7 +21,7 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
     cin_record,
 )
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import flip_dict
+from liiatools.datasets.shared_functions.common import flip_dict, check_file_type
 
 # Dependencies for la_agg()
 from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
@@ -85,7 +85,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
 
     # Open & Parse file
-    clean_config.check_file_type(input, la_log_dir=la_log_dir)
+    check_file_type(input, file_type="xml", la_log_dir=la_log_dir)
     stream = dom_parse(input)
 
     # Configure stream
