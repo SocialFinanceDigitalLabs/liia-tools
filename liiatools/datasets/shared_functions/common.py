@@ -1,5 +1,7 @@
 import re
 import logging
+from pathlib import Path
+from datetime import datetime
 
 from sfdata_stream_parser import events
 
@@ -69,3 +71,22 @@ def inherit_property(stream, prop_name):
             event = event.from_event(event, **{prop_name: prop_value})
 
         yield event
+
+
+def save_year_error(input, la_log_dir):
+    """
+    Save errors to a text file in the LA log directory
+
+    :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param la_log_dir: Path to the local authority's log folder
+    :return: Text file containing the error information
+    """
+    filename = str(Path(input).resolve().stem)
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    with open(
+        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+        "a",
+    ) as f:
+        f.write(
+            f"Could not process '{filename}' because no year was found in the name of the file"
+        )
