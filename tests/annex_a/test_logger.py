@@ -27,8 +27,8 @@ def test_duplicate_columns_error():
         ]
     )
     stream = list(stream)
-    assert stream[0].duplicate_column_error == f"Sheet with title List 1 contained the following duplicate " \
-                                               f"column(s): 'Child Unique ID'"
+    assert stream[0].duplicate_columns == f"Sheet with title List 1 contained the following duplicate " \
+                                          f"column(s): 'Child Unique ID'"
 
     stream = logger.duplicate_column_check(
         [
@@ -45,17 +45,17 @@ def test_blank_error_check():
             events.Cell(
                 other_config={"canbeblank": False},
                 value="string",
-                error="0",
+                formatting_error="0",
             ),
             events.Cell(
                 other_config={"canbeblank": False},
                 value=0,
-                error="0",
+                formatting_error="0",
             ),
             events.Cell(
                 other_config={"canbeblank": False},
                 value="",
-                error="0",
+                formatting_error="0",
             ),
         ]
     )
