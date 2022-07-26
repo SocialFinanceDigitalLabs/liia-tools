@@ -170,7 +170,7 @@ def convert_column_header_to_match(event, config):
                         return event.from_event(event, column_header=c)
             except AttributeError:  # Raised in case a config item empty which is acceptable
                 pass
-    return event
+    return event.from_event(event, column_header="Unknown")
 
 
 @streamfilter(
