@@ -7,6 +7,13 @@ from sfdata_stream_parser import events
 
 log = logging.getLogger(__name__)
 
+supported_file_types = [
+    ".xml",
+    ".csv",
+    ".xlsx",
+    ".xlsm"
+]
+
 
 def flip_dict(some_dict):
     """
@@ -73,33 +80,29 @@ def inherit_property(stream, prop_name):
         yield event
 
 
-def check_file_type(input, file_type, la_log_dir):
+def check_file_type(input, file_type, supported_file_types, la_log_dir):
     """
-    Check that the correct type of file is being used, e.g. xml
+    Check that the correct type of file is being used, e.g. xml. If it is then continue.
+    If not then check if it is in the list of supported file types. If it is then log this error to the data processor
+    If it does not match any of the expected file types then log this error to the data controller
 
     :param input: Location of file to be cleaned
     :param file_type: A string of the expected file type extension e.g. "xml"
+    :param supported_file_types: A list of file types supported by the process e.g. ["csv", "xlsx"]
     :param la_log_dir: Location to save the error log
     :return: Continue if correct, error log if incorrect
     """
-    all_allowed_file_types = [
-        ".xml",
-        ".csv",
-        ".xlsx",
-        ".xlsm"
-    ]
-    disallowed_file_types = list(set(all_allowed_file_types).difference([f".{file_type}"]))  # Add "." to start of
-    # file_type and wrap in list so .difference works as expected
-
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     extension = str(Path(input).suffix)
     filename = str(Path(input).resolve().stem)
 
-    if extension in disallowed_file_types:
-        assert extension == f".{file_type}", f"File not in the expected .{file_type} format"
+    disallowed_file_types = list(set(supported_file_types).difference([f".{file_type}"]))
 
-    elif extension == f".{file_type}":
+    if extension == f".{file_type}":
         pass
+
+    elif extension in disallowed_file_types:
+        assert extension == f".{file_type}", f"File not in the expected .{file_type} format"
 
     else:
         with open(
