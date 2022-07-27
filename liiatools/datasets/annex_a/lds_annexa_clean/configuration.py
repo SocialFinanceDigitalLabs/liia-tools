@@ -55,6 +55,7 @@ def configure_stream(stream, config):
     """
     sheet_config = config["datasources"]
     cell_config = config["data_config"]
+    stream = identify_blank_rows(stream)
     stream = add_sheet_name(stream, config=sheet_config)
     stream = inherit_property(stream, "sheet_name")
     stream = inherit_property(stream, "column_headers")
@@ -67,6 +68,39 @@ def configure_stream(stream, config):
         stream, config=sheet_config, prop_name="other_config"
     )
     return stream
+
+
+def identify_blank_rows(stream):
+    """
+    Identify any blank rows in the dataset and assign a blank_row = "1" value to the corresponding
+    StartRow, Cell and EndRow
+    All Cell values between StartRow and EndRow are added to a list which is then checked to see if it contains
+    only None values i.e. the row is blank. If row is blank return all events with a blank_row = "1" value,
+    otherwise return all events without changes
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects with blank row information
+    """
+    row = None
+    blank_row = []
+    for event in stream:
+        if isinstance(event, events.StartRow):
+            row = [event]
+        elif isinstance(event, events.EndRow):
+            row.append(event)
+            if blank_row == [None] * len(blank_row):
+                yield from [event.from_event(event, blank_row="1") for event in row]
+            else:
+                yield from [event.from_event(event) for event in row]
+            row = None
+            blank_row = []
+        elif isinstance(event, events.Cell):
+            row.append(event)
+            blank_row.append(event.value)
+        elif row:
+            row.append(event)
+        else:
+            yield event
 
 
 @streamfilter(

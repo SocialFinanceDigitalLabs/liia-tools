@@ -13,7 +13,11 @@ def test_data_minimisation():
     test_dict_1 = {"List 10": pd.DataFrame(List_10), "List 11": pd.DataFrame(List_11)}
     output_dict_1 = process.data_minimisation(test_dict_1, config["minimise"])
     assert len(output_dict_1) == 0
-    List_3 = {"Allocated Worker": ["John"], "Allocated Team": ["Janitor"], "Other column": ["Other data"]}
+    List_3 = {
+        "Allocated Worker": ["John"],
+        "Allocated Team": ["Janitor"],
+        "Other column": ["Other data"],
+    }
     test_dict_2 = {"List 3": pd.DataFrame(List_3)}
     output_dict_2 = process.data_minimisation(test_dict_2, config["minimise"])
     output_df_2 = output_dict_2["List 3"]

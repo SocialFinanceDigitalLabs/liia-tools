@@ -6,9 +6,7 @@ import os
 
 from sfdata_stream_parser import events
 
-from liiatools.datasets.annex_a.lds_annexa_clean import (
-    file_creator
-)
+from liiatools.datasets.annex_a.lds_annexa_clean import file_creator
 
 
 def test_save_tables():
@@ -53,10 +51,14 @@ def test_save_tables():
 def test_filter_rows():
     stream = file_creator.filter_rows(
         [
-            file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": "some value"}),
+            file_creator.RowEvent(
+                sheet_name="List 1", row={"Date of Contact": "some value"}
+            ),
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": ""}),
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": None}),
-            file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": "some value"}),
+            file_creator.RowEvent(
+                sheet_name="List 2", row={"Date of Contact": "some value"}
+            ),
             file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": ""}),
             file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": None}),
         ]
