@@ -31,11 +31,15 @@ def save_stream(stream, la_name, output):
 
 def coalesce_row(stream):
     """
-    Create a list of the cell values for a whole row excluding those with unknown column headers
+    Create a dictionary of the column headers and cell values for a whole row, excluding those with unknown
+    column headers
+    For duplicate column headers, add a number to the end of the column header, so it can still be saved and
+    output in the final file
     :param stream: The stream to output
     :return: Updated stream
     """
     row = None
+    duplicate_column = []
     for event in stream:
         if isinstance(event, events.StartRow):
             row = {}
@@ -47,7 +51,11 @@ def coalesce_row(stream):
             and isinstance(event, events.Cell)
             and event.column_header != "Unknown"
         ):
-            row[event.column_header] = event.value
+            if event.column_header in row:
+                duplicate_column.append(event.column_header)
+                row[f"{event.column_header} {+len(duplicate_column)+1}"] = event.value
+            else:
+                row[event.column_header] = event.value
         else:
             yield event
 
