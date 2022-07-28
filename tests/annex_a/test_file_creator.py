@@ -7,7 +7,7 @@ import os
 from sfdata_stream_parser import events
 
 from liiatools.datasets.annex_a.lds_annexa_clean import (
-    file_creator
+    file_creator,
 )
 
 
@@ -68,3 +68,23 @@ def test_filter_rows():
     assert stream[3].filter == 0
     assert stream[4].filter == 0
     assert stream[5].filter == 0
+
+
+def test_coalesce_row():
+    stream = file_creator.coalesce_row(
+        [
+            events.StartRow(),
+            events.Cell(column_header="Date of Contact", value="value_one"),
+            events.Cell(column_header="Date of Contact", value="value_two"),
+            events.Cell(column_header="Date of Contact", value="value_three"),
+            events.Cell(column_header="Date of referral", value="some_date"),
+            events.Cell(column_header="Unknown", value="anything"),
+            events.EndRow(),
+        ]
+    )
+    stream = list(stream)
+    assert stream[1].row["Date of Contact"] == "value_one"
+    assert stream[1].row["Date of Contact 2"] == "value_two"
+    assert stream[1].row["Date of Contact 3"] == "value_three"
+    assert stream[1].row["Date of referral"] == "some_date"
+    assert "Unknown" not in stream[1].row
