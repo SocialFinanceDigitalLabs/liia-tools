@@ -28,7 +28,7 @@ from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suf
 from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
 
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import flip_dict
+from liiatools.datasets.shared_functions.common import flip_dict, check_file_type, supported_file_types
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -86,9 +86,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Configuration
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
+    check_file_type(input, file_types=[".csv"], supported_file_types=supported_file_types, la_log_dir=la_log_dir)
 
     # Open & Parse file
-    stream = parse.parse_csv(input=input, la_log_dir=la_log_dir)
+    stream = parse.parse_csv(input=input)
     stream = populate.add_year_column(stream)
 
     # Configure stream
