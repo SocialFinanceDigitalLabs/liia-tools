@@ -80,14 +80,14 @@ def inherit_property(stream, prop_name):
         yield event
 
 
-def check_file_type(input, file_type, supported_file_types, la_log_dir):
+def check_file_type(input, file_types, supported_file_types, la_log_dir):
     """
     Check that the correct type of file is being used, e.g. xml. If it is then continue.
     If not then check if it is in the list of supported file types. If it is then log this error to the data processor
     If it does not match any of the expected file types then log this error to the data controller
 
     :param input: Location of file to be cleaned
-    :param file_type: A string of the expected file type extension e.g. "xml"
+    :param file_types: A list of the expected file type extensions e.g. [".xml", ".csv"]
     :param supported_file_types: A list of file types supported by the process e.g. ["csv", "xlsx"]
     :param la_log_dir: Location to save the error log
     :return: Continue if correct, error log if incorrect
@@ -96,13 +96,13 @@ def check_file_type(input, file_type, supported_file_types, la_log_dir):
     extension = str(Path(input).suffix)
     filename = str(Path(input).resolve().stem)
 
-    disallowed_file_types = list(set(supported_file_types).difference([f".{file_type}"]))
+    disallowed_file_types = list(set(supported_file_types).difference(file_types))
 
-    if extension == f".{file_type}":
+    if extension in file_types:
         pass
 
     elif extension in disallowed_file_types:
-        assert extension == f".{file_type}", f"File not in the expected .{file_type} format"
+        assert extension in file_types, f"File not in the expected {file_types} format"
 
     else:
         with open(
