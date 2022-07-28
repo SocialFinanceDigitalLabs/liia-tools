@@ -20,7 +20,11 @@ from liiatools.datasets.annex_a.lds_annexa_pan_agg import configuration as pan_c
 from liiatools.datasets.annex_a.lds_annexa_pan_agg import process as pan_process
 
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import flip_dict
+from liiatools.datasets.shared_functions.common import (
+    flip_dict,
+    check_file_type,
+    supported_file_types,
+)
 from sfdata_stream_parser.filters.column_headers import promote_first_row
 
 log = logging.getLogger()
@@ -80,7 +84,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     filename = Path(input).resolve().stem
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
-    clean_config.check_file_type(input, la_log_dir=la_log_dir)
+    check_file_type(
+        input,
+        file_types=[".xlsx", ".xlsm"],
+        supported_file_types=supported_file_types,
+        la_log_dir=la_log_dir,
+    )
 
     # Open & Parse file
     stream = openpyxl.parse_sheets(input)
@@ -118,12 +127,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     help="A string specifying the output directory location",
 )
 def la_agg(input, output):
-    '''
+    """
     Joins data from newly cleaned Annex A file (output of cleanfile()) to existing Annex A data for the depositing local authority
     :param input: a string specifying the input file location of the newly cleaned file, including file name and suffix, usable by a Path function
     :param output: a string specifying the local authority's Annex A output directory, usable by a Path function
     :return: None
-    '''
+    """
 
     # Configuration
     config = agg_config.Config()
@@ -171,13 +180,13 @@ def la_agg(input, output):
     help="A string specifying the output directory location",
 )
 def pan_agg(input, la_code, output):
-    '''
+    """
     Merges data from newly merged Annex A file (output of la_agg()) to existing pan-London Annex A data
     :param input: a string specifying the input file location of the newly merged file, including file name and suffix, usable by a Path function
     :param la_code: should be a three-letter string for the local authority whose data is to be merged
     :param output: a string specifying the pan-London Annex A output directory, usable by a Path function
     :return: None
-    '''
+    """
 
     # Configuration
     config = pan_config.Config()
