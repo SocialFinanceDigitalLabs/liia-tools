@@ -1,8 +1,6 @@
 import tablib
 import tempfile as tmp
-from unittest.mock import patch, mock_open
-from datetime import datetime
-import os
+import pandas as pd
 
 from sfdata_stream_parser import events
 
@@ -88,3 +86,21 @@ def test_coalesce_row():
     assert stream[1].row["Date of Contact 3"] == "value_three"
     assert stream[1].row["Date of referral"] == "some_date"
     assert "Unknown" not in stream[1].row
+
+
+def test_create_tables():
+    stream = file_creator.create_tables(
+        [
+            events.StartTable(matched_column_headers=["header_one", "header_two"]),
+            file_creator.RowEvent(filter=0, row={"header_one": "value_one", "header_two": "value_two"}),
+            file_creator.RowEvent(filter=0, row={"header_one": "value_one", "header_two": "value_two"}),
+            file_creator.RowEvent(filter=1, row={"header_one": "value_one", "header_two": "value_two"}),
+            events.EndTable(),
+        ],
+        la_name="Barnet"
+    )
+    stream = list(stream)
+    assert hasattr(stream[6], "data")
+
+    data = stream[6].data.export("df")
+    assert data.shape == (2, 3)
