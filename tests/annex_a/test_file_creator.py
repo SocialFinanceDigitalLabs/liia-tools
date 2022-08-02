@@ -1,6 +1,5 @@
 import tablib
 import tempfile as tmp
-import pandas as pd
 
 from sfdata_stream_parser import events
 
