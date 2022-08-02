@@ -27,11 +27,15 @@ def test_degrade_postcodes():
 
 
 def test_degrade_dob():
-    event = events.Cell(column_header="Date of Birth", value=datetime(2012, 4, 25).date())
+    event = events.Cell(
+        column_header="Date of Birth", value=datetime(2012, 4, 25).date()
+    )
     degraded_event = list(degrade.degrade_dob(event))[0]
     assert degraded_event.value == datetime(2012, 4, 1).date()
 
-    event = events.Cell(column_header="Date of Birth", value=datetime(2013, 7, 13).date())
+    event = events.Cell(
+        column_header="Date of Birth", value=datetime(2013, 7, 13).date()
+    )
     degraded_event = list(degrade.degrade_dob(event))[0]
     assert degraded_event.value == datetime(2013, 7, 1).date()
 

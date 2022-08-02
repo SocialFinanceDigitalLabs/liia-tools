@@ -50,10 +50,14 @@ def test_save_tables():
 def test_filter_rows():
     stream = file_creator.filter_rows(
         [
-            file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": "some value"}),
+            file_creator.RowEvent(
+                sheet_name="List 1", row={"Date of Contact": "some value"}
+            ),
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": ""}),
             file_creator.RowEvent(sheet_name="List 1", row={"Date of Contact": None}),
-            file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": "some value"}),
+            file_creator.RowEvent(
+                sheet_name="List 2", row={"Date of Contact": "some value"}
+            ),
             file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": ""}),
             file_creator.RowEvent(sheet_name="List 2", row={"Date of Contact": None}),
         ]
@@ -91,12 +95,18 @@ def test_create_tables():
     stream = file_creator.create_tables(
         [
             events.StartTable(matched_column_headers=["header_one", "header_two"]),
-            file_creator.RowEvent(filter=0, row={"header_one": "value_one", "header_two": "value_two"}),
-            file_creator.RowEvent(filter=0, row={"header_one": "value_one", "header_two": "value_two"}),
-            file_creator.RowEvent(filter=1, row={"header_one": "value_one", "header_two": "value_two"}),
+            file_creator.RowEvent(
+                filter=0, row={"header_one": "value_one", "header_two": "value_two"}
+            ),
+            file_creator.RowEvent(
+                filter=0, row={"header_one": "value_one", "header_two": "value_two"}
+            ),
+            file_creator.RowEvent(
+                filter=1, row={"header_one": "value_one", "header_two": "value_two"}
+            ),
             events.EndTable(),
         ],
-        la_name="Barnet"
+        la_name="Barnet",
     )
     stream = list(stream)
     assert hasattr(stream[6], "data")

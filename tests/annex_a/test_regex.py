@@ -25,7 +25,7 @@ def test_resolve_flags():
 
 def test_parse_regex():
     string = "/.*unknown.*/i"
-    assert regex.parse_regex(string) == re.compile('.*unknown.*', re.IGNORECASE)
+    assert regex.parse_regex(string) == re.compile(".*unknown.*", re.IGNORECASE)
 
     string = "/.*whi.*british.*/m"
-    assert regex.parse_regex(string) == re.compile('.*whi.*british.*', re.MULTILINE)
+    assert regex.parse_regex(string) == re.compile(".*whi.*british.*", re.MULTILINE)

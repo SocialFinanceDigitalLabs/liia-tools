@@ -5,10 +5,29 @@ from liiatools.datasets.annex_a.lds_annexa_la_agg import (
     process,
 )
 
+
 def test_sort_dict():
-    sort_order = configuration.Config()['sort_order']
-    df_right = {"Child Unique ID": [], "Gender": [], "Ethnicity": [], "Date of Birth": [], "Age of Child (Years)": [], "Date of Contact": [], "Contact Source": [], "LA": []}
-    df_wrong = {"LA": [], "Child Unique ID": [], "Gender": [], "Ethnicity": [], "Date of Birth": [], "Age of Child (Years)": [], "Date of Contact": [], "Contact Source": []}
+    sort_order = configuration.Config()["sort_order"]
+    df_right = {
+        "Child Unique ID": [],
+        "Gender": [],
+        "Ethnicity": [],
+        "Date of Birth": [],
+        "Age of Child (Years)": [],
+        "Date of Contact": [],
+        "Contact Source": [],
+        "LA": [],
+    }
+    df_wrong = {
+        "LA": [],
+        "Child Unique ID": [],
+        "Gender": [],
+        "Ethnicity": [],
+        "Date of Birth": [],
+        "Age of Child (Years)": [],
+        "Date of Contact": [],
+        "Contact Source": [],
+    }
     dict_right = {"List 1": pd.DataFrame(df_right)}
     dict_wrong = {"List 1": pd.DataFrame(df_wrong)}
     output_1 = process.sort_dict(dict_right, sort_order)
@@ -62,7 +81,12 @@ def test_remove_old_data():
     output_dict_2 = process.remove_old_data(test_dict_2, index_date_1)
     output_df_2 = output_dict_2["List 9"]
     assert output_df_2.shape[0] == 1
-    test_df_3 = pd.DataFrame({"Date 1": [seven_years_ago, seven_years_ago], "Date 2": [five_years_ago, seven_years_ago]})
+    test_df_3 = pd.DataFrame(
+        {
+            "Date 1": [seven_years_ago, seven_years_ago],
+            "Date 2": [five_years_ago, seven_years_ago],
+        }
+    )
     test_dict_3 = {"List 10": test_df_3}
     index_date_2 = {"List 10": {"ref_date": ["Date 1", "Date 2"], "years": 6}}
     output_dict_3 = process.remove_old_data(test_dict_3, index_date_2)
