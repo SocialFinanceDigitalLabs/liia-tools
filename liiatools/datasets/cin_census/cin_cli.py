@@ -8,10 +8,9 @@ import yaml
 
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
-
-from csdatatools.util.xml import dom_parse
-from csdatatools.datasets.cincensus.schema import Schema
-from csdatatools.datasets.cincensus import filters
+from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.csdatatools.datasets.cincensus.schema import Schema
+from liiatools.csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
