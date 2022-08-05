@@ -214,11 +214,8 @@ def create_missing_sheet_error(stream):
     ]
     for event in stream:
         if isinstance(event, events.StartTable):
-            try:
-                sheet_names.append(event.sheet_name)
-                yield event
-            except AttributeError:
-                yield event
+            sheet_name = getattr(event, "sheet_name", None)
+            sheet_names.append(sheet_name)
         if isinstance(event, events.EndContainer):
             missing_sheet_error = _missing_sheet_match(
                 sheet_names, expected_sheet_names
