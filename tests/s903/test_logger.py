@@ -109,49 +109,6 @@ def test_create_blank_error_count():
             ]
 
 
-def test_inherit_extra_column_error():
-    stream = (
-        events.StartTable(extra_columns=["list", "of", "extra", "columns"]),
-        logger.ErrorTable(),
-        events.EndTable(),
-    )
-    events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
-    for event in events_with_extra_column_error:
-        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.extra_column_error == [
-                "list",
-                "of",
-                "extra",
-                "columns",
-            ]
-
-    stream = (
-        events.StartTable(extra_columns=None),
-        logger.ErrorTable(),
-        events.EndTable(),
-    )
-    events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
-    for event in events_with_extra_column_error:
-        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.extra_column_error is None
-
-    stream = (
-        events.StartTable(extra_columns=""),
-        logger.ErrorTable(),
-        events.EndTable(),
-    )
-    events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
-    for event in events_with_extra_column_error:
-        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.extra_column_error == ""
-
-    stream = (events.StartTable(), logger.ErrorTable(), events.EndTable())
-    events_with_extra_column_error = list(logger.inherit_extra_column_error(stream))
-    for event in events_with_extra_column_error:
-        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.extra_column_error == []
-
-
 @patch("builtins.open", create=True)
 def test_save_errors_la(mock_save):
     la_log_dir = tmp.gettempdir()
