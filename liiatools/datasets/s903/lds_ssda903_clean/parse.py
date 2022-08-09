@@ -1,6 +1,7 @@
 import tablib
 import logging
 from pathlib import Path
+from datetime import datetime
 
 from sfdata_stream_parser import events
 
@@ -15,6 +16,7 @@ def parse_csv(input):
     :return: List of event objects containing filename, header and cell information
     """
     filename = str(Path(input).resolve().stem)
+
     with open(input, "rt") as f:
         yield events.StartContainer(filename=filename)
         data = tablib.import_set(f, format="csv")

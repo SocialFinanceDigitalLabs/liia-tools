@@ -35,7 +35,7 @@ def _get_validation_error(
             return event
         if "Unexpected" in e.reason:
             field_error.append(
-                f"Essential fields not found. See more information below"
+                f"Unexpected fields found. See more information below"
             )
             field_error.append(str(e))
             return event
