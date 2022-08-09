@@ -1,12 +1,8 @@
 from datetime import datetime
 
-from liiatools.datasets.annex_a.lds_annexa_clean.converters import (
-    to_integer
-)
+from liiatools.datasets.annex_a.lds_annexa_clean.converters import to_integer
 
-from liiatools.datasets.shared_functions.converters import (
-    to_date
-)
+from liiatools.datasets.shared_functions.converters import to_date
 
 
 def test_conversion_to_integer():
