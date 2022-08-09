@@ -88,7 +88,7 @@ def save_year_error(input, la_log_dir):
     :param la_log_dir: Path to the local authority's log folder
     :return: Text file containing the error information
     """
-    filename = str(Path(input).resolve().stem)
+    filename = Path(input).resolve().stem
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     with open(
         f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
@@ -112,8 +112,8 @@ def check_file_type(input, file_types, supported_file_types, la_log_dir):
     :return: Continue if correct, error log if incorrect
     """
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-    extension = str(Path(input).suffix)
-    filename = str(Path(input).resolve().stem)
+    extension = Path(input).suffix
+    filename = Path(input).resolve().stem
 
     disallowed_file_types = list(set(supported_file_types).difference(file_types))
 
