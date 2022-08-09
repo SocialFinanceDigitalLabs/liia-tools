@@ -1,6 +1,9 @@
 from sfdata_stream_parser import events
 
-from liiatools.datasets.annex_a.lds_annexa_clean.cleaner import clean_integers, clean_cell_category
+from liiatools.datasets.annex_a.lds_annexa_clean.cleaner import (
+    clean_integers,
+    clean_cell_category,
+)
 
 
 def test_clean_integers():
@@ -39,7 +42,7 @@ def test_clean_integers():
                 column_index=5,
                 category_config={"canbeblank": False},
                 other_config={"type": "integer"},
-                value=0
+                value=0,
             ),
         ]
     )
@@ -93,7 +96,7 @@ def test_clean_cell_category():
                         "name": "White British",
                         "regex": ["/.*whi.*british.*/i", "/a\\).*/i", "/WBRI.*/i"],
                     }
-                ]
+                ],
             ),
             events.Cell(
                 value="random_value",
@@ -103,11 +106,9 @@ def test_clean_cell_category():
                         "name": "White British",
                         "regex": ["/.*whi.*british.*/i", "/a\\).*/i", "/WBRI.*/i"],
                     }
-                ]
+                ],
             ),
-            events.Cell(
-                value="random_value"
-            ),
+            events.Cell(value="random_value"),
             events.Cell(
                 value="Monkey",
                 category_config=[
