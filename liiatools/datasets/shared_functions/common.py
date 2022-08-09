@@ -7,6 +7,13 @@ from sfdata_stream_parser import events
 
 log = logging.getLogger(__name__)
 
+supported_file_types = [
+    ".xml",
+    ".csv",
+    ".xlsx",
+    ".xlsm"
+]
+
 
 def flip_dict(some_dict):
     """
@@ -90,3 +97,38 @@ def save_year_error(input, la_log_dir):
         f.write(
             f"Could not process '{filename}' because no year was found in the name of the file"
         )
+
+
+def check_file_type(input, file_types, supported_file_types, la_log_dir):
+    """
+    Check that the correct type of file is being used, e.g. xml. If it is then continue.
+    If not then check if it is in the list of supported file types. If it is then log this error to the data processor
+    If it does not match any of the expected file types then log this error to the data controller
+
+    :param input: Location of file to be cleaned
+    :param file_types: A list of the expected file type extensions e.g. [".xml", ".csv"]
+    :param supported_file_types: A list of file types supported by the process e.g. [".csv", ".xlsx"]
+    :param la_log_dir: Location to save the error log
+    :return: Continue if correct, error log if incorrect
+    """
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    extension = str(Path(input).suffix)
+    filename = str(Path(input).resolve().stem)
+
+    disallowed_file_types = list(set(supported_file_types).difference(file_types))
+
+    if extension in file_types:
+        pass
+
+    elif extension in disallowed_file_types:
+        assert extension in file_types, f"File not in the expected {file_types} format"
+
+    else:
+        with open(
+                f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+                "a",
+        ) as f:
+            f.write(
+                f"File: '{filename}{extension}' not in any of the expected formats (csv, xml, xlsx, xlsm)"
+            )
+        exit()

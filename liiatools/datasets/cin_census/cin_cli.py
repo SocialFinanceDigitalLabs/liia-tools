@@ -8,10 +8,9 @@ import yaml
 
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
-
-from csdatatools.util.xml import dom_parse
-from csdatatools.datasets.cincensus.schema import Schema
-from csdatatools.datasets.cincensus import filters
+from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.csdatatools.datasets.cincensus.schema import Schema
+from liiatools.csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
@@ -21,7 +20,11 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
     cin_record,
 )
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import flip_dict
+from liiatools.datasets.shared_functions.common import (
+    flip_dict,
+    check_file_type,
+    supported_file_types,
+)
 
 # Dependencies for la_agg()
 from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
@@ -85,6 +88,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
 
     # Open & Parse file
+    check_file_type(
+        input,
+        file_types=[".xml"],
+        supported_file_types=supported_file_types,
+        la_log_dir=la_log_dir,
+    )
     stream = dom_parse(input)
 
     # Configure stream
@@ -176,13 +185,13 @@ def cleanfile(input, la_code, la_log_dir, output):
     "--flat_output",
     required=True,
     type=str,
-    help="A string specifying the directory location for the main flatfile output"
+    help="A string specifying the directory location for the main flatfile output",
 )
 @click.option(
     "--analysis_output",
     required=True,
     type=str,
-    help="A string specifying the directory location for the additional analysis outputs"
+    help="A string specifying the directory location for the additional analysis outputs",
 )
 def la_agg(input, flat_output, analysis_output):
     """
@@ -205,13 +214,15 @@ def la_agg(input, flat_output, analysis_output):
     sort_order = config["sort_order"]
     dedup = config["dedup"]
     flatfile = agg_process.deduplicate(flatfile, sort_order, dedup)
-    flatfile = agg_process.remove_old_data(flatfile, years = 6)
+    flatfile = agg_process.remove_old_data(flatfile, years=6)
 
     # Output flatfile
     agg_process.export_flatfile(flat_output, flatfile)
 
     # Create and output factors file
-    factors = agg_process.filter_flatfile(flatfile, filter="AssessmentAuthorisationDate")
+    factors = agg_process.filter_flatfile(
+        flatfile, filter="AssessmentAuthorisationDate"
+    )
     factors = agg_process.split_factors(factors)
     agg_process.export_factfile(analysis_output, factors)
 
@@ -243,7 +254,7 @@ def la_agg(input, flat_output, analysis_output):
 )
 @click.option(
     "--la_code",
-    required=True,    
+    required=True,
     type=click.Choice(la_list, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
@@ -251,13 +262,13 @@ def la_agg(input, flat_output, analysis_output):
     "--flat_output",
     required=True,
     type=str,
-    help="A string specifying the directory location for the main flatfile output"
+    help="A string specifying the directory location for the main flatfile output",
 )
 @click.option(
     "--analysis_output",
     required=True,
     type=str,
-    help="A string specifying the directory location for the additional analysis outputs"
+    help="A string specifying the directory location for the additional analysis outputs",
 )
 def pan_agg(input, la_code, flat_output, analysis_output):
     """
@@ -284,7 +295,9 @@ def pan_agg(input, la_code, flat_output, analysis_output):
     pan_process.export_flatfile(flat_output, flatfile)
 
     # Create and output factors file
-    factors = pan_process.filter_flatfile(flatfile, filter="AssessmentAuthorisationDate")
+    factors = pan_process.filter_flatfile(
+        flatfile, filter="AssessmentAuthorisationDate"
+    )
     factors = pan_process.split_factors(factors)
     pan_process.export_factfile(analysis_output, factors)
 

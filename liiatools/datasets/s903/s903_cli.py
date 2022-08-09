@@ -12,7 +12,7 @@ from liiatools.datasets.s903.lds_ssda903_clean import (
     filters,
     degrade,
     logger,
-    file_creator
+    file_creator,
 )
 
 # dependencies for la_agg()
@@ -28,7 +28,11 @@ from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suf
 from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
 
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import flip_dict
+from liiatools.datasets.shared_functions.common import (
+    flip_dict,
+    check_file_type,
+    supported_file_types,
+)
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -55,7 +59,7 @@ def s903():
 )
 @click.option(
     "--la_code",
-    required=True,    
+    required=True,
     type=click.Choice(la_list, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
@@ -86,6 +90,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Configuration
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
+    check_file_type(
+        input,
+        file_types=[".csv"],
+        supported_file_types=supported_file_types,
+        la_log_dir=la_log_dir,
+    )
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
@@ -164,7 +174,7 @@ def la_agg(input, output):
 )
 @click.option(
     "--la_code",
-    required=True,    
+    required=True,
     type=click.Choice(la_list, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
@@ -186,7 +196,7 @@ def pan_agg(input, la_code, output):
 
     # Configuration
     config = pan_config.Config()
-    
+
     # Read file and match type
     s903_df = pan_process.read_file(input)
     column_names = config["column_names"]
