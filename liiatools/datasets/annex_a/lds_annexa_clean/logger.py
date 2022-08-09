@@ -68,6 +68,7 @@ def blank_error_check(event):
             and not event.value
             and event.value != 0
             and event.error != "1"
+            and getattr(event, "blank_row", 0) != "1"
         ):
             return event.from_event(event, blank_error="1")
         else:
