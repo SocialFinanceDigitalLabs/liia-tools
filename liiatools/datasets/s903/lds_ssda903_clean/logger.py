@@ -97,29 +97,6 @@ def create_blank_error_count(stream):
         yield event
 
 
-def inherit_extra_column_error(stream):
-    """
-    Add the extra_column_error value to the ErrorTable so these errors can be written to the log.txt file
-
-    :param stream: A filtered list of event objects
-    :return: An updated list of event objects
-    """
-    extra_column_error = []
-    for event in stream:
-        try:
-            if isinstance(event, events.StartTable):
-                extra_column_error = event.extra_columns
-            elif isinstance(event, events.EndTable):
-                extra_column_error = []
-            elif isinstance(event, ErrorTable):
-                yield ErrorTable.from_event(
-                    event, extra_column_error=extra_column_error
-                )
-            yield event
-        except AttributeError:
-            yield event
-
-
 @streamfilter(
     check=type_check(events.StartTable),
     fail_function=pass_event,
@@ -162,12 +139,10 @@ def save_errors_la(stream, la_log_dir):
                 event.formatting_error_count is not None
                 and event.blank_error_count is not None
                 and event.table_name is not None
-                and event.extra_column_error is not None
             ):
                 if (
                     event.formatting_error_count
                     or event.blank_error_count
-                    or event.extra_column_error
                 ):
                     with open(
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
@@ -195,15 +170,6 @@ def save_errors_la(stream, la_log_dir):
                             f.write(
                                 str(blank_counter_dict)[9:-2]
                             )  # Remove "Counter({" and "})" from string
-                            f.write("\n")
-                        if event.extra_column_error:
-                            extra_column_error_no_none = list(
-                                filter(None, event.extra_column_error)
-                            )
-                            f.write(
-                                f"Headers of unexpected columns that have been removed or reformatted: "
-                                f"{extra_column_error_no_none}"
-                            )
                             f.write("\n")
         except AttributeError:
             pass
@@ -239,6 +205,5 @@ def log_errors(stream):
     stream = blank_error_check(stream)
     stream = create_formatting_error_count(stream)
     stream = create_blank_error_count(stream)
-    stream = inherit_extra_column_error(stream)
     stream = create_file_match_error(stream)
     return stream
