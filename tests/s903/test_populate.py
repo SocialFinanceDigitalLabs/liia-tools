@@ -1,24 +1,28 @@
+import tempfile as tmp
+import unittest
+
 from liiatools.datasets.s903.lds_ssda903_clean import populate
 
 from sfdata_stream_parser import events
 
 
 def test_add_year_column():
+    la_log_dir = tmp.gettempdir()
+    input = r"test_file_2022.csv"
+
     stream = populate.add_year_column(
         [
             events.StartTable(filename="test_file_2022"),
             events.EndRow(),
             events.EndTable(),
-            events.StartTable(filename="test_file_no_year"),
-            events.EndRow(),
-        ]
+        ],
+        input=input,
+        la_log_dir=la_log_dir
     )
     stream = list(stream)
     assert stream[0].year == "2022"
     assert stream[1].year == "2022"
     assert not hasattr(stream[2], "year")
-    assert stream[3].year_error == f"Unable to find year in '{stream[3].filename}' so no output has been produced"
-    assert not hasattr(stream[4], "year")
 
 
 def test_create_la_child_id():

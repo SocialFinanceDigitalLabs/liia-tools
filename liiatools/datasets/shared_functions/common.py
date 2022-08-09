@@ -80,6 +80,25 @@ def inherit_property(stream, prop_name):
         yield event
 
 
+def save_year_error(input, la_log_dir):
+    """
+    Save errors to a text file in the LA log directory
+
+    :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param la_log_dir: Path to the local authority's log folder
+    :return: Text file containing the error information
+    """
+    filename = Path(input).resolve().stem
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    with open(
+        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+        "a",
+    ) as f:
+        f.write(
+            f"Could not process '{filename}' because no year was found in the name of the file"
+        )
+
+
 def check_file_type(input, file_types, supported_file_types, la_log_dir):
     """
     Check that the correct type of file is being used, e.g. xml. If it is then continue.
@@ -88,13 +107,13 @@ def check_file_type(input, file_types, supported_file_types, la_log_dir):
 
     :param input: Location of file to be cleaned
     :param file_types: A list of the expected file type extensions e.g. [".xml", ".csv"]
-    :param supported_file_types: A list of file types supported by the process e.g. ["csv", "xlsx"]
+    :param supported_file_types: A list of file types supported by the process e.g. [".csv", ".xlsx"]
     :param la_log_dir: Location to save the error log
     :return: Continue if correct, error log if incorrect
     """
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-    extension = str(Path(input).suffix)
-    filename = str(Path(input).resolve().stem)
+    extension = Path(input).suffix
+    filename = Path(input).resolve().stem
 
     disallowed_file_types = list(set(supported_file_types).difference(file_types))
 

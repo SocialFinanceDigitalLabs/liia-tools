@@ -99,7 +99,7 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
-    stream = populate.add_year_column(stream)
+    stream = populate.add_year_column(stream, input=input, la_log_dir=la_log_dir)
 
     # Configure stream
     stream = clean_config.configure_stream(stream, config)
