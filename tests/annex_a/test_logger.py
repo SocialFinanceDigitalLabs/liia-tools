@@ -57,6 +57,9 @@ def test_blank_error_check():
                 value="",
                 error="0",
             ),
+            events.Cell(
+                other_config={"canbeblank": False}, value="", error="0", blank_row="1"
+            ),
         ]
     )
     stream = list(stream)
@@ -64,3 +67,4 @@ def test_blank_error_check():
     assert stream[1].value == 0
     assert stream[2].value == ""
     assert stream[2].blank_error == "1"
+    assert not hasattr(stream[3], "blank_error")

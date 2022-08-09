@@ -3,9 +3,7 @@ import tempfile as tmp
 
 from sfdata_stream_parser import events
 
-from liiatools.datasets.annex_a.lds_annexa_clean import (
-    file_creator,
-)
+from liiatools.datasets.annex_a.lds_annexa_clean import file_creator
 
 
 def test_save_tables():

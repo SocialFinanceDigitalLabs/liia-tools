@@ -2,6 +2,7 @@ from sfdata_stream_parser import events
 
 from liiatools.datasets.annex_a.lds_annexa_clean.configuration import (
     identify_cell_header,
+    identify_blank_rows,
     add_sheet_name,
     Config,
     _match_column_name,
@@ -38,6 +39,43 @@ def test_match_column_name():
         _match_column_name("child id", "Child Unique ID", [r"/.*child.*id.*/i"])
         == "Child Unique ID"
     )
+
+
+def test_identify_blank_rows():
+    stream = identify_blank_rows(
+        [
+            events.StartTable(),
+            events.StartRow(),
+            events.Cell(value=None),
+            events.Cell(value=None),
+            events.Cell(value=None),
+            events.EndRow(),
+            events.EndTable(),
+        ]
+    )
+    stream = list(stream)
+    assert not hasattr(stream[0], "blank_row")
+    assert stream[1].blank_row == "1"
+    assert stream[2].blank_row == "1"
+    assert stream[3].blank_row == "1"
+    assert stream[4].blank_row == "1"
+    assert stream[5].blank_row == "1"
+    assert not hasattr(stream[6], "blank_row")
+
+    stream = identify_blank_rows(
+        [
+            events.StartTable(),
+            events.StartRow(),
+            events.Cell(value=None),
+            events.Cell(value="a_value"),
+            events.Cell(value=None),
+            events.EndRow(),
+            events.EndTable(),
+        ]
+    )
+    stream = list(stream)
+    for i in range(len(stream)):
+        assert not hasattr(stream[i], "blank_row")
 
 
 def test_add_sheet_name_exact():
