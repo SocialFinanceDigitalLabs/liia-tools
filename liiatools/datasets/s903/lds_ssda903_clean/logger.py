@@ -176,7 +176,6 @@ def save_errors_la(stream, la_log_dir):
 
         if isinstance(event, events.StartTable):
             match_error = getattr(event, "match_error", None)
-            year_error = getattr(event, "year_error", None)
             if match_error:
                 with open(
                     f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
@@ -184,14 +183,6 @@ def save_errors_la(stream, la_log_dir):
                 ) as f:
                     f.write(match_error)
                     f.write("\n")
-            if year_error:
-                with open(
-                    f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
-                    "a",
-                ) as f:
-                    f.write(year_error)
-                    f.write("\n")
-
         yield event
 
 

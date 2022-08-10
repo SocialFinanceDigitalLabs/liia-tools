@@ -52,16 +52,16 @@ def test_clean_integers():
     )
     stream = list(stream)
     assert stream[0].value == 5
-    assert stream[0].error == "0"
+    assert stream[0].formatting_error == "0"
     assert stream[1].value == ""
-    assert stream[1].error == "0"
+    assert stream[1].formatting_error == "0"
     assert stream[2].value == ""
-    assert stream[2].error == "1"
+    assert stream[2].formatting_error == "1"
     assert stream[3].value == "3"
     assert stream[4].value == ""
-    assert stream[4].error == "1"
+    assert stream[4].formatting_error == "1"
     assert stream[5].value == 0
-    assert stream[5].error == "0"
+    assert stream[5].formatting_error == "0"
 
 
 def test_clean_cell_category():
@@ -127,13 +127,13 @@ def test_clean_cell_category():
     )
     stream = list(stream)
     assert stream[0].value == "b) Female"
-    assert stream[0].error == "0"
+    assert stream[0].formatting_error == "0"
     assert stream[1].value == "a) WBRI"
-    assert stream[1].error == "0"
+    assert stream[1].formatting_error == "0"
     assert stream[2].value == ""
-    assert stream[2].error == "0"
+    assert stream[2].formatting_error == "0"
     assert stream[3].value == ""
-    assert stream[3].error == "1"
+    assert stream[3].formatting_error == "1"
     assert stream[4].value == "random_value"
     assert stream[5].value == ""
     assert stream[5].error == "1"
@@ -195,3 +195,4 @@ def test_clean_postcodes():
     assert stream[5].error == "0"
     assert stream[6].value == "random_value"
     assert not hasattr(stream[6], "error")
+    assert stream[5].formatting_error == "1"

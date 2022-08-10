@@ -27,20 +27,20 @@ def clean_cell_category(event):
         for c in event.category_config:
             if event.value:
                 if str(c["code"]).lower() in str(event.value).lower():
-                    return event.from_event(event, value=c["code"], error="0")
+                    return event.from_event(event, value=c["code"], formatting_error="0")
                 elif str(c["name"]).lower() == str(event.value).lower():
-                    return event.from_event(event, value=c["code"], error="0")
+                    return event.from_event(event, value=c["code"], formatting_error="0")
 
                 for r in c.get("regex", []):
                     p = parse_regex(r)
                     if p.match(str(event.value)) is not None:
-                        return event.from_event(event, value=c["code"], error="0")
+                        return event.from_event(event, value=c["code"], formatting_error="0")
 
             else:
-                return event.from_event(event, value="", error="0")
+                return event.from_event(event, value="", formatting_error="0")
 
         else:
-            return event.from_event(event, value="", error="1")
+            return event.from_event(event, value="", formatting_error="1")
     except (
         AttributeError,
         KeyError,
@@ -69,9 +69,9 @@ def clean_integers(event):
     if numeric == "integer":
         try:
             text = to_integer(event.value)
-            return event.from_event(event, value=text, error="0")
+            return event.from_event(event, value=text, formatting_error="0")
         except (AttributeError, TypeError, ValueError):
-            return event.from_event(event, value="", error="1")
+            return event.from_event(event, value="", formatting_error="1")
     else:
         return event
 
@@ -96,9 +96,9 @@ def clean_dates(event):
     if date == "date":
         try:
             text = to_date(event.value)
-            return event.from_event(event, value=text, error="0")
+            return event.from_event(event, value=text, formatting_error="0")
         except (AttributeError, TypeError, ValueError):
-            return event.from_event(event, value="", error="1")
+            return event.from_event(event, value="", formatting_error="1")
     else:
         return event
 
@@ -120,7 +120,7 @@ def clean_postcodes(event):
         text = check_postcode(event.value)
     except (AttributeError, TypeError, ValueError):
         error = "1"
-    return event.from_event(event, value=text, error=error)
+    return event.from_event(event, value=text, formatting_error=error)
 
 
 def clean(stream):

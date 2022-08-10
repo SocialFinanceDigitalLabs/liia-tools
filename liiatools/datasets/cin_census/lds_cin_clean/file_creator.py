@@ -2,9 +2,8 @@ from pathlib import Path
 import re
 import pandas as pd
 import logging
-from datetime import datetime
 
-from liiatools.datasets.shared_functions import converters
+from liiatools.datasets.shared_functions import converters, common
 
 log = logging.getLogger(__name__)
 
@@ -12,25 +11,6 @@ log = logging.getLogger(__name__)
 def convert_to_dataframe(data):
     data = data.export("df")
     return data
-
-
-def _save_error(input, la_log_dir):
-    """
-    Save errors to a text file in the LA log directory
-
-    :param input: The input file location, including file name and suffix, and be usable by a Path function
-    :param la_log_dir: Path to the local authority's log folder
-    :return: Text file containing the error information
-    """
-    filename = str(Path(input).resolve().stem)
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-    with open(
-        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-        "a",
-    ) as f:
-        f.write(
-            f"Could not process {filename} because no year was found in the name of the file"
-        )
 
 
 def get_year(input, data, la_log_dir):
@@ -41,7 +21,7 @@ def get_year(input, data, la_log_dir):
         data["YEAR"] = year
         return data
     except AttributeError:
-        _save_error(input, la_log_dir)
+        common.save_year_error(input, la_log_dir)
         raise Exception(
             f"{filename} was not processed as the filename did not contain a year, "
             f"this error has been sent to the LA to be fixed"

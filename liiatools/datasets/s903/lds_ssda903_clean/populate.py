@@ -4,14 +4,16 @@ import logging
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
+from liiatools.datasets.shared_functions import common
+
 log = logging.getLogger(__name__)
 
 
-def add_year_column(stream):
+def add_year_column(stream, input, la_log_dir):
     """
     Searches the filename for the year by finding any four-digit number starting with 20
 
-    :param event: A filtered list of event objects of type StartTable
+    :param stream: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
     """
     year = None
@@ -23,8 +25,11 @@ def add_year_column(stream):
                 year = match.group(0)
                 yield event.from_event(event, year=year)
             except AttributeError:
-                year_error = f"Unable to find year in '{event.filename}' so no output has been produced"
-                yield event.from_event(event, year_error=year_error)
+                common.save_year_error(input, la_log_dir)
+                raise Exception(
+                    f"{event.filename} was not processed as the filename did not contain a year, "
+                    f"this error has been sent to the LA to be fixed"
+                )
         elif isinstance(event, events.EndTable):
             yield event
             year = None
