@@ -17,7 +17,7 @@ def test_add_year_column():
             events.EndTable(),
         ],
         input=input,
-        la_log_dir=la_log_dir
+        la_log_dir=la_log_dir,
     )
     stream = list(stream)
     assert stream[0].year == "2022"

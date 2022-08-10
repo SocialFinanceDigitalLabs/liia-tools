@@ -140,10 +140,7 @@ def save_errors_la(stream, la_log_dir):
                 and event.blank_error_count is not None
                 and event.table_name is not None
             ):
-                if (
-                    event.formatting_error_count
-                    or event.blank_error_count
-                ):
+                if event.formatting_error_count or event.blank_error_count:
                     with open(
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",

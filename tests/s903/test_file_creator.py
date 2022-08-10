@@ -130,12 +130,11 @@ def test_save_tables(mock_save):
     output = tmp.gettempdir()
 
     stream = file_creator.save_tables(
-        [
-            file_creator.TableEvent(filename="test_file", data=data)
-        ],
-        output
+        [file_creator.TableEvent(filename="test_file", data=data)], output
     )
     list(stream)
 
-    mock_save.assert_called_once_with(f"{Path(output, 'test_file')}_clean.csv", "w", newline="")
+    mock_save.assert_called_once_with(
+        f"{Path(output, 'test_file')}_clean.csv", "w", newline=""
+    )
     # mock_save.write.assert_called_once_with(data.export("csv"))

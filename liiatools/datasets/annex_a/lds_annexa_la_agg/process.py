@@ -7,13 +7,13 @@ log = logging.getLogger(__name__)
 
 
 def split_file(input):
-    '''Reads xlsx file as dictionary of dataframes'''
+    """Reads xlsx file as dictionary of dataframes"""
     aa_dict = pd.read_excel(input, sheet_name=None, index_col=None, dtype=object)
     return aa_dict
 
 
 def sort_dict(aa_dict, sort_order):
-    '''Sorts the imported dict by List to ensure consistency'''
+    """Sorts the imported dict by List to ensure consistency"""
     for k in aa_dict.keys():
         df = aa_dict[k]
         df = df[sort_order[k]]
@@ -33,7 +33,9 @@ def _merge_dfs(aa_dict, old_dict):
 def merge_la_files(output, aa_dict):
     output_file = Path(output, f"AnnexA_merged.xlsx")
     if output_file.is_file():
-        old_dict = pd.read_excel(output_file, sheet_name=None, index_col=None, dtype=object)
+        old_dict = pd.read_excel(
+            output_file, sheet_name=None, index_col=None, dtype=object
+        )
         _merge_dfs(aa_dict, old_dict)
     return aa_dict
 
@@ -41,7 +43,7 @@ def merge_la_files(output, aa_dict):
 def deduplicate(aa_dict, dedup):
     for k in aa_dict.keys():
         df = aa_dict[k]
-        df = df.drop_duplicates(subset=dedup[k], keep = 'first')
+        df = df.drop_duplicates(subset=dedup[k], keep="first")
         aa_dict[k] = df
     return aa_dict
 
@@ -56,7 +58,7 @@ def convert_datetimes(aa_dict, dates):
 
 
 def _remove_years(years):
-    d = pd.to_datetime('today')
+    d = pd.to_datetime("today")
     try:
         return d.replace(year=d.year - years)
     except ValueError:
@@ -67,12 +69,25 @@ def remove_old_data(aa_dict, index_date):
     for k in aa_dict.keys():
         index_date_key = index_date[k]
         df = aa_dict[k]
-        if k == 'List 9':
-            df = df[df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])]
-        elif k == 'List 10':
-            df = df[(df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])).any(axis=1)]
+        if k == "List 9":
+            df = df[
+                df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])
+            ]
+        elif k == "List 10":
+            df = df[
+                (
+                    df[index_date_key["ref_date"]]
+                    >= _remove_years(index_date_key["years"])
+                ).any(axis=1)
+            ]
         else:
-            df = df[(df[index_date_key["ref_date"]] >= _remove_years(index_date_key["years"])) | (df[index_date_key["ref_date"]].isnull())]
+            df = df[
+                (
+                    df[index_date_key["ref_date"]]
+                    >= _remove_years(index_date_key["years"])
+                )
+                | (df[index_date_key["ref_date"]].isnull())
+            ]
         aa_dict[k] = df
     return aa_dict
 

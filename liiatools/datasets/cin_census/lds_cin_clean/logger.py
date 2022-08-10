@@ -52,7 +52,7 @@ def counter(event, counter_check, value_error, structural_error):
                 value_error.append(
                     f"LAchildID: {event.LAchildID}, Node: {event.schema.name}"
                 )
-            except AttributeError: # Raised in case there is no event.schema.name
+            except AttributeError:  # Raised in case there is no event.schema.name
                 structural_error.append(
                     f"LAchildID: {event.LAchildID}, Node: {event.tag}"
                 )

@@ -146,9 +146,7 @@ def inherit_error(stream, error_name):
             elif isinstance(event, events.EndTable):
                 error = []
             elif isinstance(event, ErrorTable):
-                yield ErrorTable.from_event(
-                    event, **{f"{error_name}_error": error}
-                )
+                yield ErrorTable.from_event(event, **{f"{error_name}_error": error})
             yield event
         except AttributeError:
             yield event

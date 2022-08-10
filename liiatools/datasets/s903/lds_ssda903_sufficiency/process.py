@@ -33,8 +33,8 @@ def data_min(s903_df, minimise, table_name):
 
 
 def export_suff_file(output, table_name, s903_df):
-    '''
+    """
     Writes file to output directory
-    '''
+    """
     output_path = Path(output, f"pan_London_SSDA903_{table_name}.csv")
     s903_df.to_csv(output_path, index=False)

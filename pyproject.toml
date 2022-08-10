@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "liiatools"
-version = "0.1.4.1"
+version = "0.1.4.2"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
     "Michael Hanks <michael.hanks@socialfinance.org.uk>",
@@ -13,7 +13,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-lxml = "^4.8.0"
+lxml = "^4.9.1"
 more-itertools = "^8.12.0"
 sfdata-stream-parser = "0.4.1"
 xmlschema = "^1.10.0"

@@ -82,8 +82,8 @@ def convert_dates(s903_df, dates, table_name):
 
 
 def export_la_file(output, table_name, s903_df):
-    '''
+    """
     Writes the output as a csv
-    '''
+    """
     output_path = Path(output, f"SSDA903_{table_name}_merged.csv")
     s903_df.to_csv(output_path, index=False)

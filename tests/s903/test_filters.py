@@ -5,9 +5,7 @@ from datetime import datetime
 
 
 def test_clean_dates():
-    event = events.Cell(
-        cell=datetime(2019, 1, 15), config_dict={"date": "%d/%m/%Y"}
-    )
+    event = events.Cell(cell=datetime(2019, 1, 15), config_dict={"date": "%d/%m/%Y"})
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == datetime(2019, 1, 15).date()
     assert cleaned_event.error == "0"

@@ -122,12 +122,13 @@ def test_save_errors_la(mock_save):
                 blank_error_count=["POSTCODE", "POSTCODE", "DATE"],
                 table_name="List 1",
                 extra_column_error=["list", "of", "headers"],
-                              ),
+            ),
         ],
-        la_log_dir
+        la_log_dir,
     )
     stream = list(stream)
 
-    mock_save.assert_called_once_with(f"{Path(la_log_dir, 'test_file')}_error_log_{start_time}.txt", "a")
+    mock_save.assert_called_once_with(
+        f"{Path(la_log_dir, 'test_file')}_error_log_{start_time}.txt", "a"
+    )
     # mock_save.write.assert_called_once_with(f"test_file_{start_time}")
-
