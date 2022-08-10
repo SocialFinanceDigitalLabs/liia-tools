@@ -27,14 +27,20 @@ def clean_cell_category(event):
         for c in event.category_config:
             if event.value:
                 if str(c["code"]).lower() in str(event.value).lower():
-                    return event.from_event(event, value=c["code"], formatting_error="0")
+                    return event.from_event(
+                        event, value=c["code"], formatting_error="0"
+                    )
                 elif str(c["name"]).lower() == str(event.value).lower():
-                    return event.from_event(event, value=c["code"], formatting_error="0")
+                    return event.from_event(
+                        event, value=c["code"], formatting_error="0"
+                    )
 
                 for r in c.get("regex", []):
                     p = parse_regex(r)
                     if p.match(str(event.value)) is not None:
-                        return event.from_event(event, value=c["code"], formatting_error="0")
+                        return event.from_event(
+                            event, value=c["code"], formatting_error="0"
+                        )
 
             else:
                 return event.from_event(event, value="", formatting_error="0")

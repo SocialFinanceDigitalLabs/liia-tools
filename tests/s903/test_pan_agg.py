@@ -6,7 +6,10 @@ from liiatools.datasets.s903.lds_ssda903_pan_agg import process
 def test_match_load_file():
     test_df_1 = pd.DataFrame({"Column 1": [], "Column 2": []})
     test_df_2 = pd.DataFrame({"Column 3": [], "Column 4": []})
-    column_names = {"Match 1": ["Column 1", "Column 2"], "Match 2": ["Column 3", "Column 4"]}
+    column_names = {
+        "Match 1": ["Column 1", "Column 2"],
+        "Match 2": ["Column 3", "Column 4"],
+    }
     table_name_1 = process.match_load_file(test_df_1, column_names)
     assert table_name_1 == "Match 1"
     table_name_2 = process.match_load_file(test_df_2, column_names)

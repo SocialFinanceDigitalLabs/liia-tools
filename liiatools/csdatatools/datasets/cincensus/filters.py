@@ -41,7 +41,7 @@ def strip_text(event):
 
     If there is no content at all, then the node is not returned.
     """
-    if not hasattr(event, 'text'):
+    if not hasattr(event, "text"):
         return event
 
     if event.text is None:
@@ -65,7 +65,9 @@ def add_schema(event, schema: xmlschema.XMLSchema):
 
     Provides: path, schema
     """
-    assert event.context, "This filter required event.context to be set - see add_context"
+    assert (
+        event.context
+    ), "This filter required event.context to be set - see add_context"
     path = "/".join(event.context)
     tag = event.context[-1]
     el = schema.get_element(tag, path)
@@ -92,8 +94,14 @@ def validate_elements(event):
     if validation_error is None:
         return event
 
-    message = validation_error.reason if hasattr(validation_error, 'reason') else validation_error.message
-    return events.StartElement.from_event(event, valid=False, validation_message=message)
+    message = (
+        validation_error.reason
+        if hasattr(validation_error, "reason")
+        else validation_error.message
+    )
+    return events.StartElement.from_event(
+        event, valid=False, validation_message=message
+    )
 
 
 @streamfilter(check=type_check(events.StartElement), fail_function=pass_event)
@@ -102,7 +110,7 @@ def prop_to_attribute(event, prop_name):
     Elevates an event property to an XML attribute.
     """
     if hasattr(event, prop_name):
-        attrs = getattr(event, 'attrs', {})
+        attrs = getattr(event, "attrs", {})
         attrs[prop_name] = getattr(event, prop_name)
         return events.StartElement.from_event(event, attrs=attrs)
     else:
@@ -119,7 +127,7 @@ def remove_invalid(stream, tag_name):
     last = stream[-1]
     stream = stream[1:-1]
 
-    if first.tag == tag_name and not getattr(first, 'valid', True):
+    if first.tag == tag_name and not getattr(first, "valid", True):
         yield from []
     else:
         yield first
@@ -133,8 +141,7 @@ def remove_invalid(stream, tag_name):
 @streamfilter(check=lambda x: True)
 def counter(event, counter_check, context):
     if counter_check(event):
-        context['pass'] += 1
+        context["pass"] += 1
     else:
-        context['fail'] += 1
+        context["fail"] += 1
     return event
-

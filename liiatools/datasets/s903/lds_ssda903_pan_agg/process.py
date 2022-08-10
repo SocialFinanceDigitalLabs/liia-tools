@@ -24,20 +24,20 @@ def match_load_file(s903_df, column_names):
 
 
 def _merge_dfs(s903_df, old_df, la_name):
-    '''
+    """
     Deletes existing data for new LA from pan file
     Merges new LA data to pan file
-    '''
-    old_df = old_df.drop(old_df[old_df['LA'] == la_name].index)
+    """
+    old_df = old_df.drop(old_df[old_df["LA"] == la_name].index)
     s903_df = pd.concat([s903_df, old_df], axis=0, ignore_index=True)
     return s903_df
 
 
 def merge_agg_files(output, table_name, s903_df, la_name):
-    '''
+    """
     Checks if pan file exists
     Passes old and new file to function to be merged
-    '''
+    """
     output_file = Path(output, f"pan_London_SSDA903_{table_name}.csv")
     if output_file.is_file():
         old_df = pd.read_csv(output_file, index_col=None)
@@ -46,8 +46,8 @@ def merge_agg_files(output, table_name, s903_df, la_name):
 
 
 def export_pan_file(output, table_name, s903_df):
-    '''
+    """
     Writes file to output directory
-    '''
+    """
     output_path = Path(output, f"pan_London_SSDA903_{table_name}.csv")
     s903_df.to_csv(output_path, index=False)

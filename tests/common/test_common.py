@@ -39,5 +39,7 @@ def test_to_month_only_dob():
 
 
 def test_to_date():
-    assert to_date(datetime.datetime(2020, 3, 19)) == datetime.datetime(2020, 3, 19).date()
+    assert (
+        to_date(datetime.datetime(2020, 3, 19)) == datetime.datetime(2020, 3, 19).date()
+    )
     assert to_date("15/03/2017") == datetime.datetime(2017, 3, 15).date()

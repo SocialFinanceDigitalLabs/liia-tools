@@ -7,12 +7,7 @@ from sfdata_stream_parser import events
 
 log = logging.getLogger(__name__)
 
-supported_file_types = [
-    ".xml",
-    ".csv",
-    ".xlsx",
-    ".xlsm"
-]
+supported_file_types = [".xml", ".csv", ".xlsx", ".xlsm"]
 
 
 def flip_dict(some_dict):
@@ -125,8 +120,8 @@ def check_file_type(input, file_types, supported_file_types, la_log_dir):
 
     else:
         with open(
-                f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-                "a",
+            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+            "a",
         ) as f:
             f.write(
                 f"File: '{filename}{extension}' not in any of the expected formats (csv, xml, xlsx, xlsm)"

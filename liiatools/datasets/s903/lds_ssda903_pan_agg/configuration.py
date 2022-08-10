@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
+
 class Config(dict):
     def __init__(self, config_files=None):
         super().__init__()

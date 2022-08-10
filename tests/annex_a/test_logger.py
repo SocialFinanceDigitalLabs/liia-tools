@@ -33,12 +33,16 @@ def test_create_error_list():
             events.Cell(column_header="Child Unique ID", blank_error="1"),
             events.Cell(column_header="Gender", blank_error="1"),
             events.Cell(column_header="Gender"),
-            logger.ErrorTable()
+            logger.ErrorTable(),
         ],
-        error_name="blank_error"
+        error_name="blank_error",
     )
     stream = list(stream)
-    assert stream[5].blank_error_list == ["Child Unique ID", "Child Unique ID", "Gender"]
+    assert stream[5].blank_error_list == [
+        "Child Unique ID",
+        "Child Unique ID",
+        "Gender",
+    ]
 
     stream = logger.create_error_list(
         [
@@ -47,12 +51,16 @@ def test_create_error_list():
             events.Cell(column_header="Child Unique ID", formatting_error="1"),
             events.Cell(column_header="Gender", formatting_error="1"),
             events.Cell(column_header="Gender"),
-            logger.ErrorTable()
+            logger.ErrorTable(),
         ],
-        error_name="formatting_error"
+        error_name="formatting_error",
     )
     stream = list(stream)
-    assert stream[5].formatting_error_list == ["Child Unique ID", "Child Unique ID", "Gender"]
+    assert stream[5].formatting_error_list == [
+        "Child Unique ID",
+        "Child Unique ID",
+        "Gender",
+    ]
 
 
 def test_inherit_error():
@@ -62,34 +70,44 @@ def test_inherit_error():
             logger.ErrorTable(),
             events.EndTable(),
         ],
-        error_name="extra_columns"
+        error_name="extra_columns",
     )
     stream = list(stream)
     assert stream[1].extra_columns_error == ["extra_column", "extra_column_2"]
 
     stream = logger.inherit_error(
         [
-            events.StartTable(duplicate_columns=["duplicate_column", "duplicate_column_2"]),
+            events.StartTable(
+                duplicate_columns=["duplicate_column", "duplicate_column_2"]
+            ),
             logger.ErrorTable(),
             events.EndTable(),
         ],
-        error_name="duplicate_columns"
+        error_name="duplicate_columns",
     )
     stream = list(stream)
-    assert stream[1].duplicate_columns_error == ["duplicate_column", "duplicate_column_2"]
+    assert stream[1].duplicate_columns_error == [
+        "duplicate_column",
+        "duplicate_column_2",
+    ]
 
 
 def test_create_file_match_error():
     stream = logger.create_file_match_error(
         [
             events.StartTable(sheet_name="List 1"),
-            events.StartTable(name="random_sheet", column_headers=["header_1", "header_2"]),
+            events.StartTable(
+                name="random_sheet", column_headers=["header_1", "header_2"]
+            ),
         ]
     )
     stream = list(stream)
     assert not hasattr(stream[0], "match_error")
-    assert stream[1].match_error == "Failed to find a set of matching columns headers for sheet titled " \
-                                    "'random_sheet' which contains column headers ['header_1', 'header_2']"
+    assert (
+        stream[1].match_error
+        == "Failed to find a set of matching columns headers for sheet titled "
+        "'random_sheet' which contains column headers ['header_1', 'header_2']"
+    )
 
 
 def test_missing_sheet_match():
@@ -137,7 +155,10 @@ def test_create_missing_sheet_error():
         ]
     )
     stream = list(stream)
-    assert stream[10].missing_sheet_error == "The following sheets are missing: 'List 11' so no output has been created"
+    assert (
+        stream[10].missing_sheet_error
+        == "The following sheets are missing: 'List 11' so no output has been created"
+    )
 
 
 def test_duplicate_columns():
@@ -155,8 +176,11 @@ def test_duplicate_columns_error():
         ]
     )
     stream = list(stream)
-    assert stream[0].duplicate_columns == f"Sheet with title List 1 contained the following duplicate " \
-                                          f"column(s): 'Child Unique ID'"
+    assert (
+        stream[0].duplicate_columns
+        == f"Sheet with title List 1 contained the following duplicate "
+        f"column(s): 'Child Unique ID'"
+    )
 
     stream = logger.duplicate_column_check([events.StartTable(sheet_name="List 1")])
     stream = list(stream)
