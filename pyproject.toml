@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "liiatools"
-version = "0.1.4"
+version = "0.1.4.1"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
     "Michael Hanks <michael.hanks@socialfinance.org.uk>",
     "Patrick Troy <patrick.troy@socialfinance.org.uk>",
     "Céline Gross <celine.m.gross@gmail.com>",
     "Kaj Siebert <kaj@k-si.com>",
+    "Matthew Pugh <matthew.pugh@socialfinance.org.uk>"
 ]
 license = "MIT"
 
