@@ -136,7 +136,7 @@ def test_clean_cell_category():
     assert stream[3].formatting_error == "1"
     assert stream[4].value == "random_value"
     assert stream[5].value == ""
-    assert stream[5].error == "1"
+    assert stream[5].formatting_error == "1"
 
 
 def test_clean_dates():
@@ -153,17 +153,17 @@ def test_clean_dates():
     )
     stream = list(stream)
     assert stream[0].value == date(2012, 2, 21)
-    assert stream[0].error == "0"
+    assert stream[0].formatting_error == "0"
     assert stream[1].value == date(2013, 3, 23)
-    assert stream[1].error == "0"
+    assert stream[1].formatting_error == "0"
     assert stream[2].value == date(2021, 2, 15)
-    assert stream[2].error == "0"
+    assert stream[2].formatting_error == "0"
     assert stream[3].value == ""
-    assert stream[3].error == "1"
+    assert stream[3].formatting_error == "1"
     assert stream[4].value == ""
-    assert stream[4].error == "0"
+    assert stream[4].formatting_error == "0"
     assert stream[5].value == ""
-    assert stream[5].error == "0"
+    assert stream[5].formatting_error == "0"
     assert stream[6].value == "random_value"
     assert not hasattr(stream[6], "error")
 
@@ -182,17 +182,16 @@ def test_clean_postcodes():
     )
     stream = list(stream)
     assert stream[0].value == "SW19 3XL"
-    assert stream[0].error == "0"
+    assert stream[0].formatting_error == "0"
     assert stream[1].value == "SW19 3XL"
-    assert stream[1].error == "0"
+    assert stream[1].formatting_error == "0"
     assert stream[2].value == ""
-    assert stream[2].error == "1"
+    assert stream[2].formatting_error == "1"
     assert stream[3].value == ""
-    assert stream[3].error == "0"
+    assert stream[3].formatting_error == "0"
     assert stream[4].value == ""
-    assert stream[4].error == "0"
+    assert stream[4].formatting_error == "0"
     assert stream[5].value == "al1 3zv"
-    assert stream[5].error == "0"
+    assert stream[5].formatting_error == "0"
     assert stream[6].value == "random_value"
     assert not hasattr(stream[6], "error")
-    assert stream[5].formatting_error == "1"
