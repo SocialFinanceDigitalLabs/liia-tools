@@ -33,8 +33,8 @@ def _get_validation_error(
             )
             LAchildID_error.append(str(e))
             return event
-        if "Unexpected" in e.reason:
-            field_error.append(f"Unexpected fields found. See more information below")
+        if "Unexpected" in e.reason and " expected" in e.reason:
+            field_error.append(f"Missing required fields. See more information below")
             field_error.append(str(e))
             return event
         else:
