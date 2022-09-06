@@ -10,30 +10,30 @@ from pathlib import Path
 
 def test_coalesce_row():
     stream = (
-        events.StartRow(),
-        events.Cell(cell="value_one"),
-        events.Cell(cell="value_two"),
-        events.EndRow(),
+        events.StartRow(expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell="value_one", header="Header_1", expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell="value_two", header="Header_2", expected_columns = ["Header_1", "Header_2"]),
+        events.EndRow(expected_columns = ["Header_1", "Header_2"]),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))[0]
     assert events_complete_rows.row == ["value_one", "value_two"]
 
     stream = (
-        events.StartRow(),
-        events.Cell(cell=125),
-        events.Cell(cell=341),
-        events.EndRow(year=2019),
+        events.StartRow(expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell=125, header="Header_1", expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell=341, header="Header_2", expected_columns = ["Header_1", "Header_2"]),
+        events.EndRow(year=2019, expected_columns = ["Header_1", "Header_2"]),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))[0]
     assert events_complete_rows.row == [125, 341]
     assert events_complete_rows.year == 2019
 
     stream = (
-        events.StartRow(),
-        events.Cell(cell=125),
-        events.Cell(cell="string"),
-        events.Cell(cell=datetime(2020, 3, 23)),
-        events.EndRow(),
+        events.StartRow(expected_columns = ["Header_1", "Header_2", "Header_3"]),
+        events.Cell(cell=125, header="Header_1", expected_columns = ["Header_1", "Header_2", "Header_3"]),
+        events.Cell(cell="string", header="Header_2", expected_columns = ["Header_1", "Header_2", "Header_3"]),
+        events.Cell(cell=datetime(2020, 3, 23), header="Header_3", expected_columns = ["Header_1", "Header_2", "Header_3"]),
+        events.EndRow(expected_columns = ["Header_1", "Header_2", "Header_3"]),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))[0]
     assert events_complete_rows.row == [
@@ -43,49 +43,50 @@ def test_coalesce_row():
     ]
 
     stream = (
-        events.StartRow(),
-        events.Cell(cell=125),
-        events.Cell(cell=None),
-        events.EndRow(),
+        events.StartRow(expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell=125, header="Header_1", expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell=None, header="Header_2", expected_columns = ["Header_1", "Header_2"]),
+        events.EndRow(expected_columns = ["Header_1", "Header_2"]),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))[0]
     assert events_complete_rows.row == [125, None]
 
     stream = (
-        events.StartRow(),
-        events.Cell(cell=125),
-        events.Cell(cell=""),
-        events.EndRow(),
+        events.StartRow(expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell=125, header="Header_1", expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell="", header="Header_2", expected_columns = ["Header_1", "Header_2"]),
+        events.EndRow(expected_columns = ["Header_1", "Header_2"]),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))[0]
     assert events_complete_rows.row == [125, ""]
 
     stream = (
-        events.StartTable(),
-        events.StartRow(),
-        events.Cell(cell="value_one"),
-        events.Cell(cell="value_two"),
-        events.EndRow(),
-        events.EndTable(),
+        events.StartTable(expected_columns = ["Header_1", "Header_2"]),
+        events.StartRow(expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell="value_one", header="Header_1", expected_columns = ["Header_1", "Header_2"]),
+        events.Cell(cell="value_two", header="Header_2", expected_columns = ["Header_1", "Header_2"]),
+        events.EndRow(expected_columns = ["Header_1", "Header_2"]),
+        events.EndTable(expected_columns = ["Header_1", "Header_2"]),
     )
     events_complete_rows = list(file_creator.coalesce_row(stream))
     for event in events_complete_rows:
         if isinstance(event, file_creator.RowEvent):
             assert event.row == ["value_one", "value_two"]
         else:
-            assert event.as_dict() == {}
+            assert event.as_dict() == {"expected_columns":["Header_1", "Header_2"]}
 
 
 def test_create_tables():
     la_name = "Barking & Dagenham"
     headers = ["CHILD ID", "DOB"]
+    expected_columns = ["CHILD ID", "DOB"]
     row = [12345, datetime(2019, 4, 15).date()]
     year = 2019
     data = tablib.Dataset(headers=headers + ["LA", "YEAR"])
     data.append(row + [la_name, year])
 
     stream = (
-        events.StartTable(headers=headers),
+        events.StartTable(headers=headers, expected_columns=expected_columns),
         file_creator.RowEvent(row=row, year=year),
         events.EndTable(),
     )
@@ -96,7 +97,7 @@ def test_create_tables():
             assert event.data[0] == data[0]
 
     stream = (
-        events.StartTable(headers=["CHILD ID", "DOB"], match_error="some_error"),
+        events.StartTable(headers=["CHILD ID", "DOB"], expected_columns=expected_columns, match_error="some_error"),
         file_creator.RowEvent(row=[12345, datetime(2019, 4, 15).date()], year=2019),
         events.EndTable(),
     )
@@ -106,13 +107,14 @@ def test_create_tables():
             assert event.data is None
 
     headers = ["CHILD ID", "DOB", "DATE_INT"]
+    expected_columns = ["CHILD ID", "DOB", "DATE_INT"]
     row = [12345, None, ""]
     year = 2019
-    data = tablib.Dataset(headers=headers + ["LA", "YEAR"])
+    data = tablib.Dataset(headers=expected_columns + ["LA", "YEAR"])
     data.append(row + [la_name, year])
 
     stream = (
-        events.StartTable(headers=headers),
+        events.StartTable(headers=headers, expected_columns=expected_columns),
         file_creator.RowEvent(row=row, year=year),
         events.EndTable(),
     )
