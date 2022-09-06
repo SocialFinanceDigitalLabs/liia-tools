@@ -29,8 +29,8 @@ def add_table_name(event):
     :return: An updated list of event objects
     """
     for table_name, expected_columns in column_names.items():
-        if set(event.headers) == set(expected_columns):
-            return event.from_event(event, table_name=table_name)
+        if set(expected_columns).issubset(set(event.headers)):
+            return event.from_event(event, expected_columns=expected_columns, table_name=table_name)
     return event
 
 
@@ -67,6 +67,7 @@ def configure_stream(stream, config):
     """
     stream = add_table_name(stream)
     stream = inherit_property(stream, "table_name")
+    stream = inherit_property(stream, "expected_columns")
     stream = match_config_to_cell(stream, config=config["column_map"])
     return stream
 
