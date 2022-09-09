@@ -23,11 +23,11 @@ def test_deduplicate():
             "Column 3": ["Answer 1", "Answer 2"],
         }
     )
-    sort_order = {"Sorted": ["Column 1"]}
-    table_name_1 = "Not_sorted"
-    table_name_2 = "Sorted"
-    table_name_3 = "Something else"
-    dedup = {"Sorted": ["Column 2"], "Not_sorted": ["Column 2"]}
+    sort_order = {"Table_1": ["Column 2"], "Table_2": ["Column 1"], "Table_3": ["Column 2"]}
+    table_name_1 = "Table_1"
+    table_name_2 = "Table_2"
+    table_name_3 = "Table_3"
+    dedup = {"Table_1": ["Column 2"], "Table_2": ["Column 2"], "Table_3": ["Column 1"]}
     output_df_1 = process.deduplicate(test_df_1, table_name_1, sort_order, dedup)
     assert len(output_df_1) == 1
     assert output_df_1["Column 3"][0] == "Answer 1"

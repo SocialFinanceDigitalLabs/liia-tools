@@ -49,10 +49,9 @@ def deduplicate(s903_df, table_name, sort_order, dedup):
     """
     Sorts and removes duplicate records from merged files following schema
     """
-    if table_name in sort_order.keys():
-        s903_df = s903_df.sort_values(
-            sort_order[table_name], ascending=False, ignore_index=True
-        )
+    s903_df = s903_df.sort_values(
+        sort_order[table_name], ascending=False, ignore_index=True
+    )
     if table_name in dedup.keys():
         s903_df = s903_df.drop_duplicates(subset=dedup[table_name], keep="first")
     return s903_df
