@@ -1,5 +1,6 @@
 import logging
 from xmlschema import XMLSchemaValidatorError
+import re
 
 from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
@@ -26,16 +27,25 @@ def _get_validation_error(
         schema.validate(node)
         return None
     except XMLSchemaValidatorError as e:
+        regline = re.compile(
+            r"(?=\(line.*?(\w+))", re.MULTILINE
+        )  # Search for the number after "line" in error
+        missing_field_line = regline.search(str(e)).group(1)
         if "Unexpected" and "LAchildID" in e.reason:
             LAchildID_error.append(
-                "LAchildID is missing, other errors associated to this LAchildID will not be "
-                "shown because of this. See more information below"
+                f"LAchildID is missing from the node starting on line: {missing_field_line}, other errors associated "
+                f"to this LAchildID will not be shown because of this"
             )
-            LAchildID_error.append(str(e))
             return event
-        if "Unexpected" in e.reason:
-            field_error.append(f"Unexpected fields found. See more information below")
-            field_error.append(str(e))
+        if " expected" in e.reason:
+            regexp = re.compile(
+                r"(?=\sTag.*?(\w+))"
+            )  # Search for the first word after "Tag"
+            missing_field = regexp.search(e.reason).group(1)
+            field_error.append(
+                f"Missing required field: '{missing_field}' which occurs in the node starting "
+                f"on line: {missing_field_line}"
+            )
             return event
         else:
             return event
