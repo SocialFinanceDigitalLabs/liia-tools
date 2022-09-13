@@ -94,6 +94,34 @@ def save_year_error(input, la_log_dir):
         )
 
 
+def check_year(string):
+    """
+    Check a string to see if it contains a year, if it does, return that year
+    Expected year formats within string:
+        2022
+        14032021
+        2017-18
+        201819
+
+    :param string: String that probably contains a year
+    :return: Year withing the string
+    """
+    match = re.search(r"(20)\d{2}(.*\d)*", string)
+    try:
+        if len(match.group(2)) == 2:
+            year = match.group(1) + match.group(2)
+            return year
+        if len(match.group(2)) == 3:
+            year = match.group(1) + match.group(2)[1:]
+            return year
+        if len(match.group(2)) == 4:
+            year = match.group(2)
+            return year
+    except TypeError:
+        year = match.group(0)
+        return year
+
+
 def check_file_type(input, file_types, supported_file_types, la_log_dir):
     """
     Check that the correct type of file is being used, e.g. xml. If it is then continue.

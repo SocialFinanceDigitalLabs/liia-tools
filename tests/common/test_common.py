@@ -1,6 +1,7 @@
 from liiatools.datasets.shared_functions.common import (
     check_postcode,
     flip_dict,
+    check_year,
 )
 from liiatools.datasets.shared_functions.converters import (
     to_short_postcode,
@@ -43,3 +44,10 @@ def test_to_date():
         to_date(datetime.datetime(2020, 3, 19)) == datetime.datetime(2020, 3, 19).date()
     )
     assert to_date("15/03/2017") == datetime.datetime(2017, 3, 15).date()
+
+
+def test_check_year():
+    assert check_year("file_2022.csv") == "2022"
+    assert check_year("file_140032021.csv") == "2021"
+    assert check_year("file_2017-18.csv") == "2018"
+    assert check_year("file_201819.csv") == "2019"

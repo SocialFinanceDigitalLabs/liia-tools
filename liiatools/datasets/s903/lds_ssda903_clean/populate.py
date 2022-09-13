@@ -21,8 +21,7 @@ def add_year_column(stream, input, la_log_dir):
         if isinstance(event, events.StartTable):
             try:
                 file_dir = event.filename
-                match = re.search(r"20\d{2}", file_dir)
-                year = match.group(0)
+                year = common.check_year(file_dir)
                 yield event.from_event(event, year=year)
             except AttributeError:
                 common.save_year_error(input, la_log_dir)
