@@ -26,7 +26,7 @@ def coalesce_row(stream):
         elif isinstance(event, events.EndRow):
             yield RowEvent.from_event(event, row=row)
             row = None
-        elif row is not None and isinstance(event, events.Cell):
+        elif row is not None and isinstance(event, events.Cell) and event.header in set(event.expected_columns):
             row.append(event.cell)
         else:
             yield event
@@ -52,7 +52,7 @@ def create_tables(stream, la_name):
             if match_error or year_error is not None:
                 data = None
             else:
-                data = tablib.Dataset(headers=event.headers + ["LA", "YEAR"])
+                data = tablib.Dataset(headers=event.expected_columns + ["LA", "YEAR"])
         elif isinstance(event, events.EndTable):
             yield event
             yield TableEvent.from_event(event, data=data)
