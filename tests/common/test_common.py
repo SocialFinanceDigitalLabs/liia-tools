@@ -9,6 +9,7 @@ from liiatools.datasets.shared_functions.converters import (
     to_date,
 )
 import datetime
+import unittest
 
 
 def test_flip_dict():
@@ -51,3 +52,9 @@ def test_check_year():
     assert check_year("file_140032021.csv") == "2021"
     assert check_year("file_2017-18.csv") == "2018"
     assert check_year("file_201819.csv") == "2019"
+
+
+class TestCheckYear(unittest.TestCase):
+    def test_check_year(self):
+        with self.assertRaises(AttributeError):
+            check_year("file_no_year.csv")
