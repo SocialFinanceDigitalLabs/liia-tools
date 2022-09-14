@@ -1,5 +1,4 @@
 from pathlib import Path
-import re
 import pandas as pd
 import logging
 
@@ -15,9 +14,8 @@ def convert_to_dataframe(data):
 
 def get_year(input, data, la_log_dir):
     filename = Path(input).stem
-    match = re.search(r"20\d{2}", filename)
     try:
-        year = match.group(0)
+        year = common.check_year(filename)
         data["YEAR"] = year
         return data
     except AttributeError:
