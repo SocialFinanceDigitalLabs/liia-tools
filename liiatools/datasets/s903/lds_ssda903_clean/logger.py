@@ -135,7 +135,9 @@ def create_extra_column_error(event):
     :param event: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
     """
-    extra_columns = [item for item in event.headers if item not in event.expected_columns]
+    extra_columns = [
+        item for item in event.headers if item not in event.expected_columns
+    ]
     if len(extra_columns) == 0:
         return event
     else:
@@ -208,7 +210,7 @@ def save_errors_la(stream, la_log_dir):
                 with open(
                     f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                     "a",
-                ) as f:  
+                ) as f:
                     f.write(column_error)
                     f.write("\n")
         yield event

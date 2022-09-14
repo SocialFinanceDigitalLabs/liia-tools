@@ -30,7 +30,9 @@ def add_table_name(event):
     """
     for table_name, expected_columns in column_names.items():
         if set(expected_columns).issubset(set(event.headers)):
-            return event.from_event(event, expected_columns=expected_columns, table_name=table_name)
+            return event.from_event(
+                event, expected_columns=expected_columns, table_name=table_name
+            )
     return event
 
 

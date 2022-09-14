@@ -26,7 +26,11 @@ def coalesce_row(stream):
         elif isinstance(event, events.EndRow):
             yield RowEvent.from_event(event, row=row)
             row = None
-        elif row is not None and isinstance(event, events.Cell) and event.header in set(event.expected_columns):
+        elif (
+            row is not None
+            and isinstance(event, events.Cell)
+            and event.header in set(event.expected_columns)
+        ):
             row.append(event.cell)
         else:
             yield event
