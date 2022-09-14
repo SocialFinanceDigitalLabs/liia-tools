@@ -47,18 +47,16 @@ def counter(event, counter_check, value_error, structural_error):
     :return: The same filtered list of event objects
     """
     if counter_check(event) and len(event.node) == 0:
-        try:
-            if event.LAchildID is not None:
-                try:
-                    value_error.append(
-                        f"LAchildID: {event.LAchildID}, Node: {event.schema.name}"
-                    )
-                except AttributeError:  # Raised in case there is no event.schema.name
-                    structural_error.append(
-                        f"LAchildID: {event.LAchildID}, Node: {event.tag}"
-                    )
-        except AttributeError:  # In case there are errors in the <Header> node
-            return event
+        if hasattr(event, "LAchildID"):  # In case there are errors in the <Header> node as none of these
+            # will have an LAchildID assigned
+            if hasattr(event.schema, "name"):
+                value_error.append(
+                    f"LAchildID: {event.LAchildID}, Node: {event.schema.name}"
+                )
+            else:
+                structural_error.append(
+                    f"LAchildID: {event.LAchildID}, Node: {event.tag}"
+                )
     return event
 
 
