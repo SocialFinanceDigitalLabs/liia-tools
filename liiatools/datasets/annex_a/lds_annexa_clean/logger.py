@@ -244,7 +244,7 @@ def save_errors_la(stream, la_log_dir):
     :param la_log_dir: Location to save the gathered error logs
     :return: An updated list of event objects
     """
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     for event in stream:
         try:
             if isinstance(event, ErrorTable) and (

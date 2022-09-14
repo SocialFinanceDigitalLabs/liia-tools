@@ -77,7 +77,7 @@ def save_errors_la(
     :return: An updated list of event objects
     """
     filename = str(Path(input).resolve().stem)
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     if value_error or structural_error or field_error or LAchildID_error:
         with open(
             f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
