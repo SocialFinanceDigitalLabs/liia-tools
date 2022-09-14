@@ -5,35 +5,35 @@
 
   <xs:complexType name="messagetype">
     <xs:sequence>
-      <xs:element name="Header" type="headertype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Header" type="headertype" minOccurs="0" maxOccurs="1"/>
       <xs:element name="Children" type="childrentype" minOccurs="1" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="headertype">
     <xs:sequence>
-      <xs:element name="CollectionDetails" type="collectiondetailstype" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="Source" type="sourcetype" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="CollectionDetails" type="collectiondetailstype" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Source" type="sourcetype" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="collectiondetailstype">
     <xs:sequence>
-      <xs:element name="Collection" minOccurs="1" maxOccurs="1">
+      <xs:element name="Collection" minOccurs="0" maxOccurs="1">
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="CIN"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="Year" type="xs:gYear" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="ReferenceDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Year" type="xs:gYear" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReferenceDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="sourcetype">
     <xs:sequence>
-      <xs:element name="SourceLevel" minOccurs="1" maxOccurs="1">
+      <xs:element name="SourceLevel" minOccurs="0" maxOccurs="1">
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="L"/>
@@ -47,16 +47,16 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="SoftwareCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="SoftwareCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <xs:element name="Release" type="xs:string" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="SerialNo" minOccurs="1" maxOccurs="1">
+      <xs:element name="SerialNo" minOccurs="0" maxOccurs="1">
         <xs:simpleType>
           <xs:restriction base="xs:string" >
             <xs:pattern value="\d{3}\d*"/>
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="DateTime" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="DateTime" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
