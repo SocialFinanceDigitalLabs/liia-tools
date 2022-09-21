@@ -13,6 +13,7 @@ from liiatools.datasets.s903.lds_ssda903_clean import (
     degrade,
     logger,
     file_creator,
+    prep,
 )
 
 # dependencies for la_agg()
@@ -86,6 +87,21 @@ def cleanfile(input, la_code, la_log_dir, output):
     :param output: should specify the path to the output folder
     :return: None
     """
+
+    # Prepare file
+    # List of commonly submitted unneeded files
+    drop_file_list = [
+        "Extended Review",
+        "Pupil Premium Children",
+        "Children Ceasing to be looked after for other reasons",
+        "Distance and Placement Extended",
+        "Extended Adoption",
+        "Children Ceased Care During the Year",
+        "Children Looked After on 31st March",
+        "Children Started Care During the Year",
+    ]
+    prep.delete_unrequired_files(input, drop_file_list=drop_file_list)
+    prep.drop_empty_rows(input, input)
 
     # Configuration
     config = clean_config.Config()
