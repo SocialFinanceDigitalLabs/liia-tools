@@ -48,7 +48,7 @@ def test_to_date():
 
 
 def test_check_year():
-    assert check_year("file_2022.csv") == "2022"
+    assert check_year("file_2022_ad1.csv") == "2022"
     assert check_year("file_140032021.csv") == "2021"
     assert check_year("file_2017-18.csv") == "2018"
     assert check_year("file_201819.csv") == "2019"
