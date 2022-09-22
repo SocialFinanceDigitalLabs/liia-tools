@@ -100,7 +100,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         "Children Looked After on 31st March",
         "Children Started Care During the Year",
     ]
-    prep.delete_unrequired_files(input, drop_file_list=drop_file_list)
+    prep.delete_unrequired_files(input, drop_file_list=drop_file_list, la_log_dir=la_log_dir)
     prep.drop_empty_rows(input, input)
 
     # Configuration
