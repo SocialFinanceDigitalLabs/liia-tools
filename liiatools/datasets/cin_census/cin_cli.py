@@ -112,13 +112,14 @@ def cleanfile(input, la_code, la_log_dir, output):
     )
     value_error = []
     structural_error = []
+    LAchildID_blank = []
     stream = logger.counter(
         stream,
         counter_check=lambda e: isinstance(e, events.StartElement)
         and hasattr(e, "valid"),
         value_error=value_error,
         structural_error=structural_error,
-        LAchildID_error=LAchildID_error,
+        LAchildID_blank=LAchildID_blank,
     )
 
     # Clean stream
@@ -170,6 +171,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         LAchildID_error=LAchildID_error,
         field_error=field_error,
         la_log_dir=la_log_dir,
+        LAchildID_blank=LAchildID_blank
     )
 
 
