@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 from pathlib import Path
 import cchardet as chardet
+from datetime import datetime
 
 
 def file_encoding_audit(
@@ -59,14 +60,14 @@ def file_encoding_audit(
     return encoded_df
 
 
-def drop_empty_rows(infile: Path, outfile: Path):
+def drop_empty_rows(infile: str, outfile: str):
     """
     csv drop empty rows at top of file, save output
 
     :param infile: Path to file that needs to be cleaned
-    :type infile: Path
+    :type infile: String
     :param outfile: Path where cleaned file will be saved
-    :type outfile: Path
+    :type outfile: String
     """
     infile = Path(infile)
     data = pd.read_csv(infile, skip_blank_lines=True)
@@ -76,7 +77,7 @@ def drop_empty_rows(infile: Path, outfile: Path):
     return data
 
 
-def delete_unrequired_files(input: Path, drop_file_list: list):
+def delete_unrequired_files(input: str, drop_file_list: list, la_log_dir: str):
     """
     Deletes files if they match a substring name from list.
 
@@ -85,6 +86,8 @@ def delete_unrequired_files(input: Path, drop_file_list: list):
     :type input: File
     :param drop_file_list: List of file names that will be removed
     :type drop_file_list: List
+    :param la_log_dir: Path to the local authority's log folder
+    :type la_log_dir: Path
     """
     input = Path(input)
     for dfl in drop_file_list:
@@ -93,4 +96,27 @@ def delete_unrequired_files(input: Path, drop_file_list: list):
             logging.info(
                 f"{input.stem} removing file from processing not required."
             )
+            save_unrequired_file_error(input, la_log_dir)
             input.unlink()
+            raise Exception(
+                f"{input.stem} has been deleted because it does not math the list of accepted files"
+            )
+
+
+def save_unrequired_file_error(input: Path, la_log_dir: str):
+    """
+    Saves unrequired file errors to a text file in the LA log directory
+
+    :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param la_log_dir: Path to the local authority's log folder
+    :return: Text file containing the error information
+    """
+    filename = input.resolve().stem
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    with open(
+            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+            "a",
+    ) as f:
+        f.write(
+            f"'{filename}' has been deleted because it does not match the list of accepted files"
+        )
