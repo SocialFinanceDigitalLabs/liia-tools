@@ -46,11 +46,12 @@ def blank_error_check(event):
     """
     try:
         allowed_blank = event.other_config["canbeblank"]
+        formatting_error = getattr(event, "formatting_error", "0")
         if (
             not allowed_blank
             and not event.value
             and event.value != 0
-            and event.formatting_error != "1"
+            and formatting_error != "1"
             and getattr(event, "blank_row", 0) != "1"
         ):
             return event.from_event(event, blank_error="1")

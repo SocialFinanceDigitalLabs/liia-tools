@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "liiatools"
-version = "0.1.4.2"
+version = "0.1.4.3"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
     "Michael Hanks <michael.hanks@socialfinance.org.uk>",
@@ -27,6 +27,7 @@ pandas = "^1.4.2"
 openpyxl = "^3.0.9"
 xlrd = "^2.0.1"
 click-log = "^0.4.0"
+cchardet = "2.1.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.1"

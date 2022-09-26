@@ -70,10 +70,14 @@ def test_create_la_child_id():
     stream = populate.create_la_child_id(
         [
             events.Cell(header="CHILD", cell="123"),
+            events.Cell(header="CHILD", cell=""),
+            events.Cell(header="CHILD", cell=None),
             events.Cell(header="NOT_CHILD", cell="456"),
         ],
         la_code="BAD",
     )
     stream = list(stream)
     assert stream[0].cell == "123_BAD"
-    assert stream[1].cell == "456"
+    assert stream[1].cell == "_BAD"
+    assert stream[2].cell == "None_BAD"
+    assert stream[3].cell == "456"
