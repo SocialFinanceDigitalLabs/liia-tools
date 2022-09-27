@@ -76,7 +76,7 @@
 
   <xs:complexType name="childidentifierstype">
     <xs:sequence>
-      <xs:element name="LAchildID" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="LAchildID" type="nonEmptyString" minOccurs="1" maxOccurs="1"/>
       <xs:element name="UPN" type="upntype" minOccurs="0" maxOccurs="1"/>
       <xs:element name="FormerUPN" type="upntype" minOccurs="0" maxOccurs="1"/>
       <xs:element name="UPNunknown" type="unknownupntype" minOccurs="0" maxOccurs="1"/>
@@ -164,8 +164,15 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="yesnotype">
     <xs:restriction base="xs:string">
+	<xs:minLength value="1"/>
       <xs:enumeration value="true" />
       <xs:enumeration value="false" />
       <xs:enumeration value="0" />
@@ -194,6 +201,7 @@
 
   <xs:simpleType name="gendertype">
     <xs:restriction base="xs:string">
+	  <xs:minLength value="1"/>
       <xs:enumeration value="1">
         <xs:annotation><xs:documentation>Male</xs:documentation></xs:annotation>
       </xs:enumeration>
@@ -212,6 +220,7 @@
 
   <xs:simpleType name="ethnicitytype">
     <xs:restriction base="xs:string">
+	<xs:minLength value="1"/>
       <xs:enumeration value="WBRI"><xs:annotation><xs:documentation>White British</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="WIRI"><xs:annotation><xs:documentation>White Irish</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="WIRT"><xs:annotation><xs:documentation>Traveller of Irish heritage</xs:documentation></xs:annotation></xs:enumeration>
@@ -237,6 +246,7 @@
 
   <xs:simpleType name="disabilitytype">
     <xs:restriction base="xs:string">
+	<xs:minLength value="1"/>
       <xs:enumeration value="NONE"><xs:annotation><xs:documentation>No disability</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="MOB"><xs:annotation><xs:documentation>Mobility</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="HAND"><xs:annotation><xs:documentation>Hand function</xs:documentation></xs:annotation></xs:enumeration>
@@ -255,6 +265,7 @@
 
   <xs:simpleType name="referralsourcetype">
     <xs:restriction base="xs:string">
+	<xs:minLength value="1"/>
       <xs:enumeration value="1A"><xs:annotation><xs:documentation>INDIVIDUAL – family member, relative or carer</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="1B"><xs:annotation><xs:documentation>INDIVIDUAL – acquaintance (including neighbours and child minders)</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="1C"><xs:annotation><xs:documentation>INDIVIDUAL – self</xs:documentation></xs:annotation></xs:enumeration>
@@ -281,6 +292,7 @@
 
   <xs:simpleType name="categoryofabuse">
     <xs:restriction base="xs:string">
+	<xs:minLength value="1"/>
       <xs:enumeration value="NEG"><xs:annotation><xs:documentation>Neglect</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="PHY"><xs:annotation><xs:documentation>Physical abuse</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="SAB"><xs:annotation><xs:documentation>Sexual abuse</xs:documentation></xs:annotation></xs:enumeration>
@@ -320,6 +332,7 @@
 
     <xs:simpleType name="assessmentfactorstype">
     <xs:restriction base="xs:string">
+	<xs:minLength value="1"/>
       <xs:enumeration value="1A"><xs:annotation><xs:documentation>Alcohol misuse: concerns about alcohol misuse by the child</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="1B"><xs:annotation><xs:documentation>Alcohol misuse: concerns about alcohol misuse by the parent(s)/carer(s)</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="1C"><xs:annotation><xs:documentation>Alcohol misuse: concerns about alcohol misuse by another person living in the household</xs:documentation></xs:annotation></xs:enumeration>

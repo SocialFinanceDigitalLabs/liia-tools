@@ -3,7 +3,7 @@ from pathlib import Path
 
 import xmlschema
 
-from liiatools.csdatatools.spec import cin as cin_asset_dir
+from liiatools.spec import cin_census as cin_asset_dir
 
 
 class Schema:

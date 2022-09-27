@@ -36,7 +36,7 @@ def inherit_LAchildID(stream):
 
 
 @streamfilter(check=lambda x: True)
-def counter(event, counter_check, value_error, structural_error, LAchildID_blank):
+def counter(event, counter_check, value_error, structural_error, blank_error):
     """
     Count the invalid simple nodes storing their name and LAchildID data
 
@@ -44,7 +44,7 @@ def counter(event, counter_check, value_error, structural_error, LAchildID_blank
     :param counter_check: A function to identify which events to check
     :param value_error: An empty list to store the invalid element information
     :param structural_error: An empty list to store the invalid structure information
-    :param LAchildID_blank: An empty list to store the number of blank LAchildIDs
+    :param blank_error: An empty list to store the blank element information
     :return: The same filtered list of event objects
     """
     if counter_check(event) and len(event.node) == 0:
@@ -52,7 +52,11 @@ def counter(event, counter_check, value_error, structural_error, LAchildID_blank
             getattr(event, "LAchildID", None) is not None
         ):  # In case there are errors in the <Header> node as none
             # of these will have an LAchildID assigned
-            if hasattr(event.schema, "name"):
+            if hasattr(event, "validation_message"):
+                blank_error.append(
+                    f"LAchildID: {event.LAchildID}, Node: {event.schema.name}"
+                )
+            elif hasattr(event.schema, "name"):
                 value_error.append(
                     f"LAchildID: {event.LAchildID}, Node: {event.schema.name}"
                 )
@@ -61,8 +65,11 @@ def counter(event, counter_check, value_error, structural_error, LAchildID_blank
                     f"LAchildID: {event.LAchildID}, Node: {event.tag}"
                 )
         else:
-            LAchildID_blank.append("LAchildID")
-            if hasattr(event.schema, "name"):
+            if hasattr(event, "validation_message"):
+                blank_error.append(
+                    f"LAchildID: blank, Node: {event.schema.name}"
+                )
+            elif hasattr(event.schema, "name"):
                 value_error.append(f"LAchildID: blank, Node: {event.schema.name}")
             else:
                 structural_error.append(f"LAchildID: blank, Node: {event.tag}")
@@ -73,9 +80,9 @@ def save_errors_la(
     input,
     value_error,
     structural_error,
+    blank_error,
     LAchildID_error,
     field_error,
-    LAchildID_blank,
     la_log_dir,
 ):
     """
@@ -86,8 +93,8 @@ def save_errors_la(
     :param value_error: A list of invalid element information
     :param structural_error: A list of invalid structure information
     :param field_error: A list of missing fields
+    :param blank_error: A list of blank fields that should have contained data
     :param LAchildID_error: A list of missing LAchildID information
-    :param LAchildID_blank: A count of LAchildIDs found to be blank
     :param la_log_dir: Location to save the gathered error logs
     :return: An updated list of event objects
     """
@@ -97,8 +104,8 @@ def save_errors_la(
         value_error
         or structural_error
         or field_error
+        or blank_error
         or LAchildID_error
-        or LAchildID_blank
     ):
         with open(
             f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
@@ -125,10 +132,14 @@ def save_errors_la(
                     f.write(item)
                     f.write("\n")
                 f.write("\n")
-            if LAchildID_blank:
+            if blank_error:
                 f.write(
-                    f"Number of LAchildIDs that were found to be blank: {len(LAchildID_blank)}"
+                    "Node information for blank fields that should have contained data"
                 )
+                f.write("\n")
+                for item in blank_error:
+                    f.write(item)
+                    f.write("\n")
                 f.write("\n")
             if LAchildID_error:
                 LAchildID_error = list(

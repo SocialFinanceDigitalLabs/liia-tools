@@ -48,7 +48,10 @@ def _get_validation_error(
             )
             return event
         else:
-            return event
+            if "failed validating ''" in e.message:
+                return event.from_event(event, reason="blank")
+            else:
+                return event
     except AttributeError:  # Return event information, so it can be written to a log for the Local Authority
         return event
 
@@ -71,16 +74,12 @@ def validate_elements(event, LAchildID_error, field_error):
     if validation_error is None:
         return event
 
-    try:
-        message = (
-            validation_error.reason
-            if hasattr(validation_error, "reason")
-            else validation_error.message
-        )
+    if hasattr(validation_error, "reason"):
+        message = validation_error.reason
         return events.StartElement.from_event(
             event, valid=False, validation_message=message
         )
-    except AttributeError:
+    else:
         return events.StartElement.from_event(event, valid=False)
 
 
