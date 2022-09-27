@@ -109,7 +109,7 @@ def _time_between_date_series(later_date_series, earlier_date_series, years=0, d
 
     elif years == 1:
         years_series = (days_series / 365).apply(np.floor)
-        years_series = years_series.astype(int)
+        years_series = years_series.astype('Int32')
         return years_series
 
 
@@ -213,13 +213,20 @@ def export_reffile(analysis_output, ref_outs):
     ref_outs.to_csv(output_path, index=False)
 
 
-def journey_inputs(flatfile, icpc_cpp_days, s47_cpp_days):
+def journey_inputs(flatfile):
     """
-    Creates the input for the journey analysis file
+    Creates inputs for the journey analysis file
     """
     # Create inputs from flatfile and merge them
     s47_j = filter_flatfile(flatfile, "S47ActualStartDate")
     cpp = filter_flatfile(flatfile, "CPPstartDate")
+    return s47_j, cpp
+
+
+def journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days):
+    """
+    Merges inputs to produce outcomes file
+    """
     s47_cpp = s47_j.merge(
         cpp[["LAchildID", "CPPstartDate"]], how="left", on="LAchildID"
     )

@@ -225,25 +225,29 @@ def la_agg(input, flat_output, analysis_output):
     factors = agg_process.filter_flatfile(
         flatfile, filter="AssessmentAuthorisationDate"
     )
-    factors = agg_process.split_factors(factors)
-    agg_process.export_factfile(analysis_output, factors)
+    if len(factors) > 0:
+        factors = agg_process.split_factors(factors)
+        agg_process.export_factfile(analysis_output, factors)
 
     # Create referral file
     ref, s17, s47 = agg_process.referral_inputs(flatfile)
-    ref_assessment = config["ref_assessment"]
-    ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
-    ref_s47 = agg_process.merge_ref_s47(ref, s47, ref_assessment)
-    ref_outs = agg_process.ref_outcomes(ref, ref_s17, ref_s47)
-    agg_process.export_reffile(analysis_output, ref_outs)
+    if len(s17) > 0 and len(s47) > 0:
+        ref_assessment = config["ref_assessment"]
+        ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
+        ref_s47 = agg_process.merge_ref_s47(ref, s47, ref_assessment)
+        ref_outs = agg_process.ref_outcomes(ref, ref_s17, ref_s47)
+        agg_process.export_reffile(analysis_output, ref_outs)
 
     # Create journey file
     icpc_cpp_days = config["icpc_cpp_days"]
     s47_cpp_days = config["s47_cpp_days"]
-    s47_outs = agg_process.journey_inputs(flatfile, icpc_cpp_days, s47_cpp_days)
-    s47_day_limit = config["s47_day_limit"]
-    icpc_day_limit = config["icpc_day_limit"]
-    s47_journey = agg_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
-    agg_process.export_journeyfile(analysis_output, s47_journey)
+    s47_j, cpp = agg_process.journey_inputs(flatfile)
+    if len(s47_j) > 0 and len(cpp) > 0:
+        s47_outs = agg_process.journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days)
+        s47_day_limit = config["s47_day_limit"]
+        icpc_day_limit = config["icpc_day_limit"]
+        s47_journey = agg_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
+        agg_process.export_journeyfile(analysis_output, s47_journey)
 
 
 @cin_census.command()
@@ -300,22 +304,26 @@ def pan_agg(input, la_code, flat_output, analysis_output):
     factors = pan_process.filter_flatfile(
         flatfile, filter="AssessmentAuthorisationDate"
     )
-    factors = pan_process.split_factors(factors)
-    pan_process.export_factfile(analysis_output, factors)
+    if len(factors) > 0:
+        factors = pan_process.split_factors(factors)
+        pan_process.export_factfile(analysis_output, factors)
 
     # Create referral file
     ref, s17, s47 = pan_process.referral_inputs(flatfile)
-    ref_assessment = config["ref_assessment"]
-    ref_s17 = pan_process.merge_ref_s17(ref, s17, ref_assessment)
-    ref_s47 = pan_process.merge_ref_s47(ref, s47, ref_assessment)
-    ref_outs = pan_process.ref_outcomes(ref, ref_s17, ref_s47)
-    pan_process.export_reffile(analysis_output, ref_outs)
+    if len(s17) > 0 and len(s47) > 0:
+        ref_assessment = config["ref_assessment"]
+        ref_s17 = pan_process.merge_ref_s17(ref, s17, ref_assessment)
+        ref_s47 = pan_process.merge_ref_s47(ref, s47, ref_assessment)
+        ref_outs = pan_process.ref_outcomes(ref, ref_s17, ref_s47)
+        pan_process.export_reffile(analysis_output, ref_outs)
 
     # Create journey file
     icpc_cpp_days = config["icpc_cpp_days"]
     s47_cpp_days = config["s47_cpp_days"]
-    s47_outs = pan_process.journey_inputs(flatfile, icpc_cpp_days, s47_cpp_days)
-    s47_day_limit = config["s47_day_limit"]
-    icpc_day_limit = config["icpc_day_limit"]
-    s47_journey = pan_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
-    pan_process.export_journeyfile(analysis_output, s47_journey)
+    s47_j, cpp = pan_process.journey_inputs(flatfile)
+    if len(s47_j) > 0 and len(cpp) > 0:
+        s47_outs = pan_process.journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days)
+        s47_day_limit = config["s47_day_limit"]
+        icpc_day_limit = config["icpc_day_limit"]
+        s47_journey = pan_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
+        pan_process.export_journeyfile(analysis_output, s47_journey)
