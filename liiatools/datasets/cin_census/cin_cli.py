@@ -18,6 +18,7 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
     logger,
     validator,
     cin_record,
+    converter,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
@@ -123,6 +124,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     )
 
     # Clean stream
+    stream = converter.convert_true_false(stream)
     tags = [
         "LAchildID",
         "UPN",
