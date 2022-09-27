@@ -112,7 +112,7 @@ def test_create_blank_error_count():
 @patch("builtins.open", create=True)
 def test_save_errors_la(mock_save):
     la_log_dir = tmp.gettempdir()
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
 
     stream = logger.save_errors_la(
         [

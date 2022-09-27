@@ -92,7 +92,7 @@ def save_errors_la(
     :return: An updated list of event objects
     """
     filename = str(Path(input).resolve().stem)
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     if (
         value_error
         or structural_error
