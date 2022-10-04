@@ -94,6 +94,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         la_log_dir=la_log_dir,
     )
     stream = dom_parse(input)
+    stream = list(stream)
 
     # Configure stream
     config = clean_config.Config()
