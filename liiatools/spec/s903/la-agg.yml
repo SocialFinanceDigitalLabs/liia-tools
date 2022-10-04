@@ -182,3 +182,34 @@ dedup:
     PrevPerm:
         - CHILD
         - DATE_PERM
+    OC2:
+        - CHILD
+        - DOB
+        - SDQ_SCORE
+        - SDQ_REASON
+        - CONVICTED
+        - HEALTH_CHECK
+        - IMMUNISATIONS
+        - TEETH_CHECK
+        - HEALTH_ASSESSMENT
+        - SUBSTANCE_MISUSE
+        - INTERVENTION_RECEIVED
+        - INTERVENTION_OFFERED
+        - LA
+        - YEAR
+    OC3:
+        - CHILD
+        - DOB
+        - IN_TOUCH
+        - ACTIV
+        - ACCOM
+        - LA
+        - YEAR
+    Missing:
+        - CHILD
+        - DOB
+        - MISSING
+        - MIS_START
+        - MIS_END
+        - LA
+        - YEAR
