@@ -13,8 +13,8 @@ def convert_true_false(event):
     """
     if hasattr(event, "schema"):
         if event.schema.type.name == "yesnotype":
-            if event.text == "false":
+            if event.text.lower() == "false":
                 event = event.from_event(event, text="0")
-            elif event.text == "true":
+            elif event.text.lower() == "true":
                 event = event.from_event(event, text="1")
     return event
