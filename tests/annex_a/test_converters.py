@@ -5,3 +5,5 @@ def test_conversion_to_integer():
     assert to_integer("1") == 1
     assert to_integer("-1") == -1
     assert to_integer("") == ""
+    assert to_integer("1.0") == 1
+    assert to_integer(0) == 0
