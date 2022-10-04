@@ -39,7 +39,9 @@ def to_integer(value, config):
     :return: Either an integer value or a blank string
     """
     if config == "integer":
-        if value:
+        if isinstance(value, str) and value[-2:] == ".0":
+            return int(float(value))
+        elif value or value == 0:
             return int(value)
         else:
             return ""

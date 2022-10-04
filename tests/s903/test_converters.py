@@ -32,3 +32,5 @@ def test_to_integer():
     assert converters.to_integer("date", "") == "date"
     assert converters.to_integer("", "integer") == ""
     assert converters.to_integer(None, "integer") == ""
+    assert converters.to_integer("1.0", "integer") == 1
+    assert converters.to_integer(0, "integer") == 0
