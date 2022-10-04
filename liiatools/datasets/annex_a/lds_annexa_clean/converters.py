@@ -9,6 +9,8 @@ def to_integer(value):
     :param value: Some value to convert to an integer
     :return: Either an integer value or a blank string
     """
+    if isinstance(value, str) and value[-2:] == ".0":
+        return int(float(value))
     if value or value == 0:
         return int(value)
     else:
