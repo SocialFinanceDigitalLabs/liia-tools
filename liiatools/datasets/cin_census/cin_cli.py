@@ -1,5 +1,4 @@
 import logging
-from tkinter import N
 import click_log
 import click as click
 from pathlib import Path
@@ -9,7 +8,7 @@ import yaml
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
 from liiatools.csdatatools.util.xml import dom_parse
-from liiatools.csdatatools.datasets.cincensus.schema import Schema
+from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
 from liiatools.csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
@@ -113,14 +112,14 @@ def cleanfile(input, la_code, la_log_dir, output):
     )
     value_error = []
     structural_error = []
-    LAchildID_blank = []
+    blank_error = []
     stream = logger.counter(
         stream,
         counter_check=lambda e: isinstance(e, events.StartElement)
         and hasattr(e, "valid"),
         value_error=value_error,
         structural_error=structural_error,
-        LAchildID_blank=LAchildID_blank,
+        blank_error=blank_error,
     )
 
     # Clean stream
@@ -171,8 +170,8 @@ def cleanfile(input, la_code, la_log_dir, output):
         structural_error=structural_error,
         LAchildID_error=LAchildID_error,
         field_error=field_error,
+        blank_error=blank_error,
         la_log_dir=la_log_dir,
-        LAchildID_blank=LAchildID_blank
     )
 
 
