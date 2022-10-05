@@ -15,11 +15,13 @@ def test_convert_true_false():
         [
             events.TextNode(text="false", schema=Schema()),
             events.TextNode(text="true", schema=Schema()),
+            events.TextNode(text="TRUE", schema=Schema())
         ]
     )
     stream = list(stream)
     assert stream[0].text == "0"
     assert stream[1].text == "1"
+    assert stream[2].text == "1"
 
     class Name:
         def __init__(self):
