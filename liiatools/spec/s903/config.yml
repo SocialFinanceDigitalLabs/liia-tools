@@ -305,42 +305,42 @@ column_map:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       HEALTH_CHECK:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       IMMUNISATIONS:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       TEETH_CHECK:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       HEALTH_ASSESSMENT:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       SUBSTANCE_MISUSE:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       INTERVENTION_RECEIVED:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
       INTERVENTION_OFFERED:
        category:
        - code: "0"
        - code: "1"
-       canbeblank: no
+       canbeblank: yes
     OC3:
       CHILD:
        string: "alphanumeric"
