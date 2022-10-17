@@ -73,6 +73,9 @@ def test_create_la_child_id():
             events.Cell(header="CHILD", cell=""),
             events.Cell(header="CHILD", cell=None),
             events.Cell(header="NOT_CHILD", cell="456"),
+            events.Cell(header="CHILD", cell=789),
+            events.Cell(header="CHILD", cell=1011.0),
+            events.Cell(header="CHILD", cell="1213.0"),
         ],
         la_code="BAD",
     )
@@ -81,3 +84,6 @@ def test_create_la_child_id():
     assert stream[1].cell == "_BAD"
     assert stream[2].cell == "None_BAD"
     assert stream[3].cell == "456"
+    assert stream[4].cell == "789_BAD"
+    assert stream[5].cell == "1011_BAD"
+    assert stream[6].cell == "1213_BAD"

@@ -48,5 +48,12 @@ def create_la_child_id(event, la_code):
     :param la_code: The 3-character LA code used to identify a local authority
     :return: An updated list of event objects
     """
-    la_child_id = f"{event.cell}_{la_code}"
+    if isinstance(event.cell, str) and event.cell[-2:] == ".0":
+        child_id = int(float(event.cell))
+    elif isinstance(event.cell, float):
+        child_id = int(event.cell)
+    else:
+        child_id = event.cell
+
+    la_child_id = f"{child_id}_{la_code}"
     yield event.from_event(event, cell=la_child_id)
