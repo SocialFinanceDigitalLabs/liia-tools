@@ -162,11 +162,6 @@ dedup:
     Episodes:
         - CHILD
         - DECOM
-        - RNE
-        - LS
-        - PLACE
-        - PLACE_PROVIDER
-        - PL_POST
     Reviews:
         - CHILD
         - REVIEW
@@ -207,9 +202,6 @@ dedup:
         - YEAR
     Missing:
         - CHILD
-        - DOB
         - MISSING
         - MIS_START
-        - MIS_END
-        - LA
-        - YEAR
+        
