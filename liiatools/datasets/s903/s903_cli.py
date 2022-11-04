@@ -61,7 +61,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    output = s903_main_functions.cleanfile_function(input, la_code, la_log_dir, output)
+    output = s903_main_functions.cleanfile(input, la_code, la_log_dir, output)
     return output
 
 
@@ -88,7 +88,7 @@ def la_agg(input, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    s903_main_functions.la_agg_function(input, output)
+    s903_main_functions.la_agg(input, output)
 
 
 @s903.command()
@@ -120,7 +120,7 @@ def pan_agg(input, la_code, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    s903_main_functions.pan_agg_function(input, la_code, output)
+    s903_main_functions.pan_agg(input, la_code, output)
 
 
 @s903.command()
@@ -145,4 +145,4 @@ def sufficiency_output(input, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    s903_main_functions.sufficiency_output_function(input, output)
+    s903_main_functions.sufficiency_output(input, output)

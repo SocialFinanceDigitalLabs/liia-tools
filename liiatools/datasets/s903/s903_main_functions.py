@@ -1,4 +1,3 @@
-import click as click
 from pathlib import Path
 import yaml
 import logging
@@ -45,7 +44,7 @@ with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
 
 
 
-def cleanfile_function(input, la_code, la_log_dir, output):
+def cleanfile(input, la_code, la_log_dir, output):
     """
     Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -100,7 +99,7 @@ def cleanfile_function(input, la_code, la_log_dir, output):
 
 
 
-def la_agg_function(input, output):
+def la_agg(input, output):
     """
     Joins data from newly cleaned SSDA903 file (output of cleanfile()) to existing SSDA903 data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -134,7 +133,7 @@ def la_agg_function(input, output):
 
 
 
-def pan_agg_function(input, la_code, output):
+def pan_agg(input, la_code, output):
     """
     Joins data from newly merged SSDA903 file (output of la-agg()) to existing pan-London SSDA903 data
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -160,7 +159,7 @@ def pan_agg_function(input, la_code, output):
 
 
 
-def sufficiency_output_function(input, output):
+def sufficiency_output(input, output):
     """
     Applies data minimisation to data from aggregated SSDA903 file (output of pan-agg()) and outputs to Sufficiency analysis folder
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
