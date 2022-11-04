@@ -25,10 +25,6 @@ def add_year_column(stream, input, la_log_dir):
                 yield event.from_event(event, year=year)
             except AttributeError:
                 common.save_year_error(input, la_log_dir)
-                raise Exception(
-                    f"{event.filename} was not processed as the filename did not contain a year, "
-                    f"this error has been sent to the LA to be fixed"
-                )
         elif isinstance(event, events.EndTable):
             yield event
             year = None
