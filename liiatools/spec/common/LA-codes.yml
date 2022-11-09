@@ -27,6 +27,7 @@ data_codes:
     Redbridge: 'RED'
     Richmond upon Thames: 'RUT'
     Southwark: 'SOU'
+    Sutton: 'SUT'
     Tower Hamlets: 'TOW'
     Waltham Forest: 'WAL'
     Wandsworth: 'WAN'
