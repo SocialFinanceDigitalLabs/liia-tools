@@ -4,6 +4,8 @@ from pathlib import Path
 import cchardet as chardet
 from datetime import datetime
 
+import pandas.errors
+
 
 def file_encoding_audit(
     data_folder: Path,
@@ -60,6 +62,21 @@ def file_encoding_audit(
     return encoded_df
 
 
+def check_blank_file(input: str):
+    """
+    Check csv file is not empty
+
+    :param input: Path to file that needs to be checked
+    :return: If csv is empty stop process, else continue
+    """
+    input = Path(input)
+    try:
+        pd.read_csv(input)
+        pass
+    except pandas.errors.EmptyDataError:
+        exit()
+
+
 def drop_empty_rows(infile: str, outfile: str):
     """
     csv drop empty rows at top of file, save output
@@ -93,9 +110,7 @@ def delete_unrequired_files(input: str, drop_file_list: list, la_log_dir: str):
     for dfl in drop_file_list:
         if dfl in input.stem:
             # logged in datapipe logs
-            logging.info(
-                f"{input.stem} removing file from processing not required."
-            )
+            logging.info(f"{input.stem} removing file from processing not required.")
             save_unrequired_file_error(input, la_log_dir)
             input.unlink()
             raise Exception(
@@ -114,8 +129,8 @@ def save_unrequired_file_error(input: Path, la_log_dir: str):
     filename = input.resolve().stem
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     with open(
-            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-            "a",
+        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+        "a",
     ) as f:
         f.write(
             f"'{filename}' has been deleted because it does not match the list of accepted files"

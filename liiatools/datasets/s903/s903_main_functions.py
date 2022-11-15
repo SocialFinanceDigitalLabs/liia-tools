@@ -43,7 +43,6 @@ with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
-
 def cleanfile(input, la_code, la_log_dir, output):
     """
     Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
@@ -67,6 +66,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         "Children Started Care During the Year",
     ]
     prep.delete_unrequired_files(input, drop_file_list=drop_file_list, la_log_dir=la_log_dir)
+    prep.check_blank_file(input)
     prep.drop_empty_rows(input, input)
 
     # Configuration
@@ -96,7 +96,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = file_creator.save_stream(stream, la_name=la_name, output=output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
     list(stream)
-
 
 
 def la_agg(input, output):
@@ -132,7 +131,6 @@ def la_agg(input, output):
         agg_process.export_la_file(output, table_name, s903_df)
 
 
-
 def pan_agg(input, la_code, output):
     """
     Joins data from newly merged SSDA903 file (output of la-agg()) to existing pan-London SSDA903 data
@@ -156,7 +154,6 @@ def pan_agg(input, la_code, output):
         la_name = flip_dict(config["data_codes"])[la_code]
         s903_df = pan_process.merge_agg_files(output, table_name, s903_df, la_name)
         pan_process.export_pan_file(output, table_name, s903_df)
-
 
 
 def sufficiency_output(input, output):
