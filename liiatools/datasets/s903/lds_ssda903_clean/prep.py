@@ -62,18 +62,27 @@ def file_encoding_audit(
     return encoded_df
 
 
-def check_blank_file(input: str):
+def check_blank_file(input: str, la_log_dir: str):
     """
     Check csv file is not empty
 
     :param input: Path to file that needs to be checked
-    :return: If csv is empty stop process, else continue
+    :param la_log_dir: Location to save the error log
+    :return: If csv is empty stop process and write log to local authority, else continue
     """
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     input = Path(input)
+    filename = input.resolve().stem
+    extension = Path(input).suffix
     try:
         pd.read_csv(input)
         pass
     except pandas.errors.EmptyDataError:
+        with open(
+            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+            "a",
+        ) as f:
+            f.write(f"File: '{filename}{extension}' was found to be completely empty")
         exit()
 
 

@@ -12,10 +12,11 @@ from liiatools.datasets.s903.lds_ssda903_clean import prep
 class TestCheckBlankFile(unittest.TestCase):
     @patch("liiatools.datasets.s903.lds_ssda903_clean.prep.pd.read_csv")
     def test_check_blank_file(self, mock_read_csv):
+        la_log_dir = tmp.gettempdir()
         mock_read_csv.side_effect = pd.errors.EmptyDataError
 
         with self.assertRaises(SystemExit):
-            prep.check_blank_file("temp.csv")
+            prep.check_blank_file("temp.csv", la_log_dir=la_log_dir)
 
 
 class TestDropEmptyRows(unittest.TestCase):
