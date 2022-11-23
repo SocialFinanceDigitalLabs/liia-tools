@@ -65,7 +65,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     return output
 
 
-
 @s903.command()
 @click.option(
     "--i",
