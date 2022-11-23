@@ -48,6 +48,26 @@ def test_clean_categories():
     assert cleaned_event.error == "0"
 
     event = events.Cell(
+        cell="0.0",
+        config_dict={
+            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
+        },
+    )
+    cleaned_event = list(filters.clean_categories(event))[0]
+    assert cleaned_event.cell == "0"
+    assert cleaned_event.error == "0"
+
+    event = events.Cell(
+        cell=0,
+        config_dict={
+            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
+        },
+    )
+    cleaned_event = list(filters.clean_categories(event))[0]
+    assert cleaned_event.cell == "0"
+    assert cleaned_event.error == "0"
+
+    event = events.Cell(
         cell="true",
         config_dict={
             "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
