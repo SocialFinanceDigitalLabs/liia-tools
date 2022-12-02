@@ -15,8 +15,7 @@ class TestCheckBlankFile(unittest.TestCase):
         la_log_dir = tmp.gettempdir()
         mock_read_csv.side_effect = pd.errors.EmptyDataError
 
-        with self.assertRaises(SystemExit):
-            prep.check_blank_file("temp.csv", la_log_dir=la_log_dir)
+        assert prep.check_blank_file("temp.csv", la_log_dir=la_log_dir) == "empty"
 
 
 class TestDropEmptyRows(unittest.TestCase):

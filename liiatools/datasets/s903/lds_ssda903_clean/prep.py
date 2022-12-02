@@ -83,7 +83,7 @@ def check_blank_file(input: str, la_log_dir: str):
             "a",
         ) as f:
             f.write(f"File: '{filename}{extension}' was found to be completely empty")
-        exit()
+        return "empty"
 
 
 def drop_empty_rows(infile: str, outfile: str):

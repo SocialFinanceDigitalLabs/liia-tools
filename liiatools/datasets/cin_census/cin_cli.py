@@ -88,12 +88,16 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
 
     # Open & Parse file
-    check_file_type(
-        input,
-        file_types=[".xml"],
-        supported_file_types=supported_file_types,
-        la_log_dir=la_log_dir,
-    )
+    if (
+        check_file_type(
+            input,
+            file_types=[".xml"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
+    ):
+        return
     stream = dom_parse(input)
     stream = list(stream)
 

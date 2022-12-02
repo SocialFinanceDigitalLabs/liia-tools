@@ -65,19 +65,26 @@ def cleanfile(input, la_code, la_log_dir, output):
         "Children Looked After on 31st March",
         "Children Started Care During the Year",
     ]
-    prep.delete_unrequired_files(input, drop_file_list=drop_file_list, la_log_dir=la_log_dir)
-    prep.check_blank_file(input, la_log_dir=la_log_dir)
+    prep.delete_unrequired_files(
+        input, drop_file_list=drop_file_list, la_log_dir=la_log_dir
+    )
+    if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
+        return
     prep.drop_empty_rows(input, input)
 
     # Configuration
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
-    check_file_type(
-        input,
-        file_types=[".csv"],
-        supported_file_types=supported_file_types,
-        la_log_dir=la_log_dir,
-    )
+    if (
+        check_file_type(
+            input,
+            file_types=[".csv"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
+    ):
+        return
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
