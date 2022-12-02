@@ -157,4 +157,4 @@ def check_file_type(input, file_types, supported_file_types, la_log_dir):
             f.write(
                 f"File: '{filename}{extension}' not in any of the expected formats (csv, xml, xlsx, xlsm)"
             )
-        exit()
+        return "incorrect file type"

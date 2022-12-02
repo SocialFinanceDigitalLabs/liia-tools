@@ -84,12 +84,16 @@ def cleanfile(input, la_code, la_log_dir, output):
     filename = Path(input).resolve().stem
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
-    check_file_type(
-        input,
-        file_types=[".xlsx", ".xlsm"],
-        supported_file_types=supported_file_types,
-        la_log_dir=la_log_dir,
-    )
+    if (
+        check_file_type(
+            input,
+            file_types=[".xlsx", ".xlsm"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
+    ):
+        return
 
     # Open & Parse file
     stream = openpyxl.parse_sheets(input)
