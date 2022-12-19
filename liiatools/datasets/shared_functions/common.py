@@ -108,7 +108,7 @@ def check_year(filename):
         21-22
 
     :param filename: Filename that probably contains a year
-    :return: Year withing the string
+    :return: Year within the string
     """
     match = re.search(r"(20)\d{2}(.*\d{2})*", filename)
     if match:
