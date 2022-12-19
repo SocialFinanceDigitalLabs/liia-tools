@@ -52,9 +52,15 @@ def test_check_year():
     assert check_year("file_140032021.csv") == "2021"
     assert check_year("file_2017-18.csv") == "2018"
     assert check_year("file_201819.csv") == "2019"
+    assert check_year("file_1920.csv") == "2020"
+    assert check_year("file_21/22.csv") == "2022"
 
 
 class TestCheckYear(unittest.TestCase):
     def test_check_year(self):
         with self.assertRaises(AttributeError):
             check_year("file_no_year.csv")
+
+    def test_check_year_2(self):
+        with self.assertRaises(AttributeError):
+            check_year("1811.csv")
