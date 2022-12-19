@@ -102,9 +102,13 @@ def check_year(filename):
         14032021
         2017-18
         201819
+        2019/20
+        1920
+        21/22
+        21-22
 
     :param filename: Filename that probably contains a year
-    :return: Year withing the string
+    :return: Year within the string
     """
     match = re.search(r"(20)\d{2}(.*\d{2})*", filename)
     if match:
@@ -121,6 +125,18 @@ def check_year(filename):
         except TypeError:
             year = match.group(0)
             return year
+
+    fy_match = re.search(r"\d{2}(.*\d{2})", filename)
+    if fy_match:
+        if len(fy_match.group(1)) == 2 and int(fy_match.group(1)) == int(fy_match.group(0)[:2]) + 1:
+            year = "20" + fy_match.group(1)
+            return year
+        if len(fy_match.group(1)) == 3 and int(fy_match.group(1)[-2:]) == int(fy_match.group(0)[:2]) + 1:
+            year = "20" + fy_match.group(1)[-2:]
+            return year
+        else:
+            raise AttributeError
+
     else:
         raise AttributeError
 
