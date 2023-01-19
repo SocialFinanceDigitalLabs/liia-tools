@@ -122,7 +122,7 @@ column_map:
        - code: "PR3"
        - code: "PR4"
        - code: "PR5"
-       canbeblank: no
+       canbeblank: yes
       DEC:
        date: "%d/%m/%Y"
        canbeblank: yes
