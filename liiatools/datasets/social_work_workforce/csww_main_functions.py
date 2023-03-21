@@ -1,4 +1,6 @@
-from liiatools.datasets.social_work_workforce.sample_data import generate_sample_csww_file
+from liiatools.datasets.social_work_workforce.sample_data import (
+    generate_sample_csww_file,
+)
 from liiatools.csdatatools.util.stream import consume
 from liiatools.csdatatools.util.xml import etree, to_xml
 
@@ -17,6 +19,9 @@ def generate_sample(output: str):
     consume(stream)
 
     element = builder.close()
-    element = etree.tostring(element, encoding='utf-8', pretty_print=True)
-    with open(output, 'wb') as FILE:
-        FILE.write(element)
+    element = etree.tostring(element, encoding="utf-8", pretty_print=True)
+    try:
+        with open(output, "wb") as FILE:
+            FILE.write(element)
+    except FileNotFoundError:
+        print("The file path provided does not exist")
