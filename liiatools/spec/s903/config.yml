@@ -363,6 +363,8 @@ column_map:
        - code: "P1"
        - code: "F2"
        - code: "P2"
+       - code: "F3"
+       - code: "P3"
        - code: "F4"
        - code: "P4"
        - code: "F5"
