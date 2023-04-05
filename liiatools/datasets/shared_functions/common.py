@@ -110,29 +110,38 @@ def check_year(filename):
     :param filename: Filename that probably contains a year
     :return: Year within the string
     """
-    match = re.search(r"(20)\d{2}(.*\d{2})*", filename)
+    match = re.search(r"(20)(\d{2})(.{0,3}\d{2})*", filename)
     if match:
         try:
-            if len(match.group(2)) == 2:
-                year = match.group(1) + match.group(2)
+            if len(match.group(3)) == 2:
+                year = match.group(1) + match.group(3)
                 return year
-            if len(match.group(2)) == 3:
-                year = match.group(1) + match.group(2)[1:]
+            if len(match.group(3)) == 3:
+                year = match.group(1) + match.group(3)[-2:]
                 return year
-            if len(match.group(2)) == 4:
-                year = match.group(2)
+            if len(match.group(3)) == 4:
+                year = match.group(3)
+                return year
+            if len(match.group(3)) == 5:
+                year = match.group(3)[-4:]
                 return year
         except TypeError:
-            year = match.group(0)
+            year = match.group(1) + match.group(2)
             return year
 
-    fy_match = re.search(r"\d{2}(.*\d{2})", filename)
+    fy_match = re.search(r"(\d{2})(.{0,3}\d{2})(.*)(\d*)", filename)
     if fy_match:
-        if len(fy_match.group(1)) == 2 and int(fy_match.group(1)) == int(fy_match.group(0)[:2]) + 1:
-            year = "20" + fy_match.group(1)
+        if len(fy_match.group(2)) == 2 and int(fy_match.group(2)) == int(fy_match.group(1)) + 1:
+            year = "20" + fy_match.group(2)
             return year
-        if len(fy_match.group(1)) == 3 and int(fy_match.group(1)[-2:]) == int(fy_match.group(0)[:2]) + 1:
-            year = "20" + fy_match.group(1)[-2:]
+        if len(fy_match.group(2)) == 3 and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1:
+            year = "20" + fy_match.group(2)[-2:]
+            return year
+        if int(fy_match.group(3)[1:3]) == int(fy_match.group(2)[-2:]) + 1:
+            year = "20" + fy_match.group(3)[1:3]
+            return year
+        if int(fy_match.group(2)[-2:]) == int(fy_match.group(2)[-4:-2]) + 1:
+            year = "20" + fy_match.group(2)[-2:]
             return year
         else:
             raise AttributeError
