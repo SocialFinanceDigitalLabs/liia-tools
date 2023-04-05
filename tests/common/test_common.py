@@ -48,12 +48,16 @@ def test_to_date():
 
 
 def test_check_year():
-    assert check_year("file_2022_ad1.csv") == "2022"
-    assert check_year("file_140032021.csv") == "2021"
-    assert check_year("file_2017-18.csv") == "2018"
-    assert check_year("file_201819.csv") == "2019"
-    assert check_year("file_1920.csv") == "2020"
-    assert check_year("file_21/22.csv") == "2022"
+    assert check_year("2020 SHOULD BE PLACED FOR ADOPTION Version 12") == "2020"
+    assert check_year("19/20 adoption version 11") == "2020"
+    assert check_year("2018/19 adoption version 11") == "2019"
+    assert check_year("file_2022_ad1") == "2022"
+    assert check_year("file_14032021") == "2021"
+    assert check_year("file_20032021") == "2021"
+    assert check_year("file_2017-18") == "2018"
+    assert check_year("file_201819") == "2019"
+    assert check_year("file_1920") == "2020"
+    assert check_year("file_21/22") == "2022"
 
 
 class TestCheckYear(unittest.TestCase):
