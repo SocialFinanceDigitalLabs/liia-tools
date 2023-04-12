@@ -49,7 +49,10 @@ def create_la_child_id(event, la_code):
     elif isinstance(event.cell, float):
         child_id = int(event.cell)
     else:
-        child_id = event.cell
+        try:
+            child_id = event.cell.strip()
+        except AttributeError:
+            child_id = event.cell
 
     la_child_id = f"{child_id}_{la_code}"
     yield event.from_event(event, cell=la_child_id)

@@ -69,7 +69,7 @@ def test_add_year_column():
 def test_create_la_child_id():
     stream = populate.create_la_child_id(
         [
-            events.Cell(header="CHILD", cell="123"),
+            events.Cell(header="CHILD", cell=" 123"),
             events.Cell(header="CHILD", cell=""),
             events.Cell(header="CHILD", cell=None),
             events.Cell(header="NOT_CHILD", cell="456"),
