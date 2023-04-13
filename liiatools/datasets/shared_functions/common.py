@@ -129,13 +129,16 @@ def check_year(filename):
             year = match.group(1) + match.group(2)
             return year
 
-    fy_match = re.search(r"(\d{2})(.{0,3}\d{2})", filename)
+    fy_match = re.search(r"(\d{2})(.{0,3}\d{2}).*(\d*)", filename)
     if fy_match:
         if len(fy_match.group(2)) == 2 and int(fy_match.group(2)) == int(fy_match.group(1)) + 1:
             year = "20" + fy_match.group(2)
             return year
         if len(fy_match.group(2)) == 3 and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1:
             year = "20" + fy_match.group(2)[-2:]
+            return year
+        if int(fy_match.group(0)[-2:]) == int(fy_match.group(2)[-2:]) + 1:
+            year = "20" + fy_match.group(0)[-2:]
             return year
         else:
             raise AttributeError
