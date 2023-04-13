@@ -32,6 +32,7 @@ from liiatools.datasets.shared_functions.common import (
     flip_dict,
     check_file_type,
     supported_file_types,
+    check_year
 )
 
 log = logging.getLogger()
@@ -73,7 +74,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     prep.drop_empty_rows(input, input)
 
     # Configuration
-    config = clean_config.Config()
+    # YA added the line below
+    year = check_year(filename = str(Path(input).resolve().stem))
+    # YA added "year" to config below
+    config = clean_config.Config(year)
     la_name = flip_dict(config["data_codes"])[la_code]
     if (
         check_file_type(

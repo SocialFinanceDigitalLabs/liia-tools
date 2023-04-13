@@ -33,6 +33,9 @@ def add_year_column(stream, input, la_log_dir):
         else:
             yield event
 
+def new_func(input):
+    return input
+
 
 @streamfilter(check=lambda x: x.get("header") in ["CHILD"], fail_function=pass_event)
 def create_la_child_id(event, la_code):
