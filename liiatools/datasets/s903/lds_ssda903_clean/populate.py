@@ -23,7 +23,7 @@ def add_year_column(stream, input, la_log_dir):
                 file_dir = event.filename
                 year = common.check_year(file_dir)
                 yield event.from_event(event, year=year)
-            except AttributeError:
+            except (AttributeError, ValueError):
                 common.save_year_error(input, la_log_dir)
         elif isinstance(event, events.EndTable):
             yield event
