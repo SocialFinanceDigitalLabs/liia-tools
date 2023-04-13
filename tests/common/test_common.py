@@ -69,5 +69,5 @@ class TestCheckYear(unittest.TestCase):
             check_year("file_no_year.csv")
 
     def test_check_year_2(self):
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(ValueError):
             check_year("1811.csv")
