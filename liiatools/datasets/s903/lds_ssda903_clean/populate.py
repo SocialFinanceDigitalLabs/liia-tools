@@ -23,7 +23,7 @@ def add_year_column(stream, input, la_log_dir):
                 file_dir = event.filename
                 year = common.check_year(file_dir)
                 yield event.from_event(event, year=year)
-            except AttributeError:
+            except (AttributeError, ValueError):
                 common.save_year_error(input, la_log_dir)
         elif isinstance(event, events.EndTable):
             yield event
@@ -49,6 +49,8 @@ def create_la_child_id(event, la_code):
     """
     if isinstance(event.cell, str) and event.cell[-2:] == ".0":
         child_id = int(float(event.cell))
+    elif isinstance(event.cell, str):
+        child_id = event.cell.strip()
     elif isinstance(event.cell, float):
         child_id = int(event.cell)
     else:
