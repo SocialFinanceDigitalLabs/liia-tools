@@ -21,49 +21,48 @@ def convert_schema_error(schema_error: XMLSchemaValidationError) -> ValidationEr
     Converts an **XMLSchemaValidationError** to a custom validation error. See *'validation_error.py'*
     """
 
-    match schema_error.validator.__class__:
-        # Structural error
-        # For this error view source file xmlschema/validators/groups.py (at line 1266)
-        case xmlschema.validators.Xsd11Group:
-            # tuple (minOccurs, maxOccurs) - these numbers are specified inside the XML schema
-            occurs_range = schema_error.args[3].occurs
+    # Structural error
+    # For this error view source file xmlschema/validators/groups.py (at line 1266)
+    if schema_error.validator.__class__ == xmlschema.validators.Xsd11Group:
+        # tuple (minOccurs, maxOccurs) - these numbers are specified inside the XML schema
+        occurs_range = schema_error.args[3].occurs
 
-            # An <int> representing how many times the tag that is being validated occurs
-            # This value is 0 if there is a missmatch between the tag that was expected and the
-            # tag that was actually read
+        # An <int> representing how many times the tag that is being validated occurs
+        # This value is 0 if there is a missmatch between the tag that was expected and the
+        # tag that was actually read
 
-            occurs = schema_error.args[4]
+        occurs = schema_error.args[4]
 
-            # The tag of the read element
-            read_tag = schema_error.elem[schema_error.args[2]].tag
+        # The tag of the read element
+        read_tag = schema_error.elem[schema_error.args[2]].tag
 
-            # The tag of the expected element
-            expected_tag = schema_error.args[3].name
+        # The tag of the expected element
+        expected_tag = schema_error.args[3].name
 
-            if read_tag != expected_tag:
-                return ValidationError(ERROR_CAUSE.GROUP_FORMAT, schema_error.elem.tag, schema_error.sourceline)
-            elif occurs < occurs_range[0]:
-                return ValidationError(ERROR_CAUSE.MISSING_TAG, schema_error.elem.tag, schema_error.sourceline)
-            elif occurs > occurs_range[1]:
-                return ValidationError(ERROR_CAUSE.TOO_MANY_TAGS, schema_error.elem.tag, schema_error.sourceline)
-            else:
-                print(f'UNEXPECTED ERROR!\n{schema_error}')
-                return None
-        # Value does not match to any enumerated value
-        case xmlschema.validators.XsdEnumerationFacets:
-            return ValidationError(ERROR_CAUSE.VALUE, schema_error.elem.tag, schema_error.sourceline)
-        # Value does not match pattern specified
-        case xmlschema.validators.XsdPatternFacets:
-            return ValidationError(ERROR_CAUSE.VALUE, schema_error.elem.tag, schema_error.sourceline)
-        # Value is of unexpected type
-        case xmlschema.validators.XsdAtomicBuiltin:
-            return ValidationError(ERROR_CAUSE.TYPE, schema_error.elem.tag, schema_error.sourceline)
-        # Value is below accepted range minimum inclusive
-        case xmlschema.validators.XsdMinInclusiveFacet:
-            return ValidationError(ERROR_CAUSE.MIN_RANGE, schema_error.elem.tag, schema_error.sourceline)
-        # Value is above accepted range maximum inclusive
-        case xmlschema.validators.XsdMaxInclusiveFacet:
-            return ValidationError(ERROR_CAUSE.MAX_RANGE, schema_error.elem.tag, schema_error.sourceline)
+        if read_tag != expected_tag:
+            return ValidationError(ERROR_CAUSE.GROUP_FORMAT, schema_error.elem.tag, schema_error.sourceline)
+        elif occurs < occurs_range[0]:
+            return ValidationError(ERROR_CAUSE.MISSING_TAG, schema_error.elem.tag, schema_error.sourceline)
+        elif occurs > occurs_range[1]:
+            return ValidationError(ERROR_CAUSE.TOO_MANY_TAGS, schema_error.elem.tag, schema_error.sourceline)
+        else:
+            print(f'UNEXPECTED ERROR!\n{schema_error}')
+            return None
+    # Value does not match to any enumerated value
+    elif schema_error.validator.__class__ == xmlschema.validators.XsdEnumerationFacets:
+        return ValidationError(ERROR_CAUSE.VALUE, schema_error.elem.tag, schema_error.sourceline)
+    # Value does not match pattern specified
+    elif schema_error.validator.__class__ == xmlschema.validators.XsdPatternFacets:
+        return ValidationError(ERROR_CAUSE.VALUE, schema_error.elem.tag, schema_error.sourceline)
+    # Value is of unexpected type
+    elif schema_error.validator.__class__ == xmlschema.validators.XsdAtomicBuiltin:
+        return ValidationError(ERROR_CAUSE.TYPE, schema_error.elem.tag, schema_error.sourceline)
+    # Value is below accepted range minimum inclusive
+    elif schema_error.validator.__class__ == xmlschema.validators.XsdMinInclusiveFacet:
+        return ValidationError(ERROR_CAUSE.MIN_RANGE, schema_error.elem.tag, schema_error.sourceline)
+    # Value is above accepted range maximum inclusive
+    elif schema_error.validator.__class__ == xmlschema.validators.XsdMaxInclusiveFacet:
+        return ValidationError(ERROR_CAUSE.MAX_RANGE, schema_error.elem.tag, schema_error.sourceline)
 
 
 def is_acceptable(parsed_xml: etree.Element, error_list: List[ValidationError]) -> bool:
