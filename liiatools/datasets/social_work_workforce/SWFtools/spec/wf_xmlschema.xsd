@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+			vc:minVersion="1.1">
+
+
+	<xs:element name="Message" type="message_type"/>
+
+	<xs:complexType name="message_type">
+		<xs:sequence>
+			<xs:element name="Header" type="header_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="LALevelVacancies" type="lalevelvancancies_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="CSWWWorker" type="cswwworker_type" minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Header children defenition - 2 elements-->
+	<xs:complexType name="header_type">
+		<xs:sequence>
+			<xs:element name="CollectionDetails" type="collectiondetails_type" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="Source" type="source_type" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="collectiondetails_type">
+		<xs:sequence>
+			<xs:element name="Collection" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="CSWWW"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Year" type="xs:gYear" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ReferenceDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="source_type">
+		<xs:sequence>
+			<xs:element name="SourceLevel" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="L"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="LEA" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:pattern value=".{3}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SoftwareCode" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="DataTime" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- end of Header -->
+
+	<!-- LALevelVacancies: Local authority vancancies - children definition - 3 elements -->
+	<xs:complexType name="lalevelvancancies_type">
+		<xs:sequence>
+			<!-- NumberOfVancancies: Number of vancacies -->
+			<!-- nnn.nn (to check)-->
+			<xs:element name="NumberOfVacancies" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:pattern value="(.{1,3}[.].{1,2})|(.{1,3})" />
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<!-- NoAgencyFTE: Number of agency workers covering vacancies - FTE -->
+			<!-- nnn.nn (to check) -->
+			<xs:element name="NoAgencyFTE" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:pattern value="(.{1,3}[.].{1,2})|(.{1,3})" />
+						<xs:minInclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+
+			<!-- nnn-->
+			<xs:element name="NoAgencyHeadcount" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:pattern value=".{1,3}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- end of LALevelVacancies -->
+
+	<!-- CSWWWorker children definition - unbounded - 23 elements -->
+	<!-- Compact part -->
+	<xs:complexType name="cswwworker_type">
+		<xs:all>
+			<xs:element name="AgencyWorker" type="AgencyWorker_type" minOccurs="1" maxOccurs="1"/><!-- 1 -->
+			<xs:element name="SWENo" type="SWENo_type" minOccurs="1" maxOccurs="1"/><!-- 2 -->
+			<xs:element name="FTE" type="FTE_type" minOccurs="1" maxOccurs="1"/><!-- 3 -->
+			<xs:element name="PersonBirthDate" type="xs:date" minOccurs="0" maxOccurs="1"/><!-- 4 -->
+			<xs:element name="GenderCurrent" type="Gender_type" minOccurs="0" maxOccurs="1"/><!-- 5 -->
+			<xs:element name="Ethnicity" type="Ethnicity_type" minOccurs="0" maxOccurs="1"/><!-- 6 -->
+			<xs:element name="QualInst" type="QualInst_type" minOccurs="0" maxOccurs="1"/><!-- 7 -->
+			<xs:element name="QualLevel" type="QualLevel_type" minOccurs="0" maxOccurs="1"/><!-- 8 -->
+			<xs:element name="StepUpGrad" type="StepUpGrad_type" minOccurs="0" maxOccurs="1"/><!-- 9 -->
+			<xs:element name="OrgRole" type="OrgRole_type" minOccurs="0" maxOccurs="1"/><!-- 10 -->
+			<xs:element name="RoleStartDate" type="xs:date" minOccurs="0" maxOccurs="1"/><!-- 11 -->
+			<xs:element name="StartOrigin" type="StartOrigin_type" minOccurs="0" maxOccurs="1"/><!-- 12 -->
+			<xs:element name="RoleEndDate" type="RoleEndDate_type" minOccurs="0" maxOccurs="1"/><!-- 13 -->
+			<xs:element name="LeaverDestination" type="LeaverDestination_type" minOccurs="0" maxOccurs="1" /><!-- 14 -->
+			<xs:element name="ReasonLeave" type="ReasonLeave_type" minOccurs="0" maxOccurs="1"/><!-- 15 -->
+			<xs:element name="FTE30" type="FTE30_type" minOccurs="0" maxOccurs="1"/><!-- 16 -->
+			<xs:element name="Cases30" type="Cases30_type" minOccurs="0" maxOccurs="1"/><!-- 17 -->
+			<xs:element name="WorkingDaysLost" type="WorkingDaysLost_type" minOccurs="0" maxOccurs="1"/><!-- 18 -->
+			<xs:element name="ContractWeeks" type="ContractWeeks_type" minOccurs="0" maxOccurs="unbounded"/><!-- 19 -->
+			<xs:element name="FrontlineGrad" type="FrontlineGrad_type" minOccurs="0" maxOccurs="1"/><!-- 20 -->
+			<xs:element name="Absat30Sept" type="Absat30Sept_type" minOccurs="0" maxOccurs="unbounded"/><!-- 21 -->
+			<xs:element name="ReasonAbsence" type="ReasonAbsence_type" minOccurs="0" maxOccurs="unbounded"/><!-- 22 -->
+			<xs:element name="CFKSSstatus" type="CFKSSstatus_type" minOccurs="0" maxOccurs="unbounded"/><!-- 23 -->
+		</xs:all>
+	</xs:complexType>
+
+	<!-- 1 -  AgencyWorker: Agency worker -->
+	<xs:simpleType name="AgencyWorker_type"><!-- 1 or 0 -->
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>agency worker</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>not an agency worker</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!--- *********************************************************************************************** -->
+
+	<!-- 2 -  SWENo: SWE identifier -->
+	<!-- AAnnnnnn and is up to 12 digits-->
+	<xs:simpleType name="SWENo_type">
+		<xs:restriction base="xs:token">
+			<xs:pattern id="SWE_valid_format" value="[A-Z]{2}[0-9]{4,12}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 3 -  FTE: FTE as at 30 September 2021 -->
+	<!-- n.nnnnnn -->
+	<xs:simpleType name="FTE_type">
+		<xs:restriction base="xs:decimal">
+			<xs:pattern value="(.{1}[.].{0,6})|(.{1})" />
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- 4 -  PersonBirthDate: Date of birth -->
+	<!-- reduced to simple date type -->
+
+	<!-- 5 -  GenderCurrent: Gender -->
+	<xs:simpleType name="Gender_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>Not Known (gender has not been recorded)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Male</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Female</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>Not Specified (inderteminate; unable to be classified as either male or female)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 6 - Ethnicity: Ethnic origin -->
+	<xs:simpleType name="Ethnicity_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="WBRI">
+				<xs:annotation>
+					<xs:documentation>White - British</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="WIRI">
+				<xs:annotation>
+					<xs:documentation>White - Irish</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="WOTH">
+				<xs:annotation>
+					<xs:documentation>Any Other White Background</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MWBC">
+				<xs:annotation>
+					<xs:documentation>White and Black Caribbean</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MWBA">
+				<xs:annotation>
+					<xs:documentation>White and Black African</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MWAS">
+				<xs:annotation>
+					<xs:documentation>White and Asian</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MOTH">
+				<xs:annotation>
+					<xs:documentation>Any Other Mixed background</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="AIND">
+				<xs:annotation>
+					<xs:documentation>Indian</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="APKN">
+				<xs:annotation>
+					<xs:documentation>Pakistani</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ABAN">
+				<xs:annotation>
+					<xs:documentation>Bangladeshi</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="AOTH">
+				<xs:annotation>
+					<xs:documentation>Any Other Asian Background</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BCRB">
+				<xs:annotation>
+					<xs:documentation>Black Caribbean</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BAFR">
+				<xs:annotation>
+					<xs:documentation>Black African</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BOTH">
+				<xs:annotation>
+					<xs:documentation>Any Other Black Background</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CHNE">
+				<xs:annotation>
+					<xs:documentation>Chinese</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OOTH">
+				<xs:annotation>
+					<xs:documentation>Any Other Ethinc Group</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="REFU">
+				<xs:annotation>
+					<xs:documentation>Declared not stated or Refused</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="NOBT">
+				<xs:annotation>
+					<xs:documentation>Information Not Yet Obtained</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 7 -  QualInst: Qualifying institution -->
+	<xs:simpleType name="QualInst_type">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="300"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 8 - QualLevel: Qualifying level -->
+	<xs:simpleType name="QualLevel_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>under-graduate</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>post-graduate</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Other</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 9 - StepUpGrad: Step-up graduate -->
+	<xs:simpleType name="StepUpGrad_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>yes</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>no</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 10 - OrgRole: Role within organization -->
+	<xs:simpleType name="OrgRole_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>senior manager</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>middle manager</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>first line manager</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>senior practitioner</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>case holder</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>qualified without cases</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- ***** Starting date RoleEndDate verified blank possibility ***** -->
+	<!-- 11 - RoleStartDate: Starting date -->
+	<!-- is above in the compact part -->
+
+	<!-- 12- StartOrigin: Origin when started -->
+	<xs:simpleType name="StartOrigin_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>newly qualified social workers</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>social worker role in a different local authority in England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>social worker role outside England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>agency or consultancy in social work in England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>other social work role non-local authority in England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>other social care role in local authority / non-local auhtority in England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>non-social care role / any role outside England / no employment / career break</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>other</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>not known</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>not yet collected</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 13 - RoleEndDate: Leaving date -->
+	<xs:simpleType name="RoleEndDate_type">
+		<xs:restriction base="xs:date">
+			<xs:minInclusive value="2020-10-01"/>
+			<xs:maxInclusive value="2021-09-30"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 14 - LeaverDestination: Destination of leaver -->
+	<xs:simpleType name="LeaverDestination_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>social worker role in different local authority in England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>social worker role outside England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>agency or consultancy social work (in England)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>other social work role non-local authority (in England)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>other social care role local authority / non-local authority (in England)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>non-social care role / no employment / redundancy / career break / any other role outside England / left England</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>other</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>not known</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>not yet collected</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 15 - ReasonLeave: Reason for leaving -->
+	<xs:simpleType name="ReasonLeave_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Resignation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Voluntary redundancy</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Compulsory redundancy</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Dismissed</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Retired</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Deceased</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>Moved to a non-child and family social work role within LA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>other</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>not known</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>not yet collected</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 16 - FTE30: FTE as at 30 September 2020 -->
+	<!-- n.nnnnnn between 0 and 1 inclusive-->
+	<xs:simpleType name="FTE30_type">
+		<xs:restriction base="xs:decimal">
+			<xs:pattern value="(.{1}[.].{0,6})|(.{1})" />
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 17 - Cases30: Number of cases held at 30 September 2021 -->
+	<!-- nnnn -->
+	<xs:simpleType name="Cases30_type">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:pattern value=".{0,4}" />
+			<xs:maxInclusive value="40" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 18 - WorkingDaysLost: Number of days of work missed due to sickness absence -->
+	<!-- nnn.nn -->
+	<xs:simpleType name="WorkingDaysLost_type">
+		<xs:restriction base="xs:decimal">
+			<xs:pattern value="(.{1,3}[.].{0,2})|(.{1,3})" />
+			<xs:minInclusive value="0" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 19 - ContractWeeks: Agency worker length of contract (weeks) -->
+	<!-- nnn.n , not expected to exceed 500 weeks-->
+	<xs:simpleType name="ContractWeeks_type">
+		<xs:restriction base="xs:decimal">
+			<xs:pattern value="(.{1,3}[.].{0,1})|(.{1,3})" />
+			<xs:minInclusive value="0" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 20 - FrontlineGrad: Frontline graduate -->
+	<xs:simpleType name="FrontlineGrad_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Yes</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>No</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 21 - Absat30Sept: Absent on 30 September 2021 -->
+	<xs:simpleType name="Absat30Sept_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Yes</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>No</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 22 - ReasonAbsence: Reason for Absence -->
+	<xs:simpleType name="ReasonAbsence_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="MAT">
+				<xs:annotation>
+					<xs:documentation>Maternity/Paternity leave</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OTH">
+				<xs:annotation>
+					<xs:documentation>Other paid authorised absence, such as: compassionate leave, annual leave requiring reallocation of cases</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PUB">
+				<xs:annotation>
+					<xs:documentation>Paid absence for public duties, such as: jury duty</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SIC">
+				<xs:annotation>
+					<xs:documentation>Sick leave</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TRN">
+				<xs:annotation>
+					<xs:documentation>Training</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="UNA">
+				<xs:annotation>
+					<xs:documentation>Unauthorised absence</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="UNP">
+				<xs:annotation>
+					<xs:documentation>Unpaid authorised absence</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- 23 - CFKSSstatus: Child and family knowledge and skills statement status -->
+	<xs:simpleType name="CFKSSstatus_type">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>assessed and supported year in employment (AYSE)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>frontline practitioner</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>practice supervisor</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>practice leader</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<!-- end of CSWWWorker children definition - unbounded - 23 elements -->
+
+</xs:schema>
