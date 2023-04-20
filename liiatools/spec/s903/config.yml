@@ -137,6 +137,8 @@ column_map:
        - code: "E4B"
        - code: "E13"
        - code: "E41"
+       - code: "E43"
+       - code: "E44"
        - code: "E45"
        - code: "E46"
        - code: "E47"
