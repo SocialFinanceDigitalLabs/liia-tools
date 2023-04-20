@@ -13,7 +13,6 @@ from liiatools.datasets.s903.lds_ssda903_clean.columns import column_names
 from liiatools.datasets.shared_functions.common import inherit_property
 from liiatools.spec import s903 as s903_asset_dir
 from liiatools.spec import common as common_asset_dir
-# from liiatools.datasets.shared_functions import common
 
 log = logging.getLogger(__name__)
 
@@ -78,9 +77,6 @@ def configure_stream(stream, config):
 class Config(dict):
     def __init__(self, year, *config_files):
         super().__init__()
-        # filename = str(Path(input).resolve().stem)
-        # year = common.check_year("/workspaces/liia-tools/liiatools/spec/s903/samples/SSDA903_2020_episodes.csv")
-        
         if not config_files:
             config_files = ["DEFAULT_COLUMN_MAP", "DEFAULT_LA_MAP"]
 

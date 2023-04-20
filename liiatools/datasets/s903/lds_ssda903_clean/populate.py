@@ -9,22 +9,16 @@ from liiatools.datasets.shared_functions import common
 log = logging.getLogger(__name__)
 
 
-def add_year_column(stream, input, la_log_dir):
+def add_year_column(stream, year):
     """
     Searches the filename for the year by finding any four-digit number starting with 20
 
     :param stream: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
     """
-    year = None
     for event in stream:
         if isinstance(event, events.StartTable):
-            try:
-                file_dir = event.filename
-                year = common.check_year(file_dir)
-                yield event.from_event(event, year=year)
-            except (AttributeError, ValueError):
-                common.save_year_error(input, la_log_dir)
+            yield event.from_event(event, year=year)
         elif isinstance(event, events.EndTable):
             yield event
             year = None
@@ -32,10 +26,6 @@ def add_year_column(stream, input, la_log_dir):
             yield event.from_event(event, year=year)
         else:
             yield event
-
-def new_func(input):
-    return input
-
 
 @streamfilter(check=lambda x: x.get("header") in ["CHILD"], fail_function=pass_event)
 def create_la_child_id(event, la_code):
