@@ -7,7 +7,7 @@ from liiatools.spec import cin_census as cin_asset_dir
 
 
 class Schema:
-    def __init__(self, year: int = 2022):
+    def __init__(self, year):
         self.__year = year
 
     @cached_property

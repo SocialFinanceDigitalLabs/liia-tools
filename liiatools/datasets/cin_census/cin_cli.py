@@ -106,7 +106,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
-    stream = filters.add_schema(stream, schema=Schema().schema)
+    stream = filters.add_schema(stream, schema=Schema(2021).schema)
     stream = logger.inherit_LAchildID(stream)
 
     # Validate stream

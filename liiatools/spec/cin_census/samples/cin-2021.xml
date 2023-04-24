@@ -49,10 +49,6 @@
                         <AssessmentFactors>2B</AssessmentFactors>
                     </FactorsIdentifiedAtAssessment>
                 </Assessments>
-                <CINPlanDates>
-                    <CINPlanStartDate>1971-01-24</CINPlanStartDate>
-                    <CINPlanEndDate>1971-01-26</CINPlanEndDate>
-                </CINPlanDates>
                 <Section47>
                     <S47ActualStartDate>1970-06-02</S47ActualStartDate>
                     <InitialCPCtarget>1970-06-23</InitialCPCtarget>
