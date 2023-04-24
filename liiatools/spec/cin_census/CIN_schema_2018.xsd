@@ -109,7 +109,6 @@
       <xs:element name="ReasonForClosure" type="reasonforclosuretype" minOccurs="0" maxOccurs="1"/>
       <xs:element name="DateOfInitialCPC" type="xs:date" minOccurs="0" maxOccurs="1"/>
       <xs:element name="Assessments" type="assessmentstype" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="CINPlanDates" type="cinplandatesttype" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="Section47" type="section47type" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="ReferralNFA" type="yesnotype" minOccurs="1" maxOccurs="1"/>
       <xs:element name="ChildProtectionPlans" type="childprotectionplanstype" minOccurs="0" maxOccurs="unbounded"/>
