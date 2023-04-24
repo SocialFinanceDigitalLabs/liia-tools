@@ -13,5 +13,5 @@ class Schema:
     @cached_property
     def schema(self) -> xmlschema.XMLSchema:
         return xmlschema.XMLSchema(
-            Path(cin_asset_dir.__file__).parent / f"cin-{self.__year}.xsd"
+            Path(cin_asset_dir.__file__).parent / f"CIN_schema_{self.__year}.xsd"
         )
