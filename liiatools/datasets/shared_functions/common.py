@@ -162,8 +162,6 @@ def check_year(filename):
         if int(fy_match.group(2)[-2:]) == int(fy_match.group(2)[-4:-2]) + 1:
             year = "20" + fy_match.group(2)[-2:]
             return year
-        if year == "2015":
-            raise AttributeError
         else:
             raise AttributeError
 
