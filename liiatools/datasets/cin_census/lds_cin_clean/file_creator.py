@@ -12,18 +12,9 @@ def convert_to_dataframe(data):
     return data
 
 
-def get_year(input, data, la_log_dir):
-    filename = Path(input).stem
-    try:
-        year = common.check_year(filename)
-        data["YEAR"] = year
-        return data
-    except AttributeError:
-        common.save_year_error(input, la_log_dir)
-        raise Exception(
-            f"{filename} was not processed as the filename did not contain a year, "
-            f"this error has been sent to the LA to be fixed"
-        )
+def get_year(data, year):
+    data["YEAR"] = year
+    return data
 
 
 def convert_to_datetime(data):
@@ -84,11 +75,11 @@ def degrade_death_date(data):
         return data
 
 
-def add_fields(input, data, la_name, la_log_dir, la_code):
+def add_fields(input, input_year, data, la_name, la_code):
     """Adds YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
     Appends LA_code from config to LAChildID"""
     data = convert_to_dataframe(data)
-    data = get_year(input, data, la_log_dir)
+    data = get_year(data, input_year)
     data = convert_to_datetime(data)
     data = add_school_year(data)
     data = add_la_name(data, la_name)
