@@ -33,7 +33,8 @@ from liiatools.datasets.shared_functions.common import (
     check_file_type,
     supported_file_types,
     check_year,
-    save_year_error
+    save_year_error,
+    save_incorrect_year_error
 )
 
 log = logging.getLogger()
@@ -80,6 +81,12 @@ def cleanfile(input, la_code, la_log_dir, output):
         year = check_year(filename)
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
+        return
+    try:
+        filename = str(Path(input).resolve().stem)
+        year = check_year(filename)
+    except (AttributeError, ValueError):
+        save_incorrect_year_error(input, la_log_dir)
         return
     
     config = clean_config.Config(year)

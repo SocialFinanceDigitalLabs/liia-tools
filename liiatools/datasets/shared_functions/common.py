@@ -94,6 +94,25 @@ def save_year_error(input, la_log_dir):
         )
 
 
+def save_incorrect_year_error(input, la_log_dir):
+    """
+    Save errors to a text file in the LA log directory
+
+    :param input: The input file location, including file name and suffix, and be usable by a Path function
+    :param la_log_dir: Path to the local authority's log folder
+    :return: Text file containing the error information
+    """
+    filename = Path(input).resolve().stem
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    with open(
+        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+        "a",
+    ) as f:
+        f.write(
+            f"Could not process '{filename}'. This file is older than is permitted by the data retention policy of the LIIA Child Level Data project. Only files from the previous six years of returns will be accepted."
+        )
+
+
 def check_year(filename):
     """
     Check a filename to see if it contains a year, if it does, return that year
@@ -143,6 +162,8 @@ def check_year(filename):
         if int(fy_match.group(2)[-2:]) == int(fy_match.group(2)[-4:-2]) + 1:
             year = "20" + fy_match.group(2)[-2:]
             return year
+        if year == "2015":
+            raise AttributeError
         else:
             raise AttributeError
 
