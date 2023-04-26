@@ -83,9 +83,11 @@ def cleanfile(input, la_code, la_log_dir, output):
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
         return
+    """
     if year < f"{datetime.now().year - 6}" or  year > f"{datetime.now().year + 1}":
         save_incorrect_year_error(input, la_log_dir)
         return
+    """
     
     config = clean_config.Config(year)
     la_name = flip_dict(config["data_codes"])[la_code]
