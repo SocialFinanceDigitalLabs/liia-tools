@@ -35,7 +35,8 @@ from liiatools.datasets.shared_functions.common import (
     supported_file_types,
     check_year,
     save_year_error,
-    save_incorrect_year_error
+    save_incorrect_year_error,
+    check_year_within_range
 )
 
 log = logging.getLogger()
@@ -83,12 +84,11 @@ def cleanfile(input, la_code, la_log_dir, output):
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
         return
-    """
-    if year < f"{datetime.now().year - 6}" or  year > f"{datetime.now().year + 1}":
+    
+    if check_year_within_range(year, 6) is False:
         save_incorrect_year_error(input, la_log_dir)
         return
-    """
-    
+
     config = clean_config.Config(year)
     la_name = flip_dict(config["data_codes"])[la_code]
     if (

@@ -93,7 +93,14 @@ def save_year_error(input, la_log_dir):
         f.write(
             f"Could not process '{filename}' because no year was found in the name of the file"
         )
-
+        
+        
+def check_year_within_range(year, numofyears):
+    """
+    dummy docstring
+    """
+    return year >= f"{datetime.now().year - numofyears}" and year <= f"{datetime.now().year + 1}"
+    
 
 def save_incorrect_year_error(input, la_log_dir):
     """
@@ -103,26 +110,15 @@ def save_incorrect_year_error(input, la_log_dir):
     :param la_log_dir: Path to the local authority's log folder
     :return: Text file containing the error information
     """
-    if check_year(filename) < f"{datetime.now().year - 6}":
-        filename = Path(input).resolve().stem
-        start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-        with open(
-            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-            "a",
-        ) as f:
-            f.write(
-            f"Could not process '{filename}'. This file is older than is permitted by the data retention policy of the LIIA Child Level Data project. Only files from the previous six years of returns will be accepted."
-            )
-    if check_year(filename) < f"{datetime.now().year + 1}":
-        filename = Path(input).resolve().stem
-        start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
-        with open(
-            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-            "a",
-        ) as f:
-            f.write(
-            f"Could not process '{filename}'. There is currently no SSDA903 schema for files for this year"
-            )
+    filename = Path(input).resolve().stem
+    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    with open(
+        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+        "a",
+    ) as f:
+        f.write(
+            f"Could not process '{filename}'. This file is not within the year ranges of data retention policy."
+        )
 
 
 def check_year(filename):
