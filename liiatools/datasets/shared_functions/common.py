@@ -109,7 +109,7 @@ def save_incorrect_year_error(input, la_log_dir):
         "a",
     ) as f:
         f.write(
-            f"Could not process '{filename}'. This file is older than is permitted by the data retention policy of the LIIA Child Level Data project. Only files from the previous six years of returns will be accepted."
+            f"Could not process '{filename}'. This file is outside of our data collection year range. Only files from the previous six years of returns will be accepted."
         )
 
 

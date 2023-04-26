@@ -2,6 +2,7 @@ from pathlib import Path
 import yaml
 import logging
 import click_log
+from datetime import datetime
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
@@ -82,10 +83,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
         return
-    try:
-        filename = str(Path(input).resolve().stem)
-        year = check_year(filename)
-    except (AttributeError, ValueError):
+    if year < f"{datetime.now().year - 6}" or  year > f"{datetime.now().year + 1}":
         save_incorrect_year_error(input, la_log_dir)
         return
     
