@@ -87,7 +87,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     
     years_to_go_back = 6
     year_start_month = 6
-    if check_year_within_range(year, years_to_go_back, year_start_month) is False:
+    if check_year_within_range(year, years_to_go_back, year_start_month, datetime.now()) is False:
         save_incorrect_year_error(input, la_log_dir)
         return
 

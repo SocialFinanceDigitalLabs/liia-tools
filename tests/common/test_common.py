@@ -2,6 +2,7 @@ from liiatools.datasets.shared_functions.common import (
     check_postcode,
     flip_dict,
     check_year,
+    check_year_within_range
 )
 from liiatools.datasets.shared_functions.converters import (
     to_short_postcode,
@@ -61,6 +62,14 @@ def test_check_year():
     assert check_year("file_version_12_18/19") == "2019"
     assert check_year("file_version_1_18/19_final") == "2019"
     assert check_year("file_version_1_1819") == "2019"
+
+
+def test_check_year_within_range():
+    assert check_year_within_range(2016, 6, 6, datetime.datetime(2023,5,31)) is False
+    assert check_year_within_range(2023, 6, 6, datetime.datetime(2023,5,31)) is True
+    assert check_year_within_range(2024, 6, 6, datetime.datetime(2023,5,31)) is False
+    assert check_year_within_range(2024, 6, 6, datetime.datetime(2023,6,1)) is True
+    assert check_year_within_range(2013, 10, 2, datetime.datetime(2023,1,31)) is True
 
 
 class TestCheckYear(unittest.TestCase):

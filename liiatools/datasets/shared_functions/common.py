@@ -95,20 +95,22 @@ def save_year_error(input, la_log_dir):
         )
         
         
-def check_year_within_range(year, num_of_years, new_year_start_month):
+def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date):
     """
     Check that year is within permitted range of data retention policy
     The new year begins on 1 June, hence we must include check for current month
+    The check is made with reference to the as_at_date which will normally be the current date
 
     :param year: The year to check
     :param num_of_years: The number of years to go back
     :param new_year_start_month: The month which signifies start of a new year for data retention policy
+    :param as_at_date: The reference date against which we are checking the valid range
     :return: True if year is within range, false otherwise
     """
 
     year_to_check = int(year)
-    current_year = datetime.now().year
-    current_month = datetime.now().month
+    current_year = as_at_date.year
+    current_month = as_at_date.month
     if current_month < new_year_start_month:
         earliest_allowed_year = current_year - num_of_years
         latest_allowed_year = current_year 
