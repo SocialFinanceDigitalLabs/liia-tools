@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "liiatools"
-version = "0.1.5.0"
+version = "0.1.5.1"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
     "Michael Hanks <michael.hanks@socialfinance.org.uk>",
