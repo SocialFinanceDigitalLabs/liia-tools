@@ -3,6 +3,7 @@ import click_log
 import click as click
 from pathlib import Path
 import yaml
+from datetime import datetime
 
 
 # Dependencies for cleanfile()
@@ -25,7 +26,9 @@ from liiatools.datasets.shared_functions.common import (
     check_file_type,
     supported_file_types,
     check_year,
-    save_year_error
+    check_year_within_range,
+    save_year_error,
+    save_incorrect_year_error
 )
 
 # Dependencies for la_agg()
@@ -109,6 +112,14 @@ def cleanfile(input, la_code, la_log_dir, output):
         input_year = check_year(filename)
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
+        return
+
+    # Check year is within acceptable range for data retention policy
+    years_to_go_back = 6
+    year_start_month = 6
+    reference_date = datetime.now()
+    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+        save_incorrect_year_error(input, la_log_dir)
         return
 
     # Configure stream

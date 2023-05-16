@@ -6,8 +6,7 @@ import tempfile as tmp
 
 
 def test_get_year():
-    year = r"2022"
-    la_log_dir = tmp.gettempdir()
+    year = "2022"
 
     data = {
         "CHILD ID": [123, 456],
