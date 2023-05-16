@@ -2,6 +2,7 @@ from pathlib import Path
 import yaml
 import logging
 import click_log
+from datetime import datetime
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
@@ -32,6 +33,10 @@ from liiatools.datasets.shared_functions.common import (
     flip_dict,
     check_file_type,
     supported_file_types,
+    check_year,
+    save_year_error,
+    save_incorrect_year_error,
+    check_year_within_range
 )
 
 log = logging.getLogger()
@@ -73,7 +78,21 @@ def cleanfile(input, la_code, la_log_dir, output):
     prep.drop_empty_rows(input, input)
 
     # Configuration
-    config = clean_config.Config()
+    try:
+        filename = str(Path(input).resolve().stem)
+        year = check_year(filename)
+    except (AttributeError, ValueError):
+        save_year_error(input, la_log_dir)
+        return
+    
+    years_to_go_back = 6
+    year_start_month = 6
+    reference_date = datetime.now()
+    if check_year_within_range(year, years_to_go_back, year_start_month, reference_date) is False:
+        save_incorrect_year_error(input, la_log_dir)
+        return
+
+    config = clean_config.Config(year)
     la_name = flip_dict(config["data_codes"])[la_code]
     if (
         check_file_type(
@@ -88,7 +107,7 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
-    stream = populate.add_year_column(stream, input=input, la_log_dir=la_log_dir)
+    stream = populate.add_year_column(stream, year)
 
     # Configure stream
     stream = clean_config.configure_stream(stream, config)
