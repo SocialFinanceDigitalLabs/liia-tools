@@ -3,6 +3,7 @@ import click_log
 import click as click
 from pathlib import Path
 import yaml
+from datetime import datetime
 
 
 # Dependencies for cleanfile()
@@ -24,6 +25,10 @@ from liiatools.datasets.shared_functions.common import (
     flip_dict,
     check_file_type,
     supported_file_types,
+    check_year,
+    check_year_within_range,
+    save_year_error,
+    save_incorrect_year_error
 )
 
 # Dependencies for la_agg()
@@ -101,12 +106,28 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = dom_parse(input)
     stream = list(stream)
 
+    # Get year from input file
+    try:
+        filename = str(Path(input).resolve().stem)
+        input_year = check_year(filename)
+    except (AttributeError, ValueError):
+        save_year_error(input, la_log_dir)
+        return
+
+    # Check year is within acceptable range for data retention policy
+    years_to_go_back = 6
+    year_start_month = 6
+    reference_date = datetime.now()
+    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+        save_incorrect_year_error(input, la_log_dir)
+        return
+
     # Configure stream
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
-    stream = filters.add_schema(stream, schema=Schema().schema)
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     stream = logger.inherit_LAchildID(stream)
 
     # Validate stream
@@ -168,7 +189,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Output result
     stream = cin_record.message_collector(stream)
     data = cin_record.export_table(stream)
-    data = file_creator.add_fields(input, data, la_name, la_log_dir, la_code)
+    data = file_creator.add_fields(input_year, data, la_name, la_code)
     file_creator.export_file(input, output, data)
     logger.save_errors_la(
         input,

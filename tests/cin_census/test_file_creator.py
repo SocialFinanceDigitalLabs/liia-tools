@@ -6,8 +6,7 @@ import tempfile as tmp
 
 
 def test_get_year():
-    input = r"test\path\cin-2022.xml"
-    la_log_dir = tmp.gettempdir()
+    year = "2022"
 
     data = {
         "CHILD ID": [123, 456],
@@ -15,5 +14,5 @@ def test_get_year():
     }
     data = pd.DataFrame(data=data)
 
-    stream = file_creator.get_year(input, data, la_log_dir=la_log_dir)
+    stream = file_creator.get_year(data, year)
     assert stream["YEAR"].tolist() == ["2022", "2022"]
