@@ -189,7 +189,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Output result
     stream = cin_record.message_collector(stream)
     data = cin_record.export_table(stream)
-    data = file_creator.add_fields(input, input_year, data, la_name, la_code)
+    data = file_creator.add_fields(input_year, data, la_name, la_code)
     file_creator.export_file(input, output, data)
     logger.save_errors_la(
         input,

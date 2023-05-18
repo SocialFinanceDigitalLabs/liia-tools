@@ -75,9 +75,17 @@ def degrade_death_date(data):
         return data
 
 
-def add_fields(input, input_year, data, la_name, la_code):
-    """Adds YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
-    Appends LA_code from config to LAChildID"""
+def add_fields(input_year, data, la_name, la_code):
+    """
+    Add YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
+    Append LA_code from config to LAChildID
+
+    :param input_year: A string of the year of return for the current file
+    :param data: The dataframe to be cleaned
+    :param la_name: LA name
+    :param la_code: LA code
+    :return: Cleaned and degraded dataframe
+    """
     data = convert_to_dataframe(data)
     data = get_year(data, input_year)
     data = convert_to_datetime(data)
