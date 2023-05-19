@@ -7,10 +7,10 @@ from typing import List, Dict, Final
 import lxml.etree as etree
 from pandas import DataFrame
 
-import SWFtools.util.AppLogs as AppLog
-import SWFtools.dataprocessing.validation.validator as validator
-import SWFtools.dataprocessing.converter as converter
-from SWFtools.util.work_path import la_directories, flatfile_folder
+import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLog
+import liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.validation.validator as validator
+import liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.converter as converter
+from liiatools.datasets.social_work_workforce.SWFtools.util.work_path import la_directories, flatfile_folder
 
 COLUMNS: Final[List[str]] = ["YearCensus", "LEA", "AgencyWorker", "SWENo", "FTE", "DoB_year", "Age", "GenderCurrent",
                              "Ethnicity", "QualInst", "QualLevel", "StepUpGrad", "OrgRole", "RoleStartDate", "StartOrigin",

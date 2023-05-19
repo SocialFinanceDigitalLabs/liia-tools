@@ -1,8 +1,8 @@
+import os
 import pandas as pd
 import numpy as np
-import os
 from pathlib import Path
-import work_path
+import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
 
 
 def seniority():

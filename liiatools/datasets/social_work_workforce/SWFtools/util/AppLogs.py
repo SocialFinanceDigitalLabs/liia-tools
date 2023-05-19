@@ -7,7 +7,7 @@ import datetime
 from pathlib import Path
 from typing import List, Final, Dict
 
-import SWFtools.util.work_path as work_path
+import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
 
 log_paths: Dict[str, str] = {}
 

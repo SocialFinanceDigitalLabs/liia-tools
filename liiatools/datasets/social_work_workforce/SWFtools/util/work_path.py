@@ -1,6 +1,6 @@
 import sys
 
-import SWFtools.util.AppLogs as AppLogs
+import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
 # Setting the paths to work and executing and using the scripts
 
 import os

@@ -6,9 +6,9 @@ import lxml.etree as etree
 
 import xmlschema
 from xmlschema import XMLSchemaValidationError
-from SWFtools.util.work_path import XML_SCHEMA
+from liiatools.datasets.social_work_workforce.SWFtools.util.work_path import XML_SCHEMA
 
-from SWFtools.dataprocessing.validation.validation_error import ValidationError, ERROR_CAUSE
+from liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.validation.validation_error import ValidationError, ERROR_CAUSE
 
 CIN_XML_SCHEMA: Final = xmlschema.XMLSchema11(XML_SCHEMA)
 WORKER_SCHEMA: Final = CIN_XML_SCHEMA.find('//CSWWWorker')
