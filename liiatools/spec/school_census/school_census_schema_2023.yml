@@ -1,0 +1,2663 @@
+Spring:
+
+    addresses:
+        addressestableid:
+            &alphanumeric-not-blank
+            string: "alphanumeric"
+            canbeblank: no
+        NativeId:
+            *alphanumeric-not-blank
+        addressesorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        uniquepropertyreferencenumber:
+            &int-blank
+            numeric: "integer"
+            canbeblank: yes
+        postcode:
+            &alphanumeric-blank
+            string: "alphanumeric"
+            canbeblank: yes
+        saon:
+            *alphanumeric-blank
+        paon:
+            *alphanumeric-blank
+        street:
+            *alphanumeric-blank
+        locality:
+            *alphanumeric-blank
+        town:
+            *alphanumeric-blank
+        administrativearea:
+            *alphanumeric-blank
+        posttown:
+            *alphanumeric-blank
+        addressline1:
+            *alphanumeric-blank
+        addressline2:
+            *alphanumeric-blank
+        addressline3:
+            *alphanumeric-blank
+        addressline4:
+            *alphanumeric-blank
+        addressline5:
+            *alphanumeric-blank
+            
+    approvisiondetailoffroll:
+        approvisiondetailoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        approvisiondetailoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        prevurn:
+            *alphanumeric-blank
+        apreason:
+            &ap-reason
+            category:
+            - code: "ASP"
+            - code: "EHC"
+            - code: "MHN"
+            - code: "NEW"
+            - code: "OTH"
+            - code: "PEX"
+            - code: "PHN"
+            - code: "RHE"
+            canbeblank: yes
+        senprovisionentry:
+            &sen-provision
+            category:
+            - code: "N"
+            - code: "E"
+            - code: "K"
+            - code: "S"
+            - code: "A"
+            - code: "P"
+            canbeblank: yes
+            
+    approvisiondetailonroll:
+        approvisiondetailonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        approvisiondetailonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        prevurn:
+            *alphanumeric-blank
+        apreason:
+            *ap-reason
+        senprovisionentry:
+            *sen-provision
+            
+    childcare:
+        childcaretableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        childcareorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schooltableid:
+            *alphanumeric-not-blank
+        openingtime:
+            &time
+            time: "time"
+            canbeblank: yes
+        closingtime:
+            *time
+        noofchildcareplaces:
+            *int-blank
+        childcarewksopen:
+            *int-blank
+        onsite:
+            category:
+            - code: "Y"
+              name: "Yes"
+            - code: "N"
+              name: "No"
+            canbeblank: yes
+        childcaresignposting:
+            category:
+            - code: "YF"
+            - code: "YL"
+            - code: "N"
+            - code: "U"
+            canbeblank: yes
+        typeofchildcare:
+            category:
+            - code: "B"
+            - code: "A"
+            - code: "H"
+            - code: "U"
+            canbeblank: yes
+        childcareprovider:
+            category:
+            - code: "SCH"
+            - code: "SIP"
+            - code: "OTH"
+            canbeblank: yes
+        otherschools:
+            category:
+            - code: "Y"
+              name: "Yes"
+            - code: "N"
+              name: "No"
+            - code: "U"
+              name: "Unknown"
+            canbeblank: yes
+            
+    classes:
+        classestableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        classesorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schooltableid:
+            *alphanumeric-not-blank
+        classname:
+            *alphanumeric-blank
+        teachers:
+            *int-blank
+        nonteachers:
+            *int-blank
+        homepupils:
+            *int-blank
+        guestpupils:
+            *int-blank
+        ppateachers:
+            *int-blank
+        exceptiona:
+            *int-blank
+        exceptionb:
+            *int-blank
+        exceptionc:
+            *int-blank
+        exceptiond:
+            *int-blank
+        exceptione:
+            *int-blank
+        exceptionf:
+            *int-blank
+        exceptiong:
+            *int-blank
+        exceptionh:
+            *int-blank
+        yeargroup:
+            *int-blank
+        category:
+            *alphanumeric-blank # couldn't find
+        classactivity:
+            category:
+            - code: "AR"
+            - code: "EN"
+            - code: "FL"
+            - code: "GP"
+            - code: "GS"
+            - code: "HU"
+            - code: "MA"
+            - code: "MD"
+            - code: "OT"
+            - code: "PE"
+            - code: "PL"
+            - code: "PS"
+            - code: "RE"
+            - code: "RS"
+            - code: "SC"
+            - code: "TE"
+            - code: "TV"
+            canbeblank: yes
+        keystage:
+            category:
+            - code: "F"
+            - code: "1"
+            - code: "2"
+            - code: "3"
+            - code: "M"
+            canbeblank: yes
+            
+    fsmperiod:
+        fsmperiodtableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        fsmperiodorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        fsmstartdate:
+            &date
+            date: "%Y-%m-%d"
+            canbeblank: yes
+        fsmenddate:
+            *date
+        ukcountry:
+            &uk-country
+            category:
+            - code: "ENG"
+            - code: "NIR"
+            - code: "SCT"
+            - code: "WLS"
+            canbeblank: yes
+            
+    fundingbasisitems:
+        fundingbasisitemstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        fundingbasisitemsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        fundingbasis:
+            category:
+            - code: "ECO"
+            - code: "HSD"
+            - code: "LAA"
+            canbeblank: yes
+            
+    learnerfamoffroll:
+        learnerfamoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learnerfamoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        learnerfamhours:
+            *int-blank
+        learnerfamtype:
+            &learner-fam-type
+            category:
+            - code: "NLM"
+            canbeblank: yes
+        learnerfamcode:
+            &learner-fam-code
+            category:
+            - code: "01"
+            - code: "21"
+            - code: "22"
+            canbeblank: yes
+            
+    learnerfamonroll:
+        learnerfamonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learnerfamonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        learnerfamhours:
+            *int-blank
+        learnerfamtype:
+            *learner-fam-type
+        learnerfamcode:
+            *learner-fam-code
+            
+    learnersupportoffroll:
+        learnersupportoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learnersupportoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        supportcode:
+            &support-code
+            category:
+            - code: "24"
+            - code: "32"
+            - code: "35"
+            - code: "36"
+            - code: "41"
+            - code: "53"
+            - code: "54"
+            - code: "55"
+            - code: "56"
+            canbeblank: yes
+
+    learnersupportonroll:
+        learnersupportonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learnersupportonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        supportcode:
+            *support-code
+            
+    provisions:
+        provisionstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        provisionsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schooltableid:
+            *alphanumeric-not-blank
+        specialschooltype:
+            category:
+            - code: "SPLD"
+            - code: "MLD"
+            - code: "SLD"
+            - code: "PMLD"
+            - code: "SEMH"
+            - code: "SLCN"
+            - code: "HI"
+            - code: "VI"
+            - code: "MSI"
+            - code: "PD"
+            - code: "ASD"
+            - code: "OTH"
+            canbeblank: yes
+            
+    pupilnolongeronroll:
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        pupilnolongeronrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        upn:
+            *alphanumeric-blank
+        formerupn:
+            *alphanumeric-blank
+        surname:
+            *alphanumeric-blank
+        forename:
+            *alphanumeric-blank
+        middlenames:
+            *alphanumeric-blank
+        formersurname:
+            *alphanumeric-blank
+        dob:
+            *date
+        entrydate:
+            *date
+        leavingdate:
+            *date
+        parttime:
+            &true-false
+            category:
+            - code: "0"
+              name: "False"
+            - code: "1"
+              name: "True"
+            canbeblank: yes
+        termlysessionspossible:
+            *int-blank
+        moveonrollflag:
+            *alphanumeric-blank # couldn't find
+        termlysessionseducational:
+            *int-blank
+        termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
+            *int-blank
+        termlysessionsauthorised:
+            *int-blank
+        termlysessionsunauthorised:
+            *int-blank
+        uniquelearnernumber:
+            *int-blank
+        gender:
+            &gender
+            category:
+            - code: "M"
+              name: "Male"
+            - code: "F"
+              name: "Female"
+            canbeblank: yes
+        ethnicity:
+            &ethnicity
+            category:
+            - code: "WBRI"
+            - code: "WCOR"
+            - code: "WENG"
+            - code: "WNIR"
+            - code: "WSCO"
+            - code: "WWEL"
+            - code: "WOWB"
+            - code: "WIRI"
+            - code: "WIRT"
+            - code: "WOTH"
+            - code: "WALB"
+            - code: "WBOS"
+            - code: "WCRO"
+            - code: "WGRE"
+            - code: "WGRK"
+            - code: "WGRC"
+            - code: "WITA"
+            - code: "WKOS"
+            - code: "WPOR"
+            - code: "WSER"
+            - code: "WTUR"
+            - code: "WTUK"
+            - code: "WTUC"
+            - code: "WEUR"
+            - code: "WEEU"
+            - code: "WWEU"
+            - code: "WOTW"
+            - code: "WROM"
+            - code: "WROG"
+            - code: "WROR"
+            - code: "WROO"
+            - code: "MWBC"
+            - code: "MWBA"
+            - code: "MWAS"
+            - code: "MWAP"
+            - code: "MWAI"
+            - code: "MWAO"
+            - code: "MOTH"
+            - code: "MAOE"
+            - code: "MABL"
+            - code: "MACH"
+            - code: "MBOE"
+            - code: "MBCH"
+            - code: "MCOE"
+            - code: "MWOE"
+            - code: "MWCH"
+            - code: "MOTM"
+            - code: "AIND"
+            - code: "APKN"
+            - code: "AMPK"
+            - code: "AKPA"
+            - code: "AOPK"
+            - code: "ABAN"
+            - code: "AOTH"
+            - code: "AAFR"
+            - code: "AKAO"
+            - code: "ANEP"
+            - code: "ASNL"
+            - code: "ASLT"
+            - code: "ASRO"
+            - code: "AOTA"
+            - code: "BCRB"
+            - code: "BAFR"
+            - code: "BANN"
+            - code: "BCON"
+            - code: "BGHA"
+            - code: "BNGN"
+            - code: "BSLN"
+            - code: "BSOM"
+            - code: "BSUD"
+            - code: "BAOF"
+            - code: "BOTH"
+            - code: "BEUR"
+            - code: "BNAM"
+            - code: "BOTB"
+            - code: "CHNE"
+            - code: "CHKC"
+            - code: "CMAL"
+            - code: "CSNG"
+            - code: "CTWN"
+            - code: "COCH"
+            - code: "OOTH"
+            - code: "OAFG"
+            - code: "OARA"
+            - code: "OEGY"
+            - code: "OFIL"
+            - code: "OIRN"
+            - code: "OIRQ"
+            - code: "OJPN"
+            - code: "OKOR"
+            - code: "OKRD"
+            - code: "OLAM"
+            - code: "OLEB"
+            - code: "OLIB"
+            - code: "OMAL"
+            - code: "OMRC"
+            - code: "OPOL"
+            - code: "OTHA"
+            - code: "OVIE"
+            - code: "OYEM"
+            - code: "OOEG"
+            canbeblank: yes
+        language:
+            &language
+            category:
+            - code: "ACL"
+            - code: "ADA"
+            - code: "AFA"
+            - code: "AFK"
+            - code: "AKA"
+            - code: "AKA"
+            - code: "AKA"
+            - code: "ALB"
+            - code: "ALU"
+            - code: "AMR"
+            - code: "ARA"
+            - code: "ARA"
+            - code: "ARA"
+            - code: "ARA"
+            - code: "ARA"
+            - code: "ARA"
+            - code: "ARA"
+            - code: "ARM"
+            - code: "ASM"
+            - code: "ASR"
+            - code: "AYB"
+            - code: "AYM"
+            - code: "AZE"
+            - code: "BAI"
+            - code: "BAL"
+            - code: "BEJ"
+            - code: "BEL"
+            - code: "BEM"
+            - code: "BHO"
+            - code: "BIK"
+            - code: "BLT"
+            - code: "BMA"
+            - code: "BNG"
+            - code: "BNG"
+            - code: "BNG"
+            - code: "BNG"
+            - code: "BSL"
+            - code: "BSQ"
+            - code: "BUL"
+            - code: "CAM"
+            - code: "CAT"
+            - code: "CCE"
+            - code: "CCF"
+            - code: "CGA"
+            - code: "CGR"
+            - code: "CHE"
+            - code: "CHI"
+            - code: "CHI"
+            - code: "CHI"
+            - code: "CHI"
+            - code: "CHI"
+            - code: "CHI"
+            - code: "CKW"
+            - code: "CRN"
+            - code: "CTR"
+            - code: "CWA"
+            - code: "CYM"
+            - code: "CZE"
+            - code: "DAN"
+            - code: "DGA"
+            - code: "DGB"
+            - code: "DIN"
+            - code: "DUT"
+            - code: "DZO"
+            - code: "EBI"
+            - code: "EDO"
+            - code: "EFI"
+            - code: "ENB"
+            - code: "ENG"
+            - code: "ESA"
+            - code: "EST"
+            - code: "EWE"
+            - code: "EWO"
+            - code: "FAN"
+            - code: "FIJ"
+            - code: "FIN"
+            - code: "FON"
+            - code: "FRN"
+            - code: "FUL"
+            - code: "GAA"
+            - code: "GAE"
+            - code: "GAL"
+            - code: "GEO"
+            - code: "GER"
+            - code: "GGO"
+            - code: "GKY"
+            - code: "GLG"
+            - code: "GRE"
+            - code: "GRE"
+            - code: "GRE"
+            - code: "GRN"
+            - code: "GUJ"
+            - code: "GUN"
+            - code: "GUR"
+            - code: "HAU"
+            - code: "HDK"
+            - code: "HEB"
+            - code: "HER"
+            - code: "HGR"
+            - code: "HIN"
+            - code: "IBA"
+            - code: "IDM"
+            - code: "IGA"
+            - code: "IGB"
+            - code: "IJO"
+            - code: "ILO"
+            - code: "ISK"
+            - code: "ISL"
+            - code: "ITA"
+            - code: "JAV"
+            - code: "JIN"
+            - code: "JPN"
+            - code: "KAM"
+            - code: "KAN"
+            - code: "KAR"
+            - code: "KAS"
+            - code: "KAU"
+            - code: "KAZ"
+            - code: "KCH"
+            - code: "KGZ"
+            - code: "KHA"
+            - code: "KHY"
+            - code: "KIN"
+            - code: "KIR"
+            - code: "KIS"
+            - code: "KLN"
+            - code: "KMB"
+            - code: "KME"
+            - code: "KNK"
+            - code: "KNY"
+            - code: "KON"
+            - code: "KOR"
+            - code: "KPE"
+            - code: "KRI"
+            - code: "KRU"
+            - code: "KSI"
+            - code: "KSU"
+            - code: "KUR"
+            - code: "KUR"
+            - code: "KUR"
+            - code: "KUR"
+            - code: "LAO"
+            - code: "LBA"
+            - code: "LBA"
+            - code: "LBA"
+            - code: "LGA"
+            - code: "LGB"
+            - code: "LGS"
+            - code: "LIN"
+            - code: "LIT"
+            - code: "LNG"
+            - code: "LOZ"
+            - code: "LSO"
+            - code: "LTV"
+            - code: "LTZ"
+            - code: "LUE"
+            - code: "LUN"
+            - code: "LUO"
+            - code: "LUY"
+            - code: "MAG"
+            - code: "MAI"
+            - code: "MAK"
+            - code: "MAN"
+            - code: "MAN"
+            - code: "MAN"
+            - code: "MAN"
+            - code: "MAO"
+            - code: "MAR"
+            - code: "MAS"
+            - code: "MDV"
+            - code: "MEN"
+            - code: "MKD"
+            - code: "MLG"
+            - code: "MLM"
+            - code: "MLT"
+            - code: "MLY"
+            - code: "MLY"
+            - code: "MLY"
+            - code: "MNA"
+            - code: "MNG"
+            - code: "MNX"
+            - code: "MOR"
+            - code: "MSC"
+            - code: "MUN"
+            - code: "MYA"
+            - code: "NAH"
+            - code: "NAM"
+            - code: "NBN"
+            - code: "NDB"
+            - code: "NDB"
+            - code: "NDB"
+            - code: "NEP"
+            - code: "NOR"
+            - code: "NOT"
+            - code: "NUE"
+            - code: "NUP"
+            - code: "NWA"
+            - code: "NZM"
+            - code: "OAM"
+            - code: "OAM"
+            - code: "OAM"
+            - code: "OGN"
+            - code: "ORI"
+            - code: "ORM"
+            - code: "OTB"
+            - code: "OTH"
+            - code: "OTL"
+            - code: "PAG"
+            - code: "PAM"
+            - code: "PAT"
+            - code: "PHA"
+            - code: "PHR"
+            - code: "PNJ"
+            - code: "PNJ"
+            - code: "PNJ"
+            - code: "PNJ"
+            - code: "PNJ"
+            - code: "POL"
+            - code: "POR"
+            - code: "POR"
+            - code: "POR"
+            - code: "PRS"
+            - code: "PRS"
+            - code: "PRS"
+            - code: "PRS"
+            - code: "QUE"
+            - code: "RAJ"
+            - code: "REF"
+            - code: "RME"
+            - code: "RMI"
+            - code: "RMN"
+            - code: "RMN"
+            - code: "RMN"
+            - code: "RMS"
+            - code: "RNY"
+            - code: "RNY"
+            - code: "RNY"
+            - code: "RUS"
+            - code: "SAM"
+            - code: "SCB"
+            - code: "SCB"
+            - code: "SCB"
+            - code: "SCB"
+            - code: "SCO"
+            - code: "SHL"
+            - code: "SHO"
+            - code: "SID"
+            - code: "SIO"
+            - code: "SLO"
+            - code: "SLV"
+            - code: "SND"
+            - code: "SNG"
+            - code: "SNH"
+            - code: "SOM"
+            - code: "SPA"
+            - code: "SRD"
+            - code: "SRK"
+            - code: "SSO"
+            - code: "SSO"
+            - code: "SSO"
+            - code: "SSW"
+            - code: "STS"
+            - code: "SUN"
+            - code: "SWA"
+            - code: "SWA"
+            - code: "SWA"
+            - code: "SWA"
+            - code: "SWA"
+            - code: "SWA"
+            - code: "SWE"
+            - code: "TAM"
+            - code: "TEL"
+            - code: "TEM"
+            - code: "TES"
+            - code: "TGE"
+            - code: "TGL"
+            - code: "TGL"
+            - code: "TGL"
+            - code: "TGR"
+            - code: "THA"
+            - code: "TIB"
+            - code: "TIV"
+            - code: "TMZ"
+            - code: "TMZ"
+            - code: "TMZ"
+            - code: "TMZ"
+            - code: "TNG"
+            - code: "TON"
+            - code: "TPI"
+            - code: "TRI"
+            - code: "TSO"
+            - code: "TUK"
+            - code: "TUL"
+            - code: "TUM"
+            - code: "TUR"
+            - code: "UKR"
+            - code: "UMB"
+            - code: "URD"
+            - code: "URH"
+            - code: "UYG"
+            - code: "UZB"
+            - code: "VEN"
+            - code: "VIE"
+            - code: "VSY"
+            - code: "VSY"
+            - code: "VSY"
+            - code: "VSY"
+            - code: "VSY"
+            - code: "WAP"
+            - code: "WCP"
+            - code: "WOL"
+            - code: "WPE"
+            - code: "XHO"
+            - code: "YAO"
+            - code: "YDI"
+            - code: "YOR"
+            - code: "ZND"
+            - code: "ZUL"
+            - code: "ZZZ"
+            canbeblank: yes
+        boarder:
+            &boarder
+            category:
+            - code: "B"
+            - code: "6"
+            - code: "7"
+            - code: "N"
+            canbeblank: yes
+            
+    pupilonroll:
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        pupilonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        upn:
+            *alphanumeric-blank
+        formerupn:
+            *alphanumeric-blank
+        surname:
+            *alphanumeric-blank
+        forename:
+            *alphanumeric-blank
+        uniquelearnernumber:
+            *alphanumeric-blank
+        middlenames:
+            *alphanumeric-blank
+        preferredsurname:
+            *alphanumeric-blank
+        formersurname:
+            *alphanumeric-blank
+        dob:
+            *date
+        entrydate:
+            *date
+        schoollunchtaken:
+            *true-false
+        parttime:
+            *true-false
+        senunitindicator:
+            *true-false
+        resourcedprovisionindicator:
+            *true-false
+        missingaddress:
+            *alphanumeric-blank # couldn't find
+        hoursatsetting:
+            &float
+            numeric: "float"
+            canbeblank: yes
+        termlysessionspossible:
+            *int-blank
+        termlysessionsauthorised:
+            *int-blank
+        termlysessionsunauthorised:
+            *int-blank
+        fundedhours:
+            *float
+        termlysessionseducational:
+            *int-blank
+        termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
+            *int-blank
+        extendedhours:
+            *float
+        thirtyhourcode:
+            *int-blank
+        dafindicator:
+            *true-false
+        duplicatenotfunded:
+            *alphanumeric-blank # couldn't find
+        moveoffrollflag:
+            *alphanumeric-blank # couldn't find
+        topupfunding:
+            *true-false
+        unitcontacttime:
+            *int-blank
+        gender:
+            *gender
+        ethnicity:
+            *ethnicity
+        yssa:
+            &yssa
+            category:
+            - code: "Yes"
+              name: "Y"
+            - code: "No"
+              name: "N"
+            - code: "UNS"
+              name: "Unsought"
+            - code: "SNR"
+              name: "Sought, no reply"
+            canbeblank: yes
+        language:
+            *language
+        enrolstatus:
+            &enrol-status
+            category:
+            - code: "C"
+            - code: "M"
+            - code: "S"
+            - code: "F"
+            - code: "O"
+            canbeblank: yes
+        classtype:
+            &class-type
+            category:
+            - code: "N"
+            - code: "O"
+            canbeblank: yes
+        boarder:
+            *boarder
+        ncyearactual:
+            &year-group-category
+            category:
+            - code: "E1"
+            - code: "E2"
+            - code: "N1"
+            - code: "N2"
+            - code: "R"
+            - code: "1"
+            - code: "2"
+            - code: "3"
+            - code: "4"
+            - code: "5"
+            - code: "6"
+            - code: "7"
+            - code: "8"
+            - code: "9"
+            - code: "10"
+            - code: "11"
+            - code: "12"
+            - code: "13"
+            - code: "14"
+            - code: "M"
+            - code: "X"
+            canbeblank: yes
+        senprovision:
+            *sen-provision
+        servicechild:
+            &service-child
+            category:
+            - code: "Y"
+              name: "Yes"
+            - code: "N"
+              name: "No"
+            - code: "U"
+              name: "Unknown"
+            - code: "R"
+              name: "Refused"
+            canbeblank: yes
+        plaa:
+            &plaa
+            category:
+            - code: "N"
+            - code: "A"
+            - code: "G"
+            - code: "R"
+            - code: "C"
+            - code: "O"
+            canbeblank: yes
+        eyppr:
+            category:
+            - code: "Y"
+              name: "Yes"
+            - code: "N"
+              name: "No"
+            canbeblank: yes
+        eyppbf:
+            category:
+            - code: "RE"
+            - code: "RO"
+            - code: "RB"
+            - code: "RU"
+            canbeblank: yes
+            
+    school:
+        schooltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        schoolname:
+            *alphanumeric-blank
+        email:
+            *alphanumeric-blank
+        phoneno:
+            &phone-no
+            numeric: "phone_number"
+            canbeblank: yes
+        maxdaypupils:
+            *int-blank
+        maxboarders:
+            *int-blank
+        minmaleage:
+            numeric: "min_age"
+            canbeblank: yes
+        maxmaleage:
+            *int-blank
+        minfemaleage:
+            numeric: "min_age"
+            canbeblank: yes
+        maxfemaleage:
+            *int-blank
+        primarylodged:
+            *int-blank
+        primarywithdrawn:
+            *int-blank
+        primaryheard:
+            *int-blank
+        primaryupheld:
+            *int-blank
+        primaryrejected:
+            *int-blank
+        infantslodged:
+            *int-blank
+        infantswithdrawn:
+            *int-blank
+        infantsheard:
+            *int-blank
+        infantsupheld:
+            *int-blank
+        infantsrejected:
+            *int-blank
+        secondarylodged:
+            *int-blank
+        secondarywithdrawn:
+            *int-blank
+        secondaryheard:
+            *int-blank
+        secondaryupheld:
+            *int-blank
+        secondaryrejected:
+            *int-blank
+        parttimenotin:
+            *int-blank
+        privatestudy:
+            *int-blank
+        pupilsatotherschool:
+            *int-blank
+        workexperience:
+            *int-blank
+        fecollege:
+            *int-blank
+        freemealstaken:
+            *int-blank
+        childmothers:
+            *true-false
+        teenmotherplaces:
+            *int-blank
+        childcareplaces:
+            *true-false
+        phase:
+            &phase
+            category:
+            - code: "NS"
+            - code: "PS"
+            - code: "MP"
+            - code: "MS"
+            - code: "SS"
+            - code: "SP"
+            - code: "AT"
+            - code: "EY"
+            - code: "PR"
+            - code: "NO"
+            canbeblank: yes
+        type:
+            &type
+            category:
+            - code: "01"
+            - code: "02"
+            - code: "03"
+            - code: "04"
+            - code: "05"
+            - code: "06"
+            - code: "07"
+            - code: "08"
+            - code: "09"
+            - code: "10"
+            - code: "11"
+            - code: "12"
+            - code: "16"
+            - code: "17"
+            - code: "18"
+            - code: "21"
+            - code: "22"
+            - code: "25"
+            - code: "26"
+            - code: "27"
+            - code: "28"
+            - code: "29"
+            - code: "30"
+            - code: "31"
+            - code: "32"
+            - code: "33"
+            - code: "36"
+            - code: "37"
+            - code: "38"
+            - code: "39"
+            - code: "41"
+            - code: "42"
+            - code: "43"
+            - code: "44"
+            - code: "45"
+            - code: "46"
+            - code: "47"
+            - code: "48"
+            - code: "49"
+            - code: "50"
+            - code: "51"
+            - code: "52"
+            - code: "53"
+            - code: "54"
+            - code: "55"
+            canbeblank: yes
+        highestncyeargroup:
+            *year-group-category
+        lowestncyeargroup:
+            *year-group-category
+        intake:
+            &intake
+            category:
+            - code: "COMP"
+            - code: "SEL1"
+            - code: "SEL2"
+            - code: "SEL3"
+            - code: "SEL4"
+            - code: "SPEC"
+            - code: "HOSP"
+            canbeblank: yes
+        governance:
+            &governance
+            category:
+            - code: "CO"
+            - code: "VA"
+            - code: "VC"
+            - code: "FO"
+            - code: "IN"
+            - code: "NM"
+            - code: "CT"
+            - code: "CA"
+            canbeblank: yes
+        accommodation:
+            category:
+            - code: "D"
+            - code: "B"
+            - code: "H"
+            canbeblank: yes
+            
+    schoolarrangedapdetailoffroll:
+        schoolarrangedapdetailoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolarrangedapdetailoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        urn:
+            *int-blank
+        ukprn:
+            *int-blank
+        entrydate:
+            *date
+        leavingdate:
+            *date
+        apsessionsperweek:
+            *int-blank
+        apsettingtype:
+            &ap-setting
+            category:
+            - code: "NFE"
+            - code: "OOT"
+            - code: "OTH"
+            - code: "WBP"
+            canbeblank: yes
+        placementreason:
+            &placement-reason
+            category:
+            - code: "BHS"
+            - code: "SUS"
+            - code: "EXR"
+            - code: "MHN"
+            - code: "OTH"
+            - code: "PHN"
+            canbeblank: yes
+        senprovisionentry:
+            *sen-provision
+        senprovisionleaving:
+            *sen-provision
+        apattendancepattern:
+            &attendance-pattern
+            category:
+            - code: "FT"
+            - code: "PT"
+            canbeblank: yes
+            
+    schoolarrangedapdetailonroll:
+        schoolarrangedapdetailonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolarrangedapdetailonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        urn:
+            *int-blank
+        ukprn:
+            *int-blank
+        entrydate:
+            *date
+        leavingdate:
+            *date
+        apsessionsperweek:
+            *int-blank
+        apsettingtype:
+            *ap-setting
+        placementreason:
+            *placement-reason
+        senprovisionentry:
+            *sen-provision
+        senprovisionleaving:
+            *sen-provision
+        apattendancepattern:
+            *attendance-pattern
+            
+    schoolcensus:
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolcensusorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        term:
+            &term
+            category:
+            - code: "AUT"
+            - code: "SPR"
+            - code: "SUM"
+            - code: "601"
+            - code: "602"
+            - code: "603"
+            - code: "604"
+            - code: "605"
+            - code: "606"
+            canbeblank: yes
+        collection:
+            &collection
+            category:
+            - code: "SC"
+              name: "school census"
+            canbeblank: yes
+        name:
+            *collection
+        year:
+            *int-blank
+        referencedate:
+            *date
+        sourcelevel:
+            &source-level
+            category:
+            - code: "S"
+              name: "school"
+            - code: "L"
+              name: "local authority"
+            canbeblank: yes
+        estab:
+            *alphanumeric-not-blank
+        softwarecode:
+            *alphanumeric-not-blank
+        urn:
+            &int-not-blank
+            numeric: "integer"
+            canbeblank: no
+        release:
+            *alphanumeric-blank
+        serialno:
+            *int-blank
+        xversion:
+            *alphanumeric-blank
+        datetime:
+            *date
+        lea:
+            &lea-code
+            category:
+            - code: "001"
+            - code: "003"
+            - code: "010"
+            - code: "011"
+            - code: "012"
+            - code: "013"
+            - code: "014"
+            - code: "016"
+            - code: "020"
+            - code: "021"
+            - code: "022"
+            - code: "023"
+            - code: "024"
+            - code: "026"
+            - code: "030"
+            - code: "031"
+            - code: "032"
+            - code: "033"
+            - code: "034"
+            - code: "036"
+            - code: "040"
+            - code: "041"
+            - code: "042"
+            - code: "043"
+            - code: "044"
+            - code: "046"
+            - code: "050"
+            - code: "051"
+            - code: "052"
+            - code: "053"
+            - code: "054"
+            - code: "056"
+            - code: "167"
+            - code: "201"
+            - code: "202"
+            - code: "203"
+            - code: "204"
+            - code: "205"
+            - code: "206"
+            - code: "207"
+            - code: "208"
+            - code: "209"
+            - code: "210"
+            - code: "211"
+            - code: "212"
+            - code: "213"
+            - code: "301"
+            - code: "302"
+            - code: "303"
+            - code: "304"
+            - code: "305"
+            - code: "306"
+            - code: "307"
+            - code: "308"
+            - code: "309"
+            - code: "310"
+            - code: "311"
+            - code: "312"
+            - code: "313"
+            - code: "314"
+            - code: "315"
+            - code: "316"
+            - code: "317"
+            - code: "318"
+            - code: "319"
+            - code: "320"
+            - code: "330"
+            - code: "331"
+            - code: "332"
+            - code: "333"
+            - code: "334"
+            - code: "335"
+            - code: "336"
+            - code: "340"
+            - code: "341"
+            - code: "342"
+            - code: "343"
+            - code: "344"
+            - code: "350"
+            - code: "351"
+            - code: "352"
+            - code: "353"
+            - code: "354"
+            - code: "355"
+            - code: "356"
+            - code: "357"
+            - code: "358"
+            - code: "359"
+            - code: "370"
+            - code: "371"
+            - code: "372"
+            - code: "373"
+            - code: "380"
+            - code: "381"
+            - code: "382"
+            - code: "383"
+            - code: "384"
+            - code: "390"
+            - code: "391"
+            - code: "392"
+            - code: "393"
+            - code: "394"
+            - code: "420"
+            - code: "600"
+            - code: "601"
+            - code: "602"
+            - code: "603"
+            - code: "604"
+            - code: "605"
+            - code: "606"
+            - code: "607"
+            - code: "608"
+            - code: "609"
+            - code: "610"
+            - code: "611"
+            - code: "612"
+            - code: "613"
+            - code: "614"
+            - code: "615"
+            - code: "616"
+            - code: "617"
+            - code: "618"
+            - code: "619"
+            - code: "620"
+            - code: "621"
+            - code: "622"
+            - code: "623"
+            - code: "624"
+            - code: "625"
+            - code: "626"
+            - code: "627"
+            - code: "628"
+            - code: "629"
+            - code: "630"
+            - code: "631"
+            - code: "632"
+            - code: "633"
+            - code: "660"
+            - code: "661"
+            - code: "662"
+            - code: "663"
+            - code: "664"
+            - code: "665"
+            - code: "666"
+            - code: "667"
+            - code: "668"
+            - code: "669"
+            - code: "670"
+            - code: "671"
+            - code: "672"
+            - code: "673"
+            - code: "674"
+            - code: "675"
+            - code: "676"
+            - code: "677"
+            - code: "678"
+            - code: "679"
+            - code: "680"
+            - code: "681"
+            - code: "701"
+            - code: "702"
+            - code: "703"
+            - code: "704"
+            - code: "705"
+            - code: "706"
+            - code: "707"
+            - code: "708"
+            - code: "800"
+            - code: "801"
+            - code: "802"
+            - code: "803"
+            - code: "805"
+            - code: "806"
+            - code: "807"
+            - code: "808"
+            - code: "810"
+            - code: "811"
+            - code: "812"
+            - code: "813"
+            - code: "815"
+            - code: "816"
+            - code: "820"
+            - code: "821"
+            - code: "822"
+            - code: "823"
+            - code: "825"
+            - code: "826"
+            - code: "830"
+            - code: "831"
+            - code: "835"
+            - code: "836"
+            - code: "837"
+            - code: "838"
+            - code: "839"
+            - code: "840"
+            - code: "841"
+            - code: "845"
+            - code: "846"
+            - code: "850"
+            - code: "851"
+            - code: "852"
+            - code: "855"
+            - code: "856"
+            - code: "857"
+            - code: "860"
+            - code: "861"
+            - code: "865"
+            - code: "866"
+            - code: "867"
+            - code: "868"
+            - code: "869"
+            - code: "870"
+            - code: "871"
+            - code: "872"
+            - code: "873"
+            - code: "874"
+            - code: "875"
+            - code: "876"
+            - code: "877"
+            - code: "878"
+            - code: "879"
+            - code: "880"
+            - code: "881"
+            - code: "882"
+            - code: "883"
+            - code: "884"
+            - code: "885"
+            - code: "886"
+            - code: "887"
+            - code: "888"
+            - code: "889"
+            - code: "890"
+            - code: "891"
+            - code: "892"
+            - code: "893"
+            - code: "894"
+            - code: "895"
+            - code: "896"
+            - code: "901"
+            - code: "902"
+            - code: "903"
+            - code: "904"
+            - code: "905"
+            - code: "906"
+            - code: "907"
+            - code: "908"
+            - code: "909"
+            - code: "910"
+            - code: "911"
+            - code: "912"
+            - code: "913"
+            - code: "914"
+            - code: "915"
+            - code: "916"
+            - code: "917"
+            - code: "918"
+            - code: "919"
+            - code: "920"
+            - code: "921"
+            - code: "922"
+            - code: "923"
+            - code: "924"
+            - code: "925"
+            - code: "926"
+            - code: "927"
+            - code: "928"
+            - code: "929"
+            - code: "930"
+            - code: "931"
+            - code: "932"
+            - code: "933"
+            - code: "934"
+            - code: "935"
+            - code: "936"
+            - code: "937"
+            - code: "938"
+            - code: "939"
+            - code: "940"
+            - code: "941"
+            - code: "942"
+            - code: "943"
+            - code: "XXX"
+            - code: "MMM"
+            - code: "NAA"
+            canbeblank: yes
+            
+    senneeds:
+        senneedstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        senneedsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        sentyperank:
+            *int-blank
+        sentype:
+            *alphanumeric-blank
+            
+    termlyexclusionsoffroll:
+        termlyexclusionsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlyexclusionsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        startdate:
+            *date
+        sessions:
+            *int-blank
+        reason2:
+            &exclusion-reason
+            category:
+            - code: "PP"
+            - code: "PA"
+            - code: "VP"
+            - code: "VA"
+            - code: "OW"
+            - code: "BU"
+            - code: "RA"
+            - code: "LG"
+            - code: "DS"
+            - code: "SM"
+            - code: "DA"
+            - code: "DM"
+            - code: "TH"
+            - code: "DB"
+            - code: "MT"
+            - code: "PH"
+            canbeblank: yes
+        reason3:
+            *exclusion-reason
+        category:
+            &exclusion-category
+            category:
+            - code: "PERM"
+            - code: "LNCH"
+            - code: "SUSP"
+            canbeblank: yes
+        reason1:
+            *exclusion-reason
+        senprovision:
+            *sen-provision
+            
+    termlyexclusionsonroll:
+        termlyexclusionsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlyexclusionsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        startdate:
+            *date
+        sessions:
+            *int-blank
+        reason2:
+            *exclusion-reason
+        reason3:
+            *exclusion-reason
+        category:
+            *exclusion-category
+        reason1:
+            *exclusion-reason
+        senprovision:
+            *sen-provision
+            
+    termlysessiondetailsoffroll:
+        termlysessiondetailsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlysessiondetailsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        sessions:
+            *int-blank
+        attendancereason:
+            &attendance-reason
+            category:
+            - code: "/"
+            - code: "\\" # 2 backslashses as Python reads this as 1
+            - code: "B"
+            - code: "C"
+            - code: "D"
+            - code: "E"
+            - code: "G"
+            - code: "H"
+            - code: "I"
+            - code: "J"
+            - code: "L"
+            - code: "M"
+            - code: "N"
+            - code: "O"
+            - code: "P"
+            - code: "R"
+            - code: "S"
+            - code: "T"
+            - code: "U"
+            - code: "V"
+            - code: "W"
+            - code: "X"
+            - code: "Y"
+            - code: "Z"
+            - code: "#"
+            canbeblank: yes
+            
+    termlysessiondetailsonroll:
+        termlysessiondetailsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlysessiondetailsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        sessions:
+            *int-blank
+        attendancereason:
+            *attendance-reason
+            
+Autumn/Summer:
+
+    addressesoffroll:
+        addressesoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        addressesoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        uniquepropertyreferencenumber:
+            *int-blank
+        postcode:
+            *alphanumeric-blank
+            
+    addressesonroll:
+        addressesonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        addressesonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        uniquepropertyreferencenumber:
+            *int-blank
+        postcode:
+            *alphanumeric-blank
+        saon:
+            *alphanumeric-blank
+        paon:
+            *alphanumeric-blank
+        street:
+            *alphanumeric-blank
+        locality:
+            *alphanumeric-blank
+        town:
+            *alphanumeric-blank
+        administrativearea:
+            *alphanumeric-blank
+        posttown:
+            *alphanumeric-blank
+        addressline1:
+            *alphanumeric-blank
+        addressline2:
+            *alphanumeric-blank
+        addressline3:
+            *alphanumeric-blank
+        addressline4:
+            *alphanumeric-blank
+        addressline5:
+            *alphanumeric-blank
+            
+    approvisiondetailoffroll:
+        approvisiondetailoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        approvisiondetailoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        prevurn:
+            *alphanumeric-blank
+        apreason:
+            *ap-reason
+        senprovisionentry:
+            *sen-provision
+            
+    approvisiondetailonroll:
+        approvisiondetailonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        approvisiondetailonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        prevurn:
+            *alphanumeric-blank
+        apreason:
+            *ap-reason
+        senprovisionentry:
+            *sen-provision
+            
+    fsmperiodsonroll:
+        fsmperiodsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        fsmperiodsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        fsmstartdate:
+            *date
+        fsmenddate:
+            *date
+        ukcountry:
+            *uk-country
+            
+    learnerfamoffroll:
+        learnerfamoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learnerfamoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        learnerfamhours:
+            *int-blank
+        learnerfamtype:
+            *learner-fam-type
+        learnerfamcode:
+            *learner-fam-code
+            
+    learnerfamonroll:
+        learnerfamonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learnerfamonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        learnerfamhours:
+            *int-blank
+        learnerfamtype:
+            *learner-fam-type
+        learnerfamcode:
+            *learner-fam-code
+            
+    learningaimsoffroll:
+        learningaimsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learningaimsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        programmeaimsoffrolltableid:
+            *alphanumeric-not-blank
+        qn:
+            *alphanumeric-blank
+        traineeship:
+            *true-false
+        learningstartdate:
+            *date
+        learningplannedenddate:
+            *date
+        learningactualenddate:
+            *date
+        scc:
+            *alphanumeric-blank
+        coreaim:
+            *true-false
+        partnerukprn:
+            *int-blank
+        progtype:
+            &prog-type
+            category:
+            - code: "30"
+            - code: "31"
+            - code: "01"
+            canbeblank: yes
+        learningaimstatus:
+            &aim-status
+            category:
+            - code: "1"
+            - code: "2"
+            - code: "3"
+            - code: "4"
+            canbeblank: yes
+        learningaimwithdrawalreason:
+            &aim-withdrawal-reason
+            category:
+            - code: "1"
+            - code: "2"
+            - code: "3"
+            - code: "4"
+            - code: "44"
+            - code: "45"
+            - code: "97"
+            - code: "98"
+            canbeblank: yes
+            
+    learningaimsonroll:
+        learningaimsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        learningaimsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        programmeaimsonrolltableid:
+            *alphanumeric-not-blank
+        qn:
+            *alphanumeric-blank
+        coreaim:
+            *true-false
+        partnerukprn:
+            *int-blank
+        traineeship:
+            *true-false
+        learningstartdate:
+            *date
+        learningplannedenddate:
+            *date
+        learningactualenddate:
+            *date
+        scc:
+            *alphanumeric-blank
+        learningaimwithdrawalreason:
+            *aim-withdrawal-reason
+        progtype:
+            *prog-type
+        learningaimstatus:
+            *aim-status
+            
+    programmeaimsoffroll:
+        programmeaimsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        programmeaimsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        qn:
+            *alphanumeric-blank
+        programmestartdate:
+            *date
+        programmeplannedenddate:
+            *date
+        programmeactualenddate:
+            *date
+        traineeship:
+            *true-false
+        programmeaimstatus:
+            *aim-status
+        programmeaimwithdrawalreason:
+            *aim-withdrawal-reason
+        progtype:
+            *prog-type
+            
+    programmeaimsonroll:
+        programmeaimsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        programmeaimsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        qn:
+            *alphanumeric-blank
+        programmestartdate:
+            *date
+        programmeplannedenddate:
+            *date
+        programmeactualenddate:
+            *date
+        traineeship:
+            *true-false
+        programmeaimstatus:
+            *aim-status
+        programmeaimwithdrawalreason:
+            *aim-withdrawal-reason
+        progtype:
+            *prog-type
+            
+    pupilnolongeronroll:
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        pupilnolongeronrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        upn:
+            *alphanumeric-blank
+        formerupn:
+            *alphanumeric-blank
+        surname:
+            *alphanumeric-blank
+        forename:
+            *alphanumeric-blank
+        middlenames:
+            *alphanumeric-blank
+        uniquelearnernumber:
+            *alphanumeric-blank
+        formersurname:
+            *alphanumeric-blank
+        dob:
+            *date
+        entrydate:
+            *date
+        leavingdate:
+            *date
+        parttime:
+            *true-false
+        termlysessionspossible:
+            *int-blank
+        termlysessionsauthorised:
+            *int-blank
+        termlysessionsunauthorised:
+            *int-blank
+        moveonrollflag:
+            *alphanumeric-blank # couldn't find
+        missingaddress:
+            *alphanumeric-blank # couldn't find
+        summerhalfterm2sessionsauthorised:
+            *int-blank
+        summerhalfterm2sessionspossible:
+            *int-blank
+        summerhalfterm2sessionsunauthorised:
+            *int-blank
+        qualhrs:
+            *int-blank
+        qualhrspreviousyear:
+            *int-blank
+        nonqualhrspreviousyear:
+            *int-blank
+        tlevelqualhrs:
+            *int-blank
+        tlevelnonqualhrs:
+            *int-blank
+        nonqualhrs:
+            *int-blank
+        termlysessionseducational:
+            *int-blank
+        termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
+            *int-blank
+        summerhalfterm2sessionseducational:
+            *int-blank
+        summerhalfterm2sessionsexceptional:
+            *int-blank
+        summerhalfterm2sessionscoronavirus:
+            *int-blank
+        gender:
+            *gender
+        boarder:
+            *boarder
+        language:
+            *language
+        ncyearleaving:
+            *year-group-category
+        mathsgcsehighestpriorattainment:
+            &highest-attainment
+            category:
+            - code: "A*"
+            - code: "A"
+            - code: "B"
+            - code: "C"
+            - code: "D"
+            - code: "E"
+            - code: "F"
+            - code: "G"
+            - code: "U"
+            - code: "9"
+            - code: "8"
+            - code: "7"
+            - code: "6"
+            - code: "5"
+            - code: "4"
+            - code: "3"
+            - code: "2"
+            - code: "1"
+            - code: "NR"
+            canbeblank: yes
+        mathsgcsepriorattainmentyear11:
+            &attainment-year-11
+            category:
+            - code: "1"
+            - code: "2"
+            - code: "3"
+            canbeblank: yes
+        englishgcsehighestpriorattainment:
+            *highest-attainment
+        englishgcsepriorattainmentyear11:
+            *attainment-year-11
+        mathsgcsefundingexemption:
+            &funding-exemption
+            category:
+            - code: "L"
+            - code: "O"
+            - code: "U"
+            - code: "F"
+            - code: "N"
+        englishgcsefundingexemption:
+            *funding-exemption
+        mathsgcsehighestpriorattainmentpreviousyear:
+            *highest-attainment
+        englishgcsehighestpriorattainmentpreviousyear:
+            *highest-attainment
+            
+    pupilonroll:
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        pupilonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        surname:
+            *alphanumeric-blank
+        forename:
+            *alphanumeric-blank
+        middlenames:
+            *alphanumeric-blank
+        preferredsurname:
+            *alphanumeric-blank
+        upn:
+            *alphanumeric-blank
+        formerupn:
+            *alphanumeric-blank
+        uniquelearnernumber:
+            *alphanumeric-blank
+        formersurname:
+            *alphanumeric-blank
+        dob:
+            *date
+        hoursatsetting:
+            *float
+        schoollunchtaken:
+            *true-false
+        parttime:
+            *true-false
+        entrydate:
+            *date
+        topupfunding:
+            *true-false
+        termlysessionspossible:
+            *int-blank
+        termlysessionsauthorised:
+            *int-blank
+        termlysessionsunauthorised:
+            *int-blank
+        senunitindicator:
+            *true-false
+        resourcedprovisionindicator:
+            *true-false
+        nonqualhrs:
+            *int-blank
+        ftemp:
+            *true-false
+        qualhrs:
+            *int-blank
+        qualhrspreviousyear:
+            *int-blank
+        nonqualhrspreviousyear:
+            *int-blank
+        tlevelqualhrs:
+            *int-blank
+        tlevelnonqualhrs:
+            *int-blank
+        moveoffrollflag:
+            *alphanumeric-blank # couldn't find
+        fundedhours:
+            *float
+        missingaddress:
+            *alphanumeric-blank # couldn't find
+        duplicatenotfunded:
+            *alphanumeric-blank # couldn't find
+        summerhalfterm2sessionspossible:
+            *int-blank
+        extendedhours:
+            *float
+        thirtyhourcode:
+            *int-blank
+        summerhalfterm2sessionsauthorised:
+            *int-blank
+        summerhalfterm2sessionsunauthorised:
+            *int-blank
+        dafindicator:
+        summerhalfterm2sessionseducational:
+            *int-blank
+        summerhalfterm2sessionsexceptional:
+            *int-blank
+        summerhalfterm2sessionscoronavirus:
+            *int-blank
+        termlysessionseducational:
+            *int-blank
+        termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
+            *int-blank
+        gender:
+            *gender
+        yssa:
+            *yssa
+        servicechild:
+            *service-child
+        language:
+            *language
+        classtype:
+            *class-type
+        enrolstatus:
+            *enrol-status
+        boarder:
+            *boarder
+        plaa:
+            *plaa
+        senprovision:
+            *sen-provision
+        ncyearactual:
+            *year-group-category
+        mathsgcsehighestpriorattainment:
+            *highest-attainment
+        mathsgcsepriorattainmentyear11:
+            *attainment-year-11
+        englishgcsehighestpriorattainment:
+            *highest-attainment
+        englishgcsepriorattainmentyear11:
+            *attainment-year-11
+        mathsgcsefundingexemption:
+            *funding-exemption
+        englishgcsefundingexemption:
+            *funding-exemption
+        mathsgcsehighestpriorattainmentpreviousyear:
+            *highest-attainment
+        englishgcsehighestpriorattainmentpreviousyear:
+            *highest-attainment
+            
+    school:
+        schooltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        schoolname:
+            *alphanumeric-blank
+        email:
+            *alphanumeric-blank
+        phoneno:
+            *phone-no
+        intake:
+            *intake
+        phase:
+            *phase
+        type:
+            *type
+        highestncyeargroup:
+            *year-group-category
+        governance:
+            *governance
+        lowestncyeargroup:
+            *year-group-category
+            
+    schoolarrangedapdetailoffroll:
+        schoolarrangedapdetailoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolarrangedapdetailoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        urn:
+            *int-blank
+        ukprn:
+            *int-blank
+        entrydate:
+            *date
+        leavingdate:
+            *date
+        apsessionsperweek:
+            *int-blank
+        apsettingtype:
+            *ap-setting
+        placementreason:
+            *placement-reason
+        senprovisionentry:
+            *sen-provision
+        senprovisionleaving:
+            *sen-provision
+        apattendancepattern:
+            *attendance-pattern
+            
+    schoolarrangedapdetailonroll:
+        schoolarrangedapdetailonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolarrangedapdetailonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        urn:
+            *int-blank
+        ukprn:
+            *int-blank
+        entrydate:
+            *date
+        leavingdate:
+            *date
+        apsessionsperweek:
+            *int-blank
+        apsettingtype:
+            *ap-setting
+        placementreason:
+            *placement-reason
+        senprovisionentry:
+            *sen-provision
+        senprovisionleaving:
+            *sen-provision
+        apattendancepattern:
+            *attendance-pattern
+            
+    schoolcensus:
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        schoolcensusorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        name:
+            *collection
+        collection:
+            *collection
+        term:
+            *term
+        year:
+            *int-blank
+        referencedate:
+            *date
+        serialno:
+            *int-blank
+        sourcelevel:
+            *source-level
+        estab:
+            *alphanumeric-not-blank
+        softwarecode:
+            *alphanumeric-not-blank
+        urn:
+            *int-not-blank
+        datetime:
+            *date
+        release:
+            *alphanumeric-blank
+        xversion:
+            *alphanumeric-blank
+        lea:
+            *lea-code
+            
+    summerhalfterm2sessiondetailsoffroll:
+        summerhalfterm2sessiondetailsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        summerhalfterm2sessiondetailsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        sessions:
+            *int-blank
+        attendancereason:
+            *attendance-reason
+            
+    summerhalfterm2sessiondetailsonroll:
+        summerhalfterm2sessiondetailsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        summerhalfterm2sessiondetailsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        sessions:
+            *int-blank
+        attendancereason:
+            *attendance-reason
+            
+    termlyexclusionsoffroll:
+        termlyexclusionsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlyexclusionsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        startdate:
+            *date
+        sessions:
+            *int-blank
+        reason2:
+            *exclusion-reason
+        reason3:
+            *exclusion-reason
+        category:
+            *exclusion-category
+        reason1:
+            *exclusion-reason
+        senprovision:
+            *sen-provision
+            
+    termlyexclusionsonroll:
+        termlyexclusionsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlyexclusionsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        startdate:
+            *date
+        sessions:
+            *int-blank
+        reason1:
+            *exclusion-reason
+        reason2:
+            *exclusion-reason
+        reason3:
+            *exclusion-reason
+        category:
+            *exclusion-category
+        senprovision:
+            *sen-provision
+            
+    termlysessiondetailsoffroll:
+        termlysessiondetailsoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlysessiondetailsoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        sessions:
+            *int-blank
+        attendancereason:
+            *attendance-reason
+            
+    termlysessiondetailsonroll:
+        termlysessiondetailsonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        termlysessiondetailsonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        sessions:
+            *int-blank
+        attendancereason:
+            *attendance-reason
+            
+    workplaceentityoffroll:
+        workplaceentityoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        workplaceentityoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        learningaimsoffrolltableid:
+            *alphanumeric-not-blank
+        wpstartdate:
+            *date
+        wpenddate:
+            *date
+        wphours:
+            *int-blank
+        wpemployerid:
+            *int-blank
+        wpmode:
+            &wp-mode
+            category:
+            - code: "1"
+              name: "internal"
+            - code: "2"
+              name: "external"
+              
+    workplaceentityonroll:
+        workplaceentityonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        workplaceentityonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        learningaimsonrolltableid:
+            *alphanumeric-not-blank
+        wpstartdate:
+            *date
+        wpenddate:
+            *date
+        wphours:
+            *int-blank
+        wpemployerid:
+            *int-blank
+        wpmode:
+            *wp-mode
