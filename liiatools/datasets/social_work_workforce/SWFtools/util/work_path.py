@@ -6,33 +6,33 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
 import os
 
 # Define filepaths
-main_folder = r'/file_directories/'
+main_folder = r'/liiatools/spec/social_work_workforce/'
 
-# CIN Census files must be in one "LA" folder per LA, in the cin_folder
-cin_folder = os.path.join(main_folder, 'cin')
+# CSWW files must be in one "LA" folder per LA, in the cssw_folder
+csww_folder = os.path.join(main_folder, 'samples/csww')
 
 # Flat files
-flatfile_folder = os.path.join(main_folder, 'flatfiles')
+flatfile_folder = os.path.join(main_folder, 'samples/flatfiles')
 
 # Outputs
-output_folder = os.path.join(main_folder, 'outputs')
+output_folder = os.path.join(main_folder, 'samples/outputs')
 
 # Chris requests folder
-request = os.path.join(main_folder, 'request')
+request = os.path.join(main_folder, 'samples/request')
 
 # Workforce XML schema
-XML_SCHEMA = os.path.join('spec', 'wf_xmlschema.xsd')
+XML_SCHEMA = os.path.join(main_folder, 'social_work_workforce_2022.xsd')
 
 # Runtime log files
-runtime_log_files = os.path.join(main_folder, 'log_files')
+runtime_log_files = os.path.join(main_folder, 'samples/log_files')
 
 # Local Authority directories
-la_directories = [folder for folder in os.scandir(cin_folder) if os.path.isdir(folder)]
+la_directories = [folder for folder in os.scandir(csww_folder) if os.path.isdir(folder)]
 
 
 def check_flatfiles_folder():
     """
-    Checks that the 'flatfiles' folder contains all directories that are present in 'cin' folder and creates them if
+    Checks that the 'flatfiles' folder contains all directories that are present in 'csww' folder and creates them if
     they are not present.
     :return: None
     """
