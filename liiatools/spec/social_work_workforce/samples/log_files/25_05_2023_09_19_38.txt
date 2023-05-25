@@ -1,0 +1,26 @@
+====================
+Log file created on: 25/05/2023 at 09:19:38
+Operating System: Linux
+====================
+[25/05/2023 at 09:19:38]: Checking 2 directories...
+[25/05/2023 at 09:19:38]: BAD - Directory already exists
+[25/05/2023 at 09:19:38]: Checked 1 of 2 directories.
+[25/05/2023 at 09:19:38]: NEW - Directory already exists
+[25/05/2023 at 09:19:38]: Checked 2 of 2 directories.
+[25/05/2023 at 09:19:38]: # ===== Processing all XML files inside CIN folder ===== #
+[25/05/2023 at 09:19:38]: Processing XML files inside: /workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD
+[25/05/2023 at 09:19:38]: Parsing 'social_work_workforce_2022.xml'...
+[25/05/2023 at 09:19:38]: Validating 'social_work_workforce_2022.xml'...
+[25/05/2023 at 09:19:38]: The file 'social_work_workforce_2022.xml' passed minimum validation requirement
+[25/05/2023 at 09:19:38]: Validating worker data...
+[25/05/2023 at 09:19:38]: 0 out of 6 worker records passed validation
+[25/05/2023 at 09:19:38]: 21 worker validation errors.
+[25/05/2023 at 09:19:38]: Processing worker data...
+[25/05/2023 at 09:19:38]: Processing XML files inside: /workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/NEW
+[25/05/2023 at 09:19:38]: Finished processing 1 files in 2 directories.
+[25/05/2023 at 09:19:38]: ====================
+[25/05/2023 at 09:19:38]: Process executed successfully.
+[25/05/2023 at 09:19:38]: Total time spent in seconds: 0.351
+[25/05/2023 at 09:19:38]: Log file saved to: /workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/log_files/25_05_2023_09_19_38.txt
+[25/05/2023 at 09:19:38]: File name: 25_05_2023_09_19_38
+[25/05/2023 at 09:19:38]: ====================
