@@ -1,0 +1,26 @@
+[25/05/2023 at 14:39:02]: Validating 'social_work_workforce_2022.xml'
+[25/05/2023 at 14:39:02]: Worker validation errors: 
+[25/05/2023 at 14:39:02]: [Tag 'CSWWWorker' on line 20]: Not formatted as expected
+[25/05/2023 at 14:39:02]: [Tag 'GenderCurrent' on line 20]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'QualInst' on line 20]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'WorkingDaysLost' on line 20]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'CSWWWorker' on line 37]: Not formatted as expected
+[25/05/2023 at 14:39:02]: [Tag 'GenderCurrent' on line 37]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'Ethnicity' on line 37]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'QualInst' on line 37]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'StartOrigin' on line 37]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'WorkingDaysLost' on line 37]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'FrontlineGrad' on line 37]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'StartOrigin' on line 37]: Missing tag
+[25/05/2023 at 14:39:02]: [Tag 'RoleStartDate' on line 49]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'StartOrigin' on line 49]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'FTE30' on line 49]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'FrontlineGrad' on line 49]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'StartOrigin' on line 64]: Missing tag
+[25/05/2023 at 14:39:02]: [Tag 'Ethnicity' on line 76]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'WorkingDaysLost' on line 76]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'StepUpGrad' on line 97]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: [Tag 'FTE30' on line 97]: Mandatory tag for non-agency worker missing
+[25/05/2023 at 14:39:02]: 0 out of 6 worker records passed validation
+[25/05/2023 at 14:39:02]: 21 worker validation errors.
+[25/05/2023 at 14:39:02]: Processing worker data...
