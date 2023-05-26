@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 from pathlib import Path
+from liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.converter import ORG_ROLE_DICT, SENIORITY_CODE_DICT
 import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
 
 
@@ -157,26 +158,9 @@ def seniority_forecast_5c():
     dfSen = pd.read_csv(pathFile)
 
 
-    OrgRoleDict = {
-        1: "Senior Manager",
-        2: "Middle Manager",
-        3: "First Line Manager",
-        4: "Senior Practitioner",
-        5: "Case Holder",
-        6: "Qualified without cases"
-    }
+    dfSen['OrgRoleName'] = dfSen.OrgRole.map(ORG_ROLE_DICT)
 
-    dfSen['OrgRoleName'] = dfSen.OrgRole.map(OrgRoleDict)
-
-    SeniorityCodeDict = {
-        1: "Newly qualified",
-        2: "Early career",
-        3: "Experienced",
-        4: "Senior",
-        5: "Agency"
-    }
-
-    dfSen['SeniorityName'] = dfSen.SeniorityCode.map(SeniorityCodeDict)
+    dfSen['SeniorityName'] = dfSen.SeniorityCode.map(SENIORITY_CODE_DICT)
 
     dfSen = dfSen[["YearCensus", "SWENo", "RoleStartDate", "NewOrNot", "RoleEndDate", "LeftOrNot",
                    "AgencyWorker", "OrgRole", "OrgRoleName", "SeniorityCode", "SeniorityName"]]

@@ -74,6 +74,14 @@ ORG_ROLE_DICT: Final[Dict[str, str]] = {
     '6': "Qualified without cases"
 }
 
+SENIORITY_CODE_DICT: Final[Dict[str, str]] = {
+    '1': "Newly qualified",
+    '2': "Early career",
+    '3': "Experienced",
+    '4': "Senior",
+    '5': "Agency"
+}
+
 QUAL_LEVEL_DICT: Final[Dict[str, str]] = {
     '1': "Undergraduate",
     '2': "Postgraduate",
