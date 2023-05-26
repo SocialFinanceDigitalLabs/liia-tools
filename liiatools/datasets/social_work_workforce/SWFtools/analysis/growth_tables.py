@@ -1,11 +1,11 @@
-import os
-import pandas as pd
-import numpy as np
-import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
-
 '''
   Growth rate table and Population growth table: 2020 to 2026
 '''
+
+import os
+import pandas as pd
+import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
+
 
 
 def growth_tables():

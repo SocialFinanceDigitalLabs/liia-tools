@@ -1,9 +1,8 @@
 import sys
-
-import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
-# Setting the paths to work and executing and using the scripts
-
 import os
+import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
+
+# Setting the paths to work and executing and using the scripts
 
 # Define filepaths
 main_folder = r'/workspaces/liia-tools/liiatools/spec/social_work_workforce'

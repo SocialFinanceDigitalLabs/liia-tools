@@ -1,13 +1,12 @@
-import os
-import pandas as pd
-import numpy as np
-import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
-
 '''
    Spreadsheet generation with columns ordered by: YearCensus, LEAName, Gender, Ethnicity_Compact. 
    And with the sum columns: FTESum. 
    And the employee count: SWENo_Count
 '''
+import os
+import pandas as pd
+import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
+
 
 
 def pivotGen():

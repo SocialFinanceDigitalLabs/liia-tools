@@ -1,10 +1,10 @@
-"""This file contains constants and functions used in converting and merging XML data from CIN folder"""
-
-from typing import Final, Dict, List
-from decouple import config
+"""This file contains constants and functions used in converting and merging XML data from CSWW folder"""
 
 import hashlib
 import datetime as dt
+from typing import Final, Dict, List
+from decouple import config
+
 
 # === CONSTANTS === #
 LEA_DICT: Final[Dict[str, str]] = {

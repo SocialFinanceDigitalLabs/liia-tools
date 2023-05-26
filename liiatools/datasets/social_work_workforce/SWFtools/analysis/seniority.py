@@ -1,8 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
-from pathlib import Path
-from liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.converter import ORG_ROLE_DICT, SENIORITY_CODE_DICT
+from liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.converter import (ORG_ROLE_DICT,
+                                                                                        SENIORITY_CODE_DICT)
 import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
 
 

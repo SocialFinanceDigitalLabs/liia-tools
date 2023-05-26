@@ -1,4 +1,4 @@
-# ===== Main script where all the others will be called =====
+"""Main script where all the others will be called"""
 
 import time
 import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLog
@@ -24,7 +24,7 @@ work_path.check_flatfiles_folder()
 # Validate, process, and convert all XML files found in LA directories to CSV then merge them
 fop.process_all_input_files()
 
-""" For creating spreadsheets, tables and other files that will be stored in the request folder """
+# For creating spreadsheets, tables and other files that will be stored in the request folder
 
 
 # Outputs a file of extension 'xlsx' named 'growth_tables' (does not process any file, contains hardcoded values)
