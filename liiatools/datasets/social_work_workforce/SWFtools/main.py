@@ -10,8 +10,7 @@ from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority import
 from liiatools.datasets.social_work_workforce.SWFtools.analysis.progressed import progressed
 from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority_forecast_5c import seniority_forecast_5c
 from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority_forecast_04 import seniority_forecast_04
-from liiatools.datasets.social_work_workforce.SWFtools.analysis.FTESum import FTESum
-from liiatools.datasets.social_work_workforce.SWFtools.analysis.FTESum_2020 import FTESum_2020
+from liiatools.datasets.social_work_workforce.SWFtools.analysis.FTESum import FTESum, FTESum_2020
 
 start = time.time()
 
