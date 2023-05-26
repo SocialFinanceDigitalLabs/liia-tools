@@ -6,10 +6,10 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 import liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.file_operations as fop
 from liiatools.datasets.social_work_workforce.SWFtools.analysis.growth_tables import growth_tables
 from liiatools.datasets.social_work_workforce.SWFtools.analysis.pivotGen import pivotGen
-from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority import seniority
-from liiatools.datasets.social_work_workforce.SWFtools.analysis.progressed import progressed
-from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority_forecast_5c import seniority_forecast_5c
-from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority_forecast_04 import seniority_forecast_04
+from liiatools.datasets.social_work_workforce.SWFtools.analysis.seniority import (seniority,
+                                                                                  progressed,
+                                                                                  seniority_forecast_5c,
+                                                                                  seniority_forecast_04)
 from liiatools.datasets.social_work_workforce.SWFtools.analysis.FTESum import FTESum, FTESum_2020
 
 start = time.time()
