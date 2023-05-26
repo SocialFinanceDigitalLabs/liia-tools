@@ -76,8 +76,8 @@ def seniority_forecast_04():
     pathFile = os.path.join(requestPath, file)
     dfSen = pd.read_excel(pathFile)
 
-    dfSen['2020'] = dfSen['FTESum']
-    dfSen = dfSen.drop(['FTESum'], axis=1)
+    # ===== Rename column ===== #
+    dfSen.rename(columns={"FTESum": "2020"}, inplace=True)
 
     # ===== Read file ===== #
     file = 'population_growth_table.xlsx'
@@ -134,7 +134,6 @@ def seniority_forecast_5c():
     requestPath = work_path.request
     pathFile = os.path.join(requestPath, file)
     dfSen = pd.read_csv(pathFile)
-
 
     dfSen['OrgRoleName'] = dfSen.OrgRole.map(ORG_ROLE_DICT)
 
