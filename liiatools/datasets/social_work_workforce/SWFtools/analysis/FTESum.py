@@ -7,7 +7,6 @@ def FTESum():
 
   # ===== Read file ===== #
     file = 'CompMergSen.csv'
-    path = work_path.flatfile_folder
     requestPath = work_path.request
     pathFile = os.path.join(requestPath, file)
     df = pd.read_csv(pathFile)
@@ -31,7 +30,6 @@ def FTESum_2020():
 
   # ===== Read file ===== #
     file = 'CompMergSen.csv'
-    path = work_path.flatfile_folder
     requestPath = work_path.request
     pathFile = os.path.join(requestPath, file)
     df = pd.read_csv(pathFile)
