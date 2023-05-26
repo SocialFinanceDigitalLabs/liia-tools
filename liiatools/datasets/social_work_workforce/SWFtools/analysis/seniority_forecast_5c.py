@@ -11,7 +11,6 @@ def seniority_forecast_5c():
     path = work_path.flatfile_folder
     requestPath = work_path.request
     pathFile = os.path.join(requestPath, file)
-    # print()
     dfSen = pd.read_csv(pathFile)
 
 
@@ -24,7 +23,7 @@ def seniority_forecast_5c():
         6: "Qualified without cases"
     }
 
-    dfSen['OrgRoleName'] = [OrgRoleDict[item] for item in dfSen.OrgRole]
+    dfSen['OrgRoleName'] = dfSen.OrgRole.map(OrgRoleDict)
 
     SeniorityCodeDict = {
         1: "Newly qualified",
@@ -34,8 +33,7 @@ def seniority_forecast_5c():
         5: "Agency"
     }
 
-    dfSen['SeniorityName'] = [SeniorityCodeDict[item]
-                              for item in dfSen.SeniorityCode]
+    dfSen['SeniorityName'] = dfSen.SeniorityCode.map(SeniorityCodeDict)
 
     dfSen = dfSen[["YearCensus", "SWENo", "RoleStartDate", "NewOrNot", "RoleEndDate", "LeftOrNot",
                    "AgencyWorker", "OrgRole", "OrgRoleName", "SeniorityCode", "SeniorityName"]]
