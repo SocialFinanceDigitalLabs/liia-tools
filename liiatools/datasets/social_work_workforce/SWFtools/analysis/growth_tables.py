@@ -22,8 +22,6 @@ def growth_tables():
 
     growth_rate_table = pd.DataFrame(growth_rate_df)
 
-    # print(growth_rate_table)
-
     # ===== Save and export file ===== #
     fileOutN = 'growth_rate_table.xlsx'
     requestPath = work_path.request
@@ -47,8 +45,6 @@ def growth_tables():
                             }
 
     population_growth_table = pd.DataFrame(population_growth_df)
-
-    # print(population_growth_table)
 
     # ===== Save and export file ===== #
     fileOutN = 'population_growth_table.xlsx'

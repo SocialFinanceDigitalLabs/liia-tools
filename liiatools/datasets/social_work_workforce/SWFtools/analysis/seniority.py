@@ -12,7 +12,6 @@ def seniority():
     path = work_path.flatfile_folder
     requestPath = work_path.request
     pathFile = os.path.join(path, file)
-    # print()
     df = pd.read_csv(pathFile)
 
     df = df[['YearCensus', 'AgencyWorker', 'SWENo',
@@ -22,13 +21,10 @@ def seniority():
     df = df.reset_index()  # make sure indexes pair with number of rows
     for index, row in df.iterrows():
         if row['RoleStartDate'] == row['YearCensus']:
-            # print("New")
             listNew.append('New')
         else:
-            # print("Not")
             listNew.append('Not')
 
-    # print(listNew)
     df['NewOrNot'] = listNew
 
     df = df[['YearCensus', 'AgencyWorker', 'SWENo',
@@ -38,13 +34,10 @@ def seniority():
     df = df.reset_index()  # make sure indexes pair with number of rows
     for index, row in df.iterrows():
         if row['RoleEndDate'] == row['YearCensus']:
-            # print("New")
             listLeft.append('Left')
         else:
-            # print("Not")
             listLeft.append('Not')
 
-    # print(listNew)
     df['LeftOrNot'] = listLeft
 
     df = df[['YearCensus', 'AgencyWorker', 'SWENo', 'RoleStartDate',
@@ -54,28 +47,21 @@ def seniority():
     df = df.reset_index()  # make sure indexes pair with number of rows
     for index, row in df.iterrows():
         if row['RoleStartDate'] == row['YearCensus']:
-            # print("New")
             listSen.append(1)
         elif row['AgencyWorker'] == 1:
-            # print("Not")
             listSen.append(5)
         elif row['OrgRole'] == 5 or row['OrgRole'] == 6:
-            # print("Not")
             listSen.append(2)
         elif row['OrgRole'] == 2 or row['OrgRole'] == 3 or row['OrgRole'] == 4:
-            # print("Not")
             listSen.append(3)
         elif row['OrgRole'] == 1:
-            # print("Not")
             listSen.append(4)
 
-    # print(listSen)
     df['SeniorityCode'] = listSen
 
     df = df[['YearCensus', 'SWENo', 'RoleStartDate', 'NewOrNot',
              'RoleEndDate', 'LeftOrNot', 'AgencyWorker', 'OrgRole', 'SeniorityCode']]
 
-    # print(df)
     fileOutN = 'Seniority.csv'
     requestPath = work_path.request
     fileOut = os.path.join(requestPath, fileOutN)
@@ -89,7 +75,6 @@ def seniority_forecast_04():
     path = work_path.flatfile_folder
     requestPath = work_path.request
     pathFile = os.path.join(requestPath, file)
-    # print()
     df01 = pd.read_excel(pathFile)
 
     df01['2020'] = df01['FTESum']
@@ -129,7 +114,6 @@ def seniority_forecast_04():
         # Waltham Forest
         df_result.loc[df_result['LEAName'] == 'Waltham Forest', str(countYearNext)] = (
             (df_result[str(countYearBefore)] / p_df.loc[5, str(countYearBefore)])*p_df.loc[5, str(countYearNext)])
-      # print('teste')
 
     df_result['2020'] = df_result['2020'].round(3)
     df_result['2021'] = df_result['2021'].round(3)
@@ -223,7 +207,6 @@ def progressed():
     file = 'Seniority.csv'
     requestPath = work_path.request
     pathSen = os.path.join(requestPath, file)
-    # print()
     df = pd.read_csv(pathSen)
     df = df.sort_values(by=['SWENo', 'YearCensus'])
 

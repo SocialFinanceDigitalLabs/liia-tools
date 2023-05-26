@@ -8,7 +8,6 @@ import pandas as pd
 import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
 
 
-
 def pivotGen():
 
     # ===== Read file ===== #
