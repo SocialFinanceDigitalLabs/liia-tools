@@ -189,13 +189,7 @@ def seniority_forecast_5c():
     dfSen.to_csv(fileOut, index=False)
 
 
-    # ===== Read file ===== #
-    file = 'SeniorityComp.csv'
-    path = work_path.flatfile_folder
-    requestPath = work_path.request
-    pathFile = os.path.join(requestPath, file)
-    dfSen = pd.read_csv(pathFile)
-
+    # ===== Sort values ===== #
     dfSen = dfSen.sort_values(by=['SWENo', 'YearCensus'])
 
     # ============================================================================================ #
@@ -238,13 +232,6 @@ def seniority_forecast_5c():
 
     df5C = df.groupby(['LEAName', 'YearCensus', 'SeniorityCode', 'SeniorityName'])\
         .agg(FTESum=('FTE', 'sum'))
-
-
-    # ===== Save and export file ===== #
-    fileOutN = 'FTESum_5d.xlsx'
-    requestPath = work_path.request
-    fileOut = os.path.join(requestPath, fileOutN)
-    df5C.to_excel(fileOut, merge_cells=False)
 
 
 def progressed():
