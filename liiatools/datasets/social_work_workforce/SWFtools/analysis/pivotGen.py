@@ -9,7 +9,6 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def pivotGen():
-
     # ===== Read file ===== #
     file = "merged_modified.csv"
     path = work_path.flatfile_folder

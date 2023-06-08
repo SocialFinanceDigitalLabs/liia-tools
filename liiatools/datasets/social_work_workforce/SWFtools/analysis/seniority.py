@@ -109,7 +109,6 @@ def seniority():
 
 
 def seniority_forecast_04():
-
     # ===== Read file ===== #
     file = "FTESum_2020.xlsx"
     requestPath = work_path.request
@@ -172,7 +171,6 @@ def seniority_forecast_04():
 
 
 def seniority_forecast_5c():
-
     # ===== Read file ===== #
     file = "Seniority.csv"
     path = work_path.flatfile_folder
@@ -183,7 +181,9 @@ def seniority_forecast_5c():
     dfSen["OrgRoleName"] = dfSen.OrgRole.map(
         {int(key): ORG_ROLE_DICT[key] for key in ORG_ROLE_DICT}
     )
-    dfSen["SeniorityName"] = dfSen.SeniorityCode.map(SENIORITY_CODE_DICT)
+    dfSen["SeniorityName"] = dfSen.SeniorityCode.map(
+        {int(key): SENIORITY_CODE_DICT[key] for key in SENIORITY_CODE_DICT}
+    )
 
     dfSen = dfSen[
         [

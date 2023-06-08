@@ -151,7 +151,6 @@ def column_transfer(workers: List[Dict[str, str]], lea: str, year_census: str):
     :return: None
     """
     for worker in workers:
-
         if lea in LEA_DICT:
             worker["LEAName"] = LEA_DICT[lea]
         else:

@@ -4,7 +4,6 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def FTESum():
-
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request
@@ -27,7 +26,6 @@ def FTESum():
 
 
 def FTESum_2020():
-
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request

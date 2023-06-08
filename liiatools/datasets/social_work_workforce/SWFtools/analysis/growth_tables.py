@@ -8,7 +8,6 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def growth_tables():
-
     growth_rate_df = {
         "LEAName": [
             "Havering",

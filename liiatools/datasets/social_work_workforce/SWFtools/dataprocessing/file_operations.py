@@ -177,7 +177,6 @@ def process_all_input_files():
         xml_files = get_xml_files_from(la_directory)
 
         for xml_file in xml_files:
-
             workers = parse_and_validate(la_directory, xml_file)
 
             if workers is None:
