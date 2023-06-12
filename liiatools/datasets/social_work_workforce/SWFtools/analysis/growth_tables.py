@@ -8,6 +8,17 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def growth_tables():
+    """
+    Generates and exports growth tables for population and growth rate.
+    Generates a DataFrame for the growth rate table, including columns for "LEAName",
+    "2020" to "2026" and their corresponding growth rates.
+    Saves the growth rate table to an Excel file named "growth_rate_table.xlsx" in
+    the work_path.request directory.
+    Generates a DataFrame for the population growth table, including columns for "LEAName",
+    "2020" to "2026" and their corresponding population values.
+    Saves the population growth table to an Excel file named "population_growth_table.xlsx"
+    in the work_path.request directory.
+    """
     growth_rate_df = {
         "LEAName": [
             "Havering",
@@ -35,10 +46,6 @@ def growth_tables():
     growth_rate_table.to_excel(fileOut, index=False)
 
     print("Auxiliary table: ", fileOutN, " Created")
-
-    """
-      Population growth table: 2020 to 2026
-    """
 
     population_growth_df = {
         "LEAName": [

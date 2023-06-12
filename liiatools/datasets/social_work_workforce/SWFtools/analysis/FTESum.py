@@ -4,6 +4,19 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def FTESum():
+    """
+    Calculates the sum of FTE values from a CSV file and
+    export the work_path.py result to an Excel file.
+    Reads the CSV file named "CompMergSen.csv" located in work_path.request directory
+    and extracts the columns: "LEAName", "YearCensus", "SeniorityCode",
+    "SeniorityName", and "FTE". Sorts the values by "LEAName", "YearCensus", and
+    "SeniorityCode".
+    Groups the values by "LEAName", "YearCensus", "SeniorityCode", and "SeniorityName"
+    and calculates the sum of FTE values for each group
+    resulting in a new DataFrame with the "FTESum" column.
+    Saves the resulting DataFrame to an Excel file
+    named "FTESum_5d.xlsx" in work_path.request directory
+    """
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request
@@ -26,6 +39,18 @@ def FTESum():
 
 
 def FTESum_2020():
+    """
+    Calculates the sum of FTE values for the year 2020 from a CSV file and 
+    exports the result to an Excel file.
+    Reads the CSV file named "CompMergSen.csv" located in the work_path.request directory
+    and extracts the columns: "LEAName", "YearCensus", "SeniorityCode", "SeniorityName",
+    and "FTE". Filters to only include only rows where "YearCensus" column is equal to 2020.
+    Groups the filtered values by "LEAName", "YearCensus", "SeniorityCode", and "SeniorityName"
+    and calculates the sum of FTE values for each group
+    resulting in a new DataFrame with the "FTESum" column.
+    Saves the resulting DataFrame to an Excel file named "FTESum_2020.xlsx"
+    in the work_path.request directory
+    """
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request
