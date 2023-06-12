@@ -185,6 +185,14 @@ def seniority_forecast_04():
 
 
 def seniority_forecast_5c():
+    """
+    Generates a seniority forecast by merging data from two input CSV files and adding additional
+    columns for organizational role and seniority information. Read the 'Seniority.csv'
+    and 'merged_modified.csv'. Perform data transformations. The resulting
+    forecast is saved in two separate CSV files: 'SeniorityComp.csv' containing the seniority data
+    (with values sorted by "SWENo" and "YearCensus") and
+    'CompMergSen.csv' containing the merged and updated data.
+    """
     # ===== Read file ===== #
     file = "Seniority.csv"
     path = work_path.flatfile_folder
@@ -249,6 +257,14 @@ def seniority_forecast_5c():
     # ============================================================================================ #
 
 def progressed():
+    """
+    Identifies progressions in seniority based on the input data from the 'Seniority.csv' file.
+    Read the file, sorts the data by "SWENo" and "YearCensus", and determine
+    if progress in seniority for each record. The progressions are marked as 'Progressed',
+    while records with no progress are marked as 'No'. Records with missing or unknown data are
+    marked as 'Unknown'. The resulting data is saved in a new CSV file named 'CompletProgressed.csv'
+    in the specified request folder.
+    """
     # ===== Read file ===== #
     file = "Seniority.csv"
     requestPath = work_path.request
