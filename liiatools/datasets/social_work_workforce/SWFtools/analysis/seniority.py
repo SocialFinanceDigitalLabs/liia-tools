@@ -9,6 +9,13 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def seniority():
+    """
+    Determine seniority codes for each record in the input CSV file.
+    The input file should have the following columns - 'YearCensus', 'AgencyWorker', 'SWENo',
+    'RoleStartDate', 'RoleEndDate', and 'OrgRole'. Read the file, apply the
+    calculations, and saves the results in a new CSV file named 'Seniority.csv' in the specified
+    request folder.
+    """
     # ===== Read file ===== #
     file = "merged_modified.csv"
     path = work_path.flatfile_folder
@@ -109,6 +116,13 @@ def seniority():
 
 
 def seniority_forecast_04():
+    """
+    Generates a seniority forecast based on data from two input Excel files.
+    Read 'FTESum_2020.xlsx' and 'population_growth_table.xlsx' files to calculate
+    the forecasted seniority values for specific LAs. The calculations are performed for five
+    years from 2021 to 2025. The resulting forecast is saved in a new Excel file named
+    'seniority_forecast_04_clean.xlsx' in the specified request folder.
+    """
     # ===== Read file ===== #
     file = "FTESum_2020.xlsx"
     requestPath = work_path.request
@@ -232,8 +246,7 @@ def seniority_forecast_5c():
     fileOut = os.path.join(requestPath, fileOutN)
     dfMerged.to_csv(fileOut, index=False)
 
-    # ================================================================================================================= #
-
+    # ============================================================================================ #
 
 def progressed():
     # ===== Read file ===== #
