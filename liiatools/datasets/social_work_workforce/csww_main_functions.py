@@ -1,9 +1,35 @@
+import logging
+import click_log
+import click as click
+from pathlib import Path
+from datetime import datetime
+
 from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
 )
 from liiatools.csdatatools.util.stream import consume
 from liiatools.csdatatools.util.xml import etree, to_xml
 
+# Dependencies for cleanfile()
+from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.csdatatools.datasets.cincensus import filters
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+
+from liiatools.datasets.social_work_workforce.lds_csww_clean import (
+    file_creator,
+    configuration as clean_config,
+    csww_record
+)
+
+from liiatools.datasets.shared_functions.common import (
+    flip_dict,
+    check_file_type,
+    supported_file_types,
+    check_year,
+    check_year_within_range,
+    save_year_error,
+    save_incorrect_year_error
+)
 
 def generate_sample(output: str):
     """
@@ -25,3 +51,71 @@ def generate_sample(output: str):
             FILE.write(element)
     except FileNotFoundError:
         print("The file path provided does not exist")
+
+def cleanfile(input, la_code, la_log_dir, output):
+    """
+    Cleans input Children Social Work workforce xml files according to config and outputs cleaned csv files.
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Open & Parse file
+    print("Starting # Open & Parse file")
+    if (
+        check_file_type(
+            input,
+            file_types=[".xml"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
+    ):
+        return
+    stream = dom_parse(input)
+    stream = list(stream)
+
+    # Get year from input file
+    try:
+        filename = str(Path(input).resolve().stem)
+        input_year = check_year(filename)
+    except (AttributeError, ValueError):
+        save_year_error(input, la_log_dir)
+        return
+
+    # Check year is within acceptable range for data retention policy
+    print("Starting # Check year")
+    years_to_go_back = 6
+    year_start_month = 6
+    reference_date = datetime.now()
+    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+        save_incorrect_year_error(input, la_log_dir)
+        return
+
+    # Configure stream
+    print("Starting # Configure stream")
+    config = clean_config.Config()
+    la_name = flip_dict(config["data_codes"])[la_code]
+    stream = filters.strip_text(stream)
+    stream = filters.add_context(stream)
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+
+    # Output result
+    #print("Starting # Output result")
+    stream = csww_record.message_collector(stream) # <=== this is the problem - not returning any stream data
+    #print(f"Stream = {stream}")
+    data = csww_record.export_table(stream)
+    #print(f"Data = {data}")
+    data = file_creator.add_fields(input_year, data, la_name, la_code)
+    #print(data)
+    file_creator.export_file(input, output, data)
+
+cleanfile("/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+            "BAD",
+            "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+            "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean"
+            )
+
+print("===> Finished running csww_main_functions.py")
