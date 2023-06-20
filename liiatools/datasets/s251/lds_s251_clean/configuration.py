@@ -1,10 +1,15 @@
+import logging
 import datetime
 import os
-import logging
-import yaml
 from pathlib import Path
+import yaml
 from string import Template
 
+from sfdata_stream_parser import events
+from sfdata_stream_parser.filters.generic import streamfilter, pass_event
+from sfdata_stream_parser.checks import type_check
+
+from liiatools.datasets.shared_functions.common import inherit_property
 from liiatools.spec import s251 as s251_asset_dir
 from liiatools.spec import common as common_asset_dir
 
@@ -12,6 +17,59 @@ log = logging.getLogger(__name__)
 
 DEFAULT_CONFIG_DIR = Path(s251_asset_dir.__file__).parent
 SHARED_CONFIG_DIR = Path(common_asset_dir.__file__).parent
+
+
+@streamfilter(check=type_check(events.StartTable), fail_function=pass_event)
+def add_matched_headers(event, config):
+    """
+    Match the loaded table headers against the S251 table headers
+
+    :param event: A filtered list of event objects of type StartTable
+    :param config: The loaded configuration to use
+    :return: An updated list of event objects
+    """
+    expected_columns = list(config["placement_costs"].keys())
+    if set(expected_columns).issubset(set(event.headers)):
+        return event.from_event(
+            event, expected_columns=expected_columns
+        )
+    return event
+
+
+@streamfilter(check=type_check(events.Cell), fail_function=pass_event)
+def match_config_to_cell(event, config):
+    """
+    Match the cell to the config file given the cell header
+    the config file should be a set of dictionaries for with headers
+    and config rules for those headers
+
+    :param event: A filtered list of event objects of type Cell
+    :param config: The loaded configuration to use
+    :return: An updated list of event objects
+    """
+    try:
+        config_dict = config[event.header]
+        return event.from_event(event, config_dict=config_dict)
+    except (
+        AttributeError,
+        KeyError,
+        TypeError,
+    ):  # Raise in case there is no config item for the given table name and cell header
+        return event
+
+
+def configure_stream(stream, config):
+    """
+    Loading and matching the configuration with the loaded stream
+
+    :param stream: Set of events to parse
+    :param config: The loaded configuration
+    :return: An updated set of events/stream with matched configuration
+    """
+    stream = add_matched_headers(stream, config=config)
+    stream = inherit_property(stream, "expected_columns")
+    stream = match_config_to_cell(stream, config=config["placement_costs"])
+    return stream
 
 
 class Config(dict):

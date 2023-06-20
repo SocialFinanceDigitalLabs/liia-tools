@@ -2,6 +2,29 @@ from datetime import datetime, date
 import re
 
 
+def to_category(string, categories):
+    """
+    Matches a string to a category based on categories given in a config file
+    the config file should contain a dictionary for each category for this function to loop through
+    return blank if no categories found
+
+    :param string: Some string to convert into a category value
+    :param categories: A list of dictionaries containing different category:value pairs
+    :return: Either a category value, "error" or blank string
+    """
+    for code in categories:
+        if isinstance(string, float):
+            string = int(string)
+        if str(string).lower() == str(code["code"]).lower():
+            return code["code"]
+        elif "name" in code and string:
+            if str(code["name"]).lower() in str(string).lower():
+                return code["code"]
+        elif not string:
+            return ""
+    return "formatting_error"
+
+
 def to_date(datevalue, dateformat="%d/%m/%Y"):
     """
     Convert a string to a date based on the dateformat %d/%m/%Y and convert a datetime to a date

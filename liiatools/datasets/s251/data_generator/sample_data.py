@@ -4,7 +4,7 @@ from datetime import date, datetime, timedelta
 
 from sfdata_stream_parser.events import StartTable, StartRow, Cell, EndRow, EndTable
 
-from liiatools.datasets.s251.configuration import Config
+from liiatools.datasets.s251.lds_s251_clean.configuration import Config
 
 s251_columns = [
     "Child ID",

@@ -226,7 +226,7 @@ placement_costs:
         - code: "CUSTOD"
         - code: "OTHER"
         canbeblank: yes
-    Number of placements in the last 12 months:
+    Number of placements in last 12 months:
         *integer-blank
     Number of placements in current care period:
         *integer-blank
@@ -288,7 +288,7 @@ placement_costs:
         *postcode-blank
     LA of placement:
         *alphanumeric-blank
-    Total committed cost accrued FY to date:
+    Total committed cost accrued in FY to date:
         numeric: "currency"
         canbeblank: no
     Contribution from social care provider/s:
