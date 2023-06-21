@@ -13,9 +13,8 @@ def to_category(string, categories):
     :return: Either a category value, "error" or blank string
     """
     for code in categories:
-        if isinstance(string, float):
-            string = int(string)
-        if str(string).lower() == str(code["code"]).lower():
+        if str(string).lower() == str(code["code"]).lower() or \
+                str(string).lower() == str(code["code"]).lower() + ".0":
             return code["code"]
         elif "name" in code and string:
             if str(code["name"]).lower() in str(string).lower():

@@ -46,28 +46,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     :return: None
     """
 
-    # Prepare file
+    # Prepare and check file
     if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
         return
     prep.drop_empty_rows(input, input)
-
-    # Configuration
-    try:
-        filename = str(Path(input).resolve().stem)
-        year = check_year(filename)
-    except (AttributeError, ValueError):
-        save_year_error(input, la_log_dir)
-        return
-
-    years_to_go_back = 6
-    year_start_month = 6
-    reference_date = datetime.now()
-    if check_year_within_range(year, years_to_go_back, year_start_month, reference_date) is False:
-        save_incorrect_year_error(input, la_log_dir)
-        return
-
-    config = clean_config.Config(year)
-    la_name = flip_dict(config["data_codes"])[la_code]
     if (
             check_file_type(
                 input,
@@ -81,13 +63,17 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
-    stream = populate.add_year_column(stream, year)
-
-    # Configure stream
-    stream = clean_config.configure_stream(stream, config)
-
-    # Clean stream
-    stream = filters.clean(stream)
+    year = populate.find_year_of_return(stream)
+    print(stream)
+    # stream = populate.add_year_column(stream, year=year)
+    #
+    # # Configure stream
+    # config = clean_config.Config(year)
+    # la_name = flip_dict(config["data_codes"])[la_code]
+    # stream = clean_config.configure_stream(stream, config)
+    #
+    # # Clean stream
+    # stream = filters.clean(stream)
     # stream = degrade.degrade(stream)
     # stream = logger.log_errors(stream)
     # stream = populate.create_la_child_id(stream, la_code=la_code)
@@ -100,7 +86,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     list(stream)
 
 
-cleanfile(r"C:\Users\patrick.troy\Downloads\LIIA tests\s251_2023.csv", "BAR",
+cleanfile(r"C:\Users\patrick.troy\Downloads\LIIA tests\s251_test.csv", "BAR",
           r"C:\Users\patrick.troy\Downloads\LIIA tests", r"C:\Users\patrick.troy\Downloads\LIIA tests")
 
 

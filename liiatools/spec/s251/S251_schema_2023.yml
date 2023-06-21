@@ -205,7 +205,7 @@ placement_costs:
         canbeblank: yes
     Placement start date:
         &date-not-blank
-        date: "d/%m/%Y"
+        date: "%d/%m/%Y"
         canbeblank: no
     Placement end date:
         *date-blank

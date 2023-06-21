@@ -14,38 +14,31 @@ class ErrorTable(events.ParseEvent):
     pass
 
 
-def create_formatting_error_count(stream):
+def create_formatting_error_list(stream):
     """
-    Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
+    Create a list of the column headers for cells with formatting errors (event.formatting_error = 1)
 
     :param stream: A filtered list of event objects
-    :return: An updated list of event objects with error counts
+    :return: An updated list of event objects with formatting error lists
     """
-    formatting_error_count = None
-    table_name = None
+    formatting_error_list = None
     for event in stream:
         if isinstance(event, events.StartTable):
-            formatting_error_count = []
-            try:
-                table_name = event.table_name
-            except AttributeError:
-                pass
+            formatting_error_list = []
         elif isinstance(event, events.EndTable):
             yield ErrorTable.from_event(
                 event,
-                table_name=table_name,
-                formatting_error_count=formatting_error_count,
+                formatting_error_list=formatting_error_list,
             )
-            formatting_error_count = None
+            formatting_error_list = None
         elif (
-            formatting_error_count is not None
-            and table_name is not None
+            formatting_error_list is not None
             and isinstance(event, events.Cell)
         ):
-            try:
-                if event.error == "1":
-                    formatting_error_count.append(event.header)
-            except AttributeError:
+            formatting_error = getattr(event, "formatting_error", "0")
+            if formatting_error == "1":
+                formatting_error_list.append(event.header)
+            else:
                 pass
         yield event
 
@@ -63,8 +56,8 @@ def blank_error_check(event):
     """
     try:
         allowed_blank = event.config_dict["canbeblank"]
-        error = getattr(event, "error", "0")
-        if not allowed_blank and not event.cell and error != "1":
+        formatting_error = getattr(event, "formatting_error", "0")
+        if not allowed_blank and not event.cell and formatting_error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
@@ -72,28 +65,28 @@ def blank_error_check(event):
         pass
 
 
-def create_blank_error_count(stream):
+def create_blank_error_list(stream):
     """
     Create a list of the column headers for cells with blank fields that should not be blank (event.blank_error = 1)
     for each table
 
     :param stream: A filtered list of event objects
-    :return: An updated list of event objects
+    :return: An updated list of event objects with blank error lists
     """
-    blank_error_count = None
+    blank_error_list = None
     for event in stream:
         if isinstance(event, events.StartTable):
-            blank_error_count = []
+            blank_error_list = []
         elif isinstance(event, events.EndTable):
-            blank_error_count = None
+            blank_error_list = None
         elif isinstance(event, ErrorTable):
-            yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
-            blank_error_count = None
-        elif blank_error_count is not None and isinstance(event, events.Cell):
-            try:
-                if event.blank_error == "1":
-                    blank_error_count.append(event.header)
-            except AttributeError:
+            yield ErrorTable.from_event(event, blank_error_list=blank_error_list)
+            blank_error_list = None
+        elif blank_error_list is not None and isinstance(event, events.Cell):
+            blank_error = getattr(event, "blank_error", "0")
+            if blank_error == "1":
+                blank_error_list.append(event.header)
+            else:
                 pass
         yield event
 
@@ -105,23 +98,22 @@ def create_blank_error_count(stream):
 )
 def create_file_match_error(event):
     """
-    Add a match_error to StartTables that do not have an event.sheet_name so these errors can be written to the log.txt
-    file. If there is no event.sheet_name for a given StartTable that means its headers did not match any of those
-    in the config file
+    Add a match_error to StartTables that do not have an event.expected_columns so these errors can be written to the
+    log.txt file. If there is no event.expected_columns for a given StartTable that means its headers did not match
+    those in the config file
 
     :param event: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
     """
-    try:
-        if event.table_name:
-            return event
-    except AttributeError:
+    expected_columns = getattr(event, "expected_columns", None)
+    if expected_columns:
         return event.from_event(
             event,
-            match_error=f"Failed to find a set of matching columns headers for file titled "
-            f"'{event.filename}' which contains column headers {event.headers} so no output has been produced",
+            match_error=f"Failed to find a set of matching columns headers for file titled '{event.filename}' "
+                        f"which contains column headers {event.headers} so no output has been produced",
         )
-    return event
+    else:
+        return event
 
 
 @streamfilter(
@@ -131,7 +123,8 @@ def create_file_match_error(event):
 )
 def create_extra_column_error(event):
     """
-    Add a extra_column_error to StartTables that have more columns than the set of expected columns so these can be written to the log.txt
+    Add an extra_column_error to StartTables that have more columns than the set of expected columns so these can be
+    written to the log.txt file.
 
     :param event: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
@@ -145,7 +138,8 @@ def create_extra_column_error(event):
         return event.from_event(
             event,
             extra_column_error=f"Additional columns were found in file titled "
-            f"'{event.filename}' than those expected from schema for filetype = {event.table_name}, so these columns have been removed: {extra_columns}",
+            f"'{event.filename}' than those expected from schema for filetype = {event.table_name}, "
+                               f"so these columns have been removed: {extra_columns}",
         )
 
 
@@ -162,17 +156,14 @@ def save_errors_la(stream, la_log_dir):
     for event in stream:
         try:
             if isinstance(event, ErrorTable) and (
-                event.formatting_error_count is not None
-                and event.blank_error_count is not None
-                and event.table_name is not None
+                event.formatting_error_list is not None
+                and event.blank_error_list is not None
             ):
-                if event.formatting_error_count or event.blank_error_count:
+                if event.formatting_error_list or event.blank_error_list:
                     with open(
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
-                        f.write(event.table_name)
-                        f.write("\n")
                         if event.formatting_error_count:
                             f.write(
                                 "Number of cells that have been made blank "
@@ -225,8 +216,8 @@ def log_errors(stream):
     :return: An updated list of event objects
     """
     stream = blank_error_check(stream)
-    stream = create_formatting_error_count(stream)
-    stream = create_blank_error_count(stream)
+    stream = create_formatting_error_list(stream)
+    stream = create_blank_error_list(stream)
     stream = create_file_match_error(stream)
     stream = create_extra_column_error(stream)
     return stream
