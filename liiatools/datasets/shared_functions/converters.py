@@ -25,6 +25,23 @@ def to_category(string, categories):
     return "formatting_error"
 
 
+def to_integer(value, config):
+    """
+    Convert any strings that should be integers based on the config into integers
+
+    :param value: Some value to convert to an integer
+    :param config: The loaded configuration
+    :return: Either an integer value or a blank string
+    """
+    if config == "integer":
+        if value or value == 0:
+            return int(float(value))
+        else:
+            return ""
+    else:
+        return value
+
+
 def to_date(datevalue, dateformat="%d/%m/%Y"):
     """
     Convert a string to a date based on the dateformat %d/%m/%Y and convert a datetime to a date

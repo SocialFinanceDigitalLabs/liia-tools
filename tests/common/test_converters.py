@@ -10,7 +10,7 @@ def test_to_category():
         {"code": "MF"},
     ]
     assert converters.to_category("M1", category_dict) == "M1"
-    assert converters.to_category("M2", category_dict) == "error"
+    assert converters.to_category("M2", category_dict) == "formatting_error"
     assert converters.to_category("MF", category_dict) == "MF"
     assert converters.to_category("", category_dict) == ""
     assert converters.to_category(None, category_dict) == ""
@@ -20,8 +20,8 @@ def test_to_category():
     assert converters.to_category("false", category_dict) == "0"
     assert converters.to_category(1.0, category_dict) == "1"
     assert converters.to_category("true", category_dict) == "1"
-    assert converters.to_category("string", category_dict) == "error"
-    assert converters.to_category(123, category_dict) == "error"
+    assert converters.to_category("string", category_dict) == "formatting_error"
+    assert converters.to_category(123, category_dict) == "formatting_error"
     assert converters.to_category("", category_dict) == ""
     assert converters.to_category(None, category_dict) == ""
 
