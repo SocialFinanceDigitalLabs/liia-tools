@@ -63,7 +63,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
 
     # Open & Parse file
-    print("Starting # Open & Parse file")
     if (
         check_file_type(
             input,
@@ -86,7 +85,6 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     # Check year is within acceptable range for data retention policy
-    print("Starting # Check year")
     years_to_go_back = 6
     year_start_month = 6
     reference_date = datetime.now()
@@ -95,21 +93,15 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     # Configure stream
-    print("Starting # Configure stream")
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
-
     # Output result
-    #print("Starting # Output result")
     stream = csww_record.message_collector(stream) # <=== this is the problem - not returning any stream data
-    #print(f"Stream = {stream}")
     data = csww_record.export_table(stream)
-    #print(f"Data = {data}")
     data = file_creator.add_fields(input_year, data, la_name, la_code)
-    #print(data)
     file_creator.export_file(input, output, data)
 
 cleanfile("/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",

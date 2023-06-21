@@ -36,46 +36,6 @@ def text_collector(stream):
     return _reduce_dict(data_dict)
 
 
-# @xml_collector
-# def csww_collector(stream):
-#     data_dict = {}
-#     stream = peekable(stream)
-#     last_tag = None
-#     while stream:
-#         event = stream.peek()
-#         last_tag = event.get("tag", last_tag)
-#         if event.get("tag") in (
-#             "Assessments",
-#             "CINPlanDates",
-#             "Section47",
-#             "ChildProtectionPlans",
-#         ):
-#             data_dict.setdefault(event.tag, []).append(text_collector(stream))
-#         else:
-#             if isinstance(event, events.TextNode) and event.text:
-#                 data_dict.setdefault(last_tag, []).append(event.text)
-#             next(stream)
-
-#     return _reduce_dict(data_dict)
-
-
-# @xml_collector
-# def cswwworker_collector(stream):
-#     data_dict = {}
-#     stream = peekable(stream)
-#     assert stream.peek().tag == "CSWWWorker"
-#     while stream:
-#         event = stream.peek()
-#         print(f"Event tag = {event.get('tag')}")
-#         if event.get("tag") == "CSWWdetails":
-#             data_dict.setdefault(event.tag, []).append(text_collector(stream))
-#         # elif event.get("tag") == "LALevelVacancies":
-#         #     data_dict.setdefault(event.tag, []).append(csww_collector(stream))
-#         else:
-#             next(stream)
-#     return _reduce_dict(data_dict)
-
-
 @xml_collector
 def message_collector(stream):
     stream = peekable(stream)
@@ -85,15 +45,12 @@ def message_collector(stream):
     while stream:
         event = stream.peek()
         if event.get("tag") == "Header":
-            print(f"Header stream = {stream}")
             header_record = text_collector(stream)
             if header_record:
                 yield HeaderEvent(record=header_record)
         elif event.get("tag") == "CSWWWorker":
             csww_record = text_collector(stream)
             if csww_record:
-                #print(f"yielding csww_record event: {CSWWEvent(record=csww_record)}")
-                #print(f"CSWWEvent(record=csww_record) = {CSWWEvent(record=csww_record)}")
                 yield CSWWEvent(record=csww_record)
         else:
             next(stream)
@@ -125,7 +82,6 @@ def _maybe_list(value):
         value = []
     if not isinstance(value, list):
         value = [value]
-    print(f"maybe_list(value) = {value}")
     return value
 
 
@@ -142,38 +98,15 @@ def csww_event(record, property, event_name=None):
 
 def event_to_records(event: CSWWEvent) -> Iterator[dict]:
     record = event.record
-    #print(f"event.record = {record}")
-    # child = {
-    #     **record.get("ChildIdentifiers", {}),
-    #     **record.get("ChildCharacteristics", {}),
-    # }
-    # child["Disabilities"] = ",".join(_maybe_list(child.get("Disability")))
 
-    print(record.get("CSWWWorker"))
     for csww_item in _maybe_list(record):
-        yield from csww_event({**child, **csww_item}, "CINreferralDate")
-        yield from csww_event({**child, **csww_item}, "CINclosureDate")
-
-        for assessment in _maybe_list(csww_item.get("Assessments")):
-            assessment["Factors"] = ",".join(
-                _maybe_list(assessment.get("AssessmentFactors"))
-            )
-            yield from csww_event(
-                {**child, **csww_item, **assessment}, "AssessmentActualStartDate"
-            )
-            yield from csww_event(
-                {**child, **csww_item, **assessment}, "AssessmentAuthorisationDate"
-            )
+        yield from csww_event({**csww_item}, "StepUpGrad")
 
 
 def export_table(stream):
-    #print(f"export_table() called for stream: {stream}")
     data = tablib.Dataset(headers=__EXPORT_HEADERS)
-    #print(f"header data in export_table() = {data}")
     for event in stream:
         if isinstance(event, CSWWEvent):
             for record in event_to_records(event):
-                #print("Found data to append")
                 data.append([record.get(k, "") for k in __EXPORT_HEADERS])
-        else: print("No row data to append")
     return data
