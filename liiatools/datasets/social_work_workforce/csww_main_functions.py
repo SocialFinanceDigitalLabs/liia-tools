@@ -18,7 +18,7 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schem
 from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     file_creator,
     configuration as clean_config,
-    csww_record
+    csww_record,
 )
 
 from liiatools.datasets.shared_functions.common import (
@@ -28,8 +28,9 @@ from liiatools.datasets.shared_functions.common import (
     check_year,
     check_year_within_range,
     save_year_error,
-    save_incorrect_year_error
+    save_incorrect_year_error,
 )
+
 
 def generate_sample(output: str):
     """
@@ -51,6 +52,7 @@ def generate_sample(output: str):
             FILE.write(element)
     except FileNotFoundError:
         print("The file path provided does not exist")
+
 
 def cleanfile(input, la_code, la_log_dir, output):
     """
@@ -88,7 +90,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     years_to_go_back = 6
     year_start_month = 6
     reference_date = datetime.now()
-    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+    if (
+        check_year_within_range(
+            input_year, years_to_go_back, year_start_month, reference_date
+        )
+        is False
+    ):
         save_incorrect_year_error(input, la_log_dir)
         return
 
@@ -99,15 +106,19 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     # Output result
-    stream = csww_record.message_collector(stream) # <=== this is the problem - not returning any stream data
+    stream = csww_record.message_collector(
+        stream
+    )  # <=== this is the problem - not returning any stream data
     data = csww_record.export_table(stream)
     data = file_creator.add_fields(input_year, data, la_name, la_code)
     file_creator.export_file(input, output, data)
 
-cleanfile("/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-            "BAD",
-            "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-            "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean"
-            )
+
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+    "BAD",
+    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
 
 print("===> Finished running csww_main_functions.py")

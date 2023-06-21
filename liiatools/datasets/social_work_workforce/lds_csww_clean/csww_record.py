@@ -59,7 +59,7 @@ def message_collector(stream):
 __EXPORT_HEADERS = [
     "AgencyWorker",
     "SWENo",
-    "FTE",   
+    "FTE",
     "PersonBirthDate",
     "GenderCurrent",
     "Ethnicity",
