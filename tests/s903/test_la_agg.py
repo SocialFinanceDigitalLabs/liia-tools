@@ -44,23 +44,16 @@ def test_deduplicate():
 
 
 def test_remove_old_data():
-    latest_data_year = 2022
-    last_year = latest_data_year - 1
-    two_ya = latest_data_year - 2
-    three_ya = latest_data_year - 3
-    four_ya = latest_data_year - 4
-    five_ya = latest_data_year - 5
-    six_ya = latest_data_year - 6
     test_df_1 = pd.DataFrame(
         {
             "YEAR": [
-                latest_data_year,
-                last_year,
-                two_ya,
-                three_ya,
-                four_ya,
-                five_ya,
-                six_ya,
+                2016,
+                2017,
+                2018,
+                2019,
+                2020,
+                2021,
+                2022,
             ]
         }
     )
