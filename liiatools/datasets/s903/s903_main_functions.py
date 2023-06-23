@@ -36,7 +36,7 @@ from liiatools.datasets.shared_functions.common import (
     check_year,
     save_year_error,
     save_incorrect_year_error,
-    check_year_within_range
+    check_year_within_range,
 )
 
 log = logging.getLogger()
@@ -46,6 +46,9 @@ COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
+YEARS_TO_GO_BACK = 7
+YEAR_START_MONTH = 1
+REFERENCE_DATE = datetime.now()
 
 
 def cleanfile(input, la_code, la_log_dir, output):
@@ -84,11 +87,13 @@ def cleanfile(input, la_code, la_log_dir, output):
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
         return
-    
-    years_to_go_back = 7
-    year_start_month = 1
-    reference_date = datetime.now()
-    if check_year_within_range(year, years_to_go_back, year_start_month, reference_date) is False:
+
+    if (
+        check_year_within_range(
+            year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
+        )
+        is False
+    ):
         save_incorrect_year_error(input, la_log_dir)
         return
 
@@ -149,7 +154,12 @@ def la_agg(input, output):
     sort_order = config["sort_order"]
     dedup = config["dedup"]
     s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
-    s903_df = agg_process.remove_old_data(s903_df, years=6)
+    s903_df = agg_process.remove_old_data(
+        s903_df,
+        num_of_years=YEARS_TO_GO_BACK,
+        new_year_start_month=YEAR_START_MONTH,
+        as_at_date=REFERENCE_DATE,
+    )
 
     # If file still has data, after removing old data: re-format and export merged file
     if len(s903_df) > 0:
