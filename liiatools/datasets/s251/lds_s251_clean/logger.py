@@ -106,7 +106,7 @@ def create_file_match_error(event):
     :return: An updated list of event objects
     """
     expected_columns = getattr(event, "expected_columns", None)
-    if expected_columns:
+    if expected_columns is None:
         return event.from_event(
             event,
             match_error=f"Failed to find a set of matching columns headers for file titled '{event.filename}' "
@@ -138,8 +138,7 @@ def create_extra_column_error(event):
         return event.from_event(
             event,
             extra_column_error=f"Additional columns were found in file titled "
-            f"'{event.filename}' than those expected from schema for filetype = {event.table_name}, "
-                               f"so these columns have been removed: {extra_columns}",
+            f"'{event.filename}' than those expected from schema so these columns have been removed: {extra_columns}",
         )
 
 

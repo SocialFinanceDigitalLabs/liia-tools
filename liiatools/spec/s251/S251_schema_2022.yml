@@ -1,0 +1,301 @@
+placement_costs:
+    Child ID:
+        &alphanumeric-not-blank
+        string: "alphanumeric"
+        canbeblank: no
+    Date of birth:
+        &date-blank
+        date: "%d/%m/%Y"
+        canbeblank: yes
+    Gender:
+        category:
+        - code: "1"
+          name: "Male"
+        - code: "2"
+          name: "Female"
+        canbeblank: yes
+    Ethnicity:
+        category:
+        - code: "WBRI"
+          name: "White British"
+        - code: "WIRI"
+          name: "White Irish"
+        - code: "WOTH"
+          name: "Any other White background"
+        - code: "WIRT"
+          name: "Traveller of Irish heritage"
+        - code: "WROM"
+          name: "Gypsy/Roma"
+        - code: "MWBC"
+          name: "White and Black Caribbean"
+        - code: "MWBA"
+          name: "White and Black African"
+        - code: "MWAS"
+          name: "White and Asian"
+        - code: "MOTH"
+          name: "Any other Mixed background"
+        - code: "AIND"
+          name: "Indian"
+        - code: "APKN"
+          name: "Pakistani"
+        - code: "ABAN"
+          name: "Bangladeshi"
+        - code: "AOTH"
+          name: "Any other Asian background"
+        - code: "BCRB"
+          name: "Caribbean"
+        - code: "BAFR"
+          name: "African"
+        - code: "BOTH"
+          name: "Any other Black background"
+        - code: "CHNE"
+          name: "Chinese"
+        - code: "OOTH"
+          name: "Any other ethnic group"
+        - code: "REFU"
+          name: "Refused"
+        - code: "NOBT"
+          name: "Information not yet obtained"
+        canbeblank: yes
+    Disability:
+        category:
+        - code: "NONE"
+          name: "No disability"
+        - code: "MOB"
+          name: "Mobility"
+        - code: "HAND"
+          name: "Hand function"
+        - code: "PC"
+          name: "Personal care"
+        - code: "INC"
+          name: "Incontinence"
+        - code: "COMM"
+          name: "Communication"
+        - code: "LD"
+          name: "Learning"
+        - code: "HEAR"
+          name: "Hearing"
+        - code: "VIS"
+          name: "Vision"
+        - code: "BEH"
+          name: "Behaviour"
+        - code: "CON"
+          name: "Consciousness"
+        - code: "AUT"
+          name: "Autism"
+        - code: "DDA"
+          name: "Other"
+        canbeblank: yes
+    Category of need:
+        category:
+        - code: "1A"  
+          name: "Alcohol misuse: concerns about alcohol misuse by the child"
+        - code: "1B"  
+          name: "Alcohol misuse: concerns about alcohol misuse by the parent(s)/carer(s)"
+        - code: "1C"  
+          name: "Alcohol misuse: concerns about alcohol misuse by another person living in the household"
+        - code: "2A"  
+          name: "Drug misuse: concerns about drug misuse by the child"
+        - code: "2B"  
+          name: "Drug misuse: concerns about drug misuse by the parent(s)/carer(s)"
+        - code: "2C"  
+          name: "Drug misuse: concerns about drug misuse by another person living in the household"
+        - code: "3A"  
+          name: "Domestic violence: concerns about the child being the subject of domestic violence"
+        - code: "3B"  
+          name: "Domestic violence: concerns about the child’s parent(s)/carer(s) being the subject of domestic violence"
+        - code: "3C"  
+          name: "Domestic violence: concerns about another person living in the household being the subject of domestic violence"
+        - code: "4A"  
+          name: "Mental health: concerns about the mental health of the child"
+        - code: "4B"  
+          name: "Mental health: concerns about the mental health of the parent(s)/carer(s)"
+        - code: "4C"  
+          name: "Mental health: concerns about the mental health of another person in the family/household"
+        - code: "5A"  
+          name: "Learning disability: concerns about the child’s learning disability"
+        - code: "5B"  
+          name: "Learning disability: concerns about the parent(s)/carer(s) learning disability"
+        - code: "5C"  
+          name: "Learning disability: concerns about another person in the family/household’s learning disability"
+        - code: "6A" 
+          name: "Physical disability or illness: concerns about a physical disability or illness of the child"
+        - code: "6B"  
+          name: "Physical disability or illness: concerns about a physical disability or illness of the parent(s)/carer(s)"
+        - code: "6C"  
+          name: "Physical disability or illness: concerns about a physical disability or illness of another person in the family/household"
+        - code: "7A"  
+          name: "Young carer: concerns that services may be required or the child’s health or development may be impaired due to their caring responsibilities"
+        - code: "8B"  
+          name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - overseas children who intend to return"
+        - code: "8C" 
+          name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - overseas children who intend to stay"
+        - code: "8D"  
+          name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - UK children in educational placements"
+        - code: "8E"  
+          name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - UK children making alternative family arrangements"
+        - code: "8F"  
+          name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - other"
+        - code: "9A"  
+          name: "UASC: concerns that services may be required or the child may be at risk of harm as an unaccompanied asylum-seeking child"
+        - code: "10A"  
+          name: "Missing: concerns that services may be required or the child may be at risk of harm due to going/being missing"
+        - code: "11A" 
+          name: "Child sexual exploitation: concerns that services may be required or the child may be at risk of harm due to child sexual exploitation"
+        - code: "12A" 
+          name: "Trafficking: concerns that services may be required or the child may be at risk of harm due to trafficking"
+        - code: "13A" 
+          name: "Gangs: concerns that services may be required or the child may be at risk of harm because of involvement in/with gangs"
+        - code: "14A"  
+          name: "Socially unacceptable behaviour: concerns that services may be required or the child may be at risk due to their socially unacceptable behaviour"
+        - code: "15A"  
+          name: "Self-harm: concerns that services may be required or due to suspected/actual self-harming child may be at risk of harm"
+        - code: "16A" 
+          name: "Abuse or neglect – ‘NEGLECT’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect"
+        - code: "17A"  
+          name: "Abuse or neglect – ‘EMOTIONAL ABUSE’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect"
+        - code: "18B"  
+          name: "Abuse or neglect – ‘PHYSICAL ABUSE’ (child on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by another child"
+        - code: "18C" 
+          name: "Abuse or neglect – ‘PHYSICAL ABUSE’ (adult on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by an adult"
+        - code: "19B" 
+          name: "Abuse or neglect – ‘SEXUAL ABUSE’ (child on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by another child"
+        - code: "19C" 
+          name: "Abuse or neglect – ‘SEXUAL ABUSE’ (adult on child): concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect by an adult"
+        - code: "20"  
+          name: "Other"
+        - code: "21" 
+          name: "No factors identified - only use this if there is no evidence of any of the factors above and no further action is being taken"
+        - code: "22A"  
+          name: "Female genital mutilation (FGM) - concerns that services may be required or the child may be at risk due to female genital mutilation"
+        - code: "23A"  
+          name: "Abuse linked to faith or belief - concerns that services may be required or the child may be at risk due to abuse linked to faith or belief"
+        - code: "24A"  
+          name: "Child criminal exploitation: concerns that services may be required or the child may be at risk of harm due to child criminal exploitation"
+        canbeblank: yes
+    Date of last assessment:
+        *date-blank
+    Does the child have an EHCP:
+        &yes-no-blank
+        category:
+        - code: "Yes"
+        - code: "No"
+        canbeblank: yes
+    Is the child UASC:
+        *yes-no-blank
+    'Number of missing episodes in current period of care':
+        &integer-blank
+        numeric: "integer"
+        canbeblank: yes
+    Legal status:
+        category:
+        - code: "C1"
+        - code: "C2"
+        - code: "D1"
+        - code: "E1"
+        - code: "V2"
+        - code: "V3"
+        - code: "V4"
+        - code: "L1"
+        - code: "L2"
+        - code: "L3"
+        - code: "J1"
+        - code: "J2"
+        - code: "J3"
+        canbeblank: yes
+    Placement start date:
+        &date-not-blank
+        date: "%d/%m/%Y"
+        canbeblank: no
+    Placement end date:
+        *date-blank
+    Date of start of current care period:
+        *date-blank
+    Reason for placement change:
+        category:
+        - code: "CARPL"
+        - code: "CLOSE"
+        - code: "ALLEG"
+        - code: "STAND"
+        - code: "APPRR"
+        - code: "CREQB"
+        - code: "CREQO"
+        - code: "CHILD"
+        - code: "LAREQ"
+        - code: "PLACE"
+        - code: "CUSTOD"
+        - code: "OTHER"
+        canbeblank: yes
+    Number of placements in last 12 months:
+        *integer-blank
+    Number of placements in current care period:
+        *integer-blank
+    Placement type:
+        category:
+        - code: "A3"
+        - code: "A4"
+        - code: "A5"
+        - code: "A6"
+        - code: "H5"
+        - code: "K1"
+        - code: "K2"
+        - code: "P1"
+        - code: "P2"
+        - code: "P3"
+        - code: "R1"
+        - code: "R2"
+        - code: "R3"
+        - code: "R5"
+        - code: "S1"
+        - code: "T0"
+        - code: "T1"
+        - code: "T2"
+        - code: "T3"
+        - code: "T4"
+        - code: "U1"
+        - code: "U2"
+        - code: "U3"
+        - code: "U4"
+        - code: "U5"
+        - code: "U6"
+        - code: "Z1"
+        canbeblank: yes
+    Provider type:
+        category:
+        - code: "PR0"
+        - code: "PR1"
+        - code: "PR2"
+        - code: "PR3"
+        - code: "PR4"
+        - code: "PR5"
+        canbeblank: yes
+    Procurement platform:
+        category:
+        - code: "Framework"
+        - code: "Spot"
+        - code: "Block"
+    Procurement framework:
+        &alphanumeric-blank
+        string: "alphanumeric"
+        canbeblank: yes
+    Ofsted URN:
+        *alphanumeric-not-blank
+    Home postcode:
+        &postcode-blank
+        string: "postcode"
+        canbeblank: yes
+    Placement postcode:
+        *postcode-blank
+    LA of placement:
+        *alphanumeric-blank
+    Total committed cost accrued in FY to date:
+        numeric: "currency"
+        canbeblank: no
+    Contribution from social care provider/s:
+        &percentage-blank
+        numeric: "percentage"
+        canbeblank: yes
+    Contribution from health provider/s:
+        *percentage-blank
+    Contribution from education provider/s:
+        *percentage-blank

@@ -1,31 +1,9 @@
 import logging
-from datetime import datetime
 
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 log = logging.getLogger(__name__)
-
-
-def find_year_of_return(stream):
-    """
-    Checks the minimum placement end date years to find year of return
-
-    :param stream: A filtered list of event objects
-    :return: A year of return
-    """
-    minimum_year = None
-    for event in stream:
-        if getattr(event, "header", None) == "Placement end date":
-            placement_end_date = getattr(event, "cell", None)
-            if placement_end_date:
-                year = datetime.strptime(placement_end_date, "%d/%m/%Y").year
-                if not minimum_year:
-                    minimum_year = year
-                elif year < minimum_year:
-                    minimum_year = year
-        # yield event
-    return minimum_year
 
 
 def add_year_column(stream, year):

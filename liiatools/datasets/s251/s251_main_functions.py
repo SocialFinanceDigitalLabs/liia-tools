@@ -3,6 +3,7 @@ import yaml
 import logging
 import click_log
 from datetime import datetime
+import numpy as np
 
 from liiatools.datasets.s251.lds_s251_clean import (
     configuration as clean_config,
@@ -60,34 +61,35 @@ def cleanfile(input, la_code, la_log_dir, output):
             == "incorrect file type"
     ):
         return
+    year = prep.find_year_of_return(input, la_log_dir)
+    if year is np.nan:
+        return
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
-    year = populate.find_year_of_return(stream)
-    print(stream)
-    # stream = populate.add_year_column(stream, year=year)
-    #
-    # # Configure stream
-    # config = clean_config.Config(year)
-    # la_name = flip_dict(config["data_codes"])[la_code]
-    # stream = clean_config.configure_stream(stream, config)
-    #
-    # # Clean stream
-    # stream = filters.clean(stream)
-    # stream = degrade.degrade(stream)
-    # stream = logger.log_errors(stream)
-    # stream = populate.create_la_child_id(stream, la_code=la_code)
-    #
-    # # Output result
-    # stream = file_creator.save_stream(stream, la_name=la_name, output=output)
-    # stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
-    for e in stream:
-        print(e)
+    stream = populate.add_year_column(stream, year=year)
+
+    # Configure stream
+    config = clean_config.Config(year)
+    la_name = flip_dict(config["data_codes"])[la_code]
+    stream = clean_config.configure_stream(stream, config)
+
+    # Clean stream
+    stream = filters.clean(stream)
+    stream = degrade.degrade(stream)
+    stream = logger.log_errors(stream)
+    stream = populate.create_la_child_id(stream, la_code=la_code)
+
+    # Output result
+    stream = file_creator.save_stream(stream, la_name=la_name, output=output)
+    stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
     list(stream)
 
 
-cleanfile(r"C:\Users\patrick.troy\Downloads\LIIA tests\s251_test.csv", "BAR",
-          r"C:\Users\patrick.troy\Downloads\LIIA tests", r"C:\Users\patrick.troy\Downloads\LIIA tests")
+cleanfile(r"C:\Users\patrick.troy\Downloads\LIIA tests\s251_test.csv",
+          "BAR",
+          r"C:\Users\patrick.troy\Downloads\LIIA tests",
+          r"C:\Users\patrick.troy\Downloads\LIIA tests")
 
 
 def generate_sample(output):
