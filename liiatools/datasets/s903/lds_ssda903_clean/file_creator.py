@@ -64,7 +64,9 @@ def create_tables(stream, la_name):
         elif data is not None and isinstance(event, RowEvent):
             try:
                 data.append(event.row + [la_name, event.year])
-            except AttributeError:  # raised in case event.year is missing so data is not added
+            except (
+                AttributeError
+            ):  # raised in case event.year is missing so data is not added
                 pass
         yield event
 
