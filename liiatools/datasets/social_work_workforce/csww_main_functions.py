@@ -8,14 +8,20 @@ from liiatools.datasets.social_work_workforce.sample_data import (
 from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.csdatatools.util.stream import consume
 from liiatools.csdatatools.util.xml import etree, to_xml
+from liiatools.csdatatools.datasets.social_work_workforce import filters
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
 from liiatools.datasets.shared_functions.common import (
-    # flip_dict,
+    flip_dict,
     check_file_type,
     supported_file_types,
     check_year,
     check_year_within_range,
     save_year_error,
     save_incorrect_year_error,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_clean import (
+    configuration as clean_config,
+    logger,
 )
 
 
@@ -85,3 +91,11 @@ def cleanfile(input, la_code, la_log_dir, output):
     ):
         save_incorrect_year_error(input, la_log_dir)
         return
+
+    # Configure stream
+    config = clean_config.Config()
+    la_name = flip_dict(config["data_codes"])[la_code]
+    stream = filters.strip_text(stream)
+    stream = filters.add_context(stream)
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    stream = logger.inherit_LAchildID(stream)
