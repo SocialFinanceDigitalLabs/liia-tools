@@ -120,5 +120,3 @@ cleanfile(
     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 )
-
-print("===> Finished running csww_main_functions.py")
