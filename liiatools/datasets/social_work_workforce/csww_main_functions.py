@@ -1,7 +1,7 @@
-import logging
-import click_log
-import click as click
+# import logging
+# import click_log
 from pathlib import Path
+import click as click
 from datetime import datetime
 
 from liiatools.datasets.social_work_workforce.sample_data import (
@@ -105,10 +105,11 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    
     # Output result
     stream = csww_record.message_collector(
         stream
-    )  # <=== this is the problem - not returning any stream data
+    )
     data = csww_record.export_table(stream)
     data = file_creator.add_fields(input_year, data, la_name, la_code)
     file_creator.export_file(input, output, data)
