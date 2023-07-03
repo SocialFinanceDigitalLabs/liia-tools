@@ -21,7 +21,6 @@ from liiatools.datasets.shared_functions.common import (
 )
 from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     configuration as clean_config,
-    logger,
 )
 
 
@@ -98,4 +97,3 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
-    stream = logger.inherit_LAchildID(stream)
