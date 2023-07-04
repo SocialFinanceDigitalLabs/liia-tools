@@ -90,9 +90,9 @@ def message_collector(stream):
             if header_record:
                 yield HeaderEvent(record=header_record)
         elif event.get("tag") == "Child":
-            cin_record = child_collector(stream)
-            if cin_record:
-                yield CSWWEvent(record=cin_record)
+            csww_record = csww_collector(stream)
+            if csww_record:
+                yield CSWWEvent(record=csww_record)
         else:
             next(stream)
 
