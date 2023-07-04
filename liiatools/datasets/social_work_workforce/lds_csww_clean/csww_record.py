@@ -99,28 +99,6 @@ def _maybe_list(value):
     return value
 
 
-def csww_event_worker(record, property, event_name=None):
-    if event_name is None:
-        event_name = property
-    value = record.get(property)
-    if value:
-        new_record = {**record, "Date": value, "Type": event_name}
-        return ({k: new_record.get(k) for k in __EXPORT_HEADERS_CSWWWORKER},)
-
-    return ()
-
-
-def lalevel_event(record, property, event_name=None):
-    if event_name is None:
-        event_name = property
-    value = record.get(property)
-    if value:
-        new_record = {**record, "Date": value, "Type": event_name}
-        return ({k: new_record.get(k) for k in __EXPORT_HEADERS_LALEVELVAC},)
-
-    return ()
-
-
 def event_to_records(event) -> Iterator[dict]:
     record = event.record
     for item in _maybe_list(record):
