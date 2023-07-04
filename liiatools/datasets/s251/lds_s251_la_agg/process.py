@@ -40,9 +40,7 @@ def deduplicate(s251_df, sort_order, dedup):
     """
     Sorts and removes duplicate records from merged files following schema
     """
-    s251_df = s251_df.sort_values(
-        sort_order, ascending=False, ignore_index=True
-    )
+    s251_df = s251_df.sort_values(sort_order, ascending=False, ignore_index=True)
     s251_df = s251_df.drop_duplicates(subset=dedup, keep="first")
     return s251_df
 

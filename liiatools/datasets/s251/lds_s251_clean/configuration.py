@@ -30,9 +30,7 @@ def add_matched_headers(event, config):
     """
     expected_columns = list(config["placement_costs"].keys())
     if set(expected_columns).issubset(set(event.headers)):
-        return event.from_event(
-            event, expected_columns=expected_columns
-        )
+        return event.from_event(event, expected_columns=expected_columns)
     return event
 
 

@@ -33,7 +33,7 @@ from liiatools.datasets.shared_functions.common import (
     check_file_type,
     supported_file_types,
     save_incorrect_year_error,
-    check_year_within_range
+    check_year_within_range,
 )
 
 log = logging.getLogger()
@@ -64,13 +64,13 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
     prep.drop_empty_rows(input, input)
     if (
-            check_file_type(
-                input,
-                file_types=[".csv"],
-                supported_file_types=supported_file_types,
-                la_log_dir=la_log_dir,
-            )
-            == "incorrect file type"
+        check_file_type(
+            input,
+            file_types=[".csv"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
     ):
         return
     year = prep.find_year_of_return(input, la_log_dir)

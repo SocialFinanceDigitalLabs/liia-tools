@@ -31,10 +31,7 @@ def create_formatting_error_list(stream):
                 formatting_error_list=formatting_error_list,
             )
             formatting_error_list = None
-        elif (
-            formatting_error_list is not None
-            and isinstance(event, events.Cell)
-        ):
+        elif formatting_error_list is not None and isinstance(event, events.Cell):
             formatting_error = getattr(event, "formatting_error", "0")
             if formatting_error == "1":
                 formatting_error_list.append(event.header)
@@ -110,7 +107,7 @@ def create_file_match_error(event):
         return event.from_event(
             event,
             match_error=f"Failed to find a set of matching columns headers for file titled '{event.filename}' "
-                        f"which contains column headers {event.headers} so no output has been produced",
+            f"which contains column headers {event.headers} so no output has been produced",
         )
     else:
         return event

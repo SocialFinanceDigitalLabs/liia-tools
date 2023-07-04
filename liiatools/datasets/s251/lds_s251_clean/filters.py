@@ -4,7 +4,11 @@ from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
-from liiatools.datasets.shared_functions.converters import to_date, to_category, to_integer
+from liiatools.datasets.shared_functions.converters import (
+    to_date,
+    to_category,
+    to_integer,
+)
 from liiatools.datasets.shared_functions.common import check_postcode
 
 log = logging.getLogger(__name__)
@@ -68,7 +72,9 @@ def clean_integers(event):
 
 
 @streamfilter(
-    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event,
+    check=type_check(events.Cell),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def clean_postcodes(event):
     """

@@ -83,7 +83,7 @@ def save_year_error(input, la_log_dir):
     :param la_log_dir: Path to the local authority's log folder
     :return: Text file containing the error information
     """
-    
+
     filename = Path(input).resolve().stem
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     with open(
@@ -93,8 +93,8 @@ def save_year_error(input, la_log_dir):
         f.write(
             f"Could not process '{filename}' because no year was found in the name of the file"
         )
-        
-        
+
+
 def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date):
     """
     Check that year is within permitted range of data retention policy
@@ -113,13 +113,13 @@ def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date
     current_month = as_at_date.month
     if current_month < new_year_start_month:
         earliest_allowed_year = current_year - num_of_years
-        latest_allowed_year = current_year 
+        latest_allowed_year = current_year
     else:
         earliest_allowed_year = current_year - num_of_years + 1  # roll forward one year
         latest_allowed_year = current_year + 1
 
     return earliest_allowed_year <= year_to_check <= latest_allowed_year
-    
+
 
 def save_incorrect_year_error(input, la_log_dir):
     """
@@ -177,10 +177,16 @@ def check_year(filename):
 
     fy_match = re.search(r"(\d{2})(.{0,3}\d{2})(.*)(\d*)", filename)
     if fy_match:
-        if len(fy_match.group(2)) == 2 and int(fy_match.group(2)) == int(fy_match.group(1)) + 1:
+        if (
+            len(fy_match.group(2)) == 2
+            and int(fy_match.group(2)) == int(fy_match.group(1)) + 1
+        ):
             year = "20" + fy_match.group(2)
             return year
-        if len(fy_match.group(2)) == 3 and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1:
+        if (
+            len(fy_match.group(2)) == 3
+            and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1
+        ):
             year = "20" + fy_match.group(2)[-2:]
             return year
         if int(fy_match.group(3)[1:3]) == int(fy_match.group(2)[-2:]) + 1:

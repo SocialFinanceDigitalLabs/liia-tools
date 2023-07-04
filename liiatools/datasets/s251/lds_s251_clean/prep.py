@@ -58,8 +58,8 @@ def _save_year_error(input: str, la_log_dir: str, type: str):
     filename = Path(input).resolve().stem
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     with open(
-            f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
-            "a",
+        f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
+        "a",
     ) as f:
         if type == "missing_column":
             f.write(
@@ -84,7 +84,9 @@ def find_year_of_return(input: str, la_log_dir: str):
     infile = Path(input)
     try:
         data = pd.read_csv(infile, usecols=["Placement end date"])
-        data["Placement end date"] = pd.to_datetime(data["Placement end date"], format="%d/%m/%Y")
+        data["Placement end date"] = pd.to_datetime(
+            data["Placement end date"], format="%d/%m/%Y"
+        )
         year = data["Placement end date"].min().year
         if year is np.nan:
             _save_year_error(input, la_log_dir, "empty_column")

@@ -96,15 +96,21 @@ def generate_s251_child(configuration=None):
     if placement_end_date > date.today():
         placement_end_date = ""
 
-    current_care_period_start_date = placement_start_date - timedelta(days=random.uniform(0, 365))
+    current_care_period_start_date = placement_start_date - timedelta(
+        days=random.uniform(0, 365)
+    )
     if current_care_period_start_date < dob:
         current_care_period_start_date = dob
 
     reason_placement_change = configuration.random_reason_for_placement_change
 
-    placements_in_last_12_months = random.choices([1, 2, 3, 4], [.75, .15, .05, .05])[0]
-    placements_in_current_care_period = placements_in_last_12_months + \
-                                        random.choices([1, 2, 3, 4], [.75, .15, .05, .05])[0]
+    placements_in_last_12_months = random.choices(
+        [1, 2, 3, 4], [0.75, 0.15, 0.05, 0.05]
+    )[0]
+    placements_in_current_care_period = (
+        placements_in_last_12_months
+        + random.choices([1, 2, 3, 4], [0.75, 0.15, 0.05, 0.05])[0]
+    )
 
     placement_type = configuration.random_placement_type
     provider_type = configuration.random_provider_type
@@ -121,15 +127,26 @@ def generate_s251_child(configuration=None):
     yield Cell(header="Date of last assessment", cell=date_of_last_assessment)
     yield Cell(header="Does the child have EHCP", cell=ehcp)
     yield Cell(header="Is the child UASC", cell=uasc)
-    yield Cell(header="Number of missing episodes in current period of care",
-               cell=random.choices([0, 1, 2, 3], [.75, .15, .05, .05])[0])
+    yield Cell(
+        header="Number of missing episodes in current period of care",
+        cell=random.choices([0, 1, 2, 3], [0.75, 0.15, 0.05, 0.05])[0],
+    )
     yield Cell(header="Legal status", cell=legal_status)
     yield Cell(header="Placement start date", cell=placement_start_date)
     yield Cell(header="Placement end date", cell=placement_end_date)
-    yield Cell(header="Date of start of current care period", cell=current_care_period_start_date)
+    yield Cell(
+        header="Date of start of current care period",
+        cell=current_care_period_start_date,
+    )
     yield Cell(header="Reason for placement change", cell=reason_placement_change)
-    yield Cell(header="Number of placements in last 12 months", cell=placements_in_last_12_months)
-    yield Cell(header="Number of placements in current care period", cell=placements_in_current_care_period)
+    yield Cell(
+        header="Number of placements in last 12 months",
+        cell=placements_in_last_12_months,
+    )
+    yield Cell(
+        header="Number of placements in current care period",
+        cell=placements_in_current_care_period,
+    )
     yield Cell(header="Placement type", cell=placement_type)
     yield Cell(header="Provider type", cell=provider_type)
     yield Cell(header="Procurement platform", cell=procurement_platform)
@@ -268,7 +285,9 @@ class Configuration:
         :return: random value from a given element
         """
         if item.startswith("random_"):
-            header = item[7:].capitalize().replace("_", " ")  # Change formatting to match config
+            header = (
+                item[7:].capitalize().replace("_", " ")
+            )  # Change formatting to match config
             values = self._config["placement_costs"][header]["category"]
             if values is not None:
                 return random.choice(values)["code"]

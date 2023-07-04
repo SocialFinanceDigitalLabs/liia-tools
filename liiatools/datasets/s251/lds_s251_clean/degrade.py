@@ -4,7 +4,7 @@ from sfdata_stream_parser.filters.generic import (
     streamfilter,
     pass_event,
     type_check,
-    events
+    events,
 )
 
 from liiatools.datasets.shared_functions.converters import (
@@ -16,7 +16,9 @@ log = logging.getLogger(__name__)
 
 
 @streamfilter(
-    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event,
+    check=type_check(events.Cell),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def degrade_postcodes(event):
     """
