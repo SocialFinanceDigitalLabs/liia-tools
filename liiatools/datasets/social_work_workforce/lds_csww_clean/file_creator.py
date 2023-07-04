@@ -34,22 +34,20 @@ def add_la_name(data, la_name):
 #     return data
 
 
-def add_fields(input_year, data, la_name, la_code):
+def add_fields(input_year, data, la_name):
     """
-    Add YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
-    Append LA_code from config to LAChildID
+    Add YEAR, LA to exported dataframe
 
     :param input_year: A string of the year of return for the current file
     :param data: The dataframe to be cleaned
     :param la_name: LA name
-    :param la_code: LA code
     :return: Cleaned and degraded dataframe
     """
     data = convert_to_dataframe(data)
     data = get_year(data, input_year)
-    data = convert_to_datetime(data)
-    # data = add_school_year(data)
     data = add_la_name(data, la_name)
+
+    # data = convert_to_datetime(data)
     # data = la_prefix(data, la_code)
     # data = degrade_dob(data)
     # data = degrade_expected_dob(data)
@@ -57,8 +55,18 @@ def add_fields(input_year, data, la_name, la_code):
     return data
 
 
-def export_file(input, output, data):
-    filename = Path(input).stem
-    outfile = filename + "_clean.csv"
+def export_file(input, output, data, filenamelevel):
+    """
+    Output cleansed and degraded dataframe as csv file.
+    Example of output filename: social_work_workforce_2022_lalevel_clean.csv
+
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :param data: The cleansed dataframe to be output
+    :param filenamelevel: String appended to output filename indicating aggregation level - worker or LA level
+    :return: csv file containing cleaned and degraded dataframe
+    """
+    filenamestem = Path(input).stem
+    outfile = filenamestem + "_" + filenamelevel + "_clean.csv"
     output_path = Path(output, outfile)
     data.to_csv(output_path, index=False)

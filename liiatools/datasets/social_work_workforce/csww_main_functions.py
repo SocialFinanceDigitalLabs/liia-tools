@@ -1,7 +1,4 @@
-# import logging
-# import click_log
 from pathlib import Path
-import click as click
 from datetime import datetime
 
 from liiatools.datasets.social_work_workforce.sample_data import (
@@ -87,8 +84,8 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     # Check year is within acceptable range for data retention policy
-    years_to_go_back = 6
-    year_start_month = 6
+    years_to_go_back = 7
+    year_start_month = 1
     reference_date = datetime.now()
     if (
         check_year_within_range(
@@ -105,14 +102,15 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
-    
-    # Output result
-    stream = csww_record.message_collector(
-        stream
-    )
-    data = csww_record.export_table(stream)
-    data = file_creator.add_fields(input_year, data, la_name, la_code)
-    file_creator.export_file(input, output, data)
+
+    # Output results
+    stream = csww_record.message_collector(stream)
+
+    data_worker, data_lalevel = csww_record.export_table(stream)
+    data_worker = file_creator.add_fields(input_year, data_worker, la_name)
+    data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name)
+    file_creator.export_file(input, output, data_lalevel, "lalevel")
+    file_creator.export_file(input, output, data_worker, "worker")
 
 
 cleanfile(

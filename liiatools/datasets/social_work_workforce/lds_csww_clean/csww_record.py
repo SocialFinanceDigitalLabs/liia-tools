@@ -10,6 +10,10 @@ class CSWWEvent(events.ParseEvent):
     pass
 
 
+class LALevelEvent(events.ParseEvent):
+    pass
+
+
 class HeaderEvent(events.ParseEvent):
     pass
 
@@ -52,11 +56,15 @@ def message_collector(stream):
             csww_record = text_collector(stream)
             if csww_record:
                 yield CSWWEvent(record=csww_record)
+        elif event.get("tag") == "LALevelVacancies":
+            lalevel_record = text_collector(stream)
+            if lalevel_record:
+                yield LALevelEvent(record=lalevel_record)
         else:
             next(stream)
 
 
-__EXPORT_HEADERS = [
+__EXPORT_HEADERS_CSWWWORKER = [
     "AgencyWorker",
     "SWENo",
     "FTE",
@@ -76,6 +84,12 @@ __EXPORT_HEADERS = [
     "CFKSSstatus",
 ]
 
+__EXPORT_HEADERS_LALEVELVAC = [
+    "NumberOfVacancies",
+    "NoAgencyFTE",
+    "NoAgencyHeadcount",
+]
+
 
 def _maybe_list(value):
     if value is None:
@@ -85,28 +99,52 @@ def _maybe_list(value):
     return value
 
 
-def csww_event(record, property, event_name=None):
+def csww_event_worker(record, property, event_name=None):
     if event_name is None:
         event_name = property
     value = record.get(property)
     if value:
         new_record = {**record, "Date": value, "Type": event_name}
-        return ({k: new_record.get(k) for k in __EXPORT_HEADERS},)
+        return ({k: new_record.get(k) for k in __EXPORT_HEADERS_CSWWWORKER},)
 
     return ()
 
 
-def event_to_records(event: CSWWEvent) -> Iterator[dict]:
-    record = event.record
+def lalevel_event(record, property, event_name=None):
+    if event_name is None:
+        event_name = property
+    value = record.get(property)
+    if value:
+        new_record = {**record, "Date": value, "Type": event_name}
+        return ({k: new_record.get(k) for k in __EXPORT_HEADERS_LALEVELVAC},)
 
+    return ()
+
+
+def event_to_records_worker(event: CSWWEvent) -> Iterator[dict]:
+    record = event.record
     for csww_item in _maybe_list(record):
-        yield from csww_event({**csww_item}, "StepUpGrad")
+        yield from csww_event_worker({**csww_item}, "StepUpGrad")
+
+
+def event_to_records_lalevel(event: LALevelEvent) -> Iterator[dict]:
+    record = event.record
+    for lalevel_item in _maybe_list(record):
+        yield from lalevel_event({**lalevel_item}, "NoAgencyFTE")
 
 
 def export_table(stream):
-    data = tablib.Dataset(headers=__EXPORT_HEADERS)
+    data_worker = tablib.Dataset(headers=__EXPORT_HEADERS_CSWWWORKER)
+    data_lalevel = tablib.Dataset(headers=__EXPORT_HEADERS_LALEVELVAC)
     for event in stream:
         if isinstance(event, CSWWEvent):
-            for record in event_to_records(event):
-                data.append([record.get(k, "") for k in __EXPORT_HEADERS])
-    return data
+            for record in event_to_records_worker(event):
+                data_worker.append(
+                    [record.get(k, "") for k in __EXPORT_HEADERS_CSWWWORKER]
+                )
+        elif isinstance(event, LALevelEvent):
+            for record in event_to_records_lalevel(event):
+                data_lalevel.append(
+                    [record.get(k, "") for k in __EXPORT_HEADERS_LALEVELVAC]
+                )
+    return data_worker, data_lalevel
