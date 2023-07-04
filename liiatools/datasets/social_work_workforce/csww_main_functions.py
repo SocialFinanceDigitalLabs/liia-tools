@@ -1,9 +1,43 @@
+import logging
+import click_log
+import click as click
+import yaml
 from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
 )
 from liiatools.csdatatools.util.stream import consume
-from liiatools.csdatatools.util.xml import etree, to_xml
+from liiatools.csdatatools.util.xml import dom_parse, etree, to_xml
+from liiatools.spec import common as common_asset_dir
+from liiatools.datasets.shared_functions.common import (
+    flip_dict,
+    check_file_type,
+    supported_file_types,
+    check_year,
+    check_year_within_range,
+    save_year_error,
+    save_incorrect_year_error
+)
+from pathlib import Path
+from datetime import datetime
 
+# Dependencies for cleanfile()
+from sfdata_stream_parser.stream import events
+from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
+from liiatools.csdatatools.datasets.cincensus import filters
+
+from liiatools.datasets.cin_census.lds_cin_clean import (
+    file_creator,
+    configuration as clean_config,
+    logger,
+    validator,
+    cin_record,
+    converter,
+)
+# Dependencies for la_agg()
+#from liiatools.datasets.social_work_workforce.lds_csww_la_agg import configuration as agg_config
+#from liiatools.datasets.social_work_workforce.lds_csww_la_agg import process as agg_process
+#SB do we need to create config and process in SWW, they exist in CIN but different process needed for SW
 
 def generate_sample(output: str):
     """
@@ -25,3 +59,56 @@ def generate_sample(output: str):
             FILE.write(element)
     except FileNotFoundError:
         print("The file path provided does not exist")
+def cleanfile(input, la_code, la_log_dir, output):
+    """
+    Cleans input CIN Census xml files according to config and outputs cleaned csv files.
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Open & Parse file
+    if (
+        check_file_type(
+            input,
+            file_types=[".xml"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
+    ):
+        return
+    stream = dom_parse(input)
+    stream = list(stream)
+
+    # Get year from input file
+    try:
+        filename = str(Path(input).resolve().stem)
+        input_year = check_year(filename)
+    except (AttributeError, ValueError):
+        save_year_error(input, la_log_dir)
+        return
+
+    # Check year is within acceptable range for data retention policy
+    years_to_go_back = 6
+    year_start_month = 6
+    reference_date = datetime.now()
+    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+        save_incorrect_year_error(input, la_log_dir)
+        return
+
+# Configure stream
+    config = clean_config.Config()
+    la_name = flip_dict(config["data_codes"])[la_code]
+    stream = filters.strip_text(stream)
+    stream = filters.add_context(stream)
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    stream = logger.inherit_LAchildID(stream)
+    
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",    
+    "BAD", 
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean")

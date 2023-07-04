@@ -67,6 +67,7 @@ def configure_stream(stream, config):
     :param config: The loaded configuration
     :return: An updated set of events/stream with matched configuration
     """
+    print (add_table_name(stream))
     stream = add_table_name(stream)
     stream = inherit_property(stream, "table_name")
     stream = inherit_property(stream, "expected_columns")
