@@ -1,6 +1,9 @@
 from pathlib import Path
 import pandas as pd
 import logging
+import hashlib
+from typing import Dict
+from decouple import config
 
 from liiatools.datasets.shared_functions import converters, common
 
@@ -18,9 +21,10 @@ def get_year(data, year):
 
 
 def convert_to_datetime(data):
-    data[["PersonBirthDate", "RoleStartDate"]] = data[
-        ["PersonBirthDate", "RoleStartDate"]
-    ].apply(pd.to_datetime)
+    if set(["PersonBirthDate", "RoleStartDate"]).issubset(data):
+        data[["PersonBirthDate", "RoleStartDate"]] = data[
+            ["PersonBirthDate", "RoleStartDate"]
+        ].apply(pd.to_datetime)
     return data
 
 
@@ -29,9 +33,42 @@ def add_la_name(data, la_name):
     return data
 
 
-# def la_prefix(data, la_code):
-#     data["LAchildID"] = data["LAchildID"] + "_" + la_code
-#     return data
+def degrade_dob(data):
+    if "PersonBirthDate" in data:
+        if data["PersonBirthDate"] is not None:
+            data["PersonBirthDate"] = data["PersonBirthDate"].apply(
+                lambda row: converters.to_month_only_dob(row)
+            )
+    return data
+
+
+def degrade_SWENo(data):
+    """
+    Replaces SWE number with hashed version
+    """
+    if "SWENo" in data:
+        if data["SWENo"] is not None:
+            data["SWENo"] = data["SWENo"].apply(lambda row: swe_hash(row))
+    return data
+
+
+def swe_hash(swe_num):
+    """
+    Converts the **SWENo** field to a hash code represented in HEX
+    :param swe_num: SWE number to be converted
+    :return: Hash code version of SWE number
+    """
+
+    private_string = config("sec_str", default="")
+
+    private_key = swe_num + private_string
+
+    # Preparing plain text (SWENo) to hash it
+    plaintext = private_key.encode()
+
+    hash_algorithm = hashlib.sha3_256(plaintext)
+
+    return hash_algorithm.hexdigest()
 
 
 def add_fields(input_year, data, la_name):
@@ -47,11 +84,9 @@ def add_fields(input_year, data, la_name):
     data = get_year(data, input_year)
     data = add_la_name(data, la_name)
 
-    # data = convert_to_datetime(data)
-    # data = la_prefix(data, la_code)
-    # data = degrade_dob(data)
-    # data = degrade_expected_dob(data)
-    # data = degrade_death_date(data)
+    data = convert_to_datetime(data)
+    data = degrade_dob(data)
+    data = degrade_SWENo(data)
     return data
 
 
