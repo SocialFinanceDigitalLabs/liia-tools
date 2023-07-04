@@ -56,15 +56,25 @@ def deduplicate(s903_df, table_name, sort_order, dedup):
     return s903_df
 
 
-def remove_old_data(s903_df, years):
+def remove_old_data(s903_df, num_of_years, new_year_start_month, as_at_date):
     """
-    Removes data older than a specified number of years
+    Removes data older than a specified number of years as at reference date
+
+    :param s903_df: Dataframe containing csv data
+    :param num_of_years: The number of years to go back
+    :param new_year_start_month: The month which signifies start of a new year for data retention policy
+    :param as_at_date: The reference date against which we are checking the valid range
+    :return: Dataframe with older years removed
     """
-    year = pd.to_datetime("today").year
-    month = pd.to_datetime("today").month
-    if month <= 6:
-        year = year - 1
-    s903_df = s903_df[s903_df["YEAR"] >= year - years]
+    current_year = pd.to_datetime(as_at_date).year
+    current_month = pd.to_datetime(as_at_date).month
+
+    if current_month < new_year_start_month:
+        earliest_allowed_year = current_year - num_of_years
+    else:
+        earliest_allowed_year = current_year - num_of_years + 1  # roll forward one year
+
+    s903_df = s903_df[s903_df["YEAR"] >= earliest_allowed_year]
     return s903_df
 
 

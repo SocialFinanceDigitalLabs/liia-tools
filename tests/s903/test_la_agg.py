@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 from liiatools.datasets.s903.lds_ssda903_la_agg import process
 
 
@@ -23,7 +24,11 @@ def test_deduplicate():
             "Column 3": ["Answer 1", "Answer 2"],
         }
     )
-    sort_order = {"Table_1": ["Column 2"], "Table_2": ["Column 1"], "Table_3": ["Column 2"]}
+    sort_order = {
+        "Table_1": ["Column 2"],
+        "Table_2": ["Column 1"],
+        "Table_3": ["Column 2"],
+    }
     table_name_1 = "Table_1"
     table_name_2 = "Table_2"
     table_name_3 = "Table_3"
@@ -39,14 +44,30 @@ def test_deduplicate():
 
 
 def test_remove_old_data():
-    this_year = pd.to_datetime("today").year
-    month = pd.to_datetime("today").month
-    last_year = this_year - 1
-    two_ya = this_year - 2
-    three_ya = this_year - 3
-    test_df_1 = pd.DataFrame({"YEAR": [this_year, last_year, two_ya, three_ya]})
-    output_df_1 = process.remove_old_data(test_df_1, 1)
-    if month <= 6:
-        assert len(output_df_1) == 3
-    else:
-        assert len(output_df_1) == 2
+    test_df_1 = pd.DataFrame(
+        {
+            "YEAR": [
+                2016,
+                2017,
+                2018,
+                2019,
+                2020,
+                2021,
+                2022,
+            ]
+        }
+    )
+    output_df_1 = process.remove_old_data(
+        s903_df=test_df_1,
+        num_of_years=7,
+        new_year_start_month=1,
+        as_at_date=datetime.datetime(2023, 7, 15),
+    )
+    assert len(output_df_1) == 6
+    output_df_2 = process.remove_old_data(
+        s903_df=test_df_1,
+        num_of_years=7,
+        new_year_start_month=1,
+        as_at_date=datetime.datetime(2024, 1, 15),
+    )
+    assert len(output_df_2) == 5
