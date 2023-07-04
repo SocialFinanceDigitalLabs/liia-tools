@@ -65,7 +65,7 @@ def remove_old_data(s251_df, num_of_years, new_year_start_month, as_at_date):
     else:
         earliest_allowed_year = current_year - num_of_years + 1  # roll forward one year
 
-    s251_df = s251_df[s251_df["YEAR"] >= earliest_allowed_year]
+    s251_df = s251_df[s251_df["Year"] >= earliest_allowed_year]
     return s251_df
 
 

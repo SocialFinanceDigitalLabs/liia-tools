@@ -29,7 +29,7 @@ column_names:
     - Contribution from health provider/s
     - Contribution from education provider/s
     - LA
-    - YEAR
+    - Year
 
 dates:
     - Date of birth
@@ -39,7 +39,7 @@ dates:
     - Date of start of current care period
 
 sort_order:
-    - YEAR
+    - Year
 
 dedup:
     - Child ID

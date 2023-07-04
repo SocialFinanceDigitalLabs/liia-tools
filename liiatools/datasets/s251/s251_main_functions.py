@@ -74,7 +74,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     ):
         return
     year = prep.find_year_of_return(input, la_log_dir)
-    if year is np.nan:
+    if year is None:
         return
 
     if (
@@ -105,12 +105,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = file_creator.save_stream(stream, la_name=la_name, output=output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
     list(stream)
-
-
-# cleanfile(r"C:\Users\patrick.troy\Downloads\LIIA tests\s251_test.csv",
-#           "BAR",
-#           r"C:\Users\patrick.troy\Downloads\LIIA tests",
-#           r"C:\Users\patrick.troy\Downloads\LIIA tests")
 
 
 def la_agg(input, output):
@@ -151,11 +145,6 @@ def la_agg(input, output):
         agg_process.export_la_file(output, s251_df)
 
 
-# la_agg(r"C:\Users\patrick.troy\Downloads\LIIA tests\s251_test_clean.csv",
-#        r"C:\Users\patrick.troy\Downloads\LIIA tests"
-#        )
-
-
 def pan_agg(input, la_code, output):
     """
     Joins data from newly merged S251 file (output of la-agg()) to existing pan-London S251 data
@@ -175,12 +164,6 @@ def pan_agg(input, la_code, output):
     la_name = flip_dict(config["data_codes"])[la_code]
     s251_df = pan_process.merge_agg_files(output, s251_df, la_name)
     pan_process.export_pan_file(output, s251_df)
-
-
-pan_agg(r"C:\Users\patrick.troy\Downloads\LIIA tests\S251_merged.csv",
-        "BAR",
-        r"C:\Users\patrick.troy\Downloads\LIIA tests"
-        )
 
 
 def generate_sample(output):

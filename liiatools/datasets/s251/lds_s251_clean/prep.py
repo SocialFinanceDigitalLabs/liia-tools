@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 import pandas.errors
+import numpy as np
 
 
 def check_blank_file(input: str, la_log_dir: str):
@@ -44,12 +45,13 @@ def drop_empty_rows(input: str, output: str):
     return data
 
 
-def _save_year_error(input: str, la_log_dir: str):
+def _save_year_error(input: str, la_log_dir: str, type: str):
     """
     Save errors to a text file in the LA log directory
 
     :param input: The input file location, including file name and suffix, and be usable by a Path function
     :param la_log_dir: Path to the local authority's log folder
+    :param type: The type of year error e.g. missing column, empty correct column
     :return: Text file containing the error information
     """
 
@@ -59,10 +61,16 @@ def _save_year_error(input: str, la_log_dir: str):
             f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
             "a",
     ) as f:
-        f.write(
-            f"Could not process '{filename}' because placement end date column was not found which is used to identify"
-            f"the year of return"
-        )
+        if type == "missing_column":
+            f.write(
+                f"Could not process '{filename}' because placement end date column was not found which is used to "
+                f"identify the year of return"
+            )
+        if type == "empty_column":
+            f.write(
+                f"Could not process '{filename}' because placement end date column was empty which is used to "
+                f"identify the year of return"
+            )
 
 
 def find_year_of_return(input: str, la_log_dir: str):
@@ -78,7 +86,10 @@ def find_year_of_return(input: str, la_log_dir: str):
         data = pd.read_csv(infile, usecols=["Placement end date"])
         data["Placement end date"] = pd.to_datetime(data["Placement end date"], format="%d/%m/%Y")
         year = data["Placement end date"].min().year
-        return year
+        if year is np.nan:
+            _save_year_error(input, la_log_dir, "empty_column")
+        else:
+            return year
     except ValueError:
-        _save_year_error(input, la_log_dir)
+        _save_year_error(input, la_log_dir, "missing_column")
         return
