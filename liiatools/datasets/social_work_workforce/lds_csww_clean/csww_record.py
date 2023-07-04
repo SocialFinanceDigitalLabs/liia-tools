@@ -6,7 +6,7 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.collectors import xml_collector
 
 
-class CINEvent(events.ParseEvent):
+class CSWWEvent(events.ParseEvent):
     pass
 
 
@@ -38,7 +38,7 @@ def text_collector(stream):
 
 
 @xml_collector
-def cin_collector(stream):
+def csww_collector(stream):
     data_dict = {}
     stream = peekable(stream)
     last_tag = None
@@ -46,10 +46,10 @@ def cin_collector(stream):
         event = stream.peek()
         last_tag = event.get("tag", last_tag)
         if event.get("tag") in (
-            "Assessments",
-            "CINPlanDates",
-            "Section47",
-            "ChildProtectionPlans",
+            "SWENo",
+            "FTE",
+            "QualInst",
+            "OrgRole",
         ):
             data_dict.setdefault(event.tag, []).append(text_collector(stream))
         else:
