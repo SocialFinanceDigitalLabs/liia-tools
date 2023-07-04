@@ -45,33 +45,11 @@ def csww_collector(stream):
     while stream:
         event = stream.peek()
         last_tag = event.get("tag", last_tag)
-        if event.get("tag") in (
-            "SWENo",
-            "FTE",
-            "QualInst",
-            "OrgRole",
-        ):
+        if event.get("tag") in ("CSWWWorker",):
             data_dict.setdefault(event.tag, []).append(text_collector(stream))
         else:
             if isinstance(event, events.TextNode) and event.text:
                 data_dict.setdefault(last_tag, []).append(event.text)
-            next(stream)
-
-    return _reduce_dict(data_dict)
-
-
-@xml_collector
-def child_collector(stream):
-    data_dict = {}
-    stream = peekable(stream)
-    assert stream.peek().tag == "Child"
-    while stream:
-        event = stream.peek()
-        if event.get("tag") in ("ChildIdentifiers", "ChildCharacteristics"):
-            data_dict.setdefault(event.tag, []).append(text_collector(stream))
-        elif event.get("tag") == "CINdetails":
-            data_dict.setdefault(event.tag, []).append(csww_collector(stream))
-        else:
             next(stream)
 
     return _reduce_dict(data_dict)
@@ -89,7 +67,7 @@ def message_collector(stream):
             header_record = text_collector(stream)
             if header_record:
                 yield HeaderEvent(record=header_record)
-        elif event.get("tag") == "Child":
+        elif event.get("tag") == "CSWWWorker":
             csww_record = csww_collector(stream)
             if csww_record:
                 yield CSWWEvent(record=csww_record)
@@ -98,40 +76,25 @@ def message_collector(stream):
 
 
 __EXPORT_HEADERS = [
-    "LAchildID",
+    "AgencyWorker",
     "Date",
     "Type",
-    "CINreferralDate",
-    "ReferralSource",
-    "PrimaryNeedCode",
-    "CINclosureDate",
-    "ReasonForClosure",
-    "DateOfInitialCPC",
-    "ReferralNFA",
-    "CINPlanStartDate",
-    "CINPlanEndDate",
-    "S47ActualStartDate",
-    "InitialCPCtarget",
-    "ICPCnotRequired",
-    "AssessmentActualStartDate",
-    "AssessmentInternalReviewDate",
-    "AssessmentAuthorisationDate",
-    "Factors",
-    "CPPstartDate",
-    "CPPendDate",
-    "InitialCategoryOfAbuse",
-    "LatestCategoryOfAbuse",
-    "NumberOfPreviousCPP",
-    "UPN",
-    "FormerUPN",
-    "UPNunknown",
+    "SWENo",
+    "FTE",
     "PersonBirthDate",
-    "ExpectedPersonBirthDate",
     "GenderCurrent",
-    "PersonDeathDate",
-    "PersonSchoolYear",
     "Ethnicity",
-    "Disabilities",
+    "QualInst",
+    "StepUpGrad",
+    "RoleStartDate",
+    "StartOrigin",
+    "Cases30",
+    "WorkingDaysLost",
+    "ContractWeeks",
+    "FrontlineGrad",
+    "Absat30Sept",
+    "ReasonAbsence",
+    "CFKSSstatus",
 ]
 
 
@@ -153,7 +116,7 @@ def csww_event(record, property, event_name=None):
 
     return ()
 
-
+# need to check from here:
 def event_to_records(event: CSWWEvent) -> Iterator[dict]:
     record = event.record
     child = {
