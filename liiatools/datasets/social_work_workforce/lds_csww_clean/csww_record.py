@@ -121,16 +121,10 @@ def lalevel_event(record, property, event_name=None):
     return ()
 
 
-def event_to_records_worker(event: CSWWEvent) -> Iterator[dict]:
+def event_to_records(event) -> Iterator[dict]:
     record = event.record
-    for csww_item in _maybe_list(record):
-        yield from csww_event_worker({**csww_item}, "StepUpGrad")
-
-
-def event_to_records_lalevel(event: LALevelEvent) -> Iterator[dict]:
-    record = event.record
-    for lalevel_item in _maybe_list(record):
-        yield from lalevel_event({**lalevel_item}, "NoAgencyFTE")
+    for item in _maybe_list(record):
+        yield from (item,)
 
 
 def export_table(stream):
@@ -138,12 +132,12 @@ def export_table(stream):
     data_lalevel = tablib.Dataset(headers=__EXPORT_HEADERS_LALEVELVAC)
     for event in stream:
         if isinstance(event, CSWWEvent):
-            for record in event_to_records_worker(event):
+            for record in event_to_records(event):
                 data_worker.append(
                     [record.get(k, "") for k in __EXPORT_HEADERS_CSWWWORKER]
                 )
         elif isinstance(event, LALevelEvent):
-            for record in event_to_records_lalevel(event):
+            for record in event_to_records(event):
                 data_lalevel.append(
                     [record.get(k, "") for k in __EXPORT_HEADERS_LALEVELVAC]
                 )
