@@ -3,7 +3,7 @@ from pathlib import Path
 
 import xmlschema
 
-from liiatools.spec import cin_census as cin_asset_dir
+from liiatools.spec import social_work_workforce as csww_asset_dir
 
 
 class Schema:
@@ -13,5 +13,5 @@ class Schema:
     @cached_property
     def schema(self) -> xmlschema.XMLSchema:
         return xmlschema.XMLSchema(
-            Path(cin_asset_dir.__file__).parent / f"CIN_schema_{self.__year}.xsd"
+            Path(csww_asset_dir.__file__).parent / f"csww_schema_{self.__year}.xsd"
         )
