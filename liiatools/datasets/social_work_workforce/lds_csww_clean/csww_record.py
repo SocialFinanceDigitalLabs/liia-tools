@@ -70,7 +70,7 @@ def child_collector(stream):
         if event.get("tag") in ("ChildIdentifiers", "ChildCharacteristics"):
             data_dict.setdefault(event.tag, []).append(text_collector(stream))
         elif event.get("tag") == "CINdetails":
-            data_dict.setdefault(event.tag, []).append(cin_collector(stream))
+            data_dict.setdefault(event.tag, []).append(csww_collector(stream))
         else:
             next(stream)
 
@@ -92,7 +92,7 @@ def message_collector(stream):
         elif event.get("tag") == "Child":
             cin_record = child_collector(stream)
             if cin_record:
-                yield CINEvent(record=cin_record)
+                yield CSWWEvent(record=cin_record)
         else:
             next(stream)
 
@@ -143,7 +143,7 @@ def _maybe_list(value):
     return value
 
 
-def cin_event(record, property, event_name=None):
+def csww_event(record, property, event_name=None):
     if event_name is None:
         event_name = property
     value = record.get(property)
@@ -154,7 +154,7 @@ def cin_event(record, property, event_name=None):
     return ()
 
 
-def event_to_records(event: CINEvent) -> Iterator[dict]:
+def event_to_records(event: CSWWEvent) -> Iterator[dict]:
     record = event.record
     child = {
         **record.get("ChildIdentifiers", {}),
@@ -162,45 +162,45 @@ def event_to_records(event: CINEvent) -> Iterator[dict]:
     }
     child["Disabilities"] = ",".join(_maybe_list(child.get("Disability")))
 
-    for cin_item in _maybe_list(record.get("CINdetails")):
-        yield from cin_event({**child, **cin_item}, "CINreferralDate")
-        yield from cin_event({**child, **cin_item}, "CINclosureDate")
+    for csww_item in _maybe_list(record.get("CINdetails")):
+        yield from csww_event({**child, **csww_item}, "CINreferralDate")
+        yield from csww_event({**child, **csww_item}, "CINclosureDate")
 
-        for assessment in _maybe_list(cin_item.get("Assessments")):
+        for assessment in _maybe_list(csww_item.get("Assessments")):
             assessment["Factors"] = ",".join(
                 _maybe_list(assessment.get("AssessmentFactors"))
             )
-            yield from cin_event(
-                {**child, **cin_item, **assessment}, "AssessmentActualStartDate"
+            yield from csww_event(
+                {**child, **csww_item, **assessment}, "AssessmentActualStartDate"
             )
-            yield from cin_event(
-                {**child, **cin_item, **assessment}, "AssessmentAuthorisationDate"
+            yield from csww_event(
+                {**child, **csww_item, **assessment}, "AssessmentAuthorisationDate"
             )
 
-        for cin in _maybe_list(cin_item.get("CINPlanDates")):
-            yield from cin_event(
-                {**child, **cin_item, **cin},
+        for cin in _maybe_list(csww_item.get("CINPlanDates")):
+            yield from csww_event(
+                {**child, **csww_item, **cin},
                 "CINPlanStartDate",
             )
-            yield from cin_event({**child, **cin_item, **cin}, "CINPlanEndDate")
+            yield from csww_event({**child, **csww_item, **cin}, "CINPlanEndDate")
 
-        for s47 in _maybe_list(cin_item.get("Section47")):
-            yield from cin_event({**child, **cin_item, **s47}, "S47ActualStartDate")
+        for s47 in _maybe_list(csww_item.get("Section47")):
+            yield from csww_event({**child, **csww_item, **s47}, "S47ActualStartDate")
 
-        for cpp in _maybe_list(cin_item.get("ChildProtectionPlans")):
-            yield from cin_event({**child, **cin_item, **cpp}, "CPPstartDate")
-            yield from cin_event({**child, **cin_item, **cpp}, "CPPendDate")
+        for cpp in _maybe_list(csww_item.get("ChildProtectionPlans")):
+            yield from csww_event({**child, **csww_item, **cpp}, "CPPstartDate")
+            yield from csww_event({**child, **csww_item, **cpp}, "CPPendDate")
             for cpp_review in _maybe_list(cpp.get("CPPreviewDate")):
                 cpp_review = {"CPPreviewDate": cpp_review}
-                yield from cin_event(
-                    {**child, **cin_item, **cpp, **cpp_review}, "CPPreviewDate"
+                yield from csww_event(
+                    {**child, **csww_item, **cpp, **cpp_review}, "CPPreviewDate"
                 )
 
 
 def export_table(stream):
     data = tablib.Dataset(headers=__EXPORT_HEADERS)
     for event in stream:
-        if isinstance(event, CINEvent):
+        if isinstance(event, CSWWEvent):
             for record in event_to_records(event):
                 data.append([record.get(k, "") for k in __EXPORT_HEADERS])
     return data
