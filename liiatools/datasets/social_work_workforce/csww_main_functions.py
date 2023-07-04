@@ -1,5 +1,4 @@
 import logging
-import click_log
 import click as click
 import yaml
 from liiatools.datasets.social_work_workforce.sample_data import (
@@ -26,14 +25,14 @@ from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
 from liiatools.csdatatools.datasets.cincensus import filters
 
-from liiatools.datasets.cin_census.lds_cin_clean import (
-    file_creator,
-    configuration as clean_config,
-    logger,
-    validator,
-    cin_record,
-    converter,
-)
+#from liiatools.datasets.social_work_workforce.lds_csww_clean import (
+    #file_creator,
+    #configuration as clean_config,
+   # logger,
+    #validator,
+    #cin_record,
+   # converter,
+#)
 # Dependencies for la_agg()
 #from liiatools.datasets.social_work_workforce.lds_csww_la_agg import configuration as agg_config
 #from liiatools.datasets.social_work_workforce.lds_csww_la_agg import process as agg_process
@@ -107,8 +106,8 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     stream = logger.inherit_LAchildID(stream)
     
-cleanfile(
-    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",    
+cleanfile("/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",    
     "BAD", 
     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean")
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean"
+    )
