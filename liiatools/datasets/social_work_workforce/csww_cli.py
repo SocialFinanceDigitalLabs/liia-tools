@@ -35,3 +35,17 @@ def generate_sample(output: str):
     """
     output = csww_main_functions.generate_sample(output)
     return output
+
+# added to run from command line
+@click_log.simple_verbosity_option(log)
+def cleanfile(input, la_code, la_log_dir, output):
+    """
+    Cleans input social_work_workforce xml files according to config and outputs cleaned csv files.
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+    output = csww_main_functions.cleanfile(input, la_code, la_log_dir, output)
+    return output
