@@ -190,7 +190,7 @@ def la_agg(input, output):
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 # )
 
-la_agg(
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-)
+# la_agg(
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
