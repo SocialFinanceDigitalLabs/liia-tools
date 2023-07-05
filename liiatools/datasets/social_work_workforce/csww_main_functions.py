@@ -129,10 +129,13 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = csww_record.message_collector(stream)
 
     data_worker, data_lalevel = csww_record.export_table(stream)
+
     data_worker = file_creator.add_fields(input_year, data_worker, la_name)
+    data_worker = file_creator.degrade_data(data_worker)
+    file_creator.export_file(input, output, data_worker, "worker")
+
     data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name)
     file_creator.export_file(input, output, data_lalevel, "lalevel")
-    file_creator.export_file(input, output, data_worker, "worker")
 
 
 def la_agg(input, output):
@@ -148,7 +151,6 @@ def la_agg(input, output):
 
     # Open file as DataFrame and match file type
     csww_df = agg_process.read_file(input)
-    print(f"csww_df = {csww_df}")
     column_names = config["column_names"]
     table_name = agg_process.match_load_file(csww_df, column_names)
 
@@ -179,14 +181,14 @@ def la_agg(input, output):
 # Run in Visual Studio Code |>
 
 # cleanfile(
-#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2021.xml",
+#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
 #     "BAD",
 #     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 # )
 
 # la_agg(
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2021_worker_clean.csv",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 # )
 

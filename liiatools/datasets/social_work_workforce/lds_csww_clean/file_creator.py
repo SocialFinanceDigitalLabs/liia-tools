@@ -78,12 +78,21 @@ def add_fields(input_year, data, la_name):
     :param input_year: A string of the year of return for the current file
     :param data: The dataframe to be cleaned
     :param la_name: LA name
-    :return: Cleaned and degraded dataframe
+    :return: Dataframe with year and LA added
     """
     data = convert_to_dataframe(data)
     data = get_year(data, input_year)
     data = add_la_name(data, la_name)
+    return data
 
+
+def degrade_data(data):
+    """
+    Degrade DoB to first of month and replace SWENo with hash code version
+
+    :param data: The dataframe to be cleaned
+    :return: Dataframe with degraded data
+    """
     data = convert_to_datetime(data)
     data = degrade_dob(data)
     data = degrade_SWENo(data)
