@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import datetime
+import yaml
 
 from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
@@ -18,6 +19,7 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     csww_record,
 )
 
+from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
     flip_dict,
     check_file_type,
@@ -27,6 +29,29 @@ from liiatools.datasets.shared_functions.common import (
     save_year_error,
     save_incorrect_year_error,
 )
+
+# dependencies for la_agg()
+from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
+    configuration as agg_config,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
+    process as agg_process,
+)
+
+# dependencies for pan_agg()
+# from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import configuration as pan_config
+# from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import process as pan_process
+
+
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
+# Get all the possible LA codes that could be used
+with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
+    la_list = list(yaml.full_load(las)["data_codes"].values())
+
+# Set constants for data retention period
+YEARS_TO_GO_BACK = 7
+YEAR_START_MONTH = 1
+REFERENCE_DATE = datetime.now()
 
 
 def generate_sample(output: str):
@@ -84,12 +109,9 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     # Check year is within acceptable range for data retention policy
-    years_to_go_back = 7
-    year_start_month = 1
-    reference_date = datetime.now()
     if (
         check_year_within_range(
-            input_year, years_to_go_back, year_start_month, reference_date
+            input_year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
         )
         is False
     ):
@@ -113,9 +135,62 @@ def cleanfile(input, la_code, la_log_dir, output):
     file_creator.export_file(input, output, data_worker, "worker")
 
 
-cleanfile(
-    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-    "BAD",
-    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+def la_agg(input, output):
+    """
+    Joins data from newly cleaned social work workforce census files (output of cleanfile()) to existing social work workforce census files for the depositing local authority
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
+
+    # Open file as DataFrame and match file type
+    csww_df = agg_process.read_file(input)
+    print(f"csww_df = {csww_df}")
+    column_names = config["column_names"]
+    table_name = agg_process.match_load_file(csww_df, column_names)
+
+    # Merge file with existing file of the same type in LA output folder
+    csww_df = agg_process.merge_la_files(output, csww_df, table_name)
+
+    # De-duplicate and remove old data according to schema
+    if table_name == "CSWWWorker":
+        dates = config["dates"]
+        csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
+    sort_order = config["sort_order"]
+    dedup = config["dedup"]
+    csww_df = agg_process.deduplicate(csww_df, table_name, sort_order, dedup)
+    csww_df = agg_process.remove_old_data(
+        csww_df,
+        num_of_years=YEARS_TO_GO_BACK,
+        new_year_start_month=YEAR_START_MONTH,
+        as_at_date=REFERENCE_DATE,
+    )
+
+    # If file still has data, after removing old data: re-format and export merged file
+    if len(csww_df) > 0:
+        if table_name == "CSWWWorker":
+            csww_df = agg_process.convert_dates(csww_df, dates, table_name)
+        agg_process.export_la_file(output, table_name, csww_df)
+
+
+# Run in Visual Studio Code |>
+
+# cleanfile(
+#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2021.xml",
+#     "BAD",
+#     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
+
+# la_agg(
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2021_worker_clean.csv",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
+
+la_agg(
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 )

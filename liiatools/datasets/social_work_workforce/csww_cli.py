@@ -35,3 +35,28 @@ def generate_sample(output: str):
     """
     output = csww_main_functions.generate_sample(output)
     return output
+
+
+@csww.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+def la_agg(input, output):
+    """
+    Joins data from newly cleaned CSWW files (output of cleanfile()) to existing CSWW files data for the depositing local authority
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+    csww_main_functions.la_agg(input, output)
