@@ -1,12 +1,13 @@
 import logging
 from typing import List
-
+import xml.etree.ElementTree as ET
 import xmlschema
+from xmlschema import XMLSchemaValidatorError
+
 from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
 from sfdata_stream_parser.collectors import collector, block_check
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
-from xmlschema import XMLSchemaValidatorError
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +30,6 @@ def add_context(event, context: List[str]):
         context.pop()
     else:
         local_context = tuple(context)
-
     return event.from_event(event, context=local_context)
 
 
@@ -54,8 +54,43 @@ def strip_text(event):
         return None
 
 
+def _create_category_dict(field: str, file: str):
+    """
+    Create a dictionary containing the different categorical values of a given field to conform categories
+    e.g. {'category': [{'code': '0', 'name': 'Not an Agency Worker'}, {'code': '1', 'name': 'Agency Worker'}]}
+
+    :param field: Name of the categorical field you want to find the values for
+    :param file: Path to the .xsd schema containing possible categories
+    :return: Dictionary of categorical values and potential alternatives
+    """
+    category_dict = {"category": []}
+
+    xsd_xml = ET.parse(file)
+    search_elem = f".//{{http://www.w3.org/2001/XMLSchema}}simpleType[@name='{field}']"
+    element = xsd_xml.find(search_elem)
+
+    if element is not None:
+        search_value = f".//{{http://www.w3.org/2001/XMLSchema}}enumeration"
+        value = element.findall(search_value)
+        if value:
+            for v in value:
+                code_dict = {"code": v.get("value")}
+                category_dict["category"].append(code_dict)
+
+            search_doc = f".//{{http://www.w3.org/2001/XMLSchema}}documentation"
+            documentation = element.findall(search_doc)
+            for i, d in enumerate(documentation):
+                name_dict = {"name": d.text}
+                category_dict["category"][i] = {**category_dict["category"][i], **name_dict}
+
+            return category_dict
+
+    else:
+        return
+
+
 @streamfilter()
-def add_schema(event, schema: xmlschema.XMLSchema):
+def add_schema(event, schema: xmlschema.XMLSchema, schema_path: str):
     """
     Requires each event to have event.context as set by :func:`add_context`
 
@@ -65,13 +100,18 @@ def add_schema(event, schema: xmlschema.XMLSchema):
 
     Provides: path, schema
     """
+    schema_dict = None
     assert (
         event.context
     ), "This filter required event.context to be set - see add_context"
     path = "/".join(event.context)
     tag = event.context[-1]
     el = schema.get_element(tag, path)
-    return event.from_event(event, path=path, schema=el)
+
+    if el.type.name is not None and el.type.name[-4:] == "type":
+        schema_dict = _create_category_dict(el.type.name, schema_path)
+
+    return event.from_event(event, path=path, schema=el, schema_dict=schema_dict)
 
 
 def _get_validation_error(schema, node) -> XMLSchemaValidatorError:

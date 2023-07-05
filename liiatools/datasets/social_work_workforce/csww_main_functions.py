@@ -11,12 +11,13 @@ from liiatools.csdatatools.util.xml import etree, to_xml
 # Dependencies for cleanfile()
 from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.csdatatools.datasets.cincensus import filters
-from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema, FilePath
 
 from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     file_creator,
     configuration as clean_config,
     csww_record,
+    cleaner,
 )
 
 from liiatools.spec import common as common_asset_dir
@@ -123,7 +124,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
-    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema, schema_path=FilePath(input_year).path)
+
+    # Clean stream
+    stream = cleaner.clean_dates(stream, schema=FilePath(input_year).path)
 
     # Output results
     stream = csww_record.message_collector(stream)
