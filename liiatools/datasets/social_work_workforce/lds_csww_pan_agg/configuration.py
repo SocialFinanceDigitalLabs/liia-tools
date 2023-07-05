@@ -2,15 +2,15 @@ from pathlib import Path
 import logging
 import datetime
 import os
-import yaml
 from string import Template
+import yaml
 
-from liiatools.spec import s903 as s903_asset_dir
+from liiatools.spec import social_work_workforce as csww_asset_dir
 from liiatools.spec import common as common_asset_dir
 
 log = logging.getLogger(__name__)
 
-DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
+DEFAULT_CONFIG_DIR = Path(csww_asset_dir.__file__).parent
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 

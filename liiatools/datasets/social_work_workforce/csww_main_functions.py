@@ -40,8 +40,8 @@ from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
 )
 
 # dependencies for pan_agg()
-# from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import configuration as pan_config
-# from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import process as pan_process
+from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import configuration as pan_config
+from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import process as pan_process
 
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
@@ -182,21 +182,52 @@ def la_agg(input, output):
         agg_process.export_la_file(output, table_name, csww_df)
 
 
+def pan_agg(input, la_code, output):
+    """
+    Joins data from newly merged social work workforce file (output of la-agg()) to existing pan-London workforce data
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = pan_config.Config()
+
+    # Read file and match type
+    csww_df = pan_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = pan_process.match_load_file(csww_df, column_names)
+
+    # Remove unwanted datasets and merge wanted with existing output
+    pan_data_kept = config["pan_data_kept"]
+    if table_name in pan_data_kept:
+        la_name = flip_dict(config["data_codes"])[la_code]
+        csww_df = pan_process.merge_agg_files(output, table_name, csww_df, la_name)
+        pan_process.export_pan_file(output, table_name, csww_df)
+
+
 # Run in Visual Studio Code |>
 
-# cleanfile(
-#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-#     "BAD",
-#     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-# )
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/NEW/social_work_workforce_2022.xml",
+    "NEW",
+    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
 
-# la_agg(
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-# )
+la_agg(
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
 
-# la_agg(
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-# )
+la_agg(
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
+
+pan_agg(
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/CSWW_CSWWWorker_merged.csv",
+    "NEW",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
