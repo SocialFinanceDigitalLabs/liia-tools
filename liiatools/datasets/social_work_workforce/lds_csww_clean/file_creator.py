@@ -18,8 +18,8 @@ def get_year(data, year):
 
 
 def convert_to_datetime(data):
-    data[["PersonBirthDate", "PersonDeathDate", "ExpectedPersonBirthDate"]] = data[
-        ["PersonBirthDate", "PersonDeathDate", "ExpectedPersonBirthDate"]
+    data[["PersonBirthDate", "RoleStartDate"]] = data[
+        ["PersonBirthDate", "RoleStartDate"]
     ].apply(pd.to_datetime)
     return data
 
@@ -47,7 +47,7 @@ def add_la_name(data, la_name):
 
 
 def la_prefix(data, la_code):
-    data["LAchildID"] = data["LAchildID"] + "_" + la_code
+    data["SWENo"] = data["SWENo"] + "_" + la_code
     return data
 
 
@@ -59,20 +59,20 @@ def degrade_dob(data):
         return data
 
 
-def degrade_expected_dob(data):
-    if data["ExpectedPersonBirthDate"] is not None:
-        data["ExpectedPersonBirthDate"] = data["ExpectedPersonBirthDate"].apply(
-            lambda row: converters.to_month_only_dob(row)
-        )
-        return data
+# def degrade_expected_dob(data):
+#     if data["ExpectedPersonBirthDate"] is not None:
+#         data["ExpectedPersonBirthDate"] = data["ExpectedPersonBirthDate"].apply(
+#             lambda row: converters.to_month_only_dob(row)
+#         )
+#         return data
 
 
-def degrade_death_date(data):
-    if data["PersonDeathDate"] is not None:
-        data["PersonDeathDate"] = data["PersonDeathDate"].apply(
-            lambda row: converters.to_month_only_dob(row)
-        )
-        return data
+# def degrade_death_date(data):
+#     if data["PersonDeathDate"] is not None:
+#         data["PersonDeathDate"] = data["PersonDeathDate"].apply(
+#             lambda row: converters.to_month_only_dob(row)
+#         )
+#         return data
 
 
 def add_fields(input_year, data, la_name, la_code):
@@ -93,8 +93,8 @@ def add_fields(input_year, data, la_name, la_code):
     data = add_la_name(data, la_name)
     data = la_prefix(data, la_code)
     data = degrade_dob(data)
-    data = degrade_expected_dob(data)
-    data = degrade_death_date(data)
+    # data = degrade_expected_dob(data)
+    # data = degrade_death_date(data)
     return data
 
 
