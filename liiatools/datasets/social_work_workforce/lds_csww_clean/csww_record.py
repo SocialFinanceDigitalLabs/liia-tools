@@ -100,26 +100,30 @@ def _maybe_list(value):
     return value
 
 
-def event_to_wkrecords(event: CSWWEvent) -> Iterator[dict]:
+# def event_to_wkrecords(event: CSWWEvent) -> Iterator[dict]:
+#     record = event.record
+#     for item in _maybe_list(record):
+#         yield from (item,)
+
+
+# def event_to_larecords(event: LAEvent) -> Iterator[dict]:
+#     record = event.record
+#     for item in _maybe_list(record):
+#         yield from (item,)
+
+def event_recorder(event) -> Iterator[dict]:
     record = event.record
     for item in _maybe_list(record):
         yield from (item,)
-
-
-def event_to_larecords(event: LAEvent) -> Iterator[dict]:
-    record = event.record
-    for item in _maybe_list(record):
-        yield from (item,)
-
 
 def export_table(stream):
     data_wk = tablib.Dataset(headers=__EXPORT_HEADERS_WKLEVEL)
     data_la = tablib.Dataset(headers=__EXPORT_HEADERS_LALEVEL)
     for event in stream:
         if isinstance(event, CSWWEvent):
-            for record in event_to_wkrecords(event):
+            for record in event_recorder(event):
                 data_wk.append([record.get(k, "") for k in __EXPORT_HEADERS_WKLEVEL])
         elif isinstance(event, LAEvent):
-            for record in event_to_larecords(event):
+            for record in event_recorder(event):
                 data_la.append([record.get(k, "") for k in __EXPORT_HEADERS_LALEVEL])
     return data_wk, data_la

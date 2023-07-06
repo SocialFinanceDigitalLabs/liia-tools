@@ -35,13 +35,13 @@ def add_la_name(data, la_name):
     data["LA"] = la_name
     return data
 
-def degrade_dob(data):
-    if "PersonBirthDate" in data:
-        if data["PersonBirthDate"] is not None:
-            data["PersonBirthDate"] = data["PersonBirthDate"].apply(
-                lambda row: converters.to_month_only_dob(row)
-            )
-    return data
+# def degrade_dob(data):
+#     if "PersonBirthDate" in data:
+#         if data["PersonBirthDate"] is not None:
+#             data["PersonBirthDate"] = data["PersonBirthDate"].apply(
+#                 lambda row: converters.to_month_only_dob(row)
+#             )
+#     return data
 
 
 # def la_prefix(data, la_code):
@@ -71,13 +71,13 @@ def add_fields(input_year, data, la_name, la_code):
 
     data = add_la_name(data, la_name)
     data = la_prefix(data, la_code)
-    data = degrade_dob(data)
+    #data = degrade_dob(data)
 
     return data
 
 
-def export_file(input, output, data, filenamelevel):
+def export_file(input, output, data, wkorlalevel):
     filename = Path(input).stem
-    outfile = filename + "_" + filenamelevel + "_clean.csv"
+    outfile = filename + "_" + wkorlalevel + "_clean.csv"
     output_path = Path(output, outfile)
     data.to_csv(output_path, index=False)
