@@ -6,12 +6,14 @@ from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
 )
 from liiatools.csdatatools.util.stream import consume
-from liiatools.csdatatools.util.xml import etree, to_xml
+from liiatools.csdatatools.util.xml import etree, to_xml, dom_parse
 
 # Dependencies for cleanfile()
-from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.csdatatools.datasets.cincensus import filters
-from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema, FilePath
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import (
+    Schema,
+    FilePath,
+)
 
 from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     file_creator,
@@ -34,14 +36,14 @@ from liiatools.datasets.shared_functions.common import (
 # dependencies for la_agg()
 from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
     configuration as agg_config,
-)
-from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
     process as agg_process,
 )
 
 # dependencies for pan_agg()
-from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import configuration as pan_config
-from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import process as pan_process
+from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import (
+    configuration as pan_config,
+    process as pan_process,
+)
 
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
@@ -124,10 +126,14 @@ def cleanfile(input, la_code, la_log_dir, output):
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
-    stream = filters.add_schema(stream, schema=Schema(input_year).schema, schema_path=FilePath(input_year).path)
+    stream = filters.add_schema(
+        stream, schema=Schema(input_year).schema, schema_path=FilePath(input_year).path
+    )
 
     # Clean stream
-    stream = cleaner.clean_dates(stream, schema=FilePath(input_year).path)
+    #stream = cleaner.clean_dates(stream)
+    #stream = cleaner.clean_categories(stream)
+
 
     # Output results
     stream = csww_record.message_collector(stream)
@@ -209,25 +215,25 @@ def pan_agg(input, la_code, output):
 
 # Run in Visual Studio Code |>
 
-cleanfile(
-    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/NEW/social_work_workforce_2022.xml",
-    "NEW",
-    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-)
+# cleanfile(
+#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+#     "BAD",
+#     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
 
-la_agg(
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-)
+# la_agg(
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
 
-la_agg(
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-)
+# la_agg(
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
 
-pan_agg(
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/CSWW_CSWWWorker_merged.csv",
-    "NEW",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-)
+# pan_agg(
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/CSWW_CSWWWorker_merged.csv",
+#     "BAD",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+# )
