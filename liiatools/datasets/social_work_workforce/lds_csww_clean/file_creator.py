@@ -24,21 +24,7 @@ def convert_to_datetime(data):
     return data
 
 
-def _get_person_school_year(datevalue):
-    if datevalue.month >= 9:
-        school_year = datevalue.year
-    elif datevalue.month <= 8:
-        school_year = datevalue.year - 1
-    else:
-        school_year = None
-    return school_year
 
-
-def add_school_year(data):
-    data["PersonSchoolYear"] = data["PersonBirthDate"].apply(
-        lambda row: _get_person_school_year(row)
-    )
-    return data
 
 
 def add_la_name(data, la_name):
@@ -51,28 +37,6 @@ def la_prefix(data, la_code):
     return data
 
 
-def degrade_dob(data):
-    if data["PersonBirthDate"] is not None:
-        data["PersonBirthDate"] = data["PersonBirthDate"].apply(
-            lambda row: converters.to_month_only_dob(row)
-        )
-        return data
-
-
-def degrade_expected_dob(data):
-    if data["ExpectedPersonBirthDate"] is not None:
-        data["ExpectedPersonBirthDate"] = data["ExpectedPersonBirthDate"].apply(
-            lambda row: converters.to_month_only_dob(row)
-        )
-        return data
-
-
-def degrade_death_date(data):
-    if data["PersonDeathDate"] is not None:
-        data["PersonDeathDate"] = data["PersonDeathDate"].apply(
-            lambda row: converters.to_month_only_dob(row)
-        )
-        return data
 
 
 def add_fields(input_year, data, la_name, la_code):
