@@ -112,7 +112,6 @@ def event_to_larecords(event: LAEvent) -> Iterator[dict]:
         yield from (item,)
 
 
-# need to check from here:
 def export_table(stream):
     data_wk = tablib.Dataset(headers=__EXPORT_HEADERS_WKLEVEL)
     data_la = tablib.Dataset(headers=__EXPORT_HEADERS_LALEVEL)
