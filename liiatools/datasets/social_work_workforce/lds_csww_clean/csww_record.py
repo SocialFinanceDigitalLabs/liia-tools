@@ -10,6 +10,10 @@ class CSWWEvent(events.ParseEvent):
     pass
 
 
+class LAEvent(events.ParseEvent):
+    pass
+
+
 class HeaderEvent(events.ParseEvent):
     pass
 
@@ -53,11 +57,15 @@ def message_collector(stream):
             csww_record = text_collector(stream)
             if csww_record:
                 yield CSWWEvent(record=csww_record)
+        elif event.get("tag") == "LALevelVacancies":
+            lalevel_record = text_collector(stream)
+            if lalevel_record:
+                yield LAEvent(record=lalevel_record)
         else:
             next(stream)
 
 
-__EXPORT_HEADERS = [
+__EXPORT_HEADERS_WKLEVEL = [
     "AgencyWorker",
     "SWENo",
     "FTE",
@@ -77,6 +85,12 @@ __EXPORT_HEADERS = [
     "CFKSSstatus",
 ]
 
+__EXPORT_HEADERS_LALEVEL = [
+    "NumberOfVacancies",
+    "NoAgencyFTE",
+    "NoAgencyHeadcount",
+]
+
 
 def _maybe_list(value):
     if value is None:
@@ -86,7 +100,13 @@ def _maybe_list(value):
     return value
 
 
-def event_to_records(event: CSWWEvent) -> Iterator[dict]:
+def event_to_wkrecords(event: CSWWEvent) -> Iterator[dict]:
+    record = event.record
+    for item in _maybe_list(record):
+        yield from (item,)
+
+
+def event_to_larecords(event: LAEvent) -> Iterator[dict]:
     record = event.record
     for item in _maybe_list(record):
         yield from (item,)
@@ -94,9 +114,13 @@ def event_to_records(event: CSWWEvent) -> Iterator[dict]:
 
 # need to check from here:
 def export_table(stream):
-    data = tablib.Dataset(headers=__EXPORT_HEADERS)
+    data_wk = tablib.Dataset(headers=__EXPORT_HEADERS_WKLEVEL)
+    data_la = tablib.Dataset(headers=__EXPORT_HEADERS_LALEVEL)
     for event in stream:
         if isinstance(event, CSWWEvent):
-            for record in event_to_records(event):
-                data.append([record.get(k, "") for k in __EXPORT_HEADERS])
-    return data
+            for record in event_to_wkrecords(event):
+                data_wk.append([record.get(k, "") for k in __EXPORT_HEADERS_WKLEVEL])
+        elif isinstance(event, LAEvent):
+            for record in event_to_larecords(event):
+                data_la.append([record.get(k, "") for k in __EXPORT_HEADERS_LALEVEL])
+    return data_wk, data_la

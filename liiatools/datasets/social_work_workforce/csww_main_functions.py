@@ -81,8 +81,8 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     # Check year is within acceptable range for data retention policy
-    years_to_go_back = 6
-    year_start_month = 6
+    years_to_go_back = 7
+    year_start_month = 1
     reference_date = datetime.now()
     if (
         check_year_within_range(
@@ -102,9 +102,12 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Output result
     stream = csww_record.message_collector(stream)
-    data = csww_record.export_table(stream)
-    data = file_creator.add_fields(input_year, data, la_name, la_code)
-    file_creator.export_file(input, output, data)
+    data_wklevel = csww_record.export_table(stream)
+    data_lalevel = csww_record.export_table(stream)
+    data_wklevel = file_creator.add_fields(input_year, data_wklevel, la_name, la_code)
+    data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name, la_code)
+    file_creator.export_file(input, output, data_wklevel)
+    file_creator.export_file(input, output, data_lalevel)
 
 cleanfile(
     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
