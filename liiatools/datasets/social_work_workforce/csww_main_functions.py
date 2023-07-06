@@ -102,12 +102,14 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Output result
     stream = csww_record.message_collector(stream)
-    data_wklevel = csww_record.export_table(stream)
-    data_lalevel = csww_record.export_table(stream)
+
+    data_wklevel, data_lalevel = csww_record.export_table(stream)
+
     data_wklevel = file_creator.add_fields(input_year, data_wklevel, la_name, la_code)
+    file_creator.export_file(input, output, data_wklevel, "workerlevel")
+
     data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name, la_code)
-    file_creator.export_file(input, output, data_wklevel)
-    file_creator.export_file(input, output, data_lalevel)
+    file_creator.export_file(input, output, data_lalevel, "lalevel")
 
 cleanfile(
     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
