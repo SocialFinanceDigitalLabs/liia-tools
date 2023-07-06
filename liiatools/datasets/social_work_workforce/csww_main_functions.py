@@ -106,9 +106,9 @@ def cleanfile(input, la_code, la_log_dir, output):
     data = file_creator.add_fields(input_year, data, la_name, la_code)
     file_creator.export_file(input, output, data)
 
-# cleanfile(
-#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-#     "BAD",
-#     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-# )
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+    "BAD",
+    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)

@@ -9,6 +9,10 @@ from liiatools.datasets.social_work_workforce import csww_main_functions
 
 from liiatools.spec import common as common_asset_dir
 
+# from liiatools.datasets.social_work_workforce.lds_csww_clean import (
+#     logger,
+# )
+
 log = logging.getLogger()
 click_log.basic_config(log)
 
@@ -16,9 +20,6 @@ COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
-
-logger = logging.getLogger()
-click_log.basic_config(logger)
 
 
 @click.group()
@@ -37,7 +38,7 @@ def csww():
     type=str,
     help="A string specifying the output file location, including the file name and suffix",
 )
-@click_log.simple_verbosity_option(logger)
+@click_log.simple_verbosity_option(log)
 def generate_sample(output: str):
     """
     Export a sample file for testing
@@ -56,6 +57,12 @@ def generate_sample(output: str):
     required=True,
     type=str,
     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
+    "--la_code",
+    required=True,
+    type=click.Choice(la_list, case_sensitive=False),
+    help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(
     "--la_log_dir",
