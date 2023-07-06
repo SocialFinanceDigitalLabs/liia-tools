@@ -1,13 +1,15 @@
 import logging
 import click as click
 import click_log
+from pathlib import Path
+import yaml
+from datetime import datetime
 
 from liiatools.datasets.social_work_workforce import csww_main_functions
 
 
-logger = logging.getLogger()
-click_log.basic_config(logger)
-
+log = logging.getLogger()
+click_log.basic_config(log)
 
 @click.group()
 def csww():
@@ -25,7 +27,7 @@ def csww():
     type=str,
     help="A string specifying the output file location, including the file name and suffix",
 )
-@click_log.simple_verbosity_option(logger)
+@click_log.simple_verbosity_option(log)
 def generate_sample(output: str):
     """
     Export a sample file for testing

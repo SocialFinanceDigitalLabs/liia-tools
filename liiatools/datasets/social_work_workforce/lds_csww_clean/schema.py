@@ -11,7 +11,7 @@ class Schema:
         self.__year = year
 
     @cached_property
-    def Schema(self) -> xmlschema.XMLSchema:
+    def schema(self) -> xmlschema.XMLSchema:
         return xmlschema.XMLSchema(
             Path(social_work_workforce_asset_dir.__file__).parent / f"social_work_workforce_schema_{self.__year}.xsd"
         )

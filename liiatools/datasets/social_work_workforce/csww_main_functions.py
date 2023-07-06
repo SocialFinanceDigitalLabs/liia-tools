@@ -28,7 +28,7 @@ from liiatools.datasets.shared_functions.common import (
 #from sfdata_stream_parser.stream import events
 from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
-# copy path /workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
+# liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
 from liiatools.csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.social_work_workforce.lds_csww_clean import (

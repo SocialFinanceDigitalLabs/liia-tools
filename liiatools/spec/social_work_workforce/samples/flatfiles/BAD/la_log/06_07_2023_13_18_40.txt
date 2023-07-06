@@ -1,0 +1,55 @@
+[06/07/2023 at 13:18:40]: Validating 'social_work_workforce_2022.xml'
+[06/07/2023 at 13:18:41]: Worker validation errors: 
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 39]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 79]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'QualInst' on line 79]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 95]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 112]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 142]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 142]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'OrgRole' on line 157]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 175]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 194]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 194]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 210]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'GenderCurrent' on line 210]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'Ethnicity' on line 210]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'QualInst' on line 210]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'FTE30' on line 210]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 231]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'PersonBirthDate' on line 251]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'FTE30' on line 251]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'FrontlineGrad' on line 251]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'FrontlineGrad' on line 270]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'GenderCurrent' on line 289]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 326]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'Ethnicity' on line 326]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'QualInst' on line 326]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'OrgRole' on line 326]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'FrontlineGrad' on line 326]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 360]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'GenderCurrent' on line 360]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'QualInst' on line 360]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 360]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 360]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 378]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 394]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'StartOrigin' on line 394]: Missing tag
+[06/07/2023 at 13:18:41]: [Tag 'StepUpGrad' on line 428]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'OrgRole' on line 428]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'WorkingDaysLost' on line 428]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 444]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'CSWWWorker' on line 464]: Not formatted as expected
+[06/07/2023 at 13:18:41]: [Tag 'GenderCurrent' on line 464]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'QualInst' on line 464]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'OrgRole' on line 464]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'PersonBirthDate' on line 501]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'GenderCurrent' on line 501]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'Ethnicity' on line 501]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'WorkingDaysLost' on line 501]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'PersonBirthDate' on line 520]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'StepUpGrad' on line 520]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: [Tag 'OrgRole' on line 520]: Mandatory tag for non-agency worker missing
+[06/07/2023 at 13:18:41]: 8 out of 30 worker records passed validation
+[06/07/2023 at 13:18:41]: 50 worker validation errors.
+[06/07/2023 at 13:18:41]: Processing worker data...
