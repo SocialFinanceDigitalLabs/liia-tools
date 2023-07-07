@@ -113,7 +113,21 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     #stream = logger.inherit_LAchildID(stream)
     # Clean stream
-    
+
+# Output result
+    stream = csww_record.message_collector(stream)
+    data = csww_record.export_table(stream)
+    data = file_creator.add_fields(input_year, data, la_name, la_code)
+    file_creator.export_file(input, output, data)
+    logger.save_errors_la(
+        input,
+        value_error=value_error,
+        structural_error=structural_error,
+        #LAchildID_error=LAchildID_error,
+        field_error=field_error,
+        blank_error=blank_error,
+        la_log_dir=la_log_dir,
+    )
 cleanfile("/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
             "BAD",
             "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
