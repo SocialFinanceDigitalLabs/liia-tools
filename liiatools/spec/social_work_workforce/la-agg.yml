@@ -39,6 +39,9 @@ sort_order:
 
 dedup:
     CSWWWorker:
+        - AgencyWorker
+        - SWENo
+        - FTE
         - PersonBirthDate
         - GenderCurrent
         - Ethnicity

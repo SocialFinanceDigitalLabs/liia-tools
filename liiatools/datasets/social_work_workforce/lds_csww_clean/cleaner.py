@@ -25,7 +25,7 @@ def clean_dates(event):
     date = event.schema_dict["date"]
     try:
         newtext = to_date(event.text, date)
-        return event.from_event(event, text=f"xDATEx{newtext}", error="0")
+        return event.from_event(event, text=newtext, error="0")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, text="", error="1")
 
@@ -44,7 +44,7 @@ def clean_categories(event):
     try:
         newtext = to_category(event.text, category)
         if newtext != "error":
-            return event.from_event(event, text=f"xCATx{newtext}", error='0')
+            return event.from_event(event, text=newtext, error='0')
         return event.from_event(event, text="", error="1")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, text="", error="1")
