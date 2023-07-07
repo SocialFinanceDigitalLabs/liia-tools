@@ -5,7 +5,8 @@ import pytz
 
 from sfdata_stream_parser.events import StartElement, EndElement, TextNode
 
-from liiatools.datasets.social_work_workforce.schema import Schema
+#from liiatools.datasets.social_work_workforce.schema import Schema
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
 
 
 def TextElement(tag: str, text):

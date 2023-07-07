@@ -9,7 +9,7 @@ from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
 )
 from liiatools.csdatatools.util.stream import consume
-from liiatools.csdatatools.util.xml import dom_parse, etree, to_xml
+from liiatools.csdatatools.util.xml import  etree, to_xml
 
 
 
@@ -26,8 +26,11 @@ from liiatools.datasets.shared_functions.common import (
 
 # Dependencies for cleanfile()
 #from sfdata_stream_parser.stream import events
-from liiatools.csdatatools.util.xml import dom_parse
-from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+from liiatools.csdatatools.util.xml import etree,to_xml, dom_parse
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import (
+    Schema
+    
+)
 # liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
 from liiatools.csdatatools.datasets.cincensus import filters
 
