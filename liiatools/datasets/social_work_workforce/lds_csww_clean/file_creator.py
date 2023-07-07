@@ -48,10 +48,10 @@ def add_la_name(data, la_name):
 #     data["SWENo"] = data["SWENo"] + "_" + la_code
 #     return data
 
-def la_prefix(data, la_code):
-    if set(["SWENo"]).issubset(data):
-        data["SWENo"] = data["SWENo"] + "_" + la_code
-        return data
+# def la_prefix(data, la_code):
+#     if set(["SWENo"]).issubset(data):
+#         data["SWENo"] = data["SWENo"] + "_" + la_code
+#         return data
 
 
 def add_fields(input_year, data, la_name, la_code):
@@ -70,7 +70,7 @@ def add_fields(input_year, data, la_name, la_code):
     data = convert_to_datetime(data)
 
     data = add_la_name(data, la_name)
-    data = la_prefix(data, la_code)
+    #data = la_prefix(data, la_code)
     #data = degrade_dob(data)
 
     return data
