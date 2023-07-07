@@ -131,8 +131,8 @@ def cleanfile(input, la_code, la_log_dir, output):
     )
 
     # Clean stream
-    #stream = cleaner.clean_dates(stream)
-    #stream = cleaner.clean_categories(stream)
+    stream = cleaner.clean_categories(stream)
+    stream = cleaner.clean_dates(stream)
 
 
     # Output results
@@ -215,12 +215,12 @@ def pan_agg(input, la_code, output):
 
 # Run in Visual Studio Code |>
 
-# cleanfile(
-#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-#     "BAD",
-#     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-# )
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+    "BAD",
+    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
 
 # la_agg(
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",

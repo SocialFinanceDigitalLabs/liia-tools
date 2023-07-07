@@ -17,19 +17,17 @@ log = logging.getLogger(__name__)
 )
 def clean_dates(event):
     """
-    Convert all values that should be dates to dates based on the config.yaml file
+    Convert all values that should be dates to dates based on the schema xsd file
 
-    :param event: A filtered list of event objects of type Cell
+    :param event: A filtered list of event objects of type text
     :return: An updated list of event objects
     """
-    #print("running clean_dates")
-    #print(f"running clean_dates with date: {event.config_dict['date']}")
-    date = event.config_dict["date"]
+    date = event.schema_dict["date"]
     try:
-        text = to_date(event.cell, date)
-        return event.from_event(event, cell=text, error="0")
+        newtext = to_date(event.text, date)
+        return event.from_event(event, text=f"xDATEx{newtext}", error="0")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, cell="", error="1")
+        return event.from_event(event, text="", error="1")
 
 
 @streamfilter(
@@ -37,17 +35,16 @@ def clean_dates(event):
 )
 def clean_categories(event):
     """
-    Convert all values that should be categories to categories based on the config.yaml file
+    Convert all values that should be categories to categories based on the schema xsd file
 
-    :param event: A filtered list of event objects of type Cell
+    :param event: A filtered list of event objects of type text
     :return: An updated list of event objects
     """
-    category = event.config_dict["category"]
+    category = event.schema_dict["category"]
     try:
-        text = to_category(event.cell, category)
-        if text != "error":
-            return event.from_event(event, cell=text, error="0")
-        else:
-            return event.from_event(event, cell="", error="1")
+        newtext = to_category(event.text, category)
+        if newtext != "error":
+            return event.from_event(event, text=f"xCATx{newtext}", error='0')
+        return event.from_event(event, text="", error="1")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, cell="", error="1")
+        return event.from_event(event, text="", error="1")
