@@ -46,6 +46,15 @@ def degrade_dob(data):
     return data
 
 
+def hash_sweno(data):
+    if "SWENo" in data:
+        if data["SWENo"] is not None:
+            data["SWENo"] = data["SWENo"].apply(
+                lambda row: converters.swe_hash(row)
+            )
+    return data
+
+
 # def la_prefix(data, la_code):
 #     data["SWENo"] = data["SWENo"] + "_" + la_code
 #     return data
@@ -74,7 +83,8 @@ def add_fields(input_year, data, la_name, la_code):
     data = add_la_name(data, la_name)
     # data = la_prefix(data, la_code)
     data = degrade_dob(data)
-
+    data = hash_sweno(data)
+    
     return data
 
 

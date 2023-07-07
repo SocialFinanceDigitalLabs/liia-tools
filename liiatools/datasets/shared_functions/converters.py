@@ -1,5 +1,8 @@
 from datetime import datetime, date
 import re
+import hashlib
+from typing import Final, Dict, List
+from decouple import config
 
 
 def to_date(datevalue, dateformat="%d/%m/%Y"):
@@ -49,3 +52,22 @@ def to_month_only_dob(dob):
     except (AttributeError, TypeError, ValueError):
         dob = ""
     return dob
+
+def swe_hash(worker: Dict[str, str]):
+    """
+    Converts the **SWENo** field to a hash code represented in HEX
+    :param worker: A dictionary containing worker data
+    :return: None
+    """
+    swe_num = worker["SWENo"]
+
+    private_string = config("sec_str", default="")
+
+    private_key = swe_num + private_string
+
+    # Preparing plain text (SWENo) to hash it
+    plaintext = private_key.encode()
+
+    hash_algorithm = hashlib.sha3_256(plaintext)
+
+    worker["SWENo"] = hash_algorithm.hexdigest()
