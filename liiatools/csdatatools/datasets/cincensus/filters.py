@@ -89,8 +89,64 @@ def _create_category_dict(field: str, file: str):
         return
 
 
+def _create_float_dict(field: str, file: str):
+    float_dict = None
+
+    xsd_xml = ET.parse(file)
+    search_elem = f".//{{http://www.w3.org/2001/XMLSchema}}simpleType[@name='{field}']"
+    element = xsd_xml.find(search_elem)
+
+    search_restriction = f".//{{http://www.w3.org/2001/XMLSchema}}restriction"
+    restriction = element.findall(search_restriction)
+    for r in restriction:
+        code_dict = {"numeric": r.get("base")[3:]}  # Remove the "xs:" from the start of the base string
+        if code_dict["numeric"] == "decimal":
+            float_dict = code_dict
+
+    search_fraction_digits = f".//{{http://www.w3.org/2001/XMLSchema}}fractionDigits"
+    fraction_digits = element.findall(search_fraction_digits)
+    for f in fraction_digits:
+        fraction_digits_dict = {"fixed": f.get("fixed"), "decimal": f.get("value")}
+        float_dict = {**float_dict, **fraction_digits_dict}
+
+    search_min_inclusive = f".//{{http://www.w3.org/2001/XMLSchema}}minInclusive"
+    min_inclusive = element.findall(search_min_inclusive)
+    for m in min_inclusive:
+        min_dict = {"min_inclusive": m.get("value")}
+        float_dict = {**float_dict, **min_dict}
+
+    search_max_inclusive = f".//{{http://www.w3.org/2001/XMLSchema}}maxInclusive"
+    max_inclusive = element.findall(search_max_inclusive)
+    for m in max_inclusive:
+        max_dict = {"max_inclusive": m.get("value")}
+        float_dict = {**float_dict, **max_dict}
+
+    return float_dict
+
+
+def _create_regex_dict(field: str, file: str):
+    regex_dict = None
+
+    xsd_xml = ET.parse(file)
+    search_elem = f".//{{http://www.w3.org/2001/XMLSchema}}simpleType[@name='{field}']"
+    element = xsd_xml.find(search_elem)
+
+    search_restriction = f".//{{http://www.w3.org/2001/XMLSchema}}restriction"
+    restriction = element.findall(search_restriction)
+    for r in restriction:
+        if r.get("base") == "xs:string":
+            regex_dict = {"regex_string": None}
+
+        search_pattern = f".//{{http://www.w3.org/2001/XMLSchema}}pattern"
+        pattern = element.findall(search_pattern)
+        for p in pattern:
+            regex_dict["regex_string"] = p.get("value")
+
+    return regex_dict
+
+
 @streamfilter()
-def add_schema(event, schema: xmlschema.XMLSchema, schema_path: str):
+def add_schema(event, schema: xmlschema.XMLSchema):
     """
     Requires each event to have event.context as set by :func:`add_context`
 
@@ -100,7 +156,6 @@ def add_schema(event, schema: xmlschema.XMLSchema, schema_path: str):
 
     Provides: path, schema
     """
-    schema_dict = None
     assert (
         event.context
     ), "This filter required event.context to be set - see add_context"
@@ -108,10 +163,35 @@ def add_schema(event, schema: xmlschema.XMLSchema, schema_path: str):
     tag = event.context[-1]
     el = schema.get_element(tag, path)
 
-    if el.type.name is not None and el.type.name[-4:] == "type":
-        schema_dict = _create_category_dict(el.type.name, schema_path)
+    return event.from_event(event, path=path, schema=el)
 
-    return event.from_event(event, path=path, schema=el, schema_dict=schema_dict)
+
+@streamfilter(check=type_check(events.TextNode), fail_function=pass_event)
+def add_schema_dict(event, schema_path: str):
+    schema_dict = None
+
+    config_type = event.schema.type.name
+    if config_type is not None:
+        if config_type[-4:] == "type":
+            schema_dict = _create_category_dict(config_type, schema_path)
+        if config_type in ["onedecimalplace", "twodecimalplaces", "ftetype"]:
+            schema_dict = _create_float_dict(config_type, schema_path)
+        if config_type in ["swetype"]:
+            schema_dict = _create_regex_dict(config_type, schema_path)
+        if config_type == "{http://www.w3.org/2001/XMLSchema}date":
+            schema_dict = {"date": "%d/%m/%Y"}
+        if config_type == "{http://www.w3.org/2001/XMLSchema}integer":
+            schema_dict = {"numeric": "integer"}
+        if config_type == "{http://www.w3.org/2001/XMLSchema}string":
+            schema_dict = {"string": "alphanumeric"}
+
+        if schema_dict is not None:
+            if event.schema.occurs[0] == 0:
+                schema_dict = {**schema_dict, **{"canbeblank": "yes"}}
+            elif event.schema.occurs[0] == 1:
+                schema_dict = {**schema_dict, **{"canbeblank": "no"}}
+
+    return event.from_event(event, schema_dict=schema_dict)
 
 
 def _get_validation_error(schema, node) -> XMLSchemaValidatorError:

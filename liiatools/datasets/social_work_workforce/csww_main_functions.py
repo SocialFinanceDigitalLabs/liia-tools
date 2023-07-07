@@ -9,6 +9,7 @@ from liiatools.csdatatools.util.stream import consume
 from liiatools.csdatatools.util.xml import etree, to_xml, dom_parse
 
 # Dependencies for cleanfile()
+from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.csdatatools.datasets.cincensus import filters
 from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import (
     Schema,
@@ -126,14 +127,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     la_name = flip_dict(config["data_codes"])[la_code]
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
-    stream = filters.add_schema(
-        stream, schema=Schema(input_year).schema, schema_path=FilePath(input_year).path
-    )
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    stream = filters.add_schema_dict(stream, schema_path=FilePath(input_year).path)
 
     # Clean stream
     stream = cleaner.clean_categories(stream)
     stream = cleaner.clean_dates(stream)
-
 
     # Output results
     stream = csww_record.message_collector(stream)
@@ -226,6 +225,13 @@ def pan_agg(input, la_code, output):
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 # )
+
+cleanfile(
+    r"C:\Users\patrick.troy\Downloads\LIIA tests\social_work_workforce_2022.xml",
+    "NEW",
+    r"C:\Users\patrick.troy\Downloads\LIIA tests",
+    r"C:\Users\patrick.troy\Downloads\LIIA tests",
+)
 
 # la_agg(
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
