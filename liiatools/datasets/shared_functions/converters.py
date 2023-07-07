@@ -53,13 +53,13 @@ def to_month_only_dob(dob):
         dob = ""
     return dob
 
-def swe_hash(worker: Dict[str, str]):
+def swe_hash(swe_num):
     """
     Converts the **SWENo** field to a hash code represented in HEX
     :param worker: A dictionary containing worker data
     :return: None
     """
-    swe_num = worker["SWENo"]
+    # swe_num = worker["SWENo"]
 
     private_string = config("sec_str", default="")
 
@@ -70,4 +70,4 @@ def swe_hash(worker: Dict[str, str]):
 
     hash_algorithm = hashlib.sha3_256(plaintext)
 
-    worker["SWENo"] = hash_algorithm.hexdigest()
+    return hash_algorithm.hexdigest()
