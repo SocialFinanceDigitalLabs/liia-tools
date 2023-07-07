@@ -35,13 +35,13 @@ def add_la_name(data, la_name):
     data["LA"] = la_name
     return data
 
-# def degrade_dob(data):
-#     if "PersonBirthDate" in data:
-#         if data["PersonBirthDate"] is not None:
-#             data["PersonBirthDate"] = data["PersonBirthDate"].apply(
-#                 lambda row: converters.to_month_only_dob(row)
-#             )
-#     return data
+def degrade_dob(data):
+    if "PersonBirthDate" in data:
+        if data["PersonBirthDate"] is not None:
+            data["PersonBirthDate"] = data["PersonBirthDate"].apply(
+                lambda row: converters.to_month_only_dob(row)
+            )
+    return data
 
 
 # def la_prefix(data, la_code):
@@ -70,8 +70,8 @@ def add_fields(input_year, data, la_name, la_code):
     data = convert_to_datetime(data)
 
     data = add_la_name(data, la_name)
-    #data = la_prefix(data, la_code)
-    #data = degrade_dob(data)
+    # data = la_prefix(data, la_code)
+    data = degrade_dob(data)
 
     return data
 
