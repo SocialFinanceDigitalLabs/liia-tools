@@ -13,6 +13,27 @@ from liiatools.csdatatools.util.xml import  etree, to_xml
 
 
 
+
+
+
+# Dependencies for cleanfile()
+#from sfdata_stream_parser.stream import events
+from liiatools.csdatatools.util.xml import  dom_parse
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+
+# liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
+
+from liiatools.csdatatools.datasets.cincensus import filters
+
+from liiatools.datasets.social_work_workforce.lds_csww_clean import (
+    csww_record,
+    file_creator,
+    configuration as clean_config,
+    #validator,
+    #converter,
+    #logger,
+)
+from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
     flip_dict,
     check_file_type,
@@ -23,26 +44,13 @@ from liiatools.datasets.shared_functions.common import (
     save_incorrect_year_error,
 )
 
+log = logging.getLogger()
+click_log.basic_config(log)
 
-# Dependencies for cleanfile()
-#from sfdata_stream_parser.stream import events
-from liiatools.csdatatools.util.xml import etree,to_xml, dom_parse
-from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import (
-    Schema
-    
-)
-# liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
-from liiatools.csdatatools.datasets.cincensus import filters
-
-from liiatools.datasets.social_work_workforce.lds_csww_clean import (
-    csww_record,
-    file_creator,
-    configuration as clean_config,
-    #validator,
-    #converter,
-)
-
-
+COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
+# Get all the possible LA codes that could be used
+with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
+    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
 
@@ -67,6 +75,41 @@ def generate_sample(output: str):
             FILE.write(element)
     except FileNotFoundError:
         print("The file path provided does not exist")
+        
+@click.group()
+def cin_census():
+    """Functions for cleaning, minimising and aggregating CIN Census files"""
+    pass
+
+
+#@cin_census.command()
+#@click.option(
+ #   "--i",
+#    "input",
+ #   required=True,
+#    type=str,
+ #   help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+#)
+#@click.option(
+#    "--la_code",
+ #   required=True,
+#    type=click.Choice(la_list, case_sensitive=False),
+#    help="A three letter code, specifying the local authority that deposited the file",
+#)
+#@click.option(
+#    "--la_log_dir",
+#    required=True,
+ #   type=str,
+#    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
+#)
+#@click.option(
+ #   "--o",
+#    "output",
+#    required=True,
+#    type=str,
+#    help="A string specifying the output directory location",
+#)
+@click_log.simple_verbosity_option(log)        
         
 def cleanfile(input, la_code, la_log_dir, output):
     """
@@ -122,7 +165,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     data = csww_record.export_table(stream)
     data = file_creator.add_fields(input_year, data, la_name, la_code)
     file_creator.export_file(input, output, data)
-    logger.save_errors_la(
+    log.save_errors_la(
         input,
         value_error=value_error,
         structural_error=structural_error,
@@ -131,9 +174,10 @@ def cleanfile(input, la_code, la_log_dir, output):
         blank_error=blank_error,
         la_log_dir=la_log_dir,
     )
-cleanfile("/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
             "BAD",
-            "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+           "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
             "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean"
-            )  
+           )  
 print("===> Finished running csww_main_functions.py")
