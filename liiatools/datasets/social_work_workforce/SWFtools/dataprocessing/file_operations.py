@@ -14,6 +14,32 @@ from liiatools.datasets.social_work_workforce.SWFtools.util.work_path import (
     la_directories,
     flatfile_folder,
 )
+import logging
+import click_log
+from pathlib import Path
+from datetime import datetime
+from liiatools.datasets.social_work_workforce.sample_data import (
+    generate_sample_csww_file,
+)
+from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.csdatatools.util.stream import consume
+from liiatools.csdatatools.util.xml import etree, to_xml
+from liiatools.csdatatools.datasets.social_work_workforce import filters
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+from liiatools.datasets.shared_functions.common import (
+    flip_dict,
+    check_file_type,
+    supported_file_types,
+    check_year,
+    check_year_within_range,
+    save_year_error,
+    save_incorrect_year_error,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_clean import (
+    configuration as clean_config,
+    csww_record,
+    file_creator,
+)
 
 COLUMNS: Final[List[str]] = [
     "YearCensus",
@@ -158,75 +184,65 @@ def parse_and_validate(
     return workers
 
 
-def process_all_input_files():
+def cleanfile(input, la_code, la_log_dir, output):
     """
-    Validates XML files, processes worker data, and merges all validated XMLs.
+    Cleans input CIN Census xml files according to config and outputs cleaned csv files.
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param la_log_dir: should specify the path to the local authority's log folder
+    :param output: should specify the path to the output folder
     :return: None
     """
-    AppLog.log_section_header(
-        "Processing all XML files inside CIN folder", console_output=True
-    )
 
-    processed_files_count = 0
-    path_merged_file = os.path.join(flatfile_folder, "merged_LA_files.csv")
-    path_modified_merged_file = os.path.join(flatfile_folder, "merged_modified.csv")
+    # Open & Parse file
+    if (
+        check_file_type(
+            input,
+            file_types=[".xml"],
+            supported_file_types=supported_file_types,
+            la_log_dir=la_log_dir,
+        )
+        == "incorrect file type"
+    ):
+        return
+    stream = dom_parse(input)
+    stream = list(stream)
 
-    for la_directory in la_directories:
-        AppLog.log(f"Processing XML files inside: {la_directory.path}")
+    # Get year from input file
+    try:
+        filename = str(Path(input).resolve().stem)
+        input_year = check_year(filename)
+    except (AttributeError, ValueError):
+        save_year_error(input, la_log_dir)
+        return
 
-        xml_files = get_xml_files_from(la_directory)
+    # Check year is within acceptable range for data retention policy
+    years_to_go_back = 7
+    year_start_month = 1
+    reference_date = datetime.now()
+    if (
+        check_year_within_range(
+            input_year, years_to_go_back, year_start_month, reference_date
+        )
+        is False
+    ):
+        save_incorrect_year_error(input, la_log_dir)
+        return
 
-        for xml_file in xml_files:
-            workers = parse_and_validate(la_directory, xml_file)
+    # Configure stream
+    config = clean_config.Config()
+    la_name = flip_dict(config["data_codes"])[la_code]
+    stream = filters.strip_text(stream)
+    stream = filters.add_context(stream)
+    stream = filters.add_schema(stream, schema=Schema(input_year).schema)
 
-            if workers is None:
-                continue
+    # Output result
+    stream = csww_record.message_collector(stream)
 
-            # === PROCESSING WORKER DATA === #
-            AppLog.log("Processing worker data...", console_output=True)
-            AppLog.log("Processing worker data...", la_directory.name)
-            for worker in workers:
-                converter.swe_hash(worker)
-                converter.convert_dates(worker)
+    data_wklevel, data_lalevel = csww_record.export_table(stream)
 
-            # === WRITING TO CSV === #
-            path_file = os.path.join(
-                flatfile_folder, la_directory.name, Path(xml_file).stem + ".csv"
-            )
-            data_frame = DataFrame(workers, columns=COLUMNS_MERGED_FILE)
+    data_wklevel = file_creator.add_fields(input_year, data_wklevel, la_name, la_code)
+    file_creator.export_file(input, output, data_wklevel, "workerlevel")
 
-            # Write single file
-            data_frame.to_csv(path_file, index=False, columns=COLUMNS)
-
-            # Write to common file (merged records file)
-            # Either append data to existing file or write to file if it's the first file to be processed
-            if processed_files_count != 0:
-                # header = False (do not append column names again)
-                # columns = COLUMNS | COLUMNS_MERGED_FILE (what columns/fields to write)
-                # mode is the same as Python file modes ('w' write is default)
-                data_frame.to_csv(
-                    path_merged_file,
-                    index=False,
-                    header=False,
-                    columns=COLUMNS,
-                    mode="a",
-                )
-                data_frame.to_csv(
-                    path_modified_merged_file,
-                    index=False,
-                    header=False,
-                    columns=COLUMNS_MERGED_FILE,
-                    mode="a",
-                )
-            else:
-                data_frame.to_csv(path_merged_file, index=False, columns=COLUMNS)
-                data_frame.to_csv(
-                    path_modified_merged_file, index=False, columns=COLUMNS_MERGED_FILE
-                )
-
-            processed_files_count = processed_files_count + 1
-
-    AppLog.log(
-        f"Finished processing {processed_files_count} files in {len(la_directories)} directories.",
-        console_output=True,
-    )
+    data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name, la_code)
+    file_creator.export_file(input, output, data_lalevel, "lalevel")

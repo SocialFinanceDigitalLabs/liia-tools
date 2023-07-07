@@ -23,6 +23,7 @@ def get_year(data, year):
 #     ].apply(pd.to_datetime)
 #     return data
 
+
 def convert_to_datetime(data):
     if set(["PersonBirthDate", "RoleStartDate"]).issubset(data):
         data[["PersonBirthDate", "RoleStartDate"]] = data[
@@ -34,6 +35,7 @@ def convert_to_datetime(data):
 def add_la_name(data, la_name):
     data["LA"] = la_name
     return data
+
 
 def degrade_dob(data):
     if "PersonBirthDate" in data:

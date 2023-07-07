@@ -111,10 +111,12 @@ def _maybe_list(value):
 #     for item in _maybe_list(record):
 #         yield from (item,)
 
+
 def event_recorder(event) -> Iterator[dict]:
     record = event.record
     for item in _maybe_list(record):
         yield from (item,)
+
 
 def export_table(stream):
     data_wk = tablib.Dataset(headers=__EXPORT_HEADERS_WKLEVEL)
