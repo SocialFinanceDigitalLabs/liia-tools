@@ -130,9 +130,13 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     stream = filters.add_schema_dict(stream, schema_path=FilePath(input_year).path)
 
+    # for e in stream:
+    #     print(e.get('schema_dict'))
     # Clean stream
     stream = cleaner.clean_categories(stream)
     stream = cleaner.clean_dates(stream)
+    stream = cleaner.clean_numeric(stream) # TODO: implement function for decimal (works for integer)
+    stream = cleaner.clean_regex_string(stream) # TODO: implement function
 
     # Output results
     stream = csww_record.message_collector(stream)
@@ -214,24 +218,24 @@ def pan_agg(input, la_code, output):
 
 # Run in Visual Studio Code |>
 
-# cleanfile(
-#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-#     "BAD",
-#     "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-# )
+cleanfile(
+    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+    "BAD",
+    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+)
 
 # la_agg(
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_worker_clean.csv",
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 # )
 
-cleanfile(
-    r"C:\Users\patrick.troy\Downloads\LIIA tests\social_work_workforce_2022.xml",
-    "NEW",
-    r"C:\Users\patrick.troy\Downloads\LIIA tests",
-    r"C:\Users\patrick.troy\Downloads\LIIA tests",
-)
+# cleanfile(
+#     r"C:\Users\patrick.troy\Downloads\LIIA tests\social_work_workforce_2022.xml",
+#     "NEW",
+#     r"C:\Users\patrick.troy\Downloads\LIIA tests",
+#     r"C:\Users\patrick.troy\Downloads\LIIA tests",
+# )
 
 # la_agg(
 #     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",

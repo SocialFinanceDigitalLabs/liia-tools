@@ -179,7 +179,7 @@ def add_schema_dict(event, schema_path: str):
         if config_type in ["swetype"]:
             schema_dict = _create_regex_dict(config_type, schema_path)
         if config_type == "{http://www.w3.org/2001/XMLSchema}date":
-            schema_dict = {"date": "%d/%m/%Y"}
+            schema_dict = {"date": "%Y-%m-%d"}
         if config_type == "{http://www.w3.org/2001/XMLSchema}integer":
             schema_dict = {"numeric": "integer"}
         if config_type == "{http://www.w3.org/2001/XMLSchema}string":
