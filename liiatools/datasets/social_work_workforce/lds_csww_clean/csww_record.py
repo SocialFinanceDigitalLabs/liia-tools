@@ -37,8 +37,8 @@ def text_collector(stream):
     return _reduce_dict(data_dict)
 
 
-#@xml_collector
-#def SWW_collector(stream):
+# @xml_collector
+# def SWW_collector(stream):
 #    data_dict = {}
 #    stream = peekable(stream)
 #    last_tag = None
@@ -60,8 +60,8 @@ def text_collector(stream):
 #    return _reduce_dict(data_dict)
 
 
-#@xml_collector
-#def child_collector(stream):
+# @xml_collector
+# def child_collector(stream):
 #    data_dict = {}
 #    stream = peekable(stream)
 #    assert stream.peek().tag == "Child"
@@ -125,25 +125,26 @@ def _maybe_list(value):
     return value
 
 
-def csww_event(record, property, event_name=None):
-    if event_name is None:
-        event_name = property
-    value = record.get(property)
-    if value:
-        new_record = {**record, "Date": value, "Type": event_name}
-        return ({k: new_record.get(k) for k in __EXPORT_HEADERS},)
+# def csww_event(record, property, event_name=None):
+#     if event_name is None:
+#         event_name = property
+#     value = record.get(property)
+#     if value:
+#         new_record = {**record, "Date": value, "Type": event_name}
+#         return ({k: new_record.get(k) for k in __EXPORT_HEADERS},)
 
-    return ()
+#     return ()
 
 
-def event_to_records(event: CSWWEvent) -> Iterator[dict]:
+def event_to_records(event) -> Iterator[dict]:
     record = event.record
-    
+    for item in _maybe_list(record):
+        yield from (item,)
 
 #  for cin_item in _maybe_list(record.get("CINdetails")):
 #      yield from cin_event({**child, **cin_item}, "CINreferralDate")
 #      yield from cin_event({**child, **cin_item}, "CINclosureDate")
-#
+
 #        for assessment in _maybe_list(cin_item.get("Assessments")):
 #            assessment["Factors"] = ",".join(
 #                _maybe_list(assessment.get("AssessmentFactors"))
@@ -154,7 +155,7 @@ def event_to_records(event: CSWWEvent) -> Iterator[dict]:
 #            yield from cin_event(
 #                {**child, **cin_item, **assessment}, "AssessmentAuthorisationDate"
 #            )
-#
+
 #        for cin in _maybe_list(cin_item.get("CINPlanDates")):
 #            yield from cin_event(
 #                {**child, **cin_item, **cin},

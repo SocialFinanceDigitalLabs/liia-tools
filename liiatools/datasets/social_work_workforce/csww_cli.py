@@ -7,9 +7,15 @@ from datetime import datetime
 
 from liiatools.datasets.social_work_workforce import csww_main_functions
 
-
+from liiatools.spec import common as common_asset_dir
 log = logging.getLogger()
 click_log.basic_config(log)
+
+# COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
+# # Get all the possible LA codes that could be used
+# with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
+#     la_list = list(yaml.full_load(las)["data_codes"].values())
+# this is in csww main
 
 @click.group()
 def csww():

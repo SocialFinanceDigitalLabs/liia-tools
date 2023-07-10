@@ -31,15 +31,22 @@ def add_la_name(data, la_name):
     data["LA"] = la_name
     return data
 
+def degrade_dob(data):
+    if data["PersonBirthDate"] is not None:
+        data["PersonBirthDate"] = data["PersonBirthDate"].apply(
+            lambda row: converters.to_month_only_dob(row)
+        )
+        return data
 
-def la_prefix(data, la_code):
-    data["LAchildID"] = data["LAchildID"] + "_" + la_code
-    return data
+
+# def la_prefix(data, la_code):
+#     data["LAchildID"] = data["LAchildID"] + "_" + la_code
+#     return data
 
 
 
 
-def add_fields(input_year, data, la_name, la_code):
+def add_fields(input_year, data, la_name):
     """
     Add YEAR, LA, PERSONSCHOOLYEAR to exported dataframe
     Append LA_code from config to LAChildID
@@ -52,13 +59,13 @@ def add_fields(input_year, data, la_name, la_code):
     """
     data = convert_to_dataframe(data)
     data = get_year(data, input_year)
-    data = convert_to_datetime(data)
-    data = add_school_year(data)
+    #data = convert_to_datetime(data)
+   # data = add_school_year(data)
     data = add_la_name(data, la_name)
-    data = la_prefix(data, la_code)
-    data = degrade_dob(data)
-    data = degrade_expected_dob(data)
-    data = degrade_death_date(data)
+    # data = la_prefix(data, la_code)
+    # data = degrade_dob(data)
+    # data = degrade_expected_dob(data)
+    # data = degrade_death_date(data)
     return data
 
 
