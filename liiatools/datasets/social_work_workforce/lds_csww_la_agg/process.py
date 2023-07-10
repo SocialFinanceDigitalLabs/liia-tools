@@ -1,333 +1,97 @@
 from pathlib import Path
 import pandas as pd
-from datetime import datetime
-import numpy as np
 import logging
 
 log = logging.getLogger(__name__)
 
 
-def read_file(input, dates):
+def read_file(file):
     """
     Reads the csv file as a pandas DataFrame
     """
-    flatfile = pd.read_csv(input, parse_dates=dates, dayfirst=True)
-    return flatfile
+    filepath = Path(file)
+    s903_df = pd.read_csv(filepath, index_col=None)
+    return s903_df
 
 
-def merge_la_files(flat_output, dates, flatfile):
+def match_load_file(s903_df, column_names):
+    """
+    Matches the columns in the DataFrame against one of the 10 SSDA903 file types
+    """
+    for table_name, expected_columns in column_names.items():
+        if set(s903_df.columns) == set(expected_columns):
+            return table_name
+
+
+def merge_la_files(output, s903_df, table_name):
     """
     Looks for existing file of the same type and merges with new file if found
     """
-    old_file = Path(flat_output, f"CIN_Census_merged_flatfile.csv")
+    old_file = Path(output, f"SSDA903_{table_name}_merged.csv")
     if old_file.is_file():
-        old_df = pd.read_csv(old_file, parse_dates=dates, dayfirst=True)
-        merged_df = pd.concat([flatfile, old_df], axis=0)
+        old_df = pd.read_csv(old_file, index_col=None)
+        merged_df = pd.concat([s903_df, old_df], axis=0)
     else:
-        merged_df = flatfile
+        merged_df = s903_df
     return merged_df
 
 
-def deduplicate(flatfile, sort_order, dedup):
+def convert_datetimes(s903_df, dates, table_name):
+    """
+    Ensures that all date fields have been parsed as dates
+    """
+    for date_field in dates[table_name]:
+        s903_df[date_field] = pd.to_datetime(s903_df[date_field], format="%Y/%m/%d")
+    return s903_df
+
+
+def deduplicate(s903_df, table_name, sort_order, dedup):
     """
     Sorts and removes duplicate records from merged files following schema
     """
-    flatfile = flatfile.sort_values(sort_order, ascending=False, ignore_index=True)
-    flatfile = flatfile.drop_duplicates(subset=dedup, keep="first")
-    return flatfile
-
-
-def remove_old_data(flatfile, years):
-    """
-    Removes data older than a specified number of years
-    """
-    year = pd.to_datetime("today").year
-    month = pd.to_datetime("today").month
-    if month <= 6:
-        year = year - 1
-    flatfile = flatfile[flatfile["YEAR"] >= year - years]
-    return flatfile
-
-
-def export_flatfile(flat_output, flatfile):
-    """
-    Writes the flatfile output as a csv
-    """
-    output_path = Path(flat_output, f"CIN_Census_merged_flatfile.csv")
-    flatfile.to_csv(output_path, index=False)
-
-
-def filter_flatfile(flatfile, filter):
-    """
-    Filters rows to specified events
-    Removes redundant columns that relate to other types of event
-    """
-    filtered_flatfile = flatfile[flatfile["Type"] == filter]
-    filtered_flatfile = filtered_flatfile.dropna(axis=1, how="all")
-    return filtered_flatfile
-
-
-def split_factors(factors):
-    """
-    Creates a new set of columns from the flatfile with a column for each assessment factor
-    Rows correspond the the rows of the flatfile and should have a value of 0 or 1 for each column
-    """
-    factor_cols = factors.Factors
-    factor_cols = factor_cols.str.split(",", expand=True)
-    factor_cols = factor_cols.stack()
-    factor_cols = factor_cols.str.get_dummies()
-    factor_cols = factor_cols.groupby(level=0).sum()
-    assert factor_cols.isin([0, 1]).all(axis=None)
-    factors = pd.concat([factors, factor_cols], axis=1)
-    return factors
-
-
-def export_factfile(analysis_output, factors):
-    """
-    Writes the factors output as a csv
-    """
-    output_path = Path(analysis_output, f"CIN_Census_factors.csv")
-    factors.to_csv(output_path, index=False)
-
-
-def referral_inputs(flatfile):
-    """
-    Creates three inputs for referral journeys analysis file
-    """
-    ref = filter_flatfile(flatfile, filter="CINreferralDate")
-    s17 = filter_flatfile(flatfile, filter="AssessmentActualStartDate")
-    s47 = filter_flatfile(flatfile, filter="S47ActualStartDate")
-    return ref, s17, s47
-
-
-def _time_between_date_series(later_date_series, earlier_date_series, years=0, days=0):
-    days_series = later_date_series - earlier_date_series
-    days_series = days_series.dt.days
-
-    if days == 1:
-        return days_series
-
-    elif years == 1:
-        years_series = (days_series / 365).apply(np.floor)
-        years_series = years_series.astype('Int32')
-        return years_series
-
-
-def _filter_event_series(dataset, days_series, max_days):
-
-    dataset = dataset[
-        ((dataset[days_series] <= max_days) & (dataset[days_series] >= 0))
-    ]
-    return dataset
-
-
-def merge_ref_s17(ref, s17, ref_assessment):
-    """
-    Merges ref and s17 views together, keeping only logically valid matches
-    """
-    # Merges referrals and assessments
-    ref_s17 = ref.merge(
-        s17[["LAchildID", "AssessmentActualStartDate"]], how="left", on="LAchildID"
+    s903_df = s903_df.sort_values(
+        sort_order[table_name], ascending=False, ignore_index=True
     )
-
-    # Calculates days between assessment and referral
-    ref_s17["days_to_s17"] = _time_between_date_series(
-        ref_s17["AssessmentActualStartDate"], ref_s17["CINreferralDate"], days=1
-    )
-
-    # Only assessments within config-specifed period following referral are valid
-    ref_s17 = _filter_event_series(ref_s17, "days_to_s17", ref_assessment)
-
-    # Reduces dataset to fields required for analysis
-    ref_s17 = ref_s17[["Date", "LAchildID", "AssessmentActualStartDate", "days_to_s17"]]
-
-    return ref_s17
+    s903_df = s903_df.drop_duplicates(subset=dedup[table_name], keep="first")
+    return s903_df
 
 
-def merge_ref_s47(ref, s47, ref_assessment):
+def remove_old_data(s903_df, num_of_years, new_year_start_month, as_at_date):
     """
-    Merges ref and s47 views together, keeping only logically valid matches
+    Removes data older than a specified number of years as at reference date
+
+    :param s903_df: Dataframe containing csv data
+    :param num_of_years: The number of years to go back
+    :param new_year_start_month: The month which signifies start of a new year for data retention policy
+    :param as_at_date: The reference date against which we are checking the valid range
+    :return: Dataframe with older years removed
     """
-    # Merges referrals and S47s
-    ref_s47 = ref.merge(
-        s47[["LAchildID", "S47ActualStartDate"]], how="left", on="LAchildID"
-    )
+    current_year = pd.to_datetime(as_at_date).year
+    current_month = pd.to_datetime(as_at_date).month
 
-    # Calculates days between S47 and referral
-    ref_s47["days_to_s47"] = _time_between_date_series(
-        ref_s47["S47ActualStartDate"], ref_s47["CINreferralDate"], days=1
-    )
+    if current_month < new_year_start_month:
+        earliest_allowed_year = current_year - num_of_years
+    else:
+        earliest_allowed_year = current_year - num_of_years + 1  # roll forward one year
 
-    # Only S47s within config-specifed period following referral are valid
-    ref_s47 = _filter_event_series(ref_s47, "days_to_s47", ref_assessment)
-
-    # Reduces dataset to fields required for analysis
-    ref_s47 = ref_s47[["Date", "LAchildID", "S47ActualStartDate", "days_to_s47"]]
-
-    return ref_s47
+    s903_df = s903_df[s903_df["YEAR"] >= earliest_allowed_year]
+    return s903_df
 
 
-def ref_outcomes(ref, ref_s17, ref_s47):
+def convert_dates(s903_df, dates, table_name):
     """
-    Merges views together to give all outcomes of referrals in one place
-    Outcomes column defaults to NFA unless there is a relevant S17 or S47 event to match
-    Calculates age of child at referral
+    Ensures that all date fields have been parsed as dates
     """
-    # Merge databases together
-    ref_outs = ref.merge(ref_s17, on=["Date", "LAchildID"], how="left")
-    ref_outs = ref_outs.merge(ref_s47, on=["Date", "LAchildID"], how="left")
-
-    # Set default outcome to "NFA"
-    ref_outs["referral_outcome"] = "NFA"
-
-    # Set outcome to "S17" when there is a relevant assessment
-    ref_outs.loc[
-        ref_outs["AssessmentActualStartDate"].notnull(), "referral_outcome"
-    ] = "S17"
-
-    # Set outcome to "S47" when there is a relevant S47
-    ref_outs.loc[ref_outs["S47ActualStartDate"].notnull(), "referral_outcome"] = "S47"
-
-    # Set outcome to "Both S17 & S47" when there are both
-    ref_outs.loc[
-        (
-            (ref_outs["AssessmentActualStartDate"].notnull())
-            & (ref_outs["S47ActualStartDate"].notnull())
-        ),
-        "referral_outcome",
-    ] = "Both S17 & S47"
-
-    # Calculate age of child at referral
-    ref_outs["Age at referral"] = _time_between_date_series(
-        ref_outs["CINreferralDate"], ref_outs["PersonBirthDate"], years=1
-    )
-
-    return ref_outs
+    for date_field in dates[table_name]:
+        s903_df[date_field] = pd.to_datetime(
+            s903_df[date_field], format="%Y/%m/%d"
+        ).dt.date
+    return s903_df
 
 
-def export_reffile(analysis_output, ref_outs):
+def export_la_file(output, table_name, s903_df):
     """
-    Writes the referral journeys output as a csv
+    Writes the output as a csv
     """
-    output_path = Path(analysis_output, f"CIN_Census_referrals.csv")
-    ref_outs.to_csv(output_path, index=False)
-
-
-def journey_inputs(flatfile):
-    """
-    Creates inputs for the journey analysis file
-    """
-    # Create inputs from flatfile and merge them
-    s47_j = filter_flatfile(flatfile, "S47ActualStartDate")
-    cpp = filter_flatfile(flatfile, "CPPstartDate")
-    return s47_j, cpp
-
-
-def journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days):
-    """
-    Merges inputs to produce outcomes file
-    """
-    s47_cpp = s47_j.merge(
-        cpp[["LAchildID", "CPPstartDate"]], how="left", on="LAchildID"
-    )
-
-    # Calculate days from ICPC to CPP start
-    s47_cpp["icpc_to_cpp"] = _time_between_date_series(
-        s47_cpp["CPPstartDate"], s47_cpp["DateOfInitialCPC"], days=1
-    )
-
-    # Calculate days from S47 to CPP start
-    s47_cpp["s47_to_cpp"] = _time_between_date_series(
-        s47_cpp["CPPstartDate"], s47_cpp["S47ActualStartDate"], days=1
-    )
-
-    # Only keep logically consistent events (as defined in config variables)
-    s47_cpp = s47_cpp[
-        ((s47_cpp["icpc_to_cpp"] >= 0) & (s47_cpp["icpc_to_cpp"] <= icpc_cpp_days))
-        | ((s47_cpp["s47_to_cpp"] >= 0) & (s47_cpp["s47_to_cpp"] <= s47_cpp_days))
-    ]
-
-    # Merge events back to S47_j view
-    s47_outs = s47_j.merge(
-        s47_cpp[["Date", "LAchildID", "CPPstartDate", "icpc_to_cpp", "s47_to_cpp"]],
-        how="left",
-        on=["Date", "LAchildID"],
-    )
-
-    return s47_outs
-
-
-def s47_paths(s47_outs, s47_day_limit, icpc_day_limit):
-    """
-    Creates an output that can generate a Sankey diagram of outcomes from S47 events
-    """
-    # Dates used to define window for S47 events where outcome may not be known because CIN Census is too recent
-    for y in s47_outs["YEAR"]:
-        s47_outs["cin_census_close"] = datetime(int(y), 3, 31)
-    s47_outs["s47_max_date"] = s47_outs["cin_census_close"] - pd.Timedelta(
-        s47_day_limit
-    )
-    s47_outs["icpc_max_date"] = s47_outs["cin_census_close"] - pd.Timedelta(
-        icpc_day_limit
-    )
-
-    # Setting the Sankey diagram source for S47 events
-    step1 = s47_outs.copy()
-    step1["Source"] = "S47 strategy discussion"
-
-    # Setting the Sankey diagram destination for S47 events
-    step1["Destination"] = np.nan
-
-    step1.loc[step1["DateOfInitialCPC"].notnull(), "Destination"] = "ICPC"
-
-    step1.loc[
-        step1["DateOfInitialCPC"].isnull() & step1["CPPstartDate"].notnull(),
-        "Destination",
-    ] = "CPP start"
-
-    step1.loc[
-        (
-            (step1["Destination"].isnull())
-            & (step1["S47ActualStartDate"] >= step1["s47_max_date"])
-        ),
-        "Destination",
-    ] = "TBD - S47 too recent"
-
-    step1.loc[step1["Destination"].isnull(), "Destination"] = "No ICPC or CPP"
-
-    # Setting the Sankey diagram source for ICPC events
-    step2 = step1[step1["Destination"] == "ICPC"]
-    step2["Source"] = "ICPC"
-
-    # Setting the Sankey diagram destination for ICPC events
-    step2["Destination"] = np.nan
-
-    step2.loc[step2["CPPstartDate"].notnull(), "Destination"] = "CPP start"
-
-    step2.loc[
-        (
-            (step2["Destination"].isnull())
-            & (step2["DateOfInitialCPC"] >= step2["icpc_max_date"])
-        ),
-        "Destination",
-    ] = "TBD - ICPC too recent"
-
-    step2.loc[step2["Destination"].isnull(), "Destination"] = "No CPP"
-
-    # Merge the steps together
-    s47_journey = pd.concat([step1, step2])
-
-    # Calculate age of child at S47
-    s47_journey["Age at S47"] = _time_between_date_series(
-        s47_journey["S47ActualStartDate"], s47_journey["PersonBirthDate"], years=1
-    )
-
-    return s47_journey
-
-
-def export_journeyfile(analysis_output, s47_journey):
-    """
-    Writes the S47 journeys output as a csv
-    """
-    output_path = Path(analysis_output, f"CIN_Census_S47_journey.csv")
-    s47_journey.to_csv(output_path, index=False)
+    output_path = Path(output, f"SSDA903_{table_name}_merged.csv")
+    s903_df.to_csv(output_path, index=False)

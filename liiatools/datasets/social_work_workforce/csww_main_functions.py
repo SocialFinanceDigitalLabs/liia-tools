@@ -25,6 +25,13 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     file_creator,
 )
 
+# from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
+#     configuration as agg_config,
+# )
+# from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
+#     process as agg_process,
+# )
+
 from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
     configuration as agg_config,
 )
@@ -119,40 +126,42 @@ def cleanfile(input, la_code, la_log_dir, output):
     file_creator.export_file(input, output, data_lalevel, "lalevel")
 
 
-def la_agg(input, flat_output, analysis_output): # Stephen and Patrick said use example from 903 instead of CIN
-    #as 903 uses multiple files
+def la_agg(input, output):
     """
-    Joins data from newly cleaned CSWW file (output of cleanfile()) to existing CSWW data for the depositing local authority
+    Joins data from newly cleaned SSDA903 file (output of cleanfile()) to existing SSDA903 data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
-    :param flat_output: should specify the path to the folder for the main flatfile output
-    :param analysis_output: should specify the path to the folder for the additional analytical outputs
+    :param output: should specify the path to the output folder
     :return: None
     """
 
     # Configuration
     config = agg_config.Config()
 
-    # Open file as Dataframe
-    dates = config["dates"]
-    flatfile = agg_process.read_file(input, dates)
+    # Open file as DataFrame and match file type
+    s903_df = agg_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = agg_process.match_load_file(s903_df, column_names)
 
-    # Merge with existing data, de-duplicate and apply data retention policy
-    flatfile = agg_process.merge_la_files(flat_output, dates, flatfile)
+    # Merge file with existing file of the same type in LA output folder
+    s903_df = agg_process.merge_la_files(output, s903_df, table_name)
+
+    # De-duplicate and remove old data according to schema
+    dates = config["dates"]
+    s903_df = agg_process.convert_datetimes(s903_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
-    flatfile = agg_process.deduplicate(flatfile, sort_order, dedup)
-    flatfile = agg_process.remove_old_data(flatfile, years=6)
-
-    # Output flatfile
-    agg_process.export_flatfile(flat_output, flatfile)
-
-    # Create and output factors file
-    factors = agg_process.filter_flatfile(
-        flatfile, filter="AssessmentAuthorisationDate"
+    s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
+    s903_df = agg_process.remove_old_data(
+        s903_df,
+        num_of_years= 7,
+        new_year_start_month= 1,
+        as_at_date= datetime.now(),
     )
-    if len(factors) > 0:
-        factors = agg_process.split_factors(factors)
-        agg_process.export_factfile(analysis_output, factors)
+
+    # If file still has data, after removing old data: re-format and export merged file
+    if len(s903_df) > 0:
+        s903_df = agg_process.convert_dates(s903_df, dates, table_name)
+        agg_process.export_la_file(output, table_name, s903_df)
 
 
 # cleanfile(
