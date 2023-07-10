@@ -25,6 +25,13 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     file_creator,
 )
 
+from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
+    configuration as agg_config,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
+    process as agg_process,
+)
+
 
 def generate_sample(output: str):
     """
@@ -110,6 +117,41 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name, la_code)
     file_creator.export_file(input, output, data_lalevel, "lalevel")
+
+
+def la_agg(input, flat_output, analysis_output):
+    """
+    Joins data from newly cleaned CIN Census file (output of cleanfile()) to existing CIN Census data for the depositing local authority
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param flat_output: should specify the path to the folder for the main flatfile output
+    :param analysis_output: should specify the path to the folder for the additional analytical outputs
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
+
+    # Open file as Dataframe
+    dates = config["dates"]
+    flatfile = agg_process.read_file(input, dates)
+
+    # Merge with existing data, de-duplicate and apply data retention policy
+    flatfile = agg_process.merge_la_files(flat_output, dates, flatfile)
+    sort_order = config["sort_order"]
+    dedup = config["dedup"]
+    flatfile = agg_process.deduplicate(flatfile, sort_order, dedup)
+    flatfile = agg_process.remove_old_data(flatfile, years=6)
+
+    # Output flatfile
+    agg_process.export_flatfile(flat_output, flatfile)
+
+    # Create and output factors file
+    factors = agg_process.filter_flatfile(
+        flatfile, filter="AssessmentAuthorisationDate"
+    )
+    if len(factors) > 0:
+        factors = agg_process.split_factors(factors)
+        agg_process.export_factfile(analysis_output, factors)
 
 
 # cleanfile(

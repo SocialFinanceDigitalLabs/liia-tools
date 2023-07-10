@@ -49,6 +49,7 @@ def generate_sample(output: str):
     output = csww_main_functions.generate_sample(output)
     return output
 
+
 # added to run from command line
 @csww.command()
 @click.option(
