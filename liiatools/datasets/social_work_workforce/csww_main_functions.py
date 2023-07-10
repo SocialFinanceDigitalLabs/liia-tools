@@ -138,8 +138,8 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Clean stream
     stream = cleaner.clean_categories(stream)
     stream = cleaner.clean_dates(stream)
-    stream = cleaner.clean_numeric(stream) # TODO: implement function for decimal (works for integer)
-    stream = cleaner.clean_regex_string(stream) # TODO: implement function
+    stream = cleaner.clean_numeric(stream)
+    stream = cleaner.clean_regex_string(stream)
     stream = logger.log_errors(stream)
 
     # Output results

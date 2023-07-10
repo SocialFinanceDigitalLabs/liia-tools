@@ -1,12 +1,13 @@
 import logging
+import re
 
 log = logging.getLogger(__name__)
 
 
 def to_category(string, categories):
     """
-    Matches a string to a category based on categories given in a config file
-    the config file should contain a dictionary for each category for this function to loop through
+    Matches a string to a category based on categories given in a schema file
+    the schema file should contain a dictionary for each category for this function to loop through
     return blank if no categories found
 
     :param string: Some string to convert into a category value
@@ -18,12 +19,12 @@ def to_category(string, categories):
             return code["code"]
         if (
             str(string).lower() == str(code["code"]).lower() + ".0"
-        ):  # In case integers are read as floats
+            ):  # In case integers are read as floats
             return code["code"]
-        elif "name" in code:
+        if "name" in code:
             if str(code["name"]).lower() in str(string).lower():
                 return code["code"]
-            elif not string:
+            if not string:
                 return ""
         elif not string:
             return ""
@@ -47,14 +48,47 @@ def to_integer(value, config):
             return ""
     else:
         return value
-    
 
-def to_decimal(value, config):
+
+def to_decimal(value, config, decplaces=0):
     """
     Convert any strings that should be decimal based on the config into decimals
 
     :param value: Some value to convert to a decimal
     :param config: The loaded configuration
-    :return: Either a decimal value or a blank string
+    :param decplaces: The number of decimal places 
+    :return: Either a decimal value formatted to number of decimal places or a blank string
     """
-    pass
+    dpdisplayformat= f".{decplaces}f"
+    if config == "decimal":
+        try:
+            float(value)
+            roundtodp = round(float(value), decplaces)
+            return f"{roundtodp: {dpdisplayformat}}".strip()
+        except (ValueError, TypeError):
+            return ""
+    return value
+
+
+def to_regex(value, pattern):
+    """
+    Convert any strings that should conform to regex pattern based on the schema into regex string
+
+    :param value: Some value to convert to a regex string
+    :param pattern: The regex pattern to compare
+    :return: Either a regex string or a blank string
+    """
+    if pattern:
+        if value:
+            try:
+                isfullmatch = re.fullmatch(pattern, value)
+                if isfullmatch:
+                    return value
+                else:
+                    return ""
+            except (ValueError, TypeError):
+                return ""
+        else:
+            return ""
+    else:
+        return value

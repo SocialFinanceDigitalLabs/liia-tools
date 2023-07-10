@@ -48,7 +48,7 @@ def degrade_SWENo(data):
     """
     if "SWENo" in data:
         if data["SWENo"] is not None:
-            data["SWENo"] = data["SWENo"].apply(lambda row: swe_hash(row))
+            data["SWENo"] = data["SWENo"].apply(lambda row: swe_hash(row) if row else row )
     return data
 
 
