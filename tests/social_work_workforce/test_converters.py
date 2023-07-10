@@ -61,5 +61,5 @@ def test_to_regex():
 
 # test_to_category()
 # test_to_integer()
-test_to_decimal()
-#test_to_regex()
+# test_to_decimal()
+# test_to_regex()
