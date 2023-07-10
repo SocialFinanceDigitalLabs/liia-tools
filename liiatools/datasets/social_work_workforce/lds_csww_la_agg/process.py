@@ -16,7 +16,7 @@ def read_file(file):
 
 def match_load_file(s903_df, column_names):
     """
-    Matches the columns in the DataFrame against one of the 10 SSDA903 file types
+    Matches the columns in the DataFrame against one of the 10 CSWW file types
     """
     for table_name, expected_columns in column_names.items():
         if set(s903_df.columns) == set(expected_columns):

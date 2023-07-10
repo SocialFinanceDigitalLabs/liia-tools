@@ -128,7 +128,7 @@ def cleanfile(input, la_code, la_log_dir, output):
 
 def la_agg(input, output):
     """
-    Joins data from newly cleaned SSDA903 file (output of cleanfile()) to existing SSDA903 data for the depositing local authority
+    Joins data from newly cleaned CSWW file (output of cleanfile()) to existing CSWW data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
     :param output: should specify the path to the output folder
     :return: None
