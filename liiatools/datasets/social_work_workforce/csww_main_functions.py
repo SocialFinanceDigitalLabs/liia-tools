@@ -57,7 +57,7 @@ def generate_sample(output: str):
 
 def cleanfile(input, la_code, la_log_dir, output):
     """
-    Cleans input CIN Census xml files according to config and outputs cleaned csv files.
+    Cleans input CSWW xml files according to config and outputs cleaned csv files.
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
     :param la_code: should be a three-letter string for the local authority depositing the file
     :param la_log_dir: should specify the path to the local authority's log folder
@@ -119,9 +119,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     file_creator.export_file(input, output, data_lalevel, "lalevel")
 
 
-def la_agg(input, flat_output, analysis_output):
+def la_agg(input, flat_output, analysis_output): # Stephen and Patrick said use example from 903 instead of CIN
+    #as 903 uses multiple files
     """
-    Joins data from newly cleaned CIN Census file (output of cleanfile()) to existing CIN Census data for the depositing local authority
+    Joins data from newly cleaned CSWW file (output of cleanfile()) to existing CSWW data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
     :param flat_output: should specify the path to the folder for the main flatfile output
     :param analysis_output: should specify the path to the folder for the additional analytical outputs
