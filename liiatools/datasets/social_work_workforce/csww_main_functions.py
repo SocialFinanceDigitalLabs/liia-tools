@@ -146,11 +146,12 @@ def la_agg(input, output):
     csww_df = agg_process.merge_la_files(output, csww_df, table_name)
 
     # De-duplicate and remove old data according to schema
-    dates = config["dates"]
-    csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
+    if table_name == "CSWWWorker":
+        dates = config["dates"]
+        csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
-    csww_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
+    csww_df = agg_process.deduplicate(csww_df, table_name, sort_order, dedup)
     csww_df = agg_process.remove_old_data(
         csww_df,
         num_of_years= 7,
@@ -160,7 +161,8 @@ def la_agg(input, output):
 
     # If file still has data, after removing old data: re-format and export merged file
     if len(csww_df) > 0:
-        csww_df = agg_process.convert_dates(csww_df, dates, table_name)
+        if table_name == "CSWWWorker":
+            csww_df = agg_process.convert_dates(csww_df, dates, table_name)
         agg_process.export_la_file(output, table_name, csww_df)
 
 
