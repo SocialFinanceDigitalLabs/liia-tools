@@ -1,0 +1,31 @@
+AgencyWorker,SWENo,FTE,PersonBirthDate,GenderCurrent,Ethnicity,QualInst,StepUpGrad,RoleStartDate,StartOrigin,Cases30,WorkingDaysLost,ContractWeeks,FrontlineGrad,Absat30Sept,ReasonAbsence,CFKSSstatus,YEAR,LA
+1,5f9d98f16dda92efdbe90bf870c981d3c41311c2d46e278c8bb36893f7670c84,0.521371,1969-01-01,1,REFU,Institution Name,0,1988-04-07,9,72,15.31,288.7,1,0,TRN,1,2021,Barking and Dagenham
+1,be96a5ee5b7cc0caff4ba0452bb7d9e07d920d586912fba81d8655b373c25e04,0,1958-04-01,9,,Institution Name,1,,8,66,29.87,2.5,1,,,4,2021,Barking and Dagenham
+1,a0848103de9608a0cf1daf5e0919a81b9eaf1c315bc350348e2a8124d09762fa,0,1984-01-01,,APKN,Institution Name,0,2014-01-26,4,,92.56,213.4,0,,,2,2021,Barking and Dagenham
+0,aca59cf1fc90a06d57abaf1e396e74ec645df9755b78a8b9b5fdc2ac1dcc3bf2,0.899676,1990-09-01,9,BAFR,,0,2023-03-28,2,,14.39,,0,,,,2021,Barking and Dagenham
+1,b5b3c4b99d2d644b05e28989a2c3c3dddfbbdb0e479ac5c7bb9d2e77333a4f53,0.133587,,2,AIND,Institution Name,1,2017-06-10,,,5.39,475.7,,1,UNP,1,2021,Barking and Dagenham
+1,8e6ca61bfea2d19acf090550f277dc566ee5908fb7d0c0c45bd11abbbf04c049,0,1993-05-01,9,,,,2020-06-14,3,11,,141.0,1,,,,2021,Barking and Dagenham
+1,1ce5045eb004aa120117e90a0eb2aea4aa38523be9cedb37d2621bcbcbba329c,0.803122,,,WBRI,Institution Name,,,,,95.06,403.6,0,,,2,2021,Barking and Dagenham
+1,56ea36a6ef0a6e8e0bf43643363260aaa133e106d40d76c4ef8b677c0ed65f04,0.767688,1996-08-01,0,MWAS,,1,2023-03-28,,62,,,1,,,2,2021,Barking and Dagenham
+0,b41b26ea7649687be2f38cec5274cacea9092418177a5270a6aa2343b04ae22e,0.843488,1959-04-01,2,APKN,Institution Name,0,1997-10-01,2,,16.74,456.3,0,,,4,2021,Barking and Dagenham
+1,4c9a07fd1a15975784ffaa889a44c906ebc56fec34de4deeecdfafde430add1a,0,1971-10-01,,,Institution Name,1,1993-10-04,,45,22.98,441.5,0,,,3,2021,Barking and Dagenham
+1,8e23e51271599fb562e2db2756034cf7b954ae51a654c020bdea17ff439c68e2,0.12232,1996-06-01,1,BAFR,,,,10,23,36.13,213.1,0,,,,2021,Barking and Dagenham
+0,6ac44220390e4481616f4df2cfe2cb2471e420acc53168214b21bb4dc410a2a0,0,1987-10-01,,,,0,2012-10-02,2,37,90.85,28.5,1,1,UNA,1,2021,Barking and Dagenham
+1,e974f0b0b3a6b797b3acccacaf8489bdf4b92ad5546f7595cf14fb451599ac57,0,1968-11-01,,ABAN,,0,2018-08-03,9,,43.02,154.7,1,,,1,2021,Barking and Dagenham
+0,0b453303370012999ca7de11249dcb2aa0c2c94210cf4c51529426198cad8111,0,,0,AOTH,Institution Name,0,2015-04-24,9,,3.51,424.0,,,,2,2021,Barking and Dagenham
+0,14d5de9740886b7a7dd72877b1d39971f66d1f7a0c364fc68c8176aa582127fa,0.859218,1968-12-01,0,BCRB,Institution Name,1,2003-09-12,5,85,98.22,206.6,,,,2,2021,Barking and Dagenham
+0,fb48d144eda11163fa890ed4663e0463be3902d19837f28dadba08235d371496,0.021911,1977-06-01,,REFU,Institution Name,1,2022-10-08,6,25,29.19,,1,1,SIC,,2021,Barking and Dagenham
+1,25f8e1c67c130e33a250ec3216cfe3630c15ffe7fc12066b94d5c90244878c1a,0.786453,1996-11-01,0,MWAS,Institution Name,0,2023-03-28,1,83,78.29,364.4,1,,,,2021,Barking and Dagenham
+0,f4b772fd07a4b01a9a3f88808ed073fe5b299f2cf4be244883154614dbd8ae5c,0.491425,1998-04-01,1,,,0,2023-03-28,4,,3.1,415.3,,,,4,2021,Barking and Dagenham
+1,c569dae7a53fce2755b29a979664734b18275c28b7f5817f71b65f5776e04e64,0.192894,1959-09-01,0,REFU,Institution Name,1,1985-12-12,9,14,,188.4,0,,,1,2021,Barking and Dagenham
+0,9e56119a6e4f2760d518f5b9537d81f6de943c1144cce67e1f14f6ad44e81dd2,0,1962-11-01,,WBRI,,1,1999-07-14,,65,16.26,,1,,,,2021,Barking and Dagenham
+1,5a075ae2486f88a2b944784d643f2ad5f06e2263bbe65c6c4db8a07b20f7d1c7,0.862474,1992-02-01,0,WBRI,,1,2023-03-28,4,39,,,0,,,2,2021,Barking and Dagenham
+1,256eb6f0eda1d17c6cf4c9cd5b7ff965e302218b2dc6ffe681269e52faab0e29,0,2001-10-01,1,AIND,,0,,1,29,38.71,339.9,0,,,,2021,Barking and Dagenham
+1,79f9865feea17900c27cf27e98ba15de977887a4844241ed019874259ad7ef6a,0.668266,1983-04-01,9,,Institution Name,1,2023-03-28,3,,,,1,,,2,2021,Barking and Dagenham
+0,34ec568120a609fa591dcf9c7b5331640f01ef262f379a8816a2876bceb0b191,0.978729,1958-04-01,9,MWBA,Institution Name,,2002-01-31,1,,,121.9,1,,,3,2021,Barking and Dagenham
+1,d258de55dec2e6165c8fb23ceeaf4777bfde025c4c9f0e4d5a1eca26d481a1e2,0,1989-06-01,1,,,1,2011-08-31,5,70,12.2,301.3,0,,,4,2021,Barking and Dagenham
+0,d441374724414d204880c95117ef87c169a6aba7eaddd1ed4a613244a87b75e4,0,1981-09-01,,CHNE,,1,2001-02-10,6,,94.67,471.5,0,,,2,2021,Barking and Dagenham
+1,206e97c471f4d5221f8db5aa404d02939e28e13591da37cba903e9f2e1ecc3cd,0.561974,,,OOTH,Institution Name,0,2014-09-30,4,63,87.59,,,0,SIC,1,2021,Barking and Dagenham
+0,c5c93de4d0858abb1382d1af403cf9d2e1e87e650fce313b36e0e84bbac0f8b4,0,,,,Institution Name,0,1993-04-18,3,80,,299.1,0,,,4,2021,Barking and Dagenham
+0,6e4c8b306eae10888de2dbc28c334f74201a1e7f41da4cac9f71e65dff211ef8,0.034436,,2,APKN,Institution Name,,1997-01-11,4,23,83.01,,0,,,3,2021,Barking and Dagenham
+1,170646f335a0f93ad112764dcd11fe7a4890f08aefb28d1696807e37e882153d,0,1975-01-01,9,WOTH,Institution Name,0,2016-08-20,9,87,13.01,,1,,,,2021,Barking and Dagenham
