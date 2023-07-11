@@ -151,6 +151,7 @@ def la_agg(input, output):
         csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
+    print(column_names)
     csww_df = agg_process.deduplicate(csww_df, table_name, sort_order, dedup)
     csww_df = agg_process.remove_old_data(
         csww_df,
@@ -174,6 +175,6 @@ def la_agg(input, output):
 # )
 
 la_agg(
-    "liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2021_lalevel_clean.csv",
+    "liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
     "liiatools/datasets/social_work_workforce/lds_csww_la_agg",
 )
