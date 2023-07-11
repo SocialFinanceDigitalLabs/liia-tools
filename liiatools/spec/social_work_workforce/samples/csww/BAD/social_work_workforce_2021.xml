@@ -2,8 +2,8 @@
   <Header>
     <CollectionDetails>
       <Collection>CSWW</Collection>
-      <Year>2022</Year>
-      <ReferenceDate>2022-09-30</ReferenceDate>
+      <Year>2021</Year>
+      <ReferenceDate>2021-09-30</ReferenceDate>
     </CollectionDetails>
     <Source>
       <SourceLevel>L</SourceLevel>
@@ -13,15 +13,15 @@
     </Source>
   </Header>
   <LALevelVacancies>
-    <NumberOfVacancies>79.68</NumberOfVacancies>
-    <NoAgencyFTE>59.82</NoAgencyFTE>
-    <NoAgencyHeadcount>71</NoAgencyHeadcount>
+    <NumberOfVacancies>66.66</NumberOfVacancies>
+    <NoAgencyFTE>40.40</NoAgencyFTE>
+    <NoAgencyHeadcount>100</NoAgencyHeadcount>
   </LALevelVacancies>
   <CSWWWorker>
     <AgencyWorker>1</AgencyWorker>
-    <SWENo>Oz2054309383</SWENo>
+    <SWENo>Ox2054309383</SWENo>
     <FTE>0.521371</FTE>
-    <PersonBirthDate>1967-01-04</PersonBirthDate>
+    <PersonBirthDate>1969-01-22</PersonBirthDate>
     <GenderCurrent>1</GenderCurrent>
     <Ethnicity>REFU</Ethnicity>
     <QualInst>Institution Name</QualInst>
