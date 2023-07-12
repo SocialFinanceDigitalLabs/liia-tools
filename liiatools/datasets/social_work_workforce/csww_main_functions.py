@@ -38,6 +38,12 @@ from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
 from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
     process as agg_process,
 )
+from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import (
+    configuration as pan_config,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import (
+    process as pan_process,
+)
 
 
 def generate_sample(output: str):
@@ -151,7 +157,7 @@ def la_agg(input, output):
         csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
-    print(column_names)
+    # print(column_names)
     csww_df = agg_process.deduplicate(csww_df, table_name, sort_order, dedup)
     csww_df = agg_process.remove_old_data(
         csww_df,
@@ -165,6 +171,30 @@ def la_agg(input, output):
         if table_name == "CSWWWorker":
             csww_df = agg_process.convert_dates(csww_df, dates, table_name)
         agg_process.export_la_file(output, table_name, csww_df)
+
+def pan_agg(input, la_code, output):
+    """
+    Joins data from newly merged CSWW file (output of la-agg()) to existing pan-London CSWW data
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param la_code: should be a three-letter string for the local authority depositing the file
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = pan_config.Config()
+
+    # Read file and match type
+    csww_df = pan_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = pan_process.match_load_file(csww_df, column_names)
+
+    # Remove unwanted datasets and merge wanted with existing output
+    pan_data_kept = config["pan_data_kept"]
+    if table_name in pan_data_kept:
+        la_name = flip_dict(config["data_codes"])[la_code]
+        csww_df = pan_process.merge_agg_files(output, table_name, csww_df, la_name)
+        pan_process.export_pan_file(output, table_name, csww_df)
 
 
 # cleanfile(
