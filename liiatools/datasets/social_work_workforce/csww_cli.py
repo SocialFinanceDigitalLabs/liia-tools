@@ -90,3 +90,28 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
     output = csww_main_functions.cleanfile(input, la_code, la_log_dir, output)
     return output
+
+
+# added to run from command line
+@csww.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+
+@click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+@click_log.simple_verbosity_option(log)
+def la_agg(input, output):
+    """
+    Merge clean files each year into one file merge file
+    """
+    output = csww_main_functions.la_agg(input, output)
