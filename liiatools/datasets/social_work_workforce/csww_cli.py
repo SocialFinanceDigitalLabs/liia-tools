@@ -115,3 +115,35 @@ def la_agg(input, output):
     Merge clean files each year into one file merge file
     """
     output = csww_main_functions.la_agg(input, output)
+
+
+# added to run from command line
+@csww.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+
+@click.option(
+    "--la_code",
+    required=True,
+    type=click.Choice(la_list, case_sensitive=False),
+    help="A three letter code, specifying the local authority that deposited the file",
+)
+
+@click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+@click_log.simple_verbosity_option(log)
+def pan_agg(input, la_code, output):
+    """
+    Merge clean files each year into one file merge file
+    """
+    output = csww_main_functions.la_agg(input, output)

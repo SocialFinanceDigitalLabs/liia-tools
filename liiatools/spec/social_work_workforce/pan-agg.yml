@@ -63,4 +63,8 @@ dedup:
         - NoAgencyFTE
         - NoAgencyHeadcount
         - LA
-        - YEAR  
+        - YEAR
+
+pan_data_kept:
+    - CSWWWorker
+    - LALevelVacancies

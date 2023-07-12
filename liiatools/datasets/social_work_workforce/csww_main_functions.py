@@ -205,12 +205,12 @@ def pan_agg(input, la_code, output):
 # )
 
 # la_agg(
-#     "liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_lalevel_clean.csv",
 #     "liiatools/datasets/social_work_workforce/lds_csww_la_agg",
 # )
 
-pan_agg(
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_la_agg/CSWW_LALevelVacancies_merged.csv",
-    "BAD",
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_pan_agg"
-)
+# pan_agg(
+#     "liiatools/datasets/social_work_workforce/lds_csww_la_agg/CSWW_LALevelVacancies_merged3.csv",
+#     "RED",
+#     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_pan_agg"
+# )
