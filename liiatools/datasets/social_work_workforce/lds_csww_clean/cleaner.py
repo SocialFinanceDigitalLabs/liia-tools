@@ -24,8 +24,8 @@ def clean_dates(event):
     """
     dateformat = event.schema_dict["date"]
     try:
-        newtext = to_date(event.text, dateformat)
-        return event.from_event(event, text=newtext, error="0")
+        clean_text = to_date(event.text, dateformat)
+        return event.from_event(event, text=clean_text, error="0")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, text="", error="1")
 
@@ -42,9 +42,9 @@ def clean_categories(event):
     """
     category = event.schema_dict["category"]
     try:
-        newtext = to_category(event.text, category)
-        if newtext != "error":
-            return event.from_event(event, text=newtext, error='0')
+        clean_text = to_category(event.text, category)
+        if clean_text != "error":
+            return event.from_event(event, text=clean_text, error='0')
         return event.from_event(event, text="", error="1")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, text="", error="1")
@@ -63,13 +63,12 @@ def clean_numeric(event):
     numeric = event.schema_dict["numeric"]
     try:
         if numeric == "integer":
-            newtext = to_integer(event.text, numeric)
+            clean_text = to_integer(event.text, numeric)
         elif numeric == "decimal":
-            #print(event.schema_dict["fixed"], event.schema_dict["decimal"])
-            decimalplaces = int(event.schema_dict["decimal"])
-            newtext = to_decimal(event.text, numeric, decimalplaces)
-        if newtext != "error":
-            return event.from_event(event, text=newtext, error='0')
+            decimal_places = int(event.schema_dict["decimal"])
+            clean_text = to_decimal(event.text, numeric, decimal_places)
+        if clean_text != "error":
+            return event.from_event(event, text=clean_text, error='0')
         return event.from_event(event, text="", error="1")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, text="", error="1")
@@ -87,9 +86,9 @@ def clean_regex_string(event):
     """
     pattern = event.schema_dict["regex_string"]
     try:
-        newtext = to_regex(event.text, pattern)
-        if newtext != "error":
-            return event.from_event(event, text=newtext, error="0")
+        clean_text = to_regex(event.text, pattern)
+        if clean_text != "error":
+            return event.from_event(event, text=clean_text, error="0")
         return event.from_event(event, text="", error="1")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, text="", error="1")

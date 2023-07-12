@@ -12,7 +12,7 @@ def to_category(string, categories):
 
     :param string: Some string to convert into a category value
     :param categories: A list of dictionaries containing different category:value pairs
-    :return: Either a category value, "error" or blank string
+    :return: Either a category value, "error" if category is invalid or blank string
     """
     for code in categories:
         if str(string).lower() == str(code["code"]).lower():
@@ -37,36 +37,39 @@ def to_integer(value, config):
 
     :param value: Some value to convert to an integer
     :param config: The loaded configuration
-    :return: Either an integer value or a blank string
+    :return: Either an integer value or an "error" string if value could not be formatted as integer or a blank string if no value provided
     """
     if config == "integer":
-        if isinstance(value, str) and value[-2:] == ".0":
-            return int(float(value))
-        elif value or value == 0:
-            return int(value)
-        else:
-            return ""
+        if value or value==0:
+            if isinstance(value, str) and value[-2:] == ".0":
+                return int(float(value))
+            elif value or value == 0:
+                return int(value)
+            else:
+                return "error" # value incorrectly formatted
+        return "" # no value provided
     else:
         return value
 
 
-def to_decimal(value, config, decplaces=0):
+def to_decimal(value, config, decimal_places=0):
     """
     Convert any strings that should be decimal based on the config into decimals
 
     :param value: Some value to convert to a decimal
     :param config: The loaded configuration
-    :param decplaces: The number of decimal places 
-    :return: Either a decimal value formatted to number of decimal places or a blank string
+    :param dec_places: The number of decimal places to apply (default 0) 
+    :return: Either a decimal value formatted to number of decimal places or an "error" string if value could not be formatted as decimal or a blank string if no value provided
     """
-    dpdisplayformat= f".{decplaces}f"
     if config == "decimal":
-        try:
-            float(value)
-            roundtodp = round(float(value), decplaces)
-            return f"{roundtodp: {dpdisplayformat}}".strip()
-        except (ValueError, TypeError):
-            return ""
+        if value or value == 0:
+            try:
+                float(value)
+                round_to_dp = round(float(value), decimal_places)
+                return round_to_dp
+            except (ValueError, TypeError):
+                return "error" # value incorrectly formatted
+        return "" # no value provided
     return value
 
 
@@ -76,19 +79,20 @@ def to_regex(value, pattern):
 
     :param value: Some value to convert to a regex string
     :param pattern: The regex pattern to compare
-    :return: Either a regex string or a blank string
+    :return: Either a string matching the regex pattern or an "error" string if value does not match pattern or a blank string if no value provided
     """
     if pattern:
         if value:
+            stripped_value = value.strip()
             try:
-                isfullmatch = re.fullmatch(pattern, value)
+                isfullmatch = re.fullmatch(pattern, stripped_value)
                 if isfullmatch:
-                    return value
+                    return stripped_value
                 else:
-                    return ""
+                    return "error" # value does not match regex pattern
             except (ValueError, TypeError):
-                return ""
+                return "error" # value incorrectly formatted
         else:
-            return ""
+            return "" # no value provided
     else:
         return value

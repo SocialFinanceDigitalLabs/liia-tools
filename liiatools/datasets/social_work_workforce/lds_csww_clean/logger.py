@@ -14,7 +14,7 @@ class ErrorTable(events.ParseEvent):
     pass
 
 
-def create_formatting_error_count(stream):
+def create_formatting_error_list(stream):
     """
     Create a list of the column headers for cells with formatting errors (event.error = 1) for each table
 
@@ -56,16 +56,16 @@ def blank_error_check(event):
     """
     try:
         allowed_blank = event.schema_dict["canbeblank"]
-        error = getattr(event, "error", "0")
-        if not allowed_blank and not event.text and error != "1":
+        format_error = getattr(event, "error", "0")
+        if not allowed_blank and not event.text and format_error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
-    except AttributeError:  # Raised in case there is no config item for the given cell
+    except AttributeError:  # Raised in case there is no schema dict for the given cell
         pass
 
 
-def create_blank_error_count(stream):
+def create_blank_error_list(stream):
     """
     Create a list of the column headers for cells with blank fields that should not be blank (event.blank_error = 1)
     for each table
@@ -75,18 +75,21 @@ def create_blank_error_count(stream):
     """
     blank_error_count = None
     for event in stream:
-        if isinstance(event, events.StartTable):
+        if isinstance(event, events.StartElement) and event.tag == "LALevelVacancies":
             blank_error_count = []
-        elif isinstance(event, events.EndTable):
+        elif isinstance(event, events.EndElement) and event.tag == "Message":
             blank_error_count = None
         elif isinstance(event, ErrorTable):
             yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
             blank_error_count = None
-        elif blank_error_count is not None and isinstance(event, events.Cell):
+        elif (
+            blank_error_count is not None
+            and isinstance(event, events.TextNode)
+        ):
             try:
                 if event.blank_error == "1":
-                    blank_error_count.append(event.header)
-            except AttributeError:
+                    blank_error_count.append(event.schema.name)
+            except AttributeError:  # Raised in case there is no event.blank_error
                 pass
         yield event
 
@@ -142,13 +145,14 @@ def create_extra_column_error(event):
         )
 
 
-def save_errors_la(stream, la_log_dir):
+def save_errors_la(stream, la_log_dir, filename):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
     only save the error events if there is at least one error in said event
 
     :param stream: A filtered list of event objects
     :param la_log_dir: Location to save the gathered error logs
+    :param filename: Filename to use
     :return: An updated list of event objects
     """
     start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
@@ -157,14 +161,12 @@ def save_errors_la(stream, la_log_dir):
             if isinstance(event, ErrorTable) and (
                 event.formatting_error_count is not None
                 and event.blank_error_count is not None
-                and event.table_name is not None
             ):
                 if event.formatting_error_count or event.blank_error_count:
                     with open(
-                        f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
+                        f"{os.path.join(la_log_dir, filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
-                        f.write(event.table_name)
                         f.write("\n")
                         if event.formatting_error_count:
                             f.write(
@@ -190,23 +192,23 @@ def save_errors_la(stream, la_log_dir):
         except AttributeError:
             pass
 
-        if isinstance(event, events.StartTable):
-            match_error = getattr(event, "match_error", None)
-            if match_error:
-                with open(
-                    f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
-                    "a",
-                ) as f:
-                    f.write(match_error)
-                    f.write("\n")
-            column_error = getattr(event, "extra_column_error", None)
-            if column_error:
-                with open(
-                    f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
-                    "a",
-                ) as f:
-                    f.write(column_error)
-                    f.write("\n")
+        # if isinstance(event, events.StartTable):
+        #     match_error = getattr(event, "match_error", None)
+        #     if match_error:
+        #         with open(
+        #             f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
+        #             "a",
+        #         ) as f:
+        #             f.write(match_error)
+        #             f.write("\n")
+        #     column_error = getattr(event, "extra_column_error", None)
+        #     if column_error:
+        #         with open(
+        #             f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
+        #             "a",
+        #         ) as f:
+        #             f.write(column_error)
+        #             f.write("\n")
         yield event
 
 
@@ -218,8 +220,8 @@ def log_errors(stream):
     :return: An updated list of event objects
     """
     stream = blank_error_check(stream)
-    # stream = create_formatting_error_count(stream)
-    # stream = create_blank_error_count(stream)
+    stream = create_formatting_error_list(stream)
+    stream = create_blank_error_list(stream)
     # stream = create_file_match_error(stream)
     # stream = create_extra_column_error(stream)
     return stream

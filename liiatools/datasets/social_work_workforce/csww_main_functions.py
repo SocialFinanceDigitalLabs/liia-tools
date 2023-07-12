@@ -108,8 +108,8 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = dom_parse(input)
 
     # Get year from input file
+    filename = str(Path(input).resolve().stem)
     try:
-        filename = str(Path(input).resolve().stem)
         input_year = check_year(filename)
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
@@ -132,17 +132,16 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     stream = filters.add_schema_dict(stream, schema_path=FilePath(input_year).path)
-
-    # for e in stream:
-    #     print(e.get('schema_dict'))
     # Clean stream
     stream = cleaner.clean_categories(stream)
     stream = cleaner.clean_dates(stream)
     stream = cleaner.clean_numeric(stream)
     stream = cleaner.clean_regex_string(stream)
+
     stream = logger.log_errors(stream)
 
     # Output results
+    stream = logger.save_errors_la(stream, la_log_dir=la_log_dir, filename=filename)
     stream = csww_record.message_collector(stream)
 
     data_worker, data_lalevel = csww_record.export_table(stream)
@@ -225,7 +224,7 @@ def pan_agg(input, la_code, output):
 cleanfile(
     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
     "BAD",
-    "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
     "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
 )
 
