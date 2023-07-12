@@ -1,0 +1,67 @@
+column_names:
+    LALevelVacancies:
+        - NUMBER_OF_VACANCIES
+        - NUMBER_AGENCY_FTE
+        - NO_AGENCY_HEADCOUNT
+        - LA
+        - YEAR
+    CSWWWorker:
+        - AgencyWorker
+        - SWENO
+        - FTE
+        - PersonBirhtDate
+        - GenderCurrent
+        - Ethnicity
+        - QualInst
+        - StepUpGrad
+        - OrgRole
+        - RoleStartDate
+        - StartOrigin
+        - FTE30
+        - WorkingDaysLost
+        - FrontLineGrad
+        - Absat30Sept
+        - ReasonAbsence
+        - CFKSSstatus
+        - YEAR
+        - LA
+dates:
+    CSWWWorker:
+        -PersonBirthDate
+        - RoleStartDate
+sort_order:
+    LALevelVacancies:
+        - YEAR
+    CSWWWorker:
+        - YEAR
+        
+
+dedup:
+    LALevelVacancies:
+        - NUMBER_OF_VACANCIES
+        - NUMBER_AGENCY_FTE
+        - NO_AGENCY_HEADCOUNT
+        - LA
+        - YEAR
+    CSWWWorker:
+        - AgencyWorker
+        - SWENO
+        - FTE
+        - PersonBirhtDate
+        - GenderCurrent
+        - Ethnicity
+        - QualInst
+        - StepUpGrad
+        - OrgRole
+        - RoleStartDate
+        - StartOrigin
+        - FTE30
+        - WorkingDaysLost
+        - FrontLineGrad
+        - Absat30Sept
+        - ReasonAbsence
+        - CFKSSstatus
+        - YEAR
+        - LA
+    
+    

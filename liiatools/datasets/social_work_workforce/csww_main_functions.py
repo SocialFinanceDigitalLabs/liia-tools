@@ -4,6 +4,9 @@ import click as click
 from pathlib import Path
 import yaml
 from datetime import datetime
+import pandas as pd
+import numpy as np
+log = logging.getLogger(__name__)
 
 from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
@@ -20,6 +23,14 @@ from liiatools.csdatatools.util.xml import  etree, to_xml
 #from sfdata_stream_parser.stream import events
 from liiatools.csdatatools.util.xml import  dom_parse
 from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+
+# Dependencies for la_agg()
+from liiatools.datasets.social_work_workforce.lds_csww_la_agg import configuration as agg_config
+from liiatools.datasets.social_work_workforce.lds_csww_la_agg import process as agg_process
+
+# Dependencies for pan_agg()
+# from liiatools.datasets.cin_census.lds_cin_pan_agg import configuration as pan_config
+# from liiatools.datasets.cin_census.lds_cin_pan_agg import process as pan_process
 
 # liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
 
@@ -77,38 +88,12 @@ def generate_sample(output: str):
         print("The file path provided does not exist")
         
 @click.group()
-def cin_census():
+def social_work_workforce():
     """Functions for cleaning, minimising and aggregating CIN Census files"""
     pass
 
 
-#@cin_census.command()
-#@click.option(
- #   "--i",
-#    "input",
- #   required=True,
-#    type=str,
- #   help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
-#)
-#@click.option(
-#    "--la_code",
- #   required=True,
-#    type=click.Choice(la_list, case_sensitive=False),
-#    help="A three letter code, specifying the local authority that deposited the file",
-#)
-#@click.option(
-#    "--la_log_dir",
-#    required=True,
- #   type=str,
-#    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
-#)
-#@click.option(
- #   "--o",
-#    "output",
-#    required=True,
-#    type=str,
-#    help="A string specifying the output directory location",
-#)
+
 @click_log.simple_verbosity_option(log)        
         
 def cleanfile(input,la_code, la_log_dir,output):
@@ -180,7 +165,66 @@ def cleanfile(input,la_code, la_log_dir,output):
 cleanfile(
     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
             "BAD",
-           "/workspaces/liia_tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+           "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
             "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
            )  
 print("===> Finished running csww_main_functions.py")
+
+def la_agg(input, flat_output):
+    """
+    Joins data from newly cleaned CIN Census file (output of cleanfile()) to existing CIN Census data for the depositing local authority
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param flat_output: should specify the path to the folder for the main flatfile output
+    :param analysis_output: should specify the path to the folder for the additional analytical outputs
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
+
+    # Open file as Dataframe
+    dates = config["dates"]
+    flatfile = agg_process.read_file(input, dates)
+
+    # Merge with existing data, de-duplicate and apply data retention policy
+    flatfile = agg_process.merge_la_files(flat_output, dates, flatfile)
+    sort_order = config["sort_order"]
+    dedup = config["dedup"]
+    flatfile = agg_process.deduplicate(flatfile, sort_order, dedup)
+    flatfile = agg_process.remove_old_data(flatfile, years=6)
+
+    # Output flatfile
+    agg_process.export_flatfile(flat_output, flatfile)
+
+
+# @social_work_workforce.command()
+# @click.option(
+#     "--i",
+#     "input",
+#     required=True,
+#     type=str,
+#     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+# )
+# @click.option(
+#     "--la_code",
+#     required=True,
+#     type=click.Choice(la_list, case_sensitive=False),
+#     help="A three letter code, specifying the local authority that deposited the file",
+# )
+# @click.option(
+#     "--flat_output",
+#     required=True,
+#     type=str,
+#     help="A string specifying the directory location for the main flatfile output",
+# )
+# @click.option(
+#     "--analysis_output",
+#     required=True,
+#     type=str,
+#     help="A string specifying the directory location for the additional analysis outputs",
+# )
+la_agg(
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean.csv",
+            "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_la_agg",
+                      )  
+print("===> Finished running csww la agg")
