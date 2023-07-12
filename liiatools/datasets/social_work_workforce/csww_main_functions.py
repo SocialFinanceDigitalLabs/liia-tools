@@ -64,7 +64,10 @@ with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
-
+#Stephen's Set constants for date retention period
+YEARS_TO_GO_BACK = 7
+YEAR_START_MONTH = 1
+REFERENCE_DATE = datetime.now()
 
 def generate_sample(output: str):
     """
@@ -128,11 +131,12 @@ def cleanfile(input,la_code, la_log_dir,output):
         save_year_error(input, la_log_dir)
         return
 
-    # Check year is within acceptable range for data retention policy
-    years_to_go_back = 6
-    year_start_month = 6
-    reference_date = datetime.now()
-    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+    # Stephen's Check year is within acceptable range for data retention policy
+    if (
+         check_year_within_range(
+             input_year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
+        )
+        is False):
         save_incorrect_year_error(input, la_log_dir)
         return
 
@@ -146,10 +150,23 @@ def cleanfile(input,la_code, la_log_dir,output):
     # Clean stream
 
 # Output result
+    # stream = csww_record.message_collector(stream)
+    # data = csww_record.export_table(stream)
+    # data = file_creator.add_fields(input_year, data, la_name)
+    # file_creator.export_file(input, output, data)
+ #Stephen's output results   
     stream = csww_record.message_collector(stream)
-    data = csww_record.export_table(stream)
-    data = file_creator.add_fields(input_year, data, la_name)
-    file_creator.export_file(input, output, data)
+
+    data_worker, data_lalevel = csww_record.export_table(stream)
+
+    data_worker = file_creator.add_fields(input_year, data_worker, la_name)
+    data_worker = file_creator.degrade_data(data_worker)
+    file_creator.export_file(input, output, data_worker, "worker")
+
+    data_lalevel = file_creator.add_fields(input_year, data_lalevel, la_name)
+    file_creator.export_file(input, output, data_lalevel, "lalevel")
+    
+    
 #     log.save_errors_la(
 #         input,
 #         value_error=value_error,
@@ -162,15 +179,15 @@ def cleanfile(input,la_code, la_log_dir,output):
     for e in stream :
         print (e.as_dict())
     list (stream)
-cleanfile(
-    "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
-            "BAD",
-           "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-            "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
-           )  
-print("===> Finished running csww_main_functions.py")
+# cleanfile(
+#     "/workspaces/liia-tools/liiatools/spec/social_work_workforce/samples/csww/BAD/social_work_workforce_2022.xml",
+#             "BAD",
+#            "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+#             "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean",
+#            )  
+# print("===> Finished running csww_main_functions.py")
 
-def la_agg(input, flat_output):
+def la_agg(input, output):
     """
     Joins data from newly cleaned CIN Census file (output of cleanfile()) to existing CIN Census data for the depositing local authority
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -182,20 +199,29 @@ def la_agg(input, flat_output):
     # Configuration
     config = agg_config.Config()
 
-    # Open file as Dataframe
-    dates = config["dates"]
-    flatfile = agg_process.read_file(input, dates)
+    # Stephen's Open file as Dataframe and match file type
+    
+    csww_df = agg_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = agg_process.match_load_file(csww_df, column_names)
+    
 
     # Merge with existing data, de-duplicate and apply data retention policy
-    flatfile = agg_process.merge_la_files(flat_output, dates, flatfile)
+    csww_df = agg_process.merge_la_files(output, csww_df, table_name)
+    
+    # Stephen's De-duplicate and remove old data according to schema
+    if table_name == "CSWWWorker":
+        dates = config["dates"]
+        csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
-    flatfile = agg_process.deduplicate(flatfile, sort_order, dedup)
-    flatfile = agg_process.remove_old_data(flatfile, years=6)
-
-    # Output flatfile
-    agg_process.export_flatfile(flat_output, flatfile)
-
+    csww_df = agg_process.deduplicate(csww_df, table_name, sort_order, dedup)
+    csww_df = agg_process.remove_old_data(
+        csww_df,
+        num_of_years=YEARS_TO_GO_BACK,
+        new_year_start_month=YEAR_START_MONTH,
+        as_at_date=REFERENCE_DATE,
+    )
 
 # @social_work_workforce.command()
 # @click.option(
@@ -224,7 +250,7 @@ def la_agg(input, flat_output):
 #     help="A string specifying the directory location for the additional analysis outputs",
 # )
 la_agg(
-    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean.csv",
+    "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/social_work_workforce_2022_clean.csv",
             "/workspaces/liia-tools/liiatools/datasets/social_work_workforce/lds_csww_la_agg",
                       )  
 print("===> Finished running csww la agg")

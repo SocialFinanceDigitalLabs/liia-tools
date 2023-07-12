@@ -1,8 +1,8 @@
 column_names:
     LALevelVacancies:
-        - NUMBER_OF_VACANCIES
-        - NUMBER_AGENCY_FTE
-        - NO_AGENCY_HEADCOUNT
+        - NumberOfVacancies
+        - NoAgencyFTE
+        - NoAgencyHeadcount
         - LA
         - YEAR
     CSWWWorker:
@@ -38,9 +38,9 @@ sort_order:
 
 dedup:
     LALevelVacancies:
-        - NUMBER_OF_VACANCIES
-        - NUMBER_AGENCY_FTE
-        - NO_AGENCY_HEADCOUNT
+        - NumberOfVacancies
+        - NoAgencyFTE
+        - NoAgencyHeadcount
         - LA
         - YEAR
     CSWWWorker:

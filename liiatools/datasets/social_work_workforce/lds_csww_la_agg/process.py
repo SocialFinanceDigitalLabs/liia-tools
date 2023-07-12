@@ -10,8 +10,8 @@ def read_file(file):
     Reads the csv file as a pandas DataFrame
     """
     filepath = Path(file)
-    s903_df = pd.read_csv(filepath, index_col=None)
-    return s903_df
+    csww_df = pd.read_csv(filepath, index_col=None)
+    return csww_df
 
 
 def match_load_file(csww_df, column_names):
@@ -27,7 +27,7 @@ def merge_la_files(output, csww_df, table_name):
     """
     Looks for existing file of the same type and merges with new file if found
     """
-    old_file = Path(output, f"social_work_workforce_{table_name}_merged.csv")
+    old_file = Path(output, f"CSWW_{table_name}_merged.csv")
     if old_file.is_file():
         old_df = pd.read_csv(old_file, index_col=None)
         merged_df = pd.concat([csww_df, old_df], axis=0)
@@ -49,22 +49,22 @@ def deduplicate(csww_df, table_name, sort_order, dedup):
     """
     Sorts and removes duplicate records from merged files following schema
     """
-    csww_df = csww_df.sort_values(
-        sort_order[table_name], ascending=False, ignore_index=True
-    )
+    csww_df = csww_df.sort_values(sort_order[table_name], ascending=False, ignore_index=True)
     csww_df = csww_df.drop_duplicates(subset=dedup[table_name], keep="first")
     return csww_df
 
 
-def remove_old_data(csww_df, years):
+def remove_old_data(csww_df, num_of_years, new_year_start_month, as_at_date):
     """
     Removes data older than a specified number of years
     """
-    year = pd.to_datetime("today").year
-    month = pd.to_datetime("today").month
-    if month <= 6:
-        year = year - 1
-    csww_df = csww_df[csww_df["YEAR"] >= year - years]
+    current_year = pd.to_datetime(as_at_date).year
+    current_month = pd.to_datetime(as_at_date).month
+    if current_month < new_year_start_month:
+        earliest_allowed_year = current_year - num_of_years
+    else:
+        earliest_allowed_year = current_year - num_of_years + 1
+    csww_df = csww_df[csww_df["YEAR"] >= earliest_allowed_year]
     return csww_df
 
 
@@ -83,5 +83,5 @@ def export_la_file(output, table_name, csww_df):
     """
     Writes the output as a csv
     """
-    output_path = Path(output, f"social_work_workforce_{table_name}_merged.csv")
+    output_path = Path(output, f"CSWW_{table_name}_merged.csv")
     csww_df.to_csv(output_path, index=False)
