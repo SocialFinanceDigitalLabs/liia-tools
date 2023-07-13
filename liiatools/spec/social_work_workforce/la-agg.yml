@@ -7,9 +7,9 @@ column_names:
         - YEAR
     CSWWWorker:
         - AgencyWorker
-        - SWENO
+        - SWENo
         - FTE
-        - PersonBirhtDate
+        - PersonBirthDate
         - GenderCurrent
         - Ethnicity
         - QualInst
@@ -19,7 +19,7 @@ column_names:
         - StartOrigin
         - FTE30
         - WorkingDaysLost
-        - FrontLineGrad
+        - FrontlineGrad
         - Absat30Sept
         - ReasonAbsence
         - CFKSSstatus
@@ -27,8 +27,9 @@ column_names:
         - LA
 dates:
     CSWWWorker:
-        -PersonBirthDate
+        - PersonBirthDate
         - RoleStartDate
+
 sort_order:
     LALevelVacancies:
         - YEAR
@@ -45,9 +46,9 @@ dedup:
         - YEAR
     CSWWWorker:
         - AgencyWorker
-        - SWENO
+        - SWENo
         - FTE
-        - PersonBirhtDate
+        - PersonBirthDate
         - GenderCurrent
         - Ethnicity
         - QualInst
@@ -57,7 +58,7 @@ dedup:
         - StartOrigin
         - FTE30
         - WorkingDaysLost
-        - FrontLineGrad
+        - FrontlineGrad
         - Absat30Sept
         - ReasonAbsence
         - CFKSSstatus

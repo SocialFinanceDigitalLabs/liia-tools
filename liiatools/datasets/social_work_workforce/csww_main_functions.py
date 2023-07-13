@@ -64,7 +64,7 @@ with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
-#Stephen's Set constants for date retention period
+#S's Set constants for date retention period
 YEARS_TO_GO_BACK = 7
 YEAR_START_MONTH = 1
 REFERENCE_DATE = datetime.now()
@@ -131,7 +131,7 @@ def cleanfile(input,la_code, la_log_dir,output):
         save_year_error(input, la_log_dir)
         return
 
-    # Stephen's Check year is within acceptable range for data retention policy
+    # S's Check year is within acceptable range for data retention policy
     if (
          check_year_within_range(
              input_year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
@@ -154,7 +154,7 @@ def cleanfile(input,la_code, la_log_dir,output):
     # data = csww_record.export_table(stream)
     # data = file_creator.add_fields(input_year, data, la_name)
     # file_creator.export_file(input, output, data)
- #Stephen's output results   
+ #S's output results   
     stream = csww_record.message_collector(stream)
 
     data_worker, data_lalevel = csww_record.export_table(stream)
@@ -199,7 +199,7 @@ def la_agg(input, output):
     # Configuration
     config = agg_config.Config()
 
-    # Stephen's Open file as Dataframe and match file type
+    # S's Open file as Dataframe and match file type
     
     csww_df = agg_process.read_file(input)
     column_names = config["column_names"]
@@ -209,12 +209,13 @@ def la_agg(input, output):
     # Merge with existing data, de-duplicate and apply data retention policy
     csww_df = agg_process.merge_la_files(output, csww_df, table_name)
     
-    # Stephen's De-duplicate and remove old data according to schema
+    # S's De-duplicate and remove old data according to schema
     if table_name == "CSWWWorker":
         dates = config["dates"]
         csww_df = agg_process.convert_datetimes(csww_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
+    print (table_name)
     csww_df = agg_process.deduplicate(csww_df, table_name, sort_order, dedup)
     csww_df = agg_process.remove_old_data(
         csww_df,

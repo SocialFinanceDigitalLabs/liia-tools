@@ -49,6 +49,7 @@ def deduplicate(csww_df, table_name, sort_order, dedup):
     """
     Sorts and removes duplicate records from merged files following schema
     """
+    print (table_name)
     csww_df = csww_df.sort_values(sort_order[table_name], ascending=False, ignore_index=True)
     csww_df = csww_df.drop_duplicates(subset=dedup[table_name], keep="first")
     return csww_df
