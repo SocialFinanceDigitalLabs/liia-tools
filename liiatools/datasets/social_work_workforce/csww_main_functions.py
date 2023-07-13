@@ -5,11 +5,9 @@ from datetime import datetime
 from liiatools.datasets.social_work_workforce.sample_data import (
     generate_sample_csww_file,
 )
-from liiatools.csdatatools.util.xml import dom_parse
 from liiatools.csdatatools.util.stream import consume
 from liiatools.csdatatools.util.xml import etree, to_xml
-from liiatools.csdatatools.datasets.social_work_workforce import filters
-from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema, FilePath
 from liiatools.datasets.shared_functions.common import (
     flip_dict,
     check_file_type,
@@ -23,6 +21,8 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     configuration as clean_config,
     csww_record,
     file_creator,
+    filters,
+    xml,
 )
 
 # from liiatools.datasets.social_work_workforce.lds_csww_la_agg import (
@@ -89,7 +89,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         == "incorrect file type"
     ):
         return
-    stream = dom_parse(input)
+    stream = xml.dom_parse(input)
     stream = list(stream)
 
     # Get year from input file
@@ -119,6 +119,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    stream = filters.add_schema_dict(stream, schema_path=FilePath(input_year).path)
 
     # Output result
     stream = csww_record.message_collector(stream)
