@@ -21,8 +21,7 @@ from liiatools.csdatatools.util.xml import  etree, to_xml
 
 # Dependencies for cleanfile()
 #from sfdata_stream_parser.stream import events
-from liiatools.csdatatools.util.xml import  dom_parse
-from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema
+from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import Schema, FilePath
 
 # Dependencies for la_agg()
 from liiatools.datasets.social_work_workforce.lds_csww_la_agg import configuration as agg_config
@@ -34,8 +33,6 @@ from liiatools.datasets.social_work_workforce.lds_csww_la_agg import process as 
 
 # liia-tools/liiatools/datasets/social_work_workforce/lds_csww_clean/schema.py
 
-from liiatools.csdatatools.datasets.cincensus import filters
-
 from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     csww_record,
     file_creator,
@@ -43,6 +40,8 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     #validator,
     #converter,
     #logger,
+    filters,
+    xml,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
@@ -120,7 +119,7 @@ def cleanfile(input,la_code, la_log_dir,output):
         == "incorrect file type"
     ):
         return
-    stream = dom_parse(input)
+    stream = xml.dom_parse(input)
     stream = list(stream)
 
     # Get year from input file
@@ -146,6 +145,7 @@ def cleanfile(input,la_code, la_log_dir,output):
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
+    stream = filters.add_schema_dict(stream, schema_path=FilePath(input_year).path)
     #stream = logger.inherit_LAchildID(stream)
     # Clean stream
 
