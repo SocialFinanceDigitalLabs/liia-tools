@@ -4,16 +4,22 @@ from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
-from liiatools.datasets.social_work_workforce.lds_csww_clean.converters import to_category, to_integer, to_decimal, to_regex
+from liiatools.datasets.social_work_workforce.lds_csww_clean.converters import (
+    to_category,
+    to_integer,
+    to_decimal,
+    to_regex,
+)
 
 from liiatools.datasets.shared_functions.converters import to_date
-#from liiatools.datasets.shared_functions.common import check_postcode
 
 log = logging.getLogger(__name__)
 
 
 @streamfilter(
-    check=type_check(events.TextNode), fail_function=pass_event, error_function=pass_event
+    check=type_check(events.TextNode),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def clean_dates(event):
     """
@@ -25,13 +31,15 @@ def clean_dates(event):
     dateformat = event.schema_dict["date"]
     try:
         clean_text = to_date(event.text, dateformat)
-        return event.from_event(event, text=clean_text, error="0")
+        return event.from_event(event, text=clean_text, formatting_error="0")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, text="", error="1")
+        return event.from_event(event, text="", formatting_error="1")
 
 
 @streamfilter(
-    check=type_check(events.TextNode), fail_function=pass_event, error_function=pass_event
+    check=type_check(events.TextNode),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def clean_categories(event):
     """
@@ -44,14 +52,16 @@ def clean_categories(event):
     try:
         clean_text = to_category(event.text, category)
         if clean_text != "error":
-            return event.from_event(event, text=clean_text, error='0')
-        return event.from_event(event, text="", error="1")
+            return event.from_event(event, text=clean_text, formatting_error="0")
+        return event.from_event(event, text="", formatting_error="1")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, text="", error="1")
+        return event.from_event(event, text="", formatting_error="1")
 
 
 @streamfilter(
-    check=type_check(events.TextNode), fail_function=pass_event, error_function=pass_event
+    check=type_check(events.TextNode),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def clean_numeric(event):
     """
@@ -68,14 +78,16 @@ def clean_numeric(event):
             decimal_places = int(event.schema_dict["decimal"])
             clean_text = to_decimal(event.text, numeric, decimal_places)
         if clean_text != "error":
-            return event.from_event(event, text=clean_text, error='0')
-        return event.from_event(event, text="", error="1")
+            return event.from_event(event, text=clean_text, formatting_error="0")
+        return event.from_event(event, text="", formatting_error="1")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, text="", error="1")
+        return event.from_event(event, text="", formatting_error="1")
 
 
 @streamfilter(
-    check=type_check(events.TextNode), fail_function=pass_event, error_function=pass_event
+    check=type_check(events.TextNode),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def clean_regex_string(event):
     """
@@ -88,7 +100,21 @@ def clean_regex_string(event):
     try:
         clean_text = to_regex(event.text, pattern)
         if clean_text != "error":
-            return event.from_event(event, text=clean_text, error="0")
-        return event.from_event(event, text="", error="1")
+            return event.from_event(event, text=clean_text, formatting_error="0")
+        return event.from_event(event, text="", formatting_error="1")
     except (AttributeError, TypeError, ValueError):
-        return event.from_event(event, text="", error="1")
+        return event.from_event(event, text="", formatting_error="1")
+
+
+def clean(stream):
+    """
+    Compile the cleaning functions
+
+    :param event: A list of event objects
+    :return: An updated list of event objects
+    """
+    stream = clean_dates(stream)
+    stream = clean_categories(stream)
+    stream = clean_numeric(stream)
+    stream = clean_regex_string(stream)
+    return stream

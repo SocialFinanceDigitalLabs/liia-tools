@@ -11,7 +11,7 @@ from liiatools.csdatatools.util.stream import consume
 from liiatools.datasets.social_work_workforce.lds_csww_clean.xml import (
     etree,
     to_xml,
-    dom_parse
+    dom_parse,
 )
 from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import (
     Schema,
@@ -132,12 +132,9 @@ def cleanfile(input, la_code, la_log_dir, output):
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
     stream = filters.add_schema_dict(stream, schema_path=FilePath(input_year).path)
-    # Clean stream
-    stream = cleaner.clean_categories(stream)
-    stream = cleaner.clean_dates(stream)
-    stream = cleaner.clean_numeric(stream)
-    stream = cleaner.clean_regex_string(stream)
 
+    # Clean stream
+    stream = cleaner.clean(stream)
     stream = logger.log_errors(stream)
 
     # Output results

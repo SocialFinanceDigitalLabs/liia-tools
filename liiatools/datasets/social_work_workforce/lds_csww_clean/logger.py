@@ -21,24 +21,24 @@ def create_formatting_error_list(stream):
     :param stream: A filtered list of event objects
     :return: An updated list of event objects with error counts
     """
-    formatting_error_count = None
+    formatting_error_list = None
     for event in stream:
         if isinstance(event, events.StartElement) and event.tag == "LALevelVacancies":
-            formatting_error_count = []
+            formatting_error_list = []
         elif isinstance(event, events.EndElement) and event.tag == "Message":
             yield ErrorTable.from_event(
                 event,
-                formatting_error_count=formatting_error_count,
+                formatting_error_list=formatting_error_list,
             )
-            formatting_error_count = None
+            formatting_error_list = None
         elif (
-            formatting_error_count is not None
+            formatting_error_list is not None
             and isinstance(event, events.TextNode)
         ):
             try:
-                if event.error == "1":
-                    formatting_error_count.append(event.schema.name)
-            except AttributeError:  # Raised in case there is no event.error
+                if event.formatting_error == "1":
+                    formatting_error_list.append(event.schema.name)
+            except AttributeError:  # Raised in case there is no event.formatting_error
                 pass
         yield event
 
@@ -56,8 +56,8 @@ def blank_error_check(event):
     """
     try:
         allowed_blank = event.schema_dict["canbeblank"]
-        format_error = getattr(event, "error", "0")
-        if not allowed_blank and not event.text and format_error != "1":
+        formatting_error = getattr(event, "formatting_error", "0")
+        if not allowed_blank and not event.text and formatting_error != "1":
             return event.from_event(event, blank_error="1")
         else:
             return event
@@ -73,22 +73,22 @@ def create_blank_error_list(stream):
     :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
-    blank_error_count = None
+    blank_error_list = None
     for event in stream:
         if isinstance(event, events.StartElement) and event.tag == "LALevelVacancies":
-            blank_error_count = []
+            blank_error_list = []
         elif isinstance(event, events.EndElement) and event.tag == "Message":
-            blank_error_count = None
+            blank_error_list = None
         elif isinstance(event, ErrorTable):
-            yield ErrorTable.from_event(event, blank_error_count=blank_error_count)
-            blank_error_count = None
+            yield ErrorTable.from_event(event, blank_error_list=blank_error_list)
+            blank_error_list = None
         elif (
-            blank_error_count is not None
+            blank_error_list is not None
             and isinstance(event, events.TextNode)
         ):
             try:
                 if event.blank_error == "1":
-                    blank_error_count.append(event.schema.name)
+                    blank_error_list.append(event.schema.name)
             except AttributeError:  # Raised in case there is no event.blank_error
                 pass
         yield event
@@ -159,32 +159,32 @@ def save_errors_la(stream, la_log_dir, filename):
     for event in stream:
         try:
             if isinstance(event, ErrorTable) and (
-                event.formatting_error_count is not None
-                and event.blank_error_count is not None
+                event.formatting_error_list is not None
+                and event.blank_error_list is not None
             ):
-                if event.formatting_error_count or event.blank_error_count:
+                if event.formatting_error_list or event.blank_error_list:
                     with open(
                         f"{os.path.join(la_log_dir, filename)}_error_log_{start_time}.txt",
                         "a",
                     ) as f:
                         f.write("\n")
-                        if event.formatting_error_count:
+                        if event.formatting_error_list:
                             f.write(
                                 "Number of cells that have been made blank "
                                 "because they could not be formatted correctly"
                             )
                             f.write("\n")
-                            counter_dict = Counter(event.formatting_error_count)
+                            counter_dict = Counter(event.formatting_error_list)
                             f.write(
                                 str(counter_dict)[9:-2]
                             )  # Remove "Counter({" and "})" from string
                             f.write("\n")
-                        if event.blank_error_count:
+                        if event.blank_error_list:
                             f.write(
                                 "Number of blank cells that should have contained data"
                             )
                             f.write("\n")
-                            blank_counter_dict = Counter(event.blank_error_count)
+                            blank_counter_dict = Counter(event.blank_error_list)
                             f.write(
                                 str(blank_counter_dict)[9:-2]
                             )  # Remove "Counter({" and "})" from string
