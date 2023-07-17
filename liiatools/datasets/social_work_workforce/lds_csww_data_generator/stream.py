@@ -7,5 +7,3 @@ def consume(stream) -> Counter:
     """
     stream_types = [type(ev) for ev in stream]
     return Counter(stream_types)
-
-
