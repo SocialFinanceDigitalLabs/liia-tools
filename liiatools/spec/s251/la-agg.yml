@@ -30,6 +30,7 @@ column_names:
     - Contribution from education provider/s
     - LA
     - Year
+    - Quarter
 
 dates:
     - Date of birth
@@ -40,6 +41,7 @@ dates:
 
 sort_order:
     - Year
+    - Quarter
 
 dedup:
     - Child ID

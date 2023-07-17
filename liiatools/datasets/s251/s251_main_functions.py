@@ -49,7 +49,7 @@ YEAR_START_MONTH = 1
 REFERENCE_DATE = datetime.now()
 
 
-def cleanfile(input, la_code, la_log_dir, output):
+def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
     """
     Cleans input S251 csv file according to config and outputs cleaned csv files.
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -73,7 +73,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         == "incorrect file type"
     ):
         return
-    year = prep.find_year_of_return(input, la_log_dir)
+    year, quarter = prep.find_year_of_return(input, la_log_dir)
     if year is None:
         return
 
@@ -88,7 +88,7 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Open & Parse file
     stream = parse.parse_csv(input=input)
-    stream = populate.add_year_column(stream, year=year)
+    stream = populate.add_year_column(stream, year=year, quarter=quarter)
 
     # Configure stream
     config = clean_config.Config(year)
@@ -107,7 +107,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     list(stream)
 
 
-def la_agg(input, output):
+def la_agg(input: str, output: str):
     """
     Joins data from newly cleaned S251 file (output of cleanfile()) to existing S251 data for the depositing local
     authority
@@ -145,7 +145,7 @@ def la_agg(input, output):
         agg_process.export_la_file(output, s251_df)
 
 
-def pan_agg(input, la_code, output):
+def pan_agg(input: str, la_code: str, output: str):
     """
     Joins data from newly merged S251 file (output of la-agg()) to existing pan-London S251 data
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
@@ -166,13 +166,14 @@ def pan_agg(input, la_code, output):
     pan_process.export_pan_file(output, s251_df)
 
 
-def generate_sample(output):
+def generate_sample(output: str, la_name: str):
     """
     Export a sample file for testing
 
     :param output: string containing the desired location and name of sample file
+    :param la_name: name of local authority
     :return: .csv sample file in desired location
     """
     stream = sample_data.generate_sample_s251_file()
-    stream = file_creator.save_stream(stream, output=output)
+    stream = file_creator.save_stream(stream, la_name, output=output)
     list(stream)

@@ -6,22 +6,23 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 log = logging.getLogger(__name__)
 
 
-def add_year_column(stream, year):
+def add_year_column(stream, year, quarter):
     """
     Attaches the year of the file to the events.StartTable and events.EndRow
 
     :param stream: A filtered list of event objects of type StartTable
     :param year: Year of the file
+    :param quarter: Quarter of the file
     :return: An updated list of event objects
     """
     for event in stream:
         if isinstance(event, events.StartTable):
-            yield event.from_event(event, year=year)
+            yield event
         elif isinstance(event, events.EndTable):
             yield event
             year = None
         elif isinstance(event, events.EndRow) and year is not None:
-            yield event.from_event(event, year=year)
+            yield event.from_event(event, year=year, quarter=quarter)
         else:
             yield event
 

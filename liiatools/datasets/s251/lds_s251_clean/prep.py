@@ -75,11 +75,11 @@ def _save_year_error(input: str, la_log_dir: str, type: str):
 
 def find_year_of_return(input: str, la_log_dir: str):
     """
-    Checks the minimum placement end date years to find year of return
+    Checks the minimum placement end date years to find year and quarter of return
 
     :param input: Path to file that we need to find the year of return from
     :param la_log_dir: Path to the local authority's log folder
-    :return: A year of return
+    :return: A year and quarter of return
     """
     infile = Path(input)
     try:
@@ -88,10 +88,11 @@ def find_year_of_return(input: str, la_log_dir: str):
             data["Placement end date"], format="%d/%m/%Y"
         )
         year = data["Placement end date"].min().year
+        quarter = (data["Placement end date"].min().month-1)//3 + 1
         if year is np.nan:
             _save_year_error(input, la_log_dir, "empty_column")
         else:
-            return year
+            return year, quarter
     except ValueError:
         _save_year_error(input, la_log_dir, "missing_column")
         return

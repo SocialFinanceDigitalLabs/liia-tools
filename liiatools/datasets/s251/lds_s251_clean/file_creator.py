@@ -52,7 +52,7 @@ def create_tables(stream, la_name):
             match_error = getattr(event, "match_error", None)
             year_error = getattr(event, "year_error", None)
             if match_error is None or year_error is None:
-                data = tablib.Dataset(headers=event.expected_columns + ["LA", "Year"])
+                data = tablib.Dataset(headers=event.expected_columns + ["LA", "Year", "Quarter"])
             else:
                 data = None
         elif isinstance(event, events.EndTable):
@@ -61,7 +61,7 @@ def create_tables(stream, la_name):
             data = None
         elif data is not None and isinstance(event, RowEvent):
             try:
-                data.append(event.row + [la_name, event.year])
+                data.append(event.row + [la_name, event.year, event.quarter])
             except AttributeError:  # raised in case event.year is missing so data is not added
                 pass
         yield event
