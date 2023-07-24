@@ -8,9 +8,8 @@ from datetime import datetime
 
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
-from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.datasets.cin_census.lds_cin_clean.parse import dom_parse
 from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
-from liiatools.csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
@@ -19,6 +18,7 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
     validator,
     cin_record,
     converter,
+    filters,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
