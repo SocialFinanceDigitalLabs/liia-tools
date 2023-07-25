@@ -1,42 +1,16 @@
 import tablib
 import logging
-from pathlib import Path
 
 from sfdata_stream_parser import events
 
+from liiatools.datasets.shared_functions.file_creator import (
+    coalesce_row,
+    save_tables,
+    TableEvent,
+    RowEvent,
+)
+
 log = logging.getLogger(__name__)
-
-
-class RowEvent(events.ParseEvent):
-    pass
-
-
-def coalesce_row(stream):
-    """
-    Create a list of the cell values for a whole row
-
-    :param stream: The stream to output
-    :return: Updated stream
-    """
-    row = None
-    for event in stream:
-        if isinstance(event, events.StartRow):
-            row = []
-        elif isinstance(event, events.EndRow):
-            yield RowEvent.from_event(event, row=row)
-            row = None
-        elif (
-            row is not None
-            and isinstance(event, events.Cell)
-            and event.header in set(event.expected_columns)
-        ):
-            row.append(event.cell)
-        else:
-            yield event
-
-
-class TableEvent(events.ParseEvent):
-    pass
 
 
 def create_tables(stream, la_name):
@@ -44,6 +18,7 @@ def create_tables(stream, la_name):
     Append all the rows for a given table to create one concatenated data event
 
     :param stream: The stream to output
+    :param la_name: The name of the local authority
     :return: Updated stream
     """
     data = None
@@ -51,10 +26,12 @@ def create_tables(stream, la_name):
         if isinstance(event, events.StartTable):
             match_error = getattr(event, "match_error", None)
             year_error = getattr(event, "year_error", None)
-            if match_error is None or year_error is None:
-                data = tablib.Dataset(headers=event.expected_columns + ["LA", "Year", "Quarter"])
-            else:
+            if match_error is not None or year_error is not None:
                 data = None
+            else:
+                data = tablib.Dataset(
+                    headers=event.expected_columns + ["LA", "Year", "Quarter"]
+                )
         elif isinstance(event, events.EndTable):
             yield event
             yield TableEvent.from_event(event, data=data)
@@ -64,24 +41,6 @@ def create_tables(stream, la_name):
                 data.append(event.row + [la_name, event.year, event.quarter])
             except AttributeError:  # raised in case event.year is missing so data is not added
                 pass
-        yield event
-
-
-def save_tables(stream, output):
-    """
-    Save the data events as csv files in the Outputs directory
-
-    :param stream: The stream to output
-    :param output: The location of the output file
-    :return: updated stream object.
-    """
-    for event in stream:
-        if isinstance(event, TableEvent) and event.data is not None:
-            dataset = event.data
-            with open(
-                f"{Path(output, event.filename)}_clean.csv", "w", newline=""
-            ) as f:
-                f.write(dataset.export("csv"))
         yield event
 
 

@@ -1,43 +1,16 @@
-import functools
 import tablib
 import logging
-import os
 
 from sfdata_stream_parser import events
 
+from liiatools.datasets.shared_functions.file_creator import (
+    coalesce_row,
+    save_tables,
+    TableEvent,
+    RowEvent,
+)
+
 log = logging.getLogger(__name__)
-
-
-class RowEvent(events.ParseEvent):
-    pass
-
-
-def coalesce_row(stream):
-    """
-    Create a list of the cell values for a whole row
-
-    :param stream: The stream to output
-    :return: Updated stream
-    """
-    row = None
-    for event in stream:
-        if isinstance(event, events.StartRow):
-            row = []
-        elif isinstance(event, events.EndRow):
-            yield RowEvent.from_event(event, row=row)
-            row = None
-        elif (
-            row is not None
-            and isinstance(event, events.Cell)
-            and event.header in set(event.expected_columns)
-        ):
-            row.append(event.cell)
-        else:
-            yield event
-
-
-class TableEvent(events.ParseEvent):
-    pass
 
 
 def create_tables(stream, la_name):
@@ -71,24 +44,6 @@ def create_tables(stream, la_name):
         yield event
 
 
-def save_tables(stream, output):
-    """
-    Save the data events as csv files in the Outputs directory
-
-    :param stream: The stream to output
-    :param output: The location of the output file
-    :return: updated stream object.
-    """
-    for event in stream:
-        if isinstance(event, TableEvent) and event.data is not None:
-            dataset = event.data
-            with open(
-                f"{os.path.join(output, event.filename)}_clean.csv", "w", newline=""
-            ) as f:
-                f.write(dataset.export("csv"))
-        yield event
-
-
 def save_stream(stream, la_name, output):
     """
     Outputs stream to file
@@ -102,8 +57,3 @@ def save_stream(stream, la_name, output):
     stream = create_tables(stream, la_name=la_name)
     stream = save_tables(stream, output=output)
     return stream
-
-
-@functools.cache
-def lookup_column_config(table_name, column_name):
-    return None

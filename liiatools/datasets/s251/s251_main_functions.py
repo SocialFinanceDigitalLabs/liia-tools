@@ -3,14 +3,12 @@ import yaml
 import logging
 import click_log
 from datetime import datetime
-import numpy as np
 
 # dependencies for cleanfile()
 from liiatools.datasets.s251.lds_s251_clean import (
     configuration as clean_config,
-    parse,
     populate,
-    filters,
+    cleaner,
     degrade,
     logger,
     file_creator,
@@ -28,12 +26,11 @@ from liiatools.datasets.s251.lds_s251_pan_agg import process as pan_process
 from liiatools.datasets.s251.data_generator import sample_data
 
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import (
-    flip_dict,
-    check_file_type,
-    supported_file_types,
-    save_incorrect_year_error,
-    check_year_within_range,
+from liiatools.datasets.shared_functions import (
+    common,
+    prep as common_prep,
+    parse,
+    process as common_process,
 )
 
 log = logging.getLogger()
@@ -60,14 +57,14 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
     """
 
     # Prepare and check file
-    if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
+    if common_prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
         return
-    prep.drop_empty_rows(input, input)
+    common_prep.drop_empty_rows(input, input)
     if (
-        check_file_type(
+        common.check_file_type(
             input,
             file_types=[".csv"],
-            supported_file_types=supported_file_types,
+            supported_file_types=common.supported_file_types,
             la_log_dir=la_log_dir,
         )
         == "incorrect file type"
@@ -78,12 +75,12 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
         return
 
     if (
-        check_year_within_range(
+        common.check_year_within_range(
             year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
         )
         is False
     ):
-        save_incorrect_year_error(input, la_log_dir)
+        common.save_incorrect_year_error(input, la_log_dir)
         return
 
     # Open & Parse file
@@ -92,11 +89,11 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
 
     # Configure stream
     config = clean_config.Config(year)
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = common.flip_dict(config["data_codes"])[la_code]
     stream = clean_config.configure_stream(stream, config)
 
     # Clean stream
-    stream = filters.clean(stream)
+    stream = cleaner.clean(stream)
     stream = degrade.degrade(stream)
     stream = logger.log_errors(stream)
     stream = populate.create_la_child_id(stream, la_code=la_code)
@@ -121,7 +118,7 @@ def la_agg(input: str, output: str):
     config = agg_config.Config()
 
     # Open file as DataFrame and match file type
-    s251_df = agg_process.read_file(input)
+    s251_df = common_process.read_file(input)
 
     # Merge file with existing file of the same type in LA output folder
     s251_df = agg_process.merge_la_files(output, s251_df)
@@ -158,10 +155,10 @@ def pan_agg(input: str, la_code: str, output: str):
     config = pan_config.Config()
 
     # Read file and match type
-    s251_df = pan_process.read_file(input)
+    s251_df = common_process.read_file(input)
 
     # Remove unwanted datasets and merge wanted with existing output
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = common.flip_dict(config["data_codes"])[la_code]
     s251_df = pan_process.merge_agg_files(output, s251_df, la_name)
     pan_process.export_pan_file(output, s251_df)
 

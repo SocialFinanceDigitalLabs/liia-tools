@@ -3,14 +3,14 @@ from unittest.mock import patch
 from pathlib import Path
 from datetime import datetime
 
-from liiatools.datasets.s903.lds_ssda903_clean import logger
+from liiatools.datasets.s251.lds_s251_clean import logger
 
 from sfdata_stream_parser import events
 
 
 def test_create_formatting_error_list():
     stream = (
-        events.StartTable(table_name="AD1"),
+        events.StartTable(),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_header", formatting_error="0"),
@@ -27,7 +27,7 @@ def test_create_formatting_error_list():
             ]
 
     stream = (
-        events.StartTable(table_name="AD1"),
+        events.StartTable(),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_other_header", formatting_error="1"),
         events.Cell(header="some_header"),
@@ -44,7 +44,7 @@ def test_create_formatting_error_list():
             ]
 
     stream = (
-        events.StartTable(table_name="AD1"),
+        events.StartTable(),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_header_2", formatting_error=None),
         events.Cell(header="some_header_3", formatting_error=""),
@@ -76,9 +76,9 @@ def test_create_extra_column_error():
     )
     event_with_extra_column_error = list(stream)
     assert event_with_extra_column_error[0].extra_column_error == "Additional columns were found in file titled " \
-                                                                  "'test_file.csv' than those expected from schema " \
-                                                                  "for filetype = test_table, so these columns have " \
-                                                                  "been removed: ['column_3']"
+                                                                  "'test_file.csv' than those expected from the " \
+                                                                  "schema so these columns have been removed: " \
+                                                                  "['column_3']"
 
 
 @patch("builtins.open", create=True)
@@ -92,7 +92,6 @@ def test_save_errors_la(mock_save):
                 filename="test_file",
                 formatting_error_list=["CHILD", "CHILD", "AGE"],
                 blank_error_list=["POSTCODE", "POSTCODE", "DATE"],
-                table_name="List 1",
                 extra_column_error=["list", "of", "headers"],
             ),
         ],

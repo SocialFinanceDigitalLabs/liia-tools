@@ -5,15 +5,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def read_file(file):
-    """
-    Reads the csv file as a pandas DataFrame
-    """
-    filepath = Path(file)
-    s251_df = pd.read_csv(filepath, index_col=None)
-    return s251_df
-
-
 def merge_la_files(output, s251_df):
     """
     Looks for existing file of the same type and merges with new file if found
