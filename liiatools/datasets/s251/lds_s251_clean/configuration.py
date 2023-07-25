@@ -78,7 +78,7 @@ class Config(dict):
 
         for file in config_files:
             if file == "DEFAULT_COLUMN_MAP":
-                file = DEFAULT_CONFIG_DIR / f"s251_schema_{year}.yml"
+                file = DEFAULT_CONFIG_DIR / f"S251_schema_{year}.yml"
             elif file == "DEFAULT_LA_MAP":
                 file = SHARED_CONFIG_DIR / "LA-codes.yml"
             self.load_config(file, conditional=False)

@@ -36,29 +36,26 @@ def test_add_matched_headers():
             "Contribution from social care provider/s",
             "Contribution from health provider/s",
             "Contribution from education provider/s",
-        ],
-        filename="SSDA903_AD1.csv",
+        ]
     )
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )[0]
     assert hasattr(event_with_matched_headers, "expected_columns")
 
-    event = events.StartTable(
-        headers=["incorrect", "header", "values"], filename="SSDA903_AD1.csv"
-    )
+    event = events.StartTable(headers=["incorrect", "header", "values"])
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )
     assert not hasattr(event_with_matched_headers, "expected_columns")
 
-    event = events.StartTable(headers=[""], filename="SSDA903_AD1.csv")
+    event = events.StartTable(headers=[""])
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )
     assert not hasattr(event_with_matched_headers, "expected_columns")
 
-    event = events.StartTable(headers=[None], filename="SSDA903_AD1.csv")
+    event = events.StartTable(headers=[None])
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )
@@ -66,14 +63,14 @@ def test_add_matched_headers():
 
 
 def test_match_config_to_cell():
-    event = events.Cell(header="Date of birth", filename="S251.csv")
+    event = events.Cell(header="Date of birth")
     config_dict = {"Date of birth": {"date": "%d/%m/%Y", "canbeblank": False}}
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config.config_dict == config_dict["Date of birth"]
 
-    event = events.Cell(header="Gender", filename="S251.csv")
+    event = events.Cell(header="Gender")
     config_dict = {
         "Gender": {
             "category": [
@@ -88,28 +85,28 @@ def test_match_config_to_cell():
     )[0]
     assert event_with_config.config_dict == config_dict["Gender"]
 
-    event = events.Cell(header="Gender", filename="S251.csv")
+    event = events.Cell(header="Gender")
     config_dict = {}
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config == event
 
-    event = events.Cell(header="Gender", filename="S251.csv")
+    event = events.Cell(header="Gender")
     config_dict = None
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config == event
 
-    event = events.Cell(header="Gender", filename="S251.csv")
+    event = events.Cell(header="Gender")
     config_dict = 700
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config == event
 
-    event = events.Cell(header="Gender", filename="S251.csv")
+    event = events.Cell(header="Gender")
     config_dict = "random_string"
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
