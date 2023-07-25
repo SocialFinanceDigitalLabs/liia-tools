@@ -5,9 +5,7 @@ from datetime import datetime
 
 
 def test_degrade_postcodes():
-    config_dict = {
-        "string": "postcode"
-    }
+    config_dict = {"string": "postcode"}
     event = events.Cell(config_dict=config_dict, cell="E20 1LP")
     degraded_event = list(degrade.degrade_postcodes(event))[0]
     assert degraded_event.cell == "E20 1"
@@ -24,9 +22,7 @@ def test_degrade_postcodes():
     degraded_event = list(degrade.degrade_postcodes(event))[0]
     assert degraded_event.cell == ""
 
-    config_dict = {
-        "string": "not_postcode"
-    }
+    config_dict = {"string": "not_postcode"}
     event = events.Cell(config_dict=config_dict, cell="value")
     degraded_event = list(degrade.degrade_postcodes(event))[0]
     assert degraded_event.cell == "value"

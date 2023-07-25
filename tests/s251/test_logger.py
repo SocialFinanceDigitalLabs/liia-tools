@@ -62,7 +62,10 @@ def test_create_formatting_error_list():
 def test_create_extra_column_error():
     stream = logger.create_extra_column_error(
         [
-            events.StartTable(expected_columns=["column_1", "column_2"], headers=["column_1", "column_2"])
+            events.StartTable(
+                expected_columns=["column_1", "column_2"],
+                headers=["column_1", "column_2"],
+            )
         ]
     )
     event_without_extra_column_error = list(stream)
@@ -70,15 +73,22 @@ def test_create_extra_column_error():
 
     stream = logger.create_extra_column_error(
         [
-            events.StartTable(filename="test_file.csv", table_name="test_table",
-                              expected_columns=["column_1", "column_2"], headers=["column_1", "column_2", "column_3"])
+            events.StartTable(
+                filename="test_file.csv",
+                table_name="test_table",
+                expected_columns=["column_1", "column_2"],
+                headers=["column_1", "column_2", "column_3"],
+            )
         ]
     )
     event_with_extra_column_error = list(stream)
-    assert event_with_extra_column_error[0].extra_column_error == "Additional columns were found in file titled " \
-                                                                  "'test_file.csv' than those expected from the " \
-                                                                  "schema so these columns have been removed: " \
-                                                                  "['column_3']"
+    assert (
+        event_with_extra_column_error[0].extra_column_error
+        == "Additional columns were found in file titled "
+        "'test_file.csv' than those expected from the "
+        "schema so these columns have been removed: "
+        "['column_3']"
+    )
 
 
 @patch("builtins.open", create=True)

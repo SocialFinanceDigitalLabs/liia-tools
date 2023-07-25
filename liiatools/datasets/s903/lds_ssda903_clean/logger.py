@@ -11,7 +11,7 @@ from liiatools.datasets.shared_functions.logger import (
     blank_error_check,
     create_blank_error_list,
     create_file_match_error,
-    ErrorTable
+    ErrorTable,
 )
 
 log = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ def create_extra_column_error(event):
             event,
             extra_column_error=f"Additional columns were found in file titled "
             f"'{event.filename}' than those expected from schema for filetype = {event.table_name}, so these "
-                               f"columns have been removed: {extra_columns}",
+            f"columns have been removed: {extra_columns}",
         )
 
 

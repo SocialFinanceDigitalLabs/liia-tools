@@ -26,7 +26,11 @@ def test_create_tables():
             assert event.data[0] == data[0]
 
     stream = (
-        events.StartTable(headers=["CHILD ID", "DOB"], expected_columns=expected_columns, match_error="some_error"),
+        events.StartTable(
+            headers=["CHILD ID", "DOB"],
+            expected_columns=expected_columns,
+            match_error="some_error",
+        ),
         file_creator.RowEvent(row=[12345, datetime(2019, 4, 15).date()], year=2019),
         events.EndTable(),
     )

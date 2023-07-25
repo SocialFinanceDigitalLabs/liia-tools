@@ -27,7 +27,9 @@ def test_create_tables():
 
     stream = (
         events.StartTable(expected_columns=expected_columns, match_error="some_error"),
-        file_creator.RowEvent(row=[12345, datetime(2019, 5, 15).date()], year=year, quarter=quarter),
+        file_creator.RowEvent(
+            row=[12345, datetime(2019, 5, 15).date()], year=year, quarter=quarter
+        ),
         events.EndTable(),
     )
     events_with_tables = list(file_creator.create_tables(stream, la_name=la_name))
@@ -37,7 +39,9 @@ def test_create_tables():
 
     stream = (
         events.StartTable(expected_columns=expected_columns, year_error="some_error"),
-        file_creator.RowEvent(row=[12345, datetime(2019, 6, 15).date()], year=year, quarter=quarter),
+        file_creator.RowEvent(
+            row=[12345, datetime(2019, 6, 15).date()], year=year, quarter=quarter
+        ),
         events.EndTable(),
     )
     events_with_tables = list(file_creator.create_tables(stream, la_name=la_name))

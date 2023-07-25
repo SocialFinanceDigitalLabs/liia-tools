@@ -28,7 +28,9 @@ class TestSaveYearError(unittest.TestCase):
         )
 
         # Read the content of the generated error log file
-        error_log_file = temp_dir / f"{filename}_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        error_log_file = (
+            temp_dir / f"{filename}_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        )
         with open(error_log_file, "r") as f:
             actual_output = f.read().strip()
 
@@ -56,7 +58,9 @@ class TestSaveYearError(unittest.TestCase):
         )
 
         # Read the content of the generated error log file
-        error_log_file = temp_dir / f"{filename}_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        error_log_file = (
+            temp_dir / f"{filename}_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        )
         with open(error_log_file, "r") as f:
             actual_output = f.read().strip()
 
@@ -126,11 +130,16 @@ class TestFindYearOfReturn(unittest.TestCase):
         self.assertIsNone(quarter)
 
         # Verify the error log file is created with the correct message
-        error_log_file = temp_dir / f"s251_test_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        error_log_file = (
+            temp_dir / f"s251_test_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        )
         with open(error_log_file, "r") as f:
             error_message = f.read()
-            self.assertIn("Could not process 's251_test' because placement end date column was not found which "
-                          "is used to identify the year of return", error_message)
+            self.assertIn(
+                "Could not process 's251_test' because placement end date column was not found which "
+                "is used to identify the year of return",
+                error_message,
+            )
 
         # Clean up temporary files and directories
         for file in temp_dir.glob("*"):
@@ -162,11 +171,16 @@ class TestFindYearOfReturn(unittest.TestCase):
         self.assertIsNone(quarter)
 
         # Verify the error log file is created with the correct message
-        error_log_file = temp_dir / f"s251_test_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        error_log_file = (
+            temp_dir / f"s251_test_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+        )
         with open(error_log_file, "r") as f:
             error_message = f.read()
-            self.assertIn("Could not process 's251_test' because placement end date column was empty which is used to "
-                          "identify the year of return", error_message)
+            self.assertIn(
+                "Could not process 's251_test' because placement end date column was empty which is used to "
+                "identify the year of return",
+                error_message,
+            )
 
         # Clean up temporary files and directories
         for file in temp_dir.glob("*"):
