@@ -94,57 +94,6 @@ def create_blank_error_list(stream):
         yield event
 
 
-@streamfilter(
-    check=type_check(events.StartTable),
-    fail_function=pass_event,
-    error_function=pass_event,
-)
-def create_file_match_error(event):
-    """
-    Add a match_error to StartTables that do not have an event.sheet_name so these errors can be written to the log.txt
-    file. If there is no event.sheet_name for a given StartTable that means its headers did not match any of those
-    in the config file
-
-    :param event: A filtered list of event objects of type StartTable
-    :return: An updated list of event objects
-    """
-    try:
-        if event.table_name:
-            return event
-    except AttributeError:
-        return event.from_event(
-            event,
-            match_error=f"Failed to find a set of matching columns headers for file titled "
-            f"'{event.filename}' which contains column headers {event.headers} so no output has been produced",
-        )
-    return event
-
-
-@streamfilter(
-    check=type_check(events.StartTable),
-    fail_function=pass_event,
-    error_function=pass_event,
-)
-def create_extra_column_error(event):
-    """
-    Add a extra_column_error to StartTables that have more columns than the set of expected columns so these can be written to the log.txt
-
-    :param event: A filtered list of event objects of type StartTable
-    :return: An updated list of event objects
-    """
-    extra_columns = [
-        item for item in event.headers if item not in event.expected_columns
-    ]
-    if len(extra_columns) == 0:
-        return event
-    else:
-        return event.from_event(
-            event,
-            extra_column_error=f"Additional columns were found in file titled "
-            f"'{event.filename}' than those expected from schema for filetype = {event.table_name}, so these columns have been removed: {extra_columns}",
-        )
-
-
 def save_errors_la(stream, la_log_dir, filename):
     """
     Count the error events and save them as a text file in the Local Authority Logs directory
@@ -192,23 +141,6 @@ def save_errors_la(stream, la_log_dir, filename):
         except AttributeError:
             pass
 
-        # if isinstance(event, events.StartTable):
-        #     match_error = getattr(event, "match_error", None)
-        #     if match_error:
-        #         with open(
-        #             f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
-        #             "a",
-        #         ) as f:
-        #             f.write(match_error)
-        #             f.write("\n")
-        #     column_error = getattr(event, "extra_column_error", None)
-        #     if column_error:
-        #         with open(
-        #             f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
-        #             "a",
-        #         ) as f:
-        #             f.write(column_error)
-        #             f.write("\n")
         yield event
 
 
@@ -222,6 +154,4 @@ def log_errors(stream):
     stream = blank_error_check(stream)
     stream = create_formatting_error_list(stream)
     stream = create_blank_error_list(stream)
-    # stream = create_file_match_error(stream)
-    # stream = create_extra_column_error(stream)
     return stream

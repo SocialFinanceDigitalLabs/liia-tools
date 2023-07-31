@@ -76,7 +76,10 @@ def _create_category_dict(field: str, file: str):
             documentation = element.findall(search_doc)
             for i, d in enumerate(documentation):
                 name_dict = {"name": d.text}
-                category_dict["category"][i] = {**category_dict["category"][i], **name_dict}
+                category_dict["category"][i] = {
+                    **category_dict["category"][i],
+                    **name_dict,
+                }
 
             return category_dict
 
@@ -94,7 +97,9 @@ def _create_float_dict(field: str, file: str):
     search_restriction = f".//{{http://www.w3.org/2001/XMLSchema}}restriction"
     restriction = element.findall(search_restriction)
     for r in restriction:
-        code_dict = {"numeric": r.get("base")[3:]}  # Remove the "xs:" from the start of the base string
+        code_dict = {
+            "numeric": r.get("base")[3:]
+        }  # Remove the "xs:" from the start of the base string
         if code_dict["numeric"] == "decimal":
             float_dict = code_dict
 
@@ -120,6 +125,13 @@ def _create_float_dict(field: str, file: str):
 
 
 def _create_regex_dict(field: str, file: str):
+    """
+    Parse an XML file and extract the regex pattern for a given field name
+
+    :param field: The name of the field to look for in the XML file
+    :param file: The path to the XML file
+    :return: A dictionary with the key "regex_string" and the value as the regex pattern, or None if no pattern is found
+    """
     regex_dict = None
 
     xsd_xml = ET.parse(file)
@@ -163,6 +175,13 @@ def add_schema(event, schema: xmlschema.XMLSchema):
 
 @streamfilter(check=type_check(events.TextNode), fail_function=pass_event)
 def add_schema_dict(event, schema_path: str):
+    """
+    Add a dictionary of schema attributes to an event object based on its type and occurrence
+
+    :param event: An event object with a schema attribute
+    :param schema_path: The path to the schema file
+    :return: A new event object with a schema_dict attribute, or the original event object if no schema_dict is found
+    """
     schema_dict = None
 
     config_type = event.schema.type.name
