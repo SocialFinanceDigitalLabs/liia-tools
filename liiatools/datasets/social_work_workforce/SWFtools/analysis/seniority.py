@@ -10,10 +10,12 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 def seniority():
     """
-    Assign a seniority code to each row in the input CSV file
-    based on the role start date, agency worker status and org role.
-    
-    :return: CSV file with column SeniorityCode added.
+    Assign a seniority code to each worker in the input CSV file based on
+    the role start date, agency worker status and org role.
+
+    Also add two columns indicating whether they are new and whether they left in the census year.
+
+    :return: CSV file with columns SeniorityCode, NewOrNot and LeftOrNot added.
     """
     # ===== Read file ===== #
     file = "merged_modified.csv"
@@ -256,7 +258,7 @@ def progressed():
 
     :return: The input csv file with column called Progress added
     """
-    
+
     # ===== Read file ===== #
     file = "Seniority.csv"
     requestPath = work_path.request
