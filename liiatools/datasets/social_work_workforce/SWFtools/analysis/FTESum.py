@@ -4,6 +4,13 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def FTESum():
+    """
+    Calculate the sum of FTE by LEAName, YearCensus, SeniorityCode and SeniorityName from
+    the input csv file
+
+    :return: Excel file with the name FTESum_5d.xlsx and the same path as the input file
+    """
+
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request
@@ -26,6 +33,13 @@ def FTESum():
 
 
 def FTESum_2020():
+    """
+    Read a CSV file and calculate the sum of FTE by LEAName, YearCensus, SeniorityCode and
+    SeniorityName for the year 2020
+
+    :return: Excel file with the name FTESum_2020.xlsx and the same path as the input file
+    """
+    
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request

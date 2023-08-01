@@ -9,6 +9,12 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def seniority():
+    """
+    Assign a seniority code to each row in the input CSV file
+    based on the role start date, agency worker status and org role.
+    
+    :return: CSV file with column SeniorityCode added.
+    """
     # ===== Read file ===== #
     file = "merged_modified.csv"
     path = work_path.flatfile_folder
@@ -109,6 +115,15 @@ def seniority():
 
 
 def seniority_forecast_04():
+    """
+    Calculate the seniority forecast for six LEAs from 2020 to 2025.
+
+    Reads two Excel files. The seniority forecast is calculated by multiplying the FTESum from the first file
+    by the population growth rate for each year and LEA from the second file
+
+    :return: Excel file with the name seniority_forecast_04_clean.xlsx
+    """
+
     # ===== Read file ===== #
     file = "FTESum_2020.xlsx"
     requestPath = work_path.request
@@ -236,6 +251,12 @@ def seniority_forecast_5c():
 
 
 def progressed():
+    """
+    Determine whether an employee has progressed in their seniority code from the previous year
+
+    :return: The input csv file with column called Progress added
+    """
+    
     # ===== Read file ===== #
     file = "Seniority.csv"
     requestPath = work_path.request

@@ -8,6 +8,10 @@ import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_
 
 
 def growth_tables():
+    """
+    Create two Excel files with tables of growth rates and population growth for six LEAs
+    """
+    
     growth_rate_df = {
         "LEAName": [
             "Havering",

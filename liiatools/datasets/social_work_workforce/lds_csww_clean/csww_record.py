@@ -42,6 +42,12 @@ def text_collector(stream):
 
 @xml_collector
 def message_collector(stream):
+    """
+    Collect messages from XML elements and yield events
+
+    :param stream: An iterator of events from an XML parser
+    :yield: Events of type HeaderEvent, CSWWEvent or LALevelEvent
+    """
     stream = peekable(stream)
     assert stream.peek().tag == "Message", "Expected Message, got {}".format(
         stream.peek().tag
