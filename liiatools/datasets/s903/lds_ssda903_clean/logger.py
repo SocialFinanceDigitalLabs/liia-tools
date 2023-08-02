@@ -12,6 +12,7 @@ from liiatools.datasets.shared_functions.logger import (
     create_blank_error_list,
     create_file_match_error,
     ErrorTable,
+    create_below_zero_error_list,
 )
 
 log = logging.getLogger(__name__)
@@ -95,9 +96,14 @@ def save_errors_la(stream, la_log_dir):
             if isinstance(event, ErrorTable) and (
                 event.formatting_error_list is not None
                 and event.blank_error_list is not None
+                and event.below_zero_error_list is not None
                 and event.table_name is not None
             ):
-                if event.formatting_error_list or event.blank_error_list:
+                if (
+                    event.formatting_error_list
+                    or event.blank_error_list
+                    or event.below_zero_error_list
+                ):
                     with open(
                         f"{os.path.join(la_log_dir, event.filename)}_error_log_{start_time}.txt",
                         "a",
@@ -123,6 +129,18 @@ def save_errors_la(stream, la_log_dir):
                             blank_counter_dict = Counter(event.blank_error_list)
                             f.write(
                                 str(blank_counter_dict)[9:-2]
+                            )  # Remove "Counter({" and "})" from string
+                            f.write("\n")
+                        if event.below_zero_error_list:
+                            f.write(
+                                "Number of cells that have been made blank because they contained values below 0"
+                            )
+                            f.write("\n")
+                            below_zero_counter_dict = Counter(
+                                event.below_zero_error_list
+                            )
+                            f.write(
+                                str(below_zero_counter_dict)[9:-2]
                             )  # Remove "Counter({" and "})" from string
                             f.write("\n")
         except AttributeError:
@@ -158,6 +176,7 @@ def log_errors(stream):
     stream = blank_error_check(stream)
     stream = create_formatting_error_list(stream)
     stream = create_blank_error_list(stream)
+    stream = create_below_zero_error_list(stream)
     stream = create_file_match_error(stream)
     stream = create_extra_column_error(stream)
     return stream

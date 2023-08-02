@@ -86,6 +86,8 @@ class TestFindYearOfReturn(unittest.TestCase):
             ["Placement end date"],
             ["15/07/2023"],
             ["31/12/2022"],
+            ["not a date"],
+            ["15/2/3022"],
         ]
         input_file = "s251_test.csv"
         input_file_path = temp_dir / input_file

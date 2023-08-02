@@ -13,7 +13,7 @@ def check_blank_file(input: str, la_log_dir: str):
     :param la_log_dir: Location to save the error log
     :return: If csv is empty stop process and write log to local authority, else continue
     """
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     input = Path(input)
     filename = input.resolve().stem
     extension = Path(input).suffix

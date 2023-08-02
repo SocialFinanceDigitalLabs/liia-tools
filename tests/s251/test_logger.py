@@ -102,6 +102,7 @@ def test_save_errors_la(mock_save):
                 filename="test_file",
                 formatting_error_list=["CHILD", "CHILD", "AGE"],
                 blank_error_list=["POSTCODE", "POSTCODE", "DATE"],
+                below_zero_error_list=["AGE"],
                 extra_column_error=["list", "of", "headers"],
             ),
         ],

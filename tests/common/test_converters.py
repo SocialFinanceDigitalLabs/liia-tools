@@ -34,3 +34,7 @@ def test_to_integer():
     assert converters.to_integer(None, "integer") == ""
     assert converters.to_integer("1.0", "integer") == 1
     assert converters.to_integer(0, "integer") == 0
+    assert converters.to_integer(None, "currency") == ""
+    assert converters.to_integer("1.0", "currency") == 1
+    assert converters.to_integer(0, "currency") == 0
+    assert converters.to_integer(-15, "currency") == "value_below_zero"

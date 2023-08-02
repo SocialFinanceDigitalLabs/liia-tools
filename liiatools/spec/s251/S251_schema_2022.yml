@@ -292,10 +292,10 @@ placement_costs:
         numeric: "currency"
         canbeblank: no
     Contribution from social care provider/s:
-        &percentage-blank
-        numeric: "percentage"
+        &currency-blank
+        numeric: "currency"
         canbeblank: yes
     Contribution from health provider/s:
-        *percentage-blank
+        *currency-blank
     Contribution from education provider/s:
-        *percentage-blank
+        *currency-blank

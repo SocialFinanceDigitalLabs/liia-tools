@@ -65,6 +65,9 @@ def clean_integers(event):
     numeric = event.config_dict["numeric"]
     try:
         text = to_integer(event.cell, numeric)
-        return event.from_event(event, cell=text, formatting_error="0")
+        if text == "value_below_zero":
+            return event.from_event(event, cell="", below_zero_error="1")
+        else:
+            return event.from_event(event, cell=text, formatting_error="0")
     except (AttributeError, TypeError, ValueError):
         return event.from_event(event, cell="", formatting_error="1")

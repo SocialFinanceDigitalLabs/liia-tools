@@ -25,7 +25,13 @@ def blank_error_check(event):
     try:
         allowed_blank = event.config_dict["canbeblank"]
         formatting_error = getattr(event, "formatting_error", "0")
-        if not allowed_blank and not event.cell and formatting_error != "1":
+        below_zero_error = getattr(event, "below_zero_error", "0")
+        if (
+            not allowed_blank
+            and not event.cell
+            and formatting_error != "1"
+            and below_zero_error != "1"
+        ):
             return event.from_event(event, blank_error="1")
         else:
             return event
@@ -54,6 +60,33 @@ def create_blank_error_list(stream):
             blank_error = getattr(event, "blank_error", "0")
             if blank_error == "1":
                 blank_error_list.append(event.header)
+            else:
+                pass
+        yield event
+
+
+def create_below_zero_error_list(stream):
+    """
+    Create a list of the column headers for cells with fields below zero for each table
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects with blank error lists
+    """
+    below_zero_error_list = None
+    for event in stream:
+        if isinstance(event, events.StartTable):
+            below_zero_error_list = []
+        elif isinstance(event, events.EndTable):
+            below_zero_error_list = None
+        elif isinstance(event, ErrorTable):
+            yield ErrorTable.from_event(
+                event, below_zero_error_list=below_zero_error_list
+            )
+            below_zero_error_list = None
+        elif below_zero_error_list is not None and isinstance(event, events.Cell):
+            below_zero_error = getattr(event, "below_zero_error", "0")
+            if below_zero_error == "1":
+                below_zero_error_list.append(event.header)
             else:
                 pass
         yield event

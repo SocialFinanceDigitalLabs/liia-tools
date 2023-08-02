@@ -115,6 +115,15 @@ def test_coalesce_row():
         else:
             assert event.as_dict() == {"expected_columns": ["Header_1", "Header_2"]}
 
+    stream = (
+        events.StartRow(),
+        events.Cell(cell=125, header="Header_1"),
+        events.Cell(cell="", header="Header_2"),
+        events.EndRow(),
+    )
+    events_complete_rows = list(file_creator.coalesce_row(stream))[0]
+    assert events_complete_rows.row == []
+
 
 @patch("builtins.open", create=True)
 def test_save_tables(mock_save):

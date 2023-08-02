@@ -50,7 +50,7 @@ def find_year_of_return(input: str, la_log_dir: str):
     try:
         data = pd.read_csv(infile, usecols=["Placement end date"])
         data["Placement end date"] = pd.to_datetime(
-            data["Placement end date"], format="%d/%m/%Y"
+            data["Placement end date"], format="%d/%m/%Y", errors="coerce"
         )
         year = data["Placement end date"].min().year
         quarter = f'Q{(data["Placement end date"].min().month - 1) // 3 + 1}'

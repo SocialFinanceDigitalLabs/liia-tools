@@ -166,3 +166,8 @@ def test_clean_integers():
     )
     cleaned_event = list(cleaner.clean_integers(event))[0]
     assert cleaned_event.cell == datetime(2017, 3, 17)
+
+    event = events.Cell(cell="-12", config_dict={"numeric": "currency"})
+    cleaned_event = list(cleaner.clean_integers(event))[0]
+    assert cleaned_event.cell == ""
+    assert cleaned_event.below_zero_error == "1"

@@ -85,7 +85,7 @@ def save_year_error(input, la_log_dir):
     """
 
     filename = Path(input).resolve().stem
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     with open(
         f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
         "a",
@@ -130,7 +130,7 @@ def save_incorrect_year_error(input, la_log_dir):
     :return: Text file containing the error information
     """
     filename = Path(input).resolve().stem
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     with open(
         f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
         "a",
@@ -214,7 +214,7 @@ def check_file_type(input, file_types, supported_file_types, la_log_dir):
     :param la_log_dir: Location to save the error log
     :return: Continue if correct, error log if incorrect
     """
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     extension = Path(input).suffix
     filename = Path(input).resolve().stem
 

@@ -34,9 +34,13 @@ def to_integer(value, config):
     :param config: The loaded configuration
     :return: Either an integer value or a blank string
     """
-    if config == "integer":
+    if config == "integer" or config == "currency":
         if value or value == 0:
-            return int(float(value))
+            int_value = int(float(value))
+            if int_value >= 0:
+                return int_value
+            else:
+                return "value_below_zero"
         else:
             return ""
     else:
