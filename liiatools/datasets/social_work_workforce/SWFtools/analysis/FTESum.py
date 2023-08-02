@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
+import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
 
 
 def FTESum():
@@ -47,15 +48,18 @@ def FTESum_2020():
     df = pd.read_csv(pathFile)
 
     df2020 = df[df["YearCensus"] == 2020]
+    
+    if df2020.empty:
+        AppLogs.log("FTESum_2020 error: No data for year 2020", console_output=True)
+    else:
+        df5D = df2020[["LEAName", "YearCensus", "SeniorityCode", "SeniorityName", "FTE"]]
 
-    df5D = df2020[["LEAName", "YearCensus", "SeniorityCode", "SeniorityName", "FTE"]]
+        df5D = df2020.groupby(
+            ["LEAName", "YearCensus", "SeniorityCode", "SeniorityName"]
+        ).agg(FTESum=("FTE", "sum"))
 
-    df5D = df2020.groupby(
-        ["LEAName", "YearCensus", "SeniorityCode", "SeniorityName"]
-    ).agg(FTESum=("FTE", "sum"))
-
-    # ===== Save and export file ===== #
-    fileOutN = "FTESum_2020.xlsx"
-    requestPath = work_path.request
-    fileOut = os.path.join(requestPath, fileOutN)
-    df5D.to_excel(fileOut, merge_cells=False)
+        # ===== Save and export file ===== #
+        fileOutN = "FTESum_2020.xlsx"
+        requestPath = work_path.request
+        fileOut = os.path.join(requestPath, fileOutN)
+        df5D.to_excel(fileOut, merge_cells=False)
