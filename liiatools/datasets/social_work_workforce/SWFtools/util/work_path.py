@@ -9,7 +9,6 @@ main_folder = r"/workspaces/liia-tools/liiatools/spec/social_work_workforce"
 
 # CSWW files must be in one "LA" folder per LA, in the cssw_folder
 csww_folder = os.path.join(main_folder, "samples/csww")
-# print (f"csww_folder is {csww_folder}")
 
 # Flat files
 flatfile_folder = os.path.join(main_folder, "samples/flatfiles")
