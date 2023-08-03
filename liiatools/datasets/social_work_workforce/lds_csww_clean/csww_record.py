@@ -30,6 +30,12 @@ def _reduce_dict(dict_instance):
 
 @xml_collector
 def text_collector(stream):
+    """
+    Create a dictionary of text values for each element
+
+    :param stream: An iterator of events from an XML parser
+    :return: Dictionary containing element name and text values 
+    """
     data_dict = {}
     current_element = None
     for event in stream:
@@ -49,9 +55,7 @@ def message_collector(stream):
     :yield: Events of type HeaderEvent, CSWWEvent or LALevelEvent
     """
     stream = peekable(stream)
-    assert stream.peek().tag == "Message", "Expected Message, got {}".format(
-        stream.peek().tag
-    )
+    assert stream.peek().tag == "Message", f"Expected Message, got {stream.peek().tag}"
     while stream:
         event = stream.peek()
         if event.get("tag") == "Header":
