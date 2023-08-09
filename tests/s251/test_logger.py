@@ -91,6 +91,29 @@ def test_create_extra_column_error():
     )
 
 
+def test_create_file_match_error():
+    config = {
+        "placement_costs": {"Child ID": {"string": "alphanumeric", "canbeblank": False}}
+    }
+
+    stream = logger.create_file_match_error(
+        [events.StartTable(expected_columns=["Child ID"])], config=config
+    )
+    event_without_file_match_error = list(stream)
+    assert not hasattr(event_without_file_match_error[0], "match_error")
+
+    stream = logger.create_file_match_error(
+        [events.StartTable(filename="test_file.csv", headers=["column_1", "column_2"])],
+        config=config,
+    )
+    event_with_file_match_error = list(stream)
+    assert (
+        event_with_file_match_error[0].match_error
+        == "Failed to find a set of matching columns headers for file titled 'test_file.csv' which is "
+        "missing column headers ['Child ID'] so no output has been produced"
+    )
+
+
 @patch("builtins.open", create=True)
 def test_save_errors_la(mock_save):
     la_log_dir = tmp.gettempdir()

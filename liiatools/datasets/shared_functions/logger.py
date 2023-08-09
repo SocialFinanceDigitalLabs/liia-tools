@@ -28,7 +28,7 @@ def blank_error_check(event):
         below_zero_error = getattr(event, "below_zero_error", "0")
         if (
             not allowed_blank
-            and not event.cell
+            and (event.cell == "" or event.cell is None)
             and formatting_error != "1"
             and below_zero_error != "1"
         ):
@@ -90,28 +90,3 @@ def create_below_zero_error_list(stream):
             else:
                 pass
         yield event
-
-
-@streamfilter(
-    check=type_check(events.StartTable),
-    fail_function=pass_event,
-    error_function=pass_event,
-)
-def create_file_match_error(event):
-    """
-    Add a match_error to StartTables that do not have an event.expected_columns so these errors can be written to the
-    log.txt file. If there is no event.expected_columns for a given StartTable that means its headers did not match
-    those in the config file
-
-    :param event: A filtered list of event objects of type StartTable
-    :return: An updated list of event objects
-    """
-    expected_columns = getattr(event, "expected_columns", None)
-    if expected_columns is None:
-        return event.from_event(
-            event,
-            match_error=f"Failed to find a set of matching columns headers for file titled '{event.filename}' "
-            f"which contains column headers {event.headers} so no output has been produced",
-        )
-    else:
-        return event

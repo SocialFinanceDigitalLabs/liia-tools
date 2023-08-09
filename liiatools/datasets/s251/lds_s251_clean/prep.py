@@ -21,7 +21,7 @@ def _save_year_error(input: str, la_log_dir: str, data_type: DataType):
     """
 
     filename = Path(input).resolve().stem
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     with open(
         f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
         "a",
@@ -53,12 +53,14 @@ def find_year_of_return(input: str, la_log_dir: str):
             data["Placement end date"], format="%d/%m/%Y", errors="coerce"
         )
         year = data["Placement end date"].min().year
-        quarter = f'Q{(data["Placement end date"].min().month - 1) // 3 + 1}'
+        quarter = f'Q{(data["Placement end date"].min().month - 1) // 3}'
         if year is np.nan:
             _save_year_error(input, la_log_dir, DataType.EMPTY_COLUMN)
             return None, None
         else:
+            quarter = "Q4" if quarter == "Q0" else quarter
             return year, quarter
-    except ValueError:
-        _save_year_error(input, la_log_dir, DataType.MISSING_COLUMN)
-        return None, None
+    except ValueError as e:
+        if "columns expected but not found: ['Placement end date']" in str(e):
+            _save_year_error(input, la_log_dir, DataType.MISSING_COLUMN)
+            return None, None

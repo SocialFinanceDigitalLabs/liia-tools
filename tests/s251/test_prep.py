@@ -29,7 +29,7 @@ class TestSaveYearError(unittest.TestCase):
 
         # Read the content of the generated error log file
         error_log_file = (
-            temp_dir / f"{filename}_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+            temp_dir / f"{filename}_error_log_{datetime.now():%Y-%m-%dT%H%M%SZ}.txt"
         )
         with open(error_log_file, "r") as f:
             actual_output = f.read().strip()
@@ -59,7 +59,7 @@ class TestSaveYearError(unittest.TestCase):
 
         # Read the content of the generated error log file
         error_log_file = (
-            temp_dir / f"{filename}_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+            temp_dir / f"{filename}_error_log_{datetime.now():%Y-%m-%dT%H%M%SZ}.txt"
         )
         with open(error_log_file, "r") as f:
             actual_output = f.read().strip()
@@ -85,9 +85,9 @@ class TestFindYearOfReturn(unittest.TestCase):
         csv_data = [
             ["Placement end date"],
             ["15/07/2023"],
-            ["31/12/2022"],
+            ["28/02/2022"],
             ["not a date"],
-            ["15/2/3022"],
+            ["15/02/3022"],
         ]
         input_file = "s251_test.csv"
         input_file_path = temp_dir / input_file
@@ -133,7 +133,7 @@ class TestFindYearOfReturn(unittest.TestCase):
 
         # Verify the error log file is created with the correct message
         error_log_file = (
-            temp_dir / f"s251_test_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+            temp_dir / f"s251_test_error_log_{datetime.now():%Y-%m-%dT%H%M%SZ}.txt"
         )
         with open(error_log_file, "r") as f:
             error_message = f.read()
@@ -174,7 +174,7 @@ class TestFindYearOfReturn(unittest.TestCase):
 
         # Verify the error log file is created with the correct message
         error_log_file = (
-            temp_dir / f"s251_test_error_log_{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}.txt"
+            temp_dir / f"s251_test_error_log_{datetime.now():%Y-%m-%dT%H%M%SZ}.txt"
         )
         with open(error_log_file, "r") as f:
             error_message = f.read()

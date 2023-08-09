@@ -122,24 +122,3 @@ def pan_agg(input, la_code, output):
     :return: None
     """
     s251_main_functions.pan_agg(input, la_code, output)
-
-
-@s251.command()
-@click.option(
-    "--o",
-    "output",
-    required=True,
-    type=str,
-    help="A string specifying the output file location, including the file name and suffix",
-)
-@click_log.simple_verbosity_option(log)
-def generate_sample(la_code, output):
-    """
-    Export a sample file for testing
-
-    :param la_code: should be a three-letter string for the local authority depositing the file
-    :param output: string containing the desired location and name of sample file
-    :return: .csv sample file in desired location
-    """
-    output = s251_main_functions.generate_sample(la_code, output)
-    return output

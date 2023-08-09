@@ -46,4 +46,5 @@ sort_order:
 dedup:
     - Child ID
     - Placement start date
-    - Placement end date
+    - Year
+    - Quarter

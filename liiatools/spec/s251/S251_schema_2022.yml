@@ -6,14 +6,14 @@ placement_costs:
     Date of birth:
         &date-blank
         date: "%d/%m/%Y"
-        canbeblank: yes
+        canbeblank: no
     Gender:
         category:
         - code: "1"
           name: "Male"
         - code: "2"
           name: "Female"
-        canbeblank: yes
+        canbeblank: no
     Ethnicity:
         category:
         - code: "WBRI"
@@ -56,7 +56,7 @@ placement_costs:
           name: "Refused"
         - code: "NOBT"
           name: "Information not yet obtained"
-        canbeblank: yes
+        canbeblank: no
     Disability:
         category:
         - code: "NONE"
@@ -202,7 +202,7 @@ placement_costs:
         - code: "J1"
         - code: "J2"
         - code: "J3"
-        canbeblank: yes
+        canbeblank: no
     Placement start date:
         &date-not-blank
         date: "%d/%m/%Y"
@@ -259,7 +259,7 @@ placement_costs:
         - code: "U5"
         - code: "U6"
         - code: "Z1"
-        canbeblank: yes
+        canbeblank: no
     Provider type:
         category:
         - code: "PR0"
@@ -268,12 +268,13 @@ placement_costs:
         - code: "PR3"
         - code: "PR4"
         - code: "PR5"
-        canbeblank: yes
+        canbeblank: no
     Procurement platform:
         category:
         - code: "Framework"
         - code: "Spot"
         - code: "Block"
+        canbeblank: yes
     Procurement framework:
         &alphanumeric-blank
         string: "alphanumeric"

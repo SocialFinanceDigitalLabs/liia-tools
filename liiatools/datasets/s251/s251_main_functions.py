@@ -23,8 +23,6 @@ from liiatools.datasets.s251.lds_s251_la_agg import process as agg_process
 from liiatools.datasets.s251.lds_s251_pan_agg import configuration as pan_config
 from liiatools.datasets.s251.lds_s251_pan_agg import process as pan_process
 
-from liiatools.datasets.s251.data_generator import sample_data
-
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions import (
     common,
@@ -95,7 +93,7 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
     # Clean stream
     stream = cleaner.clean(stream)
     stream = degrade.degrade(stream)
-    stream = logger.log_errors(stream)
+    stream = logger.log_errors(stream, config=config)
     stream = populate.create_la_child_id(stream, la_code=la_code)
 
     # Output result
@@ -161,16 +159,3 @@ def pan_agg(input: str, la_code: str, output: str):
     la_name = common.flip_dict(config["data_codes"])[la_code]
     s251_df = pan_process.merge_agg_files(output, s251_df, la_name)
     pan_process.export_pan_file(output, s251_df)
-
-
-def generate_sample(output: str, la_name: str):
-    """
-    Export a sample file for testing
-
-    :param output: string containing the desired location and name of sample file
-    :param la_name: name of local authority
-    :return: .csv sample file in desired location
-    """
-    stream = sample_data.generate_sample_s251_file()
-    stream = file_creator.save_stream(stream, la_name, output=output)
-    list(stream)

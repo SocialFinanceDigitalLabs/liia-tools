@@ -34,11 +34,22 @@ def to_integer(value, config):
     :param config: The loaded configuration
     :return: Either an integer value or a blank string
     """
-    if config == "integer" or config == "currency":
+    if config == "integer":
         if value or value == 0:
             int_value = int(float(value))
             if int_value >= 0:
                 return int_value
+            else:
+                return "value_below_zero"
+        else:
+            return ""
+    if config == "currency":
+        if value or value == 0:
+            value = re.findall(r"[+-]*\d*\.*", str(value))
+            value = "".join(map(str, value))
+            float_value = float(value)
+            if float_value >= 0:
+                return float_value
             else:
                 return "value_below_zero"
         else:
