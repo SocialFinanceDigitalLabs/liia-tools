@@ -37,7 +37,7 @@ def create_formatting_error_list(stream):
             yield ErrorTable.from_event(
                 event,
                 formatting_error_list=formatting_error_list,
-                expected_columns=expected_columns
+                expected_columns=expected_columns,
             )
             formatting_error_list = None
         elif formatting_error_list is not None and isinstance(event, events.Cell):

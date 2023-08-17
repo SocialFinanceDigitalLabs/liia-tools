@@ -78,7 +78,9 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
         )
         is False
     ):
-        common.save_incorrect_year_error(input, la_log_dir, retention_period=YEARS_TO_GO_BACK-1)
+        common.save_incorrect_year_error(
+            input, la_log_dir, retention_period=YEARS_TO_GO_BACK - 1
+        )
         return
 
     # Open & Parse file

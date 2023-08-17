@@ -32,9 +32,11 @@ def check_blank_file(input: str, la_log_dir: str):
             f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
             "a",
         ) as f:
-            f.write(f"File: '{filename}{extension}' was found to be saved in the wrong format. The correct format"
-                    f" is CSV UTF-8. To fix this open the file in Excel, click 'Save As' and select 'CSV UTF-8"
-                    f" (Comma delimited) (*csv)'")
+            f.write(
+                f"File: '{filename}{extension}' was found to be saved in the wrong format. The correct format"
+                f" is CSV UTF-8. To fix this open the file in Excel, click 'Save As' and select 'CSV UTF-8"
+                f" (Comma delimited) (*csv)'"
+            )
         return "error"
 
 
