@@ -25,13 +25,19 @@ def create_formatting_error_list(stream):
     :return: An updated list of event objects with formatting error lists
     """
     formatting_error_list = None
+    expected_columns = None
     for event in stream:
         if isinstance(event, events.StartTable):
             formatting_error_list = []
+            try:
+                expected_columns = event.expected_columns
+            except AttributeError:
+                pass
         elif isinstance(event, events.EndTable):
             yield ErrorTable.from_event(
                 event,
                 formatting_error_list=formatting_error_list,
+                expected_columns=expected_columns
             )
             formatting_error_list = None
         elif formatting_error_list is not None and isinstance(event, events.Cell):
@@ -115,6 +121,7 @@ def save_errors_la(stream, la_log_dir):
                 event.formatting_error_list is not None
                 and event.blank_error_list is not None
                 and event.below_zero_error_list is not None
+                and event.expected_columns is not None
             ):
                 if (
                     event.formatting_error_list

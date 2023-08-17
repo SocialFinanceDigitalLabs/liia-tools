@@ -75,7 +75,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         )
         is False
     ):
-        common.save_incorrect_year_error(input, la_log_dir)
+        common.save_incorrect_year_error(input, la_log_dir, retention_period=YEARS_TO_GO_BACK-1)
         return
 
     config = clean_config.Config(year)

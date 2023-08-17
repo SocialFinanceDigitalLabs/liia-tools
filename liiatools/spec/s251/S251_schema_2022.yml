@@ -1,10 +1,9 @@
 placement_costs:
     Child ID:
-        &alphanumeric-not-blank
         string: "alphanumeric"
         canbeblank: no
     Date of birth:
-        &date-blank
+        &date-not-blank
         date: "%d/%m/%Y"
         canbeblank: no
     Gender:
@@ -174,7 +173,9 @@ placement_costs:
           name: "Child criminal exploitation: concerns that services may be required or the child may be at risk of harm due to child criminal exploitation"
         canbeblank: yes
     Date of last assessment:
-        *date-blank
+        &date-blank
+        date: "%d/%m/%Y"
+        canbeblank: yes
     Does the child have an EHCP:
         &yes-no-blank
         category:
@@ -204,9 +205,7 @@ placement_costs:
         - code: "J3"
         canbeblank: no
     Placement start date:
-        &date-not-blank
-        date: "%d/%m/%Y"
-        canbeblank: no
+        *date-not-blank
     Placement end date:
         *date-blank
     Date of start of current care period:
@@ -280,7 +279,7 @@ placement_costs:
         string: "alphanumeric"
         canbeblank: yes
     Ofsted URN:
-        *alphanumeric-not-blank
+        *alphanumeric-blank
     Home postcode:
         &postcode-blank
         string: "postcode"

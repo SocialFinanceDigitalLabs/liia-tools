@@ -55,7 +55,7 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
     """
 
     # Prepare and check file
-    if common_prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
+    if common_prep.check_blank_file(input, la_log_dir=la_log_dir) == "error":
         return
     common_prep.drop_empty_rows(input, input)
     if (
@@ -78,7 +78,7 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
         )
         is False
     ):
-        common.save_incorrect_year_error(input, la_log_dir)
+        common.save_incorrect_year_error(input, la_log_dir, retention_period=YEARS_TO_GO_BACK-1)
         return
 
     # Open & Parse file
