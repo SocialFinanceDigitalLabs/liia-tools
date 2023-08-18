@@ -1,9 +1,9 @@
 from functools import cached_property
 from pathlib import Path
 
-import xmlschema
+from xmlschema import XMLSchema
 
-from liiatools.spec import social_work_workforce as csww_asset_dir
+from liiatools.spec import social_work_workforce as social_work_workforce_dir
 
 
 class FilePath:
@@ -12,16 +12,16 @@ class FilePath:
 
     @cached_property
     def path(self):
-        return Path(csww_asset_dir.__file__).parent / f"social_work_workforce_{self.__year}.xsd"
+        return Path(social_work_workforce_dir.__file__).parent / f"social_work_workforce_{self.__year}.xsd"
 
 
 class Schema:
-    def __init__(self, year):
+    def __init__(self, year: int):
         self.__year = year
 
     @cached_property
-    def schema(self) -> xmlschema.XMLSchema:
-        return xmlschema.XMLSchema(
-            Path(csww_asset_dir.__file__).parent
+    def schema(self) -> XMLSchema:
+        return XMLSchema(
+            Path(social_work_workforce_dir.__file__).parent
             / f"social_work_workforce_{self.__year}.xsd"
         )

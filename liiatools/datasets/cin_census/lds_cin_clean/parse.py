@@ -33,18 +33,3 @@ def dom_parse(source, **kwargs):
             yield ProcessingInstructionNode(name=elem.target, text=elem.text, node=elem)
         else:
             raise ValueError(f"Unknown event: {action}")
-
-
-def to_xml(stream, builder: etree.TreeBuilder):
-    for ev in stream:
-        if isinstance(ev, StartElement):
-            builder.start(ev.tag, getattr(ev, "attrs", {}))
-        elif isinstance(ev, EndElement):
-            builder.end(ev.tag)
-        elif isinstance(ev, TextNode):
-            builder.data(ev.text)
-        elif isinstance(ev, CommentNode):
-            builder.comment(ev.text)
-        elif isinstance(ev, ProcessingInstructionNode):
-            builder.pi(ev.name, ev.text)
-        yield ev
