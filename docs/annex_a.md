@@ -113,6 +113,8 @@ Three CLI options:
 
 
 
+Requirement | Description
+--- | ---
 AASUPTYPE | Must be one of xlsx or xlsm - however, supports also .xml and .csv? - check if this is correct | 
 AABLANKROW | Blank rows are flagged with `blank_row="1"`
 AASHEETNAME | Match the loaded table against one of the Annex A sheet names using fuzzy matching with regex
