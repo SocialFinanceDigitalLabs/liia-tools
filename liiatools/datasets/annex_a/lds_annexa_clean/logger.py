@@ -30,6 +30,8 @@ def create_error_table(stream):
                 event,
                 sheet_name=sheet_name,
             )
+            # FIXME: Swallows the EndTable event
+            # FIXME: Does not reset sheet_name to None after the table ends
         yield event
 
 
@@ -117,6 +119,7 @@ def duplicate_column_check(event):
             return event
         else:
             duplicate_columns = _duplicate_columns(column_headers)
+            # FIXME: use join
             duplicate_columns = str(duplicate_columns)[
                 1:-1
             ]  # "Remove [ and ] from string
@@ -221,6 +224,7 @@ def create_missing_sheet_error(stream):
                 sheet_names, expected_sheet_names
             )
             if missing_sheet_error:
+                # FIXME: use join
                 missing_sheet_error = str(missing_sheet_error)[
                     1:-1
                 ]  # Remove brackets [] from list

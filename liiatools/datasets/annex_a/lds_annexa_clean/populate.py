@@ -5,6 +5,7 @@ from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 log = logging.getLogger(__name__)
 
 
+# REQ AACHILD_ID: Adds the Local Authority code to the Child Unique ID / Individual adopter identifier to create a unique identifier for each child
 @streamfilter(
     check=lambda x: x.get("column_header")
     in ["Child Unique ID", "Individual adopter identifier"],
