@@ -18,6 +18,7 @@ def flip_dict(some_dict):
     :param some_dict: A config dictionary
     :return: a reversed dictionary with keys as values and vice versa
     """
+    # FIXME: Suggest adding a size check here to assert that input size is the same as output size and fail if different - this will catch duplicate values
     return {value: key for key, value in some_dict.items()}
 
 
