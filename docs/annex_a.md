@@ -1,5 +1,7 @@
 # Data Specification: Annex A
 
+Test Coverage: 70%
+
 Three CLI options:
 
 * cleanfile(input, la_code, la_log_dir, output) - Cleans input Annex A xlsx files according to config and outputs cleaned xlsx files
@@ -43,7 +45,18 @@ For some dataset configurations there is also a lot of duplication, and in some 
     * la_name - looks up name based on code
        - **WARNING**: uses a function called `flip_dict` which does not check for duplicate values - so could fail silently
         
-    * check if input file is supported (REQ AASUPTYPE)
+    * check_file_type [shared] - check if input file is supported (REQ AASUPTYPE)
+        * Uses pathlib to get the file stem and suffix
+        * Returns None if suffix is an exact match (case sensitive) of one of the `file_types`
+        * Raises AssertionError if suffix is one of the `supported_file_types` (but not one of the `file_types`)
+        * If neither of those conditions are met:
+            * writes a warning to a dynamic file name **DAGSTER WARNING**
+            * returns the string "incorrect file type"
+
+        * the return value of this is now checked and if the value is "incorrect file type" then the pipeline is stopped
+
+        * **NEEDS REWRITE FOR DAGSTER**
+        
     * read file using `parse_sheets` from sfdata_stream_parser
         - **Uses open - DAGSTER WARNING**
     * configure stream (`clean_config.configure_stream`)
