@@ -128,3 +128,58 @@ Three CLI options:
 
         * save_errors_la
             * Uses open **DAGSTER WARNING**
+
+## CLI COMMAND: la_agg
+
+* la_agg
+
+    * Config()
+
+    * read_file - `pd.read_csv(input, parse_dates=dates, dayfirst=True)` **DAGSTER WARNING**
+
+    * merge_la_files
+        * Reads the 'archive' file and merges it with the 'current' file
+        * Hardocded filename
+        * Uses pd.read_csv **DAGSTER WARNING**
+
+    * deduplicate
+        * Removes duplicate entries based on primary keys
+
+    * remove_old_data
+        * Removes data older than six years
+        * June hardcoded as month
+        * "today" hardcoded as reference - different from AA which uses "now"
+        * `year` and `years` as argument names are very dangerous - must use more descriptive names
+
+    * export_flatfile
+        * Writes the dataframe to a csv file - alias for `dataframe.to_csv` **DAGSTER WARNING**
+        * Hardcoded filename - should at least be constant
+
+    * filter_flatfile
+        * Filters the dataframe based on column 'Type' == 'AssessmentAuthorisationDate' and drops columns that now are empty
+
+    * IF len(factors) > 0 - factors is output of filter_flatfile
+        * split_factors
+            * If I understand this correctly, there is a column called Factors which has a list of strings in it. This 
+              function translates this column to a One-Hot encoded vuew with a columns for each factor.
+
+        * export_factfile
+            * Writes the dataframe to a csv file - alias for `dataframe.to_csv` **DAGSTER WARNING**
+            * Hardcoded filename
+
+    * referral_inputs
+        * Returns a tuple of three dataframes all having been individually filtered by filter_flatfile
+        * ref = "CINreferralDate", s17 = "AssessmentActualStartDate", s47 = "S47ActualStartDate"
+
+    * IF len(s17) AND len(s47) - s17 and s47 are output of referral_inputs and both must have values to proceed
+
+        * merge_ref_s17
+            * Merges the two dataframes on the 'LAchildID'
+            * Calculates the dates between AssessmentActualStartDate and CINreferralDate
+
+    * **INCOMPLETE**
+
+## CLI COMMAND: pan_agg
+
+* pan_agg
+    * 

@@ -100,6 +100,8 @@ def referral_inputs(flatfile):
     return ref, s17, s47
 
 
+# FIXME: This function defaults to returning nothing - should probably improve arguments to be a bit more helpful
+#        or simply just returning the series and then doing `series // 365` in the calling function
 def _time_between_date_series(later_date_series, earlier_date_series, years=0, days=0):
     days_series = later_date_series - earlier_date_series
     days_series = days_series.dt.days
@@ -113,8 +115,20 @@ def _time_between_date_series(later_date_series, earlier_date_series, years=0, d
         return years_series
 
 
-def _filter_event_series(dataset, days_series, max_days):
+def _filter_event_series(dataset: pd.DataFrame, days_series: str, max_days: int) -> pd.DataFrame:
+    """
+    Filters a dataframe to only include rows where the column named `days_series`
+    is 0 <= days_series <= max_days
 
+    Args:
+        dataset (pd.DataFrame): The dataset to filter
+        days_series (str): The name of the column containing the days between two events
+        max_days (int): The maximum number of days between the two events
+    
+    Returns:
+        pd.DataFrame: The filtered dataset
+
+    """
     dataset = dataset[
         ((dataset[days_series] <= max_days) & (dataset[days_series] >= 0))
     ]
