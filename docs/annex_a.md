@@ -7,6 +7,8 @@ Three CLI options:
 * pan_agg(input, la_code, output) - Merges data from newly merged Annex A file (output of la_agg()) to existing pan-London Annex A data
 
 
+## CLI COMMAND: Cleanfile
+
 * cleanfile
     * check if input file is supported (REQ AASUPTYPE)
     * read file using `parse_sheets` from sfdata_stream_parser
