@@ -12,6 +12,7 @@ Three CLI options:
 * cleanfile
     * check if input file is supported (REQ AASUPTYPE)
     * read file using `parse_sheets` from sfdata_stream_parser
+        - **Uses open - DAGSTER WARNING**
     * configure stream (`clean_config.configure_stream`)
         * Uses: config["datasources"] and config["data_config"]
         * identify_blank_rows (REQ AABLANKROW)
@@ -53,7 +54,7 @@ Three CLI options:
 
     * log_errors
         * create_error_table
-            - Emits an ErrorTable event INSTEAD OF the EndTable event
+            - Emits an ErrorTable event **INSTEAD OF** the EndTable event (**EndTable is removed**)
         * blank_error_check
             - Checks if 'required' (not `canbeblank`) fields are filled
         * create_error_list
