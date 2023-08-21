@@ -31,6 +31,7 @@ A simpler approach would be to have each pipeline as a standalone package with a
 
 This could then be versioned independently and released independently allowing for simpler change management and less testing required.
 
+For some dataset configurations there is also a lot of duplication, and in some cases hardcoded duplication, where this could simply be combined into a single file. Most of the features here will be supported by the default `sfdata` format.
 
 ## CLI COMMAND: Cleanfile
 
@@ -193,7 +194,6 @@ AACHILD_ID | Adds the Local Authority code to the Child Unique ID / Individual a
         * Uses config["dates"] - this is a list of the date columns for each table
         - Calls pd.to_datetime on each table using the date columns from the config **uses hardcoded date format**
 
-
     * remove_old_data
         * Takes index_date from config file (**DAGSTER WARNING - this date must be configurable**)
         - Uses hardcoded table and column names
@@ -206,7 +206,7 @@ AACHILD_ID | Adds the Local Authority code to the Child Unique ID / Individual a
         - This is a duplicate of `convert_datetimes` (**DRY**) with the addition of `.dt.date` on each column
 
     * export_file
-        * Exports the sheets to an excel file using pd.ExcelWrite (**DAGSTER WARNING**)
+        * Exports the sheets to an excel file using pd.ExcelWriter (**DAGSTER WARNING**)
         - Uses hardcoded filename - in fact the same hardcoded one as the input ouput file but without a constant
         - Suggest the sorting of sheets could happen here as a list rather than the sorted dict above
 
@@ -217,3 +217,37 @@ The overwriting of the input file means that if a run fails, the original file i
 There is also a clear race condition where a second run starts before another is complete - this would lead to the loss of session data from whichever run finishes first.
 
 These are probably minor issue, but nonetheless without debugging or logging it would be difficult to diagnose or even be aware of any issues.
+
+
+## CLI COMMAND: pan_agg
+
+
+* pan_agg
+    * Config()
+        - Uses environment variables to set the config - do we need this?
+
+    * flip_dict - see comments above
+
+    * split_file - see comments above - also **DRY** (re-implemented)
+        * Removes two hardcoded sheets from the input file
+        * Removes columns from config by column name - could match columns from mutiple tables
+
+    * merge_agg_files
+        * **Reads** hardcoded file name from **output** (comments as above - this is a constant filename)
+
+        * _merge_dfs
+            * Takes original file, drops all entries for the current LA, merges with the current file, and then overwrites the original file
+            * Takes sheet names from 'pan london file' - means this needs to manually created and must exist - won't recover from error
+
+    * convert_dates
+        * Uses config["dates"] - this is a list of the date columns for each table
+        - this is yet another duplicate of this function **DRY**
+        - why aren't dates preserved in the first instance? - this is just plastering over a bug
+
+    * export_file
+        * Exports the sheets to an excel file using pd.ExcelWriter (**DAGSTER WARNING**)
+        * Same as the comments above for la_agg
+
+Same comments apply to this as the la_agg file process about risk of data loss. The issue is compounded by the fact that the merge function is called for each LA file and so chances of simultaneous runs are significantly higher.
+
+For this I would recommend that the merge function is moved to a central task that *ALWAYS* read the individual files from each LA's private stores. This would mean that the merge function would be idempotent and could be run as many times as required without risk of data loss.
