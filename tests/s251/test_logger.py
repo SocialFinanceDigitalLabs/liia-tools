@@ -127,7 +127,7 @@ def test_save_errors_la(mock_save):
                 blank_error_list=["POSTCODE", "POSTCODE", "DATE"],
                 below_zero_error_list=["AGE"],
                 extra_column_error=["list", "of", "headers"],
-                expected_columns=["CHILD", "AGE", "DATE", "POSTCODE"]
+                expected_columns=["CHILD", "AGE", "DATE", "POSTCODE"],
             ),
         ],
         la_log_dir,

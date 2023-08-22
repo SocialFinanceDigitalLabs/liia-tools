@@ -71,7 +71,7 @@ def configure_stream(stream, config):
 
 
 class Config(dict):
-    def __init__(self, year=2023, *config_files):
+    def __init__(self, year, *config_files):
         super().__init__()
         if not config_files:
             config_files = ["DEFAULT_COLUMN_MAP", "DEFAULT_LA_MAP"]
