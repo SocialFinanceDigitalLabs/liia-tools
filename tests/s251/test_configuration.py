@@ -4,7 +4,7 @@ from sfdata_stream_parser import events
 
 
 def test_add_matched_headers():
-    config = configuration.Config(2022)
+    config = configuration.Config(2023)
     event = events.StartTable(
         headers=[
             "Child ID",
