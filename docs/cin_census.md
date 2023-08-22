@@ -177,9 +177,112 @@ Three CLI options:
             * Merges the two dataframes on the 'LAchildID'
             * Calculates the dates between AssessmentActualStartDate and CINreferralDate
 
-    * **INCOMPLETE**
+        * merge_ref_s47
+            * Merges the two dataframes on the 'LAchildID'
+            * Calculates the dates between S47ActualStartDate and CINreferralDate
+            - *This is identical to merge_ref_s17 just acting on different columns*
+
+        * ref_outcomes
+            - **Inputs**:
+                - `ref`: Primary dataframe.
+                - `ref_s17`: Dataframe for S17 outcomes.
+                - `ref_s47`: Dataframe for S47 outcomes.
+
+            - **Operations**:
+                - Merge `ref` with `ref_s17` based on `Date` and `LAchildID`.
+                - Merge the resulting dataframe with `ref_s47` based on the same keys.
+                - Set a default outcome in a column named `referral_outcome` to "NFA" for all records.
+                - Change outcome to "S17" when an `AssessmentActualStartDate` is present.
+                - Change outcome to "S47" when a `S47ActualStartDate` is present.
+                - Set outcome to "Both S17 & S47" when both start dates are present.
+                - Calculate age of the child at the time of referral using the function `_time_between_date_series()` and store in `Age at referral`.
+
+            - **Output**:
+                - Dataframe (`ref_outs`) containing merged views with outcomes and child's age at referral. 
+
+        * export_reffile
+            * Saves the merged file to a csv file - alias for `dataframe.to_csv` **DAGSTER WARNING**
+
+    * journey_inputs
+        * Returns a tuple of two dataframes all having been individually filtered by filter_flatfile
+        * s47_j = "S47ActualStartDate", cpp = "CPPstartDate"
+
+    * IF len(s47_j) AND len(cpp) - s47_j and cpp are output of journal_inputs and both must have values to proceed
+
+        * journey_merge
+            - Merge `s47_j` with `CPPstartDate` from `cpp` based on `LAchildID` to get `s47_cpp`.
+            - Calculate days from ICPC to CPP start:
+                - Add a new column `icpc_to_cpp` to `s47_cpp`.
+                - Use helper function `_time_between_date_series` to calculate the days difference.
+            - Calculate days from S47 to CPP start:
+                - Add a new column `s47_to_cpp` to `s47_cpp`.
+                - Use helper function `_time_between_date_series` to calculate the days difference.
+            - Filter `s47_cpp` to keep only logically consistent events:
+                - Based on constraints defined for `icpc_to_cpp` and `s47_to_cpp` using the config variables `icpc_cpp_days` and `s47_cpp_days`.
+            - Merge filtered events from `s47_cpp` back to `s47_j` to get `s47_outs`:
+                - Keep columns ["Date", "LAchildID", "CPPstartDate", "icpc_to_cpp", "s47_to_cpp"].
+                - Merge based on ["Date", "LAchildID"].
+            - Return `s47_outs`.
+
+        * s47_paths
+            - **Purpose**: Creates an output that can generate a Sankey diagram of outcomes from S47 events.
+            
+            - **Step 1: Define Date Window for S47 events**
+                - For each year in `s47_outs["YEAR"]`:
+                    - Define the date for the 'cin_census_close' as March 31st of that year.
+                - Compute the 's47_max_date' by subtracting the 's47_day_limit' from the 'cin_census_close'.
+                - Compute the 'icpc_max_date' by subtracting the 'icpc_day_limit' from the 'cin_census_close'.
+
+            - **Step 2: Setting up the Sankey diagram source for S47 events**
+                - Create a copy of `s47_outs` named `step1`.
+                - Set the "Source" column values to "S47 strategy discussion".
+                - Initialize the "Destination" column with NaN values.
+                - Update the "Destination" for rows where 'DateOfInitialCPC' is not null to "ICPC".
+                - Update the "Destination" for rows where 'DateOfInitialCPC' is null but 'CPPstartDate' is not null to "CPP start".
+                - Update the "Destination" for rows where 'S47ActualStartDate' is on or after 's47_max_date' to "TBD - S47 too recent".
+                - For remaining rows with null "Destination", set the value to "No ICPC or CPP".
+
+            - **Step 3: Setting up the Sankey diagram source for ICPC events**
+                - Filter `step1` where the "Destination" is "ICPC" and assign to `step2`.
+                - Set the "Source" column values of `step2` to "ICPC".
+                - Initialize the "Destination" column with NaN values.
+                - Update the "Destination" for rows where 'CPPstartDate' is not null to "CPP start".
+                - Update the "Destination" for rows where 'DateOfInitialCPC' is on or after 'icpc_max_date' to "TBD - ICPC too recent".
+                - For remaining rows with null "Destination", set the value to "No CPP".
+
+            - **Step 4: Merge the steps together**
+                - Concatenate `step1` and `step2` into `s47_journey`.
+
+            - **Step 5: Calculate Age of Child at S47**
+                - Compute the child's age at the time of the S47 event by finding the difference between 'S47ActualStartDate' and 'PersonBirthDate' in terms of years.
+
+            - **Return**: The function finally returns the `s47_journey` dataframe.        
+
+        * export_journeyfile
+            * Saves the merged file to a csv file - alias for `dataframe.to_csv` **DAGSTER WARNING**
 
 ## CLI COMMAND: pan_agg
 
 * pan_agg
-    * 
+
+    * Config
+
+    * read_file
+        * Reads the file from the filepath
+        * Alias for `pandas.read_csv` **DAGSTER WARNING**
+
+    * merge_agg_files
+        * Reads the pan flatfile using pandas.read_csv **DAGSTER WARNING**
+        
+        * _merge_dfs 
+            * Drops the LA column
+            * Merges the new columns to the pan flatfile
+            * *ONLY CALLED FROM PARENT* - should probably be inline
+
+    * export_flatfile
+        * Saves the merged file to a csv file - alias for `dataframe.to_csv` **DAGSTER WARNING**
+
+
+    * filter_flatfile
+
+    * At this stage it pretty much exactly follows the steps from la_agg
