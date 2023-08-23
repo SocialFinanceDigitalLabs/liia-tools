@@ -40,7 +40,7 @@ well as avoiding potentially conflicting data.
 The pan_London_CIN_flatfile is created from the current LA file as well as the previous version of the pan_London_CIN_flatfile. Based on the LA Code (provided by CLI) all
 columns for that LA are dropped and the new file merged in. 
     * The fact that the LA code is provided by the CLI leads me to suspect that, although not specified, the input file is the cleaned file for the LA, not the merged 
-      flatfile as this has the la code in it
+      flatfile as this has the la code in it. **CORRECTION:** The is intended to run from the merged flatfile. The LA code is used to drop the LA data from the pan-London file.
     * This means that the pan london flatfile will only have the latest data - not the historic data. It's not specified if this is intentional or accidental. 
       The code will happily accept either the merged flatfile or the cleaned file as input, so it's not clear which is the correct one.
 
@@ -68,7 +68,7 @@ Finally it would remove large amounts of duplicate code thus making the code muc
 
 Here are some examples based on the sample data file provided
 
-** cin-2022_clean.csv **
+**&lt;inputfile>_clean.csv**
 
 ```csv
 LAchildID,Date,Type,CINreferralDate,ReferralSource,PrimaryNeedCode,CINclosureDate,ReasonForClosure,DateOfInitialCPC,ReferralNFA,CINPlanStartDate,CINPlanEndDate,S47ActualStartDate,InitialCPCtarget,ICPCnotRequired,AssessmentActualStartDate,AssessmentInternalReviewDate,AssessmentAuthorisationDate,Factors,CPPstartDate,CPPendDate,InitialCategoryOfAbuse,LatestCategoryOfAbuse,NumberOfPreviousCPP,UPN,FormerUPN,UPNunknown,PersonBirthDate,ExpectedPersonBirthDate,GenderCurrent,PersonDeathDate,PersonSchoolYear,Ethnicity,Disabilities,YEAR,LA
@@ -84,7 +84,7 @@ DfEX0000001_BAD,1971-03-14,CPPendDate,1970-10-06,1A,N4,1971-02-27,RC1,1970-12-06
 DfEX0000001_BAD,1971-02-15,CPPreviewDate,1970-10-06,1A,N4,1971-02-27,RC1,1970-12-06,0,,,,,,,,,,1970-02-17,1971-03-14,PHY,PHY,10,A123456789123,X98765432123B,UN3,1966-03-01,1966-03-01,1,1980-10-01,1965,WBRI,"HAND,HEAR",2022,Barking and Dagenham
 ```
 
-**CIN_Census_merged_flatfile**
+**CIN_Census_merged_flatfile.csv**
 
 ```csv
 LAchildID,Date,Type,CINreferralDate,ReferralSource,PrimaryNeedCode,CINclosureDate,ReasonForClosure,DateOfInitialCPC,ReferralNFA,CINPlanStartDate,CINPlanEndDate,S47ActualStartDate,InitialCPCtarget,ICPCnotRequired,AssessmentActualStartDate,AssessmentInternalReviewDate,AssessmentAuthorisationDate,Factors,CPPstartDate,CPPendDate,InitialCategoryOfAbuse,LatestCategoryOfAbuse,NumberOfPreviousCPP,UPN,FormerUPN,UPNunknown,PersonBirthDate,ExpectedPersonBirthDate,GenderCurrent,PersonDeathDate,PersonSchoolYear,Ethnicity,Disabilities,YEAR,LA
@@ -100,21 +100,21 @@ DfEX0000001_BAD,1971-03-14,CPPendDate,1970-10-06,1A,N4,1971-02-27,RC1,1970-12-06
 DfEX0000001_BAD,1971-02-15,CPPreviewDate,1970-10-06,1A,N4,1971-02-27,RC1,1970-12-06,0,,,,,,,,,,1970-02-17,1971-03-14,PHY,PHY,10.0,A123456789123,X98765432123B,UN3,1966-03-01,1966-03-01,1,1980-10-01,1965,WBRI,"HAND,HEAR",2022,Barking and Dagenham
 ```
 
-**CIN_Census_factors**
+**CIN_Census_factors.csv**
 
 ```csv 
 LAchildID,Date,Type,CINreferralDate,ReferralSource,PrimaryNeedCode,CINclosureDate,ReasonForClosure,DateOfInitialCPC,ReferralNFA,AssessmentActualStartDate,AssessmentInternalReviewDate,AssessmentAuthorisationDate,Factors,UPN,FormerUPN,UPNunknown,PersonBirthDate,ExpectedPersonBirthDate,GenderCurrent,PersonDeathDate,PersonSchoolYear,Ethnicity,Disabilities,YEAR,LA,2A,2B
 DfEX0000001_BAD,1971-07-18,AssessmentAuthorisationDate,1970-10-06,1A,N4,1971-02-27,RC1,1970-12-06,0,1970-06-03,1970-06-22,1971-07-18,"2A,2B",A123456789123,X98765432123B,UN3,1966-03-01,1966-03-01,1,1980-10-01,1965,WBRI,"HAND,HEAR",2022,Barking and Dagenham,1,1
 ```
 
-**CIN_Census_referrals**
+**CIN_Census_referrals.csv**
 
 ```csv
 LAchildID,Date,Type,CINreferralDate,ReferralSource,PrimaryNeedCode,CINclosureDate,ReasonForClosure,DateOfInitialCPC,ReferralNFA,UPN,FormerUPN,UPNunknown,PersonBirthDate,ExpectedPersonBirthDate,GenderCurrent,PersonDeathDate,PersonSchoolYear,Ethnicity,Disabilities,YEAR,LA,AssessmentActualStartDate,days_to_s17,S47ActualStartDate,days_to_s47,referral_outcome,Age at referral
 DfEX0000001_BAD,1970-10-06,CINreferralDate,1970-10-06,1A,N4,1971-02-27,RC1,1970-12-06,0,A123456789123,X98765432123B,UN3,1966-03-01,1966-03-01,1,1980-10-01,1965,WBRI,"HAND,HEAR",2022,Barking and Dagenham,,,,,NFA,4
 ```
 
-**CIN_Census_S47_journey**
+**CIN_Census_S47_journey.csv**
 
 ```csv
 LAchildID,Date,Type,CINreferralDate,ReferralSource,PrimaryNeedCode,CINclosureDate,ReasonForClosure,DateOfInitialCPC,ReferralNFA,S47ActualStartDate,InitialCPCtarget,ICPCnotRequired,UPN,FormerUPN,UPNunknown,PersonBirthDate,ExpectedPersonBirthDate,GenderCurrent,PersonDeathDate,PersonSchoolYear,Ethnicity,Disabilities,YEAR,LA,CPPstartDate,icpc_to_cpp,s47_to_cpp,cin_census_close,s47_max_date,icpc_max_date,Source,Destination,Age at S47
