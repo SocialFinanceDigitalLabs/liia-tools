@@ -69,7 +69,10 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
     ):
         return
     year, quarter = prep.find_year_of_return(
-        input, la_log_dir, retention_period=YEARS_TO_GO_BACK - 1, reference_year=REFERENCE_DATE.year
+        input,
+        la_log_dir,
+        retention_period=YEARS_TO_GO_BACK - 1,
+        reference_year=REFERENCE_DATE.year,
     )
     if year is None:
         return

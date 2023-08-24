@@ -253,7 +253,7 @@ class TestFindYearOfReturn(unittest.TestCase):
 
         # Verify the error log file is created with the correct message
         error_log_file = (
-                temp_dir / f"s251_test_error_log_{datetime.now():%Y-%m-%dT%H%M%SZ}.txt"
+            temp_dir / f"s251_test_error_log_{datetime.now():%Y-%m-%dT%H%M%SZ}.txt"
         )
         with open(error_log_file, "r") as f:
             error_message = f.read()
