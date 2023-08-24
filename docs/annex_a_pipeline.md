@@ -35,11 +35,13 @@ Process:
 
 ```mermaid
 graph TD
-    A[Is there a new file in the incoming folder?]
-    B[Exit]
+    START((Timed\nTrigger))
+    A{Is there a new file\nin the incoming folder?}
+    B((Exit))
     C[Create a new session folder]
     D[Move the incoming file to the session folder]
     
+    START --> A
     A -->|Yes| C
     A -->|No| B
     C --> D
@@ -48,11 +50,13 @@ graph TD
 
 
 
+
 ## Annex A - Cleanfile
 
 Cleans the incoming file by normalising column headers and data types, and saves sheets as individual CSV files.
 
-This process uses the stream parser (in future SFDATA)
+This process uses the stream parser (in future SFDATA) and therefore has to run
+as a single dagster operation.
 
 Inputs:
   * Session folder with incoming Annex A file
@@ -94,7 +98,10 @@ Questions:
 
 ```mermaid
 graph TD
+    START((Triggered by\nprevious job))
     A[Convert the file to a stream]
+    A1[\Write to user log\]
+    A2((Exit))
     B[Remove blank rows]
     C[Promote header to create table]
     D[Identify the columns based on headers and sheet name]
@@ -105,11 +112,13 @@ graph TD
     F3[Clean integers]
     F4[Clean postcodes]
     G[Collect data into tables / dataframes]
-    H[Save tables to session folder]
-    I[Create data quality report and save to session folder]
-    Z[Write to user log and error log then exit]
+    H[\Save tables to session folder\]
+    I[\Create data quality report and save to session folder\]
+    EXIT((Exit))
 
-    A -->|Error| Z
+    START --> A
+    A -->|Error| A1
+    A1 --> A2
     A --> B
     B --> C
     C --> D
@@ -122,9 +131,10 @@ graph TD
     F4 --> G
     G --> H
     H --> I
+    I --> EXIT
 ```
 
-## Annex A - Degrade
+## Annex A - Apply Privacy Policy
 
 Working on each of the tables in turn, this process will degrade the data to meet data minimisation rules:
   * Dates all set to the first of the month
@@ -152,6 +162,11 @@ session-<timestamp>
 
 Process:
 
-* **1:** 
+* **1:** Read each table in turn from the session folder making sure to use schema information to set the data types
+* **2:** Degrade date columns - based on the schema find date columns that require degradation and degrade them
+* **3:** Degrade postcode columns - based on the schema find postcode columns that require degradation and degrade them
+
+
+
 
 
