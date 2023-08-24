@@ -57,8 +57,6 @@ def configure_stream(stream, config):
     cell_config = config["data_config"]
     stream = identify_blank_rows(stream)
     stream = add_sheet_name(stream, config=sheet_config)
-
-    # Q: This could be optimised by only running the filter once but with multiple parameters
     stream = inherit_property(stream, "sheet_name")
     stream = inherit_property(stream, "column_headers")
     stream = identify_cell_header(stream)
@@ -71,7 +69,7 @@ def configure_stream(stream, config):
     )
     return stream
 
-# REQ AABLANKROW: Flag blank rows with blank_row = "1"
+
 def identify_blank_rows(stream):
     """
     Identify any blank rows in the dataset and assign a blank_row = "1" value to the corresponding
@@ -105,7 +103,6 @@ def identify_blank_rows(stream):
             yield event
 
 
-# REQ AASHEETNAME: Match the loaded table against one of the Annex A sheet names using fuzzy matching with regex
 @streamfilter(
     check=checks.type_check(events.StartTable),
     fail_function=pass_event,

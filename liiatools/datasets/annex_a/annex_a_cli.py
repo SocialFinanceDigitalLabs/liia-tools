@@ -84,9 +84,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     filename = Path(input).resolve().stem
     config = clean_config.Config()
     la_name = flip_dict(config["data_codes"])[la_code]
-
-    # REQ AASUPTYPE: Check if file is one of supported types
-    # Q: This doesn't seem to support CSV or XML - so why are these in the supported_file_types list?
     if (
         check_file_type(
             input,
@@ -115,8 +112,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Output result
     stream = file_creator.save_stream(stream, la_name, output)
     stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
-
-    # FIXME: Stores stream in memory - better to just consume it
     list(stream)
 
 

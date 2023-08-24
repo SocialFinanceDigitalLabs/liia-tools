@@ -11,8 +11,7 @@ from liiatools.datasets.annex_a.lds_annexa_clean.regex import parse_regex
 
 log = logging.getLogger(__name__)
 
-# REQ AACAT: Clean the category column based on available configuration and also check for formatting errors
-# Q: Why are formattings 0/1 as strings. Also, slightly worried about the silent failure mode
+
 @streamfilter(
     check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
 )
@@ -54,8 +53,7 @@ def clean_cell_category(event):
     ):  # Raised in case there is no config item for the given cell
         return event
 
-# REQ AAINT: Clean the integer column based on available configuration and also check for formatting errors
-# Q: This would be easier to read if the type check was a filter `check`
+
 @streamfilter(
     check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
 )
@@ -84,8 +82,6 @@ def clean_integers(event):
         return event
 
 
-# REQ AADATE: Clean the date column based on available configuration and also check for formatting errors
-# Q: This would be easier to read if the type check was a filter `check`
 @streamfilter(
     check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
 )
@@ -112,8 +108,7 @@ def clean_dates(event):
     else:
         return event
 
-# REQ AAPCODE: Clean the postcode column based on available configuration and also check for formatting errors
-# Q: This does use a check - but based on header name rather than type?
+
 @streamfilter(
     check=lambda x: x.get("column_header") in ["Placement postcode"],
     fail_function=pass_event,

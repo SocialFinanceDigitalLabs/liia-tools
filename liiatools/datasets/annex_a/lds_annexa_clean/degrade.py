@@ -10,7 +10,6 @@ from liiatools.datasets.shared_functions.converters import (
 log = logging.getLogger(__name__)
 
 
-# REC AADEGPCODE: Degrade the postcode column
 @streamfilter(
     check=lambda x: x.get("column_header") in ["Date of Birth"],
     fail_function=pass_event,
@@ -26,7 +25,6 @@ def degrade_dob(event):
     return event.from_event(event, value=text)
 
 
-# REC AADEGPCODE: Degrade the postcode column
 @streamfilter(
     check=lambda x: x.get("column_header") in ["Placement postcode"],
     fail_function=pass_event,

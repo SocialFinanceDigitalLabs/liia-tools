@@ -45,7 +45,6 @@ def coalesce_row(stream):
             row = {}
         elif isinstance(event, events.EndRow):
             yield RowEvent.from_event(event, row=row)
-            # FIXME: I believe duplicate_column should also be reset here otherwise it will keep growing for each row encountered
             row = None
         elif (
             row is not None
@@ -150,7 +149,6 @@ def save_tables(stream, output):
         yield event
 
 
-# FIXME: This does nothing!!!
 @functools.cache
 def lookup_column_config(table_name, column_name):
     return None
