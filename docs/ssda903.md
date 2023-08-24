@@ -1,6 +1,6 @@
 # Data Specification: SSDA903 Return
 
-Test Coverage: 71%
+Test Coverage: 48%
 
 Structure here is slightly different in that the CLI just calls functions in `s903_main_functions.py`. I'm not sure why this is the case.
 
