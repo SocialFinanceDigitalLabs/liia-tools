@@ -126,7 +126,9 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(str(input_file_path), str(temp_dir))
+        year, quarter = prep.find_year_of_return(
+            str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
+        )
 
         # Assertions
         self.assertEqual(year, 2023)
@@ -155,7 +157,9 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(str(input_file_path), str(temp_dir))
+        year, quarter = prep.find_year_of_return(
+            str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
+        )
 
         # Assertions
         self.assertIsNone(year)
@@ -196,7 +200,9 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(str(input_file_path), str(temp_dir))
+        year, quarter = prep.find_year_of_return(
+            str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
+        )
 
         # Assertions
         self.assertIsNone(year)
@@ -237,7 +243,9 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(str(input_file_path), str(temp_dir))
+        year, quarter = prep.find_year_of_return(
+            str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
+        )
 
         # Assertions
         self.assertIsNone(year)

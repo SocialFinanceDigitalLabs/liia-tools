@@ -47,12 +47,14 @@ def _save_year_error(
             )
 
 
-def find_year_of_return(input: str, la_log_dir: str):
+def find_year_of_return(input: str, la_log_dir: str, retention_period: int, reference_year: int):
     """
     Checks the minimum placement end date years to find year and quarter of return
 
     :param input: Path to file that we need to find the year of return from
     :param la_log_dir: Path to the local authority's log folder
+    :param retention_period: Number of years in the retention period
+    :param reference_year: The reference date against which we are checking the valid range
     :return: A year and quarter of return
     """
     infile = Path(input)
@@ -69,7 +71,7 @@ def find_year_of_return(input: str, la_log_dir: str):
         else:
             quarter = "Q4" if quarter == "Q0" else quarter
             year = year + 1 if quarter == "Q1" or quarter == "Q2" else year
-            if year in [2017, 2018, 2019, 2020, 2021, 2022]:
+            if year in range(reference_year-retention_period, 2022):
                 _save_year_error(input, la_log_dir, DataType.OLD_DATA, year=year)
                 return None, None
             else:
