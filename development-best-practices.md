@@ -48,6 +48,13 @@ This guide aims to establish a set of best practices and guidelines to ensure co
 
 21. **Limit Function Parameter Count**: Too many parameters can complicate a function. If a function requires numerous inputs, consider using structured data types or classes.
 
+22. **Inline Comments for Context**: While function and module documentation is crucial, inline comments within code blocks are invaluable for providing context and explaining complex logic. Ensure comments are concise and directly related to the code they accompany. They should clarify 'why' something is done (if not immediately obvious) rather than 'what' is being done.
+
+
+
+
+
+
 ---
 
 By integrating these best practices into our daily development workflow, we aim to build a robust, efficient, and maintainable ETL pipeline that meets our project's requirements. Remember, these are guidelines to direct our development, but always use your best judgment for specific scenarios.
