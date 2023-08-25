@@ -146,7 +146,7 @@ def la_agg(input, output):
 
     # Merge with existing LA file, if any
     list_columns = config["sort_order"]
-    aa_dict = agg_process.sort_dict(aa_dict, list_columns=list_columns)
+    aa_dict = agg_process.sort_dict(aa_dict, list_columns)
     aa_dict = agg_process.merge_la_files(output, aa_dict)
 
     # Remove duplicate data and data older than retention period
