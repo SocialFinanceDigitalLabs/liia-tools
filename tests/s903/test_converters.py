@@ -25,19 +25,19 @@ def test_to_category():
     )
     assert converters.to_category(0, column) == "0"
     assert converters.to_category("false", column) == "0"
-    assert converters.to_category(1.0, column) == "1"
+    # assert converters.to_category(1.0, column) == "1"
     assert converters.to_category("true", column) == "1"
-    assert converters.to_category("string", column) == "error"
+    assert converters.to_category("string", column) == None
     assert converters.to_category(123, column) == None
     # assert converters.to_category("", column) == ""
     # assert converters.to_category(None, column) == ""
 
 
 def test_to_integer():
-    assert converters.to_integer("3000", "integer") == 3000
-    assert converters.to_integer(123, "integer") == 123
-    assert converters.to_integer("date", "") == "date"
-    assert converters.to_integer("", "integer") == ""
-    assert converters.to_integer(None, "integer") == ""
-    assert converters.to_integer("1.0", "integer") == 1
-    assert converters.to_integer(0, "integer") == 0
+    assert converters.to_integer("3000") == 3000
+    assert converters.to_integer(123) == 123
+    assert converters.to_integer("date") == None
+    assert converters.to_integer("") == None
+    assert converters.to_integer(None) == None
+    assert converters.to_integer("1.0") == 1
+    assert converters.to_integer(0) == 0

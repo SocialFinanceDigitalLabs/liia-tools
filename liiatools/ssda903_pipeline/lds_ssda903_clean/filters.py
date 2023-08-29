@@ -13,7 +13,7 @@ from liiatools.datasets.shared_functions.common import check_postcode
 from liiatools.datasets.shared_functions.converters import to_date
 
 from ..spec import Column, DataSchema
-from .converters import to_category, to_integer
+from .converters import check_empty_cell, to_category, to_integer
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +26,12 @@ def add_table_name(event, schema: DataSchema):
     :param event: A filtered list of event objects of type StartTable
     :return: An updated list of event objects
     """
-    table_name = schema.get_table_from_headers(event.headers)
+    headers = getattr(event, "headers", None)
+    if not headers:
+        table_name = None
+    else:
+        table_name = schema.get_table_from_headers(event.headers)
+
     if table_name:
         return event.from_event(
             event, table_name=table_name, table_spec=schema.column_map[table_name]
@@ -42,13 +47,22 @@ def match_config_to_cell(event, schema: DataSchema):
     the config file should be a set of dictionaries for each table, headers within those tables
     and config rules for those headers
 
+    Requires:
+
+        * `table_name` on Cell events
+        * `header` on Cell events
+
+    Provides:
+
+        * `column_spec` on Cell events
+
     :param event: A filtered list of event objects of type Cell
     :param config: The loaded configuration to use
     :return: An updated list of event objects
     """
-    if hasattr(event, "table_name"):
-        table_config = schema.table[event.table_name]
-        if event.header in table_config:
+    if hasattr(event, "table_name") and hasattr(event, "header"):
+        table_config = schema.table.get(event.table_name)
+        if table_config and event.header in table_config:
             return event.from_event(event, column_spec=table_config[event.header])
     return event
 
@@ -79,47 +93,69 @@ def clean_dates(event):
 
 
 @streamfilter(check=cell_type_check("category"), fail_function=pass_event)
-def clean_categories(event):
+def clean_categories(event, preserve_value=False):
     """
     Convert all values that should be categories to categories based on the config.yaml file
 
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-    text = to_category(event.cell, event.column_spec)
-    if text is not None:
-        return event.from_event(event, cell=text, error="0")
+    cell_value = getattr(event, "cell", None)
+    cell_value = check_empty_cell(cell_value)
+    if cell_value != "":
+        cell_value = to_category(cell_value, event.column_spec)
+    if cell_value is None:
+        return event.from_event(
+            event, cell=event.cell if preserve_value else "", error="1"
+        )
     else:
-        return event.from_event(event, cell="", error="1")
+        return event.from_event(event, cell=cell_value, error="0")
 
 
 @streamfilter(check=cell_type_check("integer"), fail_function=pass_event)
-def clean_integers(event):
+def clean_integers(event, preserve_value=False):
     """
     Convert all values that should be integers into integers based on the config.yaml file
 
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-    text = to_integer(event.cell)
-    return event.from_event(event, cell=text, error="0")
+    cell_value = getattr(event, "cell", None)
+    cell_value = check_empty_cell(cell_value)
+    if cell_value != "":
+        cell_value = to_integer(cell_value)
+
+    if cell_value is None:
+        return event.from_event(
+            event, cell=event.cell if preserve_value else "", error="1"
+        )
+    else:
+        return event.from_event(event, cell=cell_value, error="0")
 
 
 @streamfilter(check=cell_type_check("postcode"), fail_function=pass_event)
-def clean_postcodes(event):
+def clean_postcodes(event, preserve_value=False):
     """
     Check that all values that should be postcodes are postcodes
 
     :param event: A filtered list of event objects of type Cell
     :return: An updated list of event objects
     """
-    error = "0"
-    text = ""
-    try:
-        text = check_postcode(event.cell)
-    except (AttributeError, TypeError, ValueError):
-        error = "1"
-    return event.from_event(event, cell=text, error=error)
+    cell_value = getattr(event, "cell", None)
+    cell_value = check_empty_cell(cell_value)
+    if cell_value != "":
+        try:
+            cell_value = check_postcode(str(cell_value))
+        except AttributeError:
+            # This happens when the test value doesn't match the pattern
+            cell_value = None
+
+    if cell_value is None:
+        return event.from_event(
+            event, cell=event.cell if preserve_value else "", error="1"
+        )
+    else:
+        return event.from_event(event, cell=cell_value, error="0")
 
 
 @collectors.collector(

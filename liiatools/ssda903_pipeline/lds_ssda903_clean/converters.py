@@ -23,13 +23,28 @@ def to_category(value: str, column: Column):
 
 def to_integer(value):
     """
-    Convert any strings that should be integers based on the config into integers
+    Convert any strings that should be integers based on the config into integers.
 
     :param value: Some value to convert to an integer
-    :param config: The loaded configuration
     :return: Either an integer value or a blank string
     """
     try:
         return int(float(value))
-    except (TypeError, ValueError):
+    except Exception as e:
         return None
+
+
+def check_empty_cell(value):
+    """
+    Check if a cell is empty, if it is return a blank string.
+
+    "empty" cells are either None or all whitespace
+
+    :param value: Some value to check
+    :return: Either the value or a blank string
+    """
+    if value is None:
+        return ""
+    if isinstance(value, str) and value.strip() == "":
+        return ""
+    return value

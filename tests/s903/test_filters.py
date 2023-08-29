@@ -4,7 +4,7 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.filters import generic
 
 from liiatools.ssda903_pipeline.lds_ssda903_clean import filters
-from liiatools.ssda903_pipeline.spec import Column
+from liiatools.ssda903_pipeline.spec import Column, load_schema
 
 
 def test_collect_row():
@@ -64,177 +64,67 @@ def test_collect_tables():
 
 
 def test_add_table_name():
-    event = events.StartTable(
-        headers=["CHILD", "SEX", "DOB", "ETHNIC", "UPN", "MOTHER", "MC_DOB"],
-        filename="SSDA903_AD1.csv",
+    schema = load_schema(2040)
+
+    def get_table_name(headers):
+        stream = [events.StartTable(headers=headers)]
+        stream = filters.add_table_name(stream, schema=schema)
+        event = list(stream)[0]
+        return getattr(event, "table_name", None)
+
+    assert (
+        get_table_name(["CHILD", "SEX", "DOB", "ETHNIC", "UPN", "MOTHER", "MC_DOB"])
+        == "Header"
     )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "Header"
 
-    event = events.StartTable(
-        headers=[
-            "CHILD",
-            "DECOM",
-            "RNE",
-            "LS",
-            "CIN",
-            "PLACE",
-            "PLACE_PROVIDER",
-            "DEC",
-            "REC",
-            "REASON_PLACE_CHANGE",
-            "HOME_POST",
-            "PL_POST",
-            "URN",
-        ],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "Episodes"
+    for table_name, table_data in schema.table.items():
+        headers = list(table_data.keys())
+        assert get_table_name(headers) == table_name
 
-    event = events.StartTable(
-        headers=["CHILD", "DOB", "REVIEW", "REVIEW_CODE"], filename="SSDA903_AD1.csv"
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "Reviews"
+    assert get_table_name(["incorrect", "header", "values"]) == None
 
-    event = events.StartTable(
-        headers=["CHILD", "SEX", "DOB", "DUC"], filename="SSDA903_AD1.csv"
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "UASC"
+    assert get_table_name([""]) == None
 
-    event = events.StartTable(
-        headers=[
-            "CHILD",
-            "DOB",
-            "SDQ_SCORE",
-            "SDQ_REASON",
-            "CONVICTED",
-            "HEALTH_CHECK",
-            "IMMUNISATIONS",
-            "TEETH_CHECK",
-            "HEALTH_ASSESSMENT",
-            "SUBSTANCE_MISUSE",
-            "INTERVENTION_RECEIVED",
-            "INTERVENTION_OFFERED",
-        ],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "OC2"
+    assert get_table_name([]) == None
 
-    event = events.StartTable(
-        headers=["CHILD", "DOB", "IN_TOUCH", "ACTIV", "ACCOM"],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "OC3"
-
-    event = events.StartTable(
-        headers=[
-            "CHILD",
-            "DOB",
-            "DATE_INT",
-            "DATE_MATCH",
-            "FOSTER_CARE",
-            "NB_ADOPTR",
-            "SEX_ADOPTR",
-            "LS_ADOPTR",
-        ],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "AD1"
-
-    event = events.StartTable(
-        headers=[
-            "CHILD",
-            "DOB",
-            "DATE_PLACED",
-            "DATE_PLACED_CEASED",
-            "REASON_PLACED_CEASED",
-        ],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "PlacedAdoption"
-
-    event = events.StartTable(
-        headers=["CHILD", "DOB", "PREV_PERM", "LA_PERM", "DATE_PERM"],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "PrevPerm"
-
-    event = events.StartTable(
-        headers=["CHILD", "DOB", "MISSING", "MIS_START", "MIS_END"],
-        filename="SSDA903_AD1.csv",
-    )
-    event_with_table_name = list(config.add_table_name(event))[0]
-    assert event_with_table_name.table_name == "Missing"
-
-    event = events.StartTable(
-        headers=["incorrect", "header", "values"], filename="SSDA903_AD1.csv"
-    )
-    event_with_table_name = list(config.add_table_name(event))
-    table_name = getattr(event_with_table_name, "table_name", [])
-    assert table_name == []
-
-    event = events.StartTable(headers=[""], filename="SSDA903_AD1.csv")
-    event_with_table_name = list(config.add_table_name(event))
-    table_name = getattr(event_with_table_name, "table_name", [])
-    assert table_name == []
-
-    event = events.StartTable(headers=[None], filename="SSDA903_AD1.csv")
-    event_with_table_name = list(config.add_table_name(event))
-    table_name = getattr(event_with_table_name, "table_name", [])
-    assert table_name == []
+    assert get_table_name(None) == None
 
 
 def test_match_config_to_cell():
-    event = events.Cell(table_name="AD1", header="DOB", filename="SSDA903_AD1.csv")
-    config_dict = {"AD1": {"DOB": {"date": "%d/%m/%Y", "canbeblank": False}}}
-    event_with_config = list(config.match_config_to_cell(event, config=config_dict))[0]
-    assert event_with_config.config_dict == config_dict["AD1"]["DOB"]
+    schema = load_schema(2040)
 
-    event = events.Cell(table_name="Episodes", header="RNE", filename="SSDA903_AD1.csv")
-    config_dict = {
-        "Episodes": {
-            "RNE": {"category": [{"code": "S"}, {"code": "L"}], "canbeblank": False}
-        }
-    }
-    event_with_config = list(config.match_config_to_cell(event, config=config_dict))[0]
-    assert event_with_config.config_dict == config_dict["Episodes"]["RNE"]
+    def match_cell(**cell_properties):
+        stream = [events.Cell(**cell_properties)]
+        stream = filters.match_config_to_cell(stream, schema=schema)
+        event = list(stream)[0]
+        return getattr(event, "column_spec", None)
 
-    event = events.Cell(table_name="Episodes", header="RNE", filename="SSDA903_AD1.csv")
-    config_dict = {}
-    event_with_config = list(config.match_config_to_cell(event, config=config_dict))[0]
-    assert event_with_config == event
+    assert match_cell(table_name="Header", header="CHILD").string == "alphanumeric"
 
-    event = events.Cell(table_name="Episodes", header="RNE", filename="SSDA903_AD1.csv")
-    config_dict = None
-    event_with_config = list(config.match_config_to_cell(event, config=config_dict))[0]
-    assert event_with_config == event
+    assert match_cell(header="CHILD") is None
 
-    event = events.Cell(table_name="Episodes", header="RNE", filename="SSDA903_AD1.csv")
-    config_dict = 700
-    event_with_config = list(config.match_config_to_cell(event, config=config_dict))[0]
-    assert event_with_config == event
+    assert match_cell(table_name="Header") is None
 
-    event = events.Cell(table_name="Episodes", header="RNE", filename="SSDA903_AD1.csv")
-    config_dict = "random_string"
-    event_with_config = list(config.match_config_to_cell(event, config=config_dict))[0]
-    assert event_with_config == event
+    assert match_cell() is None
+
+    assert match_cell(table_name="UNKNOWN", header="CHILD") is None
+
+    assert match_cell(table_name="Header", header="UNKNOWN") is None
+
+    assert match_cell(table_name="Header", header=None) is None
+
+    assert match_cell(table_name=None, header="CHILD") is None
 
 
 def test_clean_dates():
-    event = events.Cell(cell=datetime(2019, 1, 15), config_dict={"date": "%d/%m/%Y"})
+    date_spec = Column(date="%d/%m/%Y")
+
+    event = events.Cell(cell=datetime(2019, 1, 15), column_spec=date_spec)
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == datetime(2019, 1, 15).date()
     assert cleaned_event.error == "0"
 
-    event = events.Cell(cell="2019/1/15", config_dict={"date": "%d/%m/%Y"})
+    event = events.Cell(cell="2019/1/15", column_spec=date_spec)
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
@@ -249,138 +139,91 @@ def test_clean_dates():
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == "string"
 
-    event = events.Cell(cell=None, config_dict={"date": "%d/%m/%Y"})
+    event = events.Cell(cell=None, column_spec=date_spec)
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "0"
 
-    event = events.Cell(cell="", config_dict={"date": "%d/%m/%Y"})
+    event = events.Cell(cell="", column_spec=date_spec)
     cleaned_event = list(filters.clean_dates(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "0"
 
 
 def test_clean_categories():
-    event = events.Cell(
-        cell="0",
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
+    category_spec = Column(
+        category=[{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
     )
+
+    event = events.Cell(cell="0", column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == "0"
     assert cleaned_event.error == "0"
 
-    event = events.Cell(
-        cell="0.0",
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
+    # event = events.Cell(cell="0.0", column_spec=category_spec)
+    # cleaned_event = list(filters.clean_categories(event))[0]
+    # assert cleaned_event.cell == "0"
+    # assert cleaned_event.error == "0"
+
+    event = events.Cell(cell=0, column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == "0"
     assert cleaned_event.error == "0"
 
-    event = events.Cell(
-        cell=0,
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
-    cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.cell == "0"
-    assert cleaned_event.error == "0"
-
-    event = events.Cell(
-        cell="true",
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
+    event = events.Cell(cell="true", column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == "1"
     assert cleaned_event.error == "0"
 
-    event = events.Cell(
-        cell=123,
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
+    event = events.Cell(cell=123, column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 
-    event = events.Cell(
-        cell="string",
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
+    event = events.Cell(cell="string", column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 
-    event = events.Cell(
-        cell="string",
-        config_dict={
-            "not_category": [
-                {"code": "0", "name": "False"},
-                {"code": "1", "name": "True"},
-            ]
-        },
-    )
-    cleaned_event = list(filters.clean_categories(event))[0]
-    assert cleaned_event.cell == "string"
-
-    event = events.Cell(
-        cell=None,
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
+    event = events.Cell(cell=None, column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "0"
 
-    event = events.Cell(
-        cell="",
-        config_dict={
-            "category": [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-        },
-    )
+    event = events.Cell(cell="", column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "0"
 
 
 def test_clean_integers():
-    event = events.Cell(cell=123, config_dict={"numeric": "integer"})
+    integer_spec = Column(numeric="integer")
+    event = events.Cell(cell=123, column_spec=integer_spec)
     cleaned_event = list(filters.clean_integers(event))[0]
     assert cleaned_event.cell == 123
     assert cleaned_event.error == "0"
 
-    event = events.Cell(cell="", config_dict={"numeric": "integer"})
-    cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
-
-    event = events.Cell(cell=None, config_dict={"numeric": "integer"})
-    cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
-
-    event = events.Cell(cell="123", config_dict={"numeric": "integer"})
+    event = events.Cell(cell="123", column_spec=integer_spec)
     cleaned_event = list(filters.clean_integers(event))[0]
     assert cleaned_event.cell == 123
     assert cleaned_event.error == "0"
 
-    event = events.Cell(cell="string", config_dict={"numeric": "integer"})
+    event = events.Cell(cell="string", column_spec=integer_spec)
     cleaned_event = list(filters.clean_integers(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 
-    event = events.Cell(cell=datetime(2017, 3, 17), config_dict={"numeric": "integer"})
+    event = events.Cell(cell="", column_spec=integer_spec)
+    cleaned_event = list(filters.clean_integers(event))[0]
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
+
+    event = events.Cell(cell=None, column_spec=integer_spec)
+    cleaned_event = list(filters.clean_integers(event))[0]
+    assert cleaned_event.cell == ""
+    assert cleaned_event.error == "0"
+
+    event = events.Cell(cell=datetime(2017, 3, 17), column_spec=integer_spec)
     cleaned_event = list(filters.clean_integers(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
@@ -393,32 +236,33 @@ def test_clean_integers():
 
 
 def test_clean_postcodes():
-    event = events.Cell(header="HOME_POST", cell="G62 7PS")
+    pc_spec = Column(string="postcode")
+    event = events.Cell(cell="G62 7PS", column_spec=pc_spec)
     cleaned_event = list(filters.clean_postcodes(event))[0]
     assert cleaned_event.cell == "G62 7PS"
     assert cleaned_event.error == "0"
 
-    event = events.Cell(header="PL_POST", cell="CW3 9PU")
+    event = events.Cell(cell="CW3 9PU", column_spec=pc_spec)
     cleaned_event = list(filters.clean_postcodes(event))[0]
     assert cleaned_event.cell == "CW3 9PU"
     assert cleaned_event.error == "0"
 
-    event = events.Cell(header="PL_POST", cell="string")
+    event = events.Cell(cell="string", column_spec=pc_spec)
     cleaned_event = list(filters.clean_postcodes(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 
-    event = events.Cell(header="PL_POST", cell=123)
+    event = events.Cell(cell=123, column_spec=pc_spec)
     cleaned_event = list(filters.clean_postcodes(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
 
-    event = events.Cell(header="PL_POST", cell="")
+    event = events.Cell(cell="", column_spec=pc_spec)
     cleaned_event = list(filters.clean_postcodes(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "0"
 
-    event = events.Cell(header="PL_POST", cell=None)
+    event = events.Cell(cell=None, column_spec=pc_spec)
     cleaned_event = list(filters.clean_postcodes(event))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "0"

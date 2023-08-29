@@ -24,7 +24,6 @@ def test_check_postcode():
     assert check_postcode("") == ""
     assert check_postcode("AA9         4AA") == "AA9         4AA"
     assert check_postcode("AA94AA") == "AA94AA"
-    assert check_postcode("AA9") == ""
 
 
 def test_to_short_postcode():

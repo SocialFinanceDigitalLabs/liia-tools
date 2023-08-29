@@ -38,7 +38,10 @@ def test_end_to_end(liiatools_dir, build_dir, log_dir):
             "s903",
             "cleanfile",
             "--i",
-            str(liiatools_dir / "spec/s903/samples/SSDA903_2020_episodes.csv"),
+            str(
+                liiatools_dir
+                / "ssda903_pipeline/spec/samples/SSDA903_2020_episodes.csv"
+            ),
             "--o",
             str(build_dir),
             "--la_log_dir",
