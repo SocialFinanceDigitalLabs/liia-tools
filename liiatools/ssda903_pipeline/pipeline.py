@@ -13,10 +13,12 @@ from liiatools.datasets.shared_functions import stream as stream_functions
 from .lds_ssda903_clean import filters
 from .spec import Column, DataSchema
 
+DataContainer = Dict[str, pd.DataFrame]
+
 
 @dataclass
 class CleanFileResult:
-    data: Dict[str, pd.DataFrame]
+    data: DataContainer
 
 
 def task_cleanfile(
@@ -55,3 +57,7 @@ def task_cleanfile(
     dataset = {k: pd.DataFrame(v) for k, v in dataset.items()}
 
     return CleanFileResult(data=dataset)
+
+
+def task_enrich(data: DataContainer) -> DataContainer:
+    pass

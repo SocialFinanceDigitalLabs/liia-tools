@@ -141,3 +141,10 @@ def sufficiency_output(input, output):
     :return: None
     """
     cli_functions.sufficiency_output(input, output)
+
+
+@s903.command()
+def convert_spec():
+    from liiatools.ssda903_pipeline.spec import build_data_from_old_config
+
+    build_data_from_old_config()

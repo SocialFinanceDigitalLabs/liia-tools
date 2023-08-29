@@ -13,6 +13,7 @@ from liiatools.datasets.shared_functions.common import (
     supported_file_types,
 )
 from liiatools.spec.common import authorities
+from liiatools.ssda903_pipeline.pipeline import task_enrich
 
 # dependencies for la_agg()
 from .lds_ssda903_la_agg import process as agg_process
@@ -104,6 +105,8 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     for table_name, table_data in cleanfile_result.data.items():
         table_data.to_csv(f"{output}/{table_name}.csv")
+
+    enrich_result = task_enrich(cleanfile_result.data)
 
     # stream = populate.add_year_column(stream, year)
 
