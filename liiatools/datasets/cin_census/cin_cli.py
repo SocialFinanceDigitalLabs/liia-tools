@@ -32,7 +32,6 @@ from liiatools.datasets.shared_functions.common import (
     check_file_type,
     check_year,
     check_year_within_range,
-    flip_dict,
     save_incorrect_year_error,
     save_year_error,
     supported_file_types,
@@ -124,7 +123,7 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Configure stream
     config = clean_config.Config()
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = authorities.get_by_code(la_code)
     stream = filters.strip_text(stream)
     stream = filters.add_context(stream)
     stream = filters.add_schema(stream, schema=Schema(input_year).schema)
@@ -321,7 +320,7 @@ def pan_agg(input, la_code, flat_output, analysis_output):
     flatfile = pan_process.read_file(input, dates)
 
     # Merge with existing pan-London data
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = authorities.get_by_code(la_code)
     flatfile = pan_process.merge_agg_files(flat_output, dates, la_name, flatfile)
 
     # Output flatfile

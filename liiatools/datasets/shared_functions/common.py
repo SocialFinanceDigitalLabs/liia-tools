@@ -3,24 +3,15 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Iterable, Union
+from warnings import warn
 
-from sfdata_stream_parser import events
+from liiatools.datasets.shared_functions.stream import (
+    inherit_property as __inherit_property,
+)
 
 log = logging.getLogger(__name__)
 
 supported_file_types = [".xml", ".csv", ".xlsx", ".xlsm"]
-
-
-def flip_dict(some_dict):
-    """
-    Potentially a temporary function which switches keys and values in a dictionary.
-    May need to rewrite LA-codes YAML file to avoid this step
-
-    :param some_dict: A config dictionary
-    :return: a reversed dictionary with keys as values and vice versa
-    """
-    # FIXME: Suggest adding a size check here to assert that input size is the same as output size and fail if different - this will catch duplicate values
-    return {value: key for key, value in some_dict.items()}
 
 
 def check_postcode(postcode):
@@ -56,35 +47,11 @@ def to_short_postcode(postcode):
 
 
 def inherit_property(stream, prop_name: Union[str, Iterable[str]], override=False):
-    """
-    Reads a property from StartTable and sets that property (if it exists) on every event between this event
-    and the next EndTable event.
-
-    :param event: A filtered list of event objects of type StartTable
-    :param prop_name: The property name to inherit
-    :return: An updated list of event objects
-    """
-    if isinstance(prop_name, str):
-        prop_name = [prop_name]
-
-    prop_value = None
-    for event in stream:
-        if isinstance(event, events.StartTable):
-            prop_value = {k: getattr(event, k, None) for k in prop_name}
-            prop_value = {k: v for k, v in prop_value.items() if v is not None}
-        elif isinstance(event, events.EndTable):
-            prop_value = None
-
-        if prop_value:
-            if override:
-                event_values = prop_value
-            else:
-                event_values = {
-                    k: v for k, v in prop_value.items() if not hasattr(event, k)
-                }
-            event = event.from_event(event, **event_values)
-
-        yield event
+    warn(
+        "This function is deprecated. Use liiatools.datasets.shared_functions.stream.inherit_property instead.",
+        DeprecationWarning,
+    )
+    return __inherit_property(stream, prop_name, override)
 
 
 def save_year_error(input, la_log_dir):

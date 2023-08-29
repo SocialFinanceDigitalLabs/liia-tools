@@ -5,17 +5,12 @@ from liiatools.datasets.shared_functions.common import (
     check_postcode,
     check_year,
     check_year_within_range,
-    flip_dict,
 )
 from liiatools.datasets.shared_functions.converters import (
     to_date,
     to_month_only_dob,
     to_short_postcode,
 )
-
-
-def test_flip_dict():
-    assert flip_dict({"key": "value"}) == {"value": "key"}
 
 
 def test_check_postcode():

@@ -3,7 +3,6 @@ from pathlib import Path
 
 import click as click
 import click_log
-import yaml
 from sfdata_stream_parser.filters.column_headers import promote_first_row
 from sfdata_stream_parser.parser import openpyxl
 
@@ -21,7 +20,6 @@ from liiatools.datasets.annex_a.lds_annexa_pan_agg import configuration as pan_c
 from liiatools.datasets.annex_a.lds_annexa_pan_agg import process as pan_process
 from liiatools.datasets.shared_functions.common import (
     check_file_type,
-    flip_dict,
     supported_file_types,
 )
 from liiatools.spec.common import authorities
@@ -77,7 +75,8 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Configuration
     filename = Path(input).resolve().stem
     config = clean_config.Config()
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = authorities.get_by_code(la_code)
+
     if (
         check_file_type(
             input,
@@ -188,7 +187,7 @@ def pan_agg(input, la_code, output):
 
     # Configuration
     config = pan_config.Config()
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = authorities.get_by_code(la_code)
 
     # Open merged file as dictionary
     pan_dict = pan_process.split_file(input)

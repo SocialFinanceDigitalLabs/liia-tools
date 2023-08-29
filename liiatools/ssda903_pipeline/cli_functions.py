@@ -8,8 +8,6 @@ from liiatools.datasets.shared_functions.common import (
     check_file_type,
     check_year,
     check_year_within_range,
-    flip_dict,
-    inherit_property,
     save_incorrect_year_error,
     save_year_error,
     supported_file_types,
@@ -178,7 +176,7 @@ def pan_agg(input, la_code, output):
     # Remove unwanted datasets and merge wanted with existing output
     pan_data_kept = config["pan_data_kept"]
     if table_name in pan_data_kept:
-        la_name = flip_dict(config["data_codes"])[la_code]
+        la_name = authorities.get_by_code(la_code)
         s903_df = pan_process.merge_agg_files(output, table_name, s903_df, la_name)
         pan_process.export_pan_file(output, table_name, s903_df)
 
