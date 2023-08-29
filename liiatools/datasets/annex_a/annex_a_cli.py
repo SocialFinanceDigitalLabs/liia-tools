@@ -1,39 +1,33 @@
-import click as click
-from pathlib import Path
-import yaml
 import logging
-import click_log
+from pathlib import Path
 
+import click as click
+import click_log
+import yaml
+from sfdata_stream_parser.filters.column_headers import promote_first_row
 from sfdata_stream_parser.parser import openpyxl
+
+from liiatools.datasets.annex_a.lds_annexa_clean import cleaner
+from liiatools.datasets.annex_a.lds_annexa_clean import configuration as clean_config
 from liiatools.datasets.annex_a.lds_annexa_clean import (
-    configuration as clean_config,
-    cleaner,
     degrade,
+    file_creator,
     logger,
     populate,
-    file_creator,
 )
 from liiatools.datasets.annex_a.lds_annexa_la_agg import configuration as agg_config
 from liiatools.datasets.annex_a.lds_annexa_la_agg import process as agg_process
-
 from liiatools.datasets.annex_a.lds_annexa_pan_agg import configuration as pan_config
 from liiatools.datasets.annex_a.lds_annexa_pan_agg import process as pan_process
-
-from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
-    flip_dict,
     check_file_type,
+    flip_dict,
     supported_file_types,
 )
-from sfdata_stream_parser.filters.column_headers import promote_first_row
+from liiatools.spec.common import authorities
 
 log = logging.getLogger()
 click_log.basic_config(log)
-
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
-# Get all the possible LA codes that could be used
-with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
-    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
 @click.group()
@@ -53,7 +47,7 @@ def annex_a():
 @click.option(
     "--la_code",
     required=True,
-    type=click.Choice(la_list, case_sensitive=False),
+    type=click.Choice(authorities.codes, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(
@@ -173,7 +167,7 @@ def la_agg(input, output):
 @click.option(
     "--la_code",
     required=True,
-    type=click.Choice(la_list, case_sensitive=False),
+    type=click.Choice(authorities.codes, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(

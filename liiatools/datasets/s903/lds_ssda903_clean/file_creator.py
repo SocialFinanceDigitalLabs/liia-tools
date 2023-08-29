@@ -1,8 +1,8 @@
 import functools
-import tablib
 import logging
 import os
 
+import tablib
 from sfdata_stream_parser import events
 
 log = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def coalesce_row(stream):
         elif (
             row is not None
             and isinstance(event, events.Cell)
-            and event.header in set(event.expected_columns)
+            and event.header in set(event.table_spec.keys())
         ):
             row.append(event.cell)
         else:
@@ -56,14 +56,14 @@ def create_tables(stream, la_name):
             if match_error or year_error is not None:
                 data = None
             else:
-                data = tablib.Dataset(headers=event.expected_columns + ["LA", "YEAR"])
+                data = tablib.Dataset(headers=event.table_spec.keys())
         elif isinstance(event, events.EndTable):
             yield event
             yield TableEvent.from_event(event, data=data)
             data = None
         elif data is not None and isinstance(event, RowEvent):
             try:
-                data.append(event.row + [la_name, event.year])
+                data.append(event.row)
             except (
                 AttributeError
             ):  # raised in case event.year is missing so data is not added

@@ -1,16 +1,17 @@
-from liiatools.datasets.shared_functions.common import (
-    check_postcode,
-    flip_dict,
-    check_year,
-    check_year_within_range
-)
-from liiatools.datasets.shared_functions.converters import (
-    to_short_postcode,
-    to_month_only_dob,
-    to_date,
-)
 import datetime
 import unittest
+
+from liiatools.datasets.shared_functions.common import (
+    check_postcode,
+    check_year,
+    check_year_within_range,
+    flip_dict,
+)
+from liiatools.datasets.shared_functions.converters import (
+    to_date,
+    to_month_only_dob,
+    to_short_postcode,
+)
 
 
 def test_flip_dict():
@@ -23,6 +24,7 @@ def test_check_postcode():
     assert check_postcode("") == ""
     assert check_postcode("AA9         4AA") == "AA9         4AA"
     assert check_postcode("AA94AA") == "AA94AA"
+    assert check_postcode("AA9") == ""
 
 
 def test_to_short_postcode():
@@ -65,11 +67,11 @@ def test_check_year():
 
 
 def test_check_year_within_range():
-    assert check_year_within_range(2016, 6, 6, datetime.datetime(2023,5,31)) is False
-    assert check_year_within_range(2023, 6, 6, datetime.datetime(2023,5,31)) is True
-    assert check_year_within_range(2024, 6, 6, datetime.datetime(2023,5,31)) is False
-    assert check_year_within_range(2024, 6, 6, datetime.datetime(2023,6,1)) is True
-    assert check_year_within_range(2013, 10, 2, datetime.datetime(2023,1,31)) is True
+    assert check_year_within_range(2016, 6, 6, datetime.datetime(2023, 5, 31)) is False
+    assert check_year_within_range(2023, 6, 6, datetime.datetime(2023, 5, 31)) is True
+    assert check_year_within_range(2024, 6, 6, datetime.datetime(2023, 5, 31)) is False
+    assert check_year_within_range(2024, 6, 6, datetime.datetime(2023, 6, 1)) is True
+    assert check_year_within_range(2013, 10, 2, datetime.datetime(2023, 1, 31)) is True
 
 
 class TestCheckYear(unittest.TestCase):

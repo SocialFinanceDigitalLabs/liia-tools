@@ -1,21 +1,16 @@
-import click as click
-from pathlib import Path
-import yaml
 import logging
+from pathlib import Path
+
+import click as click
 import click_log
+import yaml
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903 import s903_main_functions
-
-from liiatools.spec import common as common_asset_dir
+from liiatools.spec.common import authorities
 
 log = logging.getLogger()
 click_log.basic_config(log)
-
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
-# Get all the possible LA codes that could be used
-with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
-    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
 @click.group()
@@ -35,7 +30,7 @@ def s903():
 @click.option(
     "--la_code",
     required=True,
-    type=click.Choice(la_list, case_sensitive=False),
+    type=click.Choice(authorities.codes, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(
@@ -101,7 +96,7 @@ def la_agg(input, output):
 @click.option(
     "--la_code",
     required=True,
-    type=click.Choice(la_list, case_sensitive=False),
+    type=click.Choice(authorities.codes, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(

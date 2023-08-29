@@ -1,11 +1,11 @@
-from collections import Counter
-from datetime import datetime
 import logging
 import os
+from collections import Counter
+from datetime import datetime
 
 from sfdata_stream_parser import events
-from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 from sfdata_stream_parser.checks import type_check
+from sfdata_stream_parser.filters.generic import pass_event, streamfilter
 
 log = logging.getLogger(__name__)
 
@@ -50,9 +50,7 @@ def create_formatting_error_count(stream):
         yield event
 
 
-@streamfilter(
-    check=type_check(events.Cell), fail_function=pass_event, error_function=pass_event
-)
+@streamfilter(check=type_check(events.Cell), fail_function=pass_event)
 def blank_error_check(event):
     """
     Check all the values against the config to see if they are allowed to be blank
@@ -101,7 +99,6 @@ def create_blank_error_count(stream):
 @streamfilter(
     check=type_check(events.StartTable),
     fail_function=pass_event,
-    error_function=pass_event,
 )
 def create_file_match_error(event):
     """
@@ -127,7 +124,6 @@ def create_file_match_error(event):
 @streamfilter(
     check=type_check(events.StartTable),
     fail_function=pass_event,
-    error_function=pass_event,
 )
 def create_extra_column_error(event):
     """
@@ -137,7 +133,7 @@ def create_extra_column_error(event):
     :return: An updated list of event objects
     """
     extra_columns = [
-        item for item in event.headers if item not in event.expected_columns
+        item for item in event.headers if item not in event.table_spec.keys()
     ]
     if len(extra_columns) == 0:
         return event

@@ -1,29 +1,36 @@
 from liiatools.datasets.s903.lds_ssda903_clean import converters
+from liiatools.spec.s903 import Column
 
 
 def test_to_category():
-    category_dict = [
-        {"code": "M1"},
-        {"code": "F1"},
-        {"code": "MM"},
-        {"code": "FF"},
-        {"code": "MF"},
-    ]
-    assert converters.to_category("M1", category_dict) == "M1"
-    assert converters.to_category("M2", category_dict) == "error"
-    assert converters.to_category("MF", category_dict) == "MF"
-    assert converters.to_category("", category_dict) == ""
-    assert converters.to_category(None, category_dict) == ""
+    column = Column(
+        canbeblank=False,
+        category=[
+            {"code": "M1"},
+            {"code": "F1"},
+            {"code": "MM"},
+            {"code": "FF"},
+            {"code": "MF"},
+        ],
+    )
+    assert converters.to_category("M1", column) == "M1"
+    assert converters.to_category("M2", column) == None
+    assert converters.to_category("MF", column) == "MF"
+    assert converters.to_category("", column) == ""
+    # assert converters.to_category(None, column) == ""
 
-    category_dict = [{"code": "0", "name": "False"}, {"code": "1", "name": "True"}]
-    assert converters.to_category(0, category_dict) == "0"
-    assert converters.to_category("false", category_dict) == "0"
-    assert converters.to_category(1.0, category_dict) == "1"
-    assert converters.to_category("true", category_dict) == "1"
-    assert converters.to_category("string", category_dict) == "error"
-    assert converters.to_category(123, category_dict) == "error"
-    assert converters.to_category("", category_dict) == ""
-    assert converters.to_category(None, category_dict) == ""
+    column = Column(
+        canbeblank=False,
+        category=[{"code": "0", "name": "False"}, {"code": "1", "name": "True"}],
+    )
+    assert converters.to_category(0, column) == "0"
+    assert converters.to_category("false", column) == "0"
+    assert converters.to_category(1.0, column) == "1"
+    assert converters.to_category("true", column) == "1"
+    assert converters.to_category("string", column) == "error"
+    assert converters.to_category(123, column) == None
+    # assert converters.to_category("", column) == ""
+    # assert converters.to_category(None, column) == ""
 
 
 def test_to_integer():

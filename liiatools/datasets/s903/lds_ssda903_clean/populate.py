@@ -1,31 +1,12 @@
-import re
 import logging
+import re
 
 from sfdata_stream_parser import events
-from sfdata_stream_parser.filters.generic import streamfilter, pass_event
+from sfdata_stream_parser.filters.generic import pass_event, streamfilter
 
 from liiatools.datasets.shared_functions import common
 
 log = logging.getLogger(__name__)
-
-
-def add_year_column(stream, year):
-    """
-    Searches the filename for the year by finding any four-digit number starting with 20
-
-    :param stream: A filtered list of event objects of type StartTable
-    :return: An updated list of event objects
-    """
-    for event in stream:
-        if isinstance(event, events.StartTable):
-            yield event.from_event(event, year=year)
-        elif isinstance(event, events.EndTable):
-            yield event
-            year = None
-        elif isinstance(event, events.EndRow) and year is not None:
-            yield event.from_event(event, year=year)
-        else:
-            yield event
 
 
 @streamfilter(check=lambda x: x.get("header") in ["CHILD"], fail_function=pass_event)

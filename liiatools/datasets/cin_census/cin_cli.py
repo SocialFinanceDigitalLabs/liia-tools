@@ -1,35 +1,25 @@
 import logging
-import click_log
-import click as click
-from pathlib import Path
-import yaml
 from datetime import datetime
+from pathlib import Path
 
+import click as click
+import click_log
+import yaml
 
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
-from liiatools.datasets.cin_census.lds_cin_clean.parse import dom_parse
-from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
 
+from liiatools.datasets.cin_census.lds_cin_clean import cin_record
+from liiatools.datasets.cin_census.lds_cin_clean import configuration as clean_config
 from liiatools.datasets.cin_census.lds_cin_clean import (
+    converter,
     file_creator,
-    configuration as clean_config,
+    filters,
     logger,
     validator,
-    cin_record,
-    converter,
-    filters,
 )
-from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import (
-    flip_dict,
-    check_file_type,
-    supported_file_types,
-    check_year,
-    check_year_within_range,
-    save_year_error,
-    save_incorrect_year_error
-)
+from liiatools.datasets.cin_census.lds_cin_clean.parse import dom_parse
+from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
 
 # Dependencies for la_agg()
 from liiatools.datasets.cin_census.lds_cin_la_agg import configuration as agg_config
@@ -38,14 +28,19 @@ from liiatools.datasets.cin_census.lds_cin_la_agg import process as agg_process
 # Dependencies for pan_agg()
 from liiatools.datasets.cin_census.lds_cin_pan_agg import configuration as pan_config
 from liiatools.datasets.cin_census.lds_cin_pan_agg import process as pan_process
+from liiatools.datasets.shared_functions.common import (
+    check_file_type,
+    check_year,
+    check_year_within_range,
+    flip_dict,
+    save_incorrect_year_error,
+    save_year_error,
+    supported_file_types,
+)
+from liiatools.spec.common import authorities
 
 log = logging.getLogger()
 click_log.basic_config(log)
-
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
-# Get all the possible LA codes that could be used
-with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
-    la_list = list(yaml.full_load(las)["data_codes"].values())
 
 
 @click.group()
@@ -65,7 +60,7 @@ def cin_census():
 @click.option(
     "--la_code",
     required=True,
-    type=click.Choice(la_list, case_sensitive=False),
+    type=click.Choice(authorities.codes, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(
@@ -118,7 +113,12 @@ def cleanfile(input, la_code, la_log_dir, output):
     years_to_go_back = 6
     year_start_month = 6
     reference_date = datetime.now()
-    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
+    if (
+        check_year_within_range(
+            input_year, years_to_go_back, year_start_month, reference_date
+        )
+        is False
+    ):
         save_incorrect_year_error(input, la_log_dir)
         return
 
@@ -288,7 +288,7 @@ def la_agg(input, flat_output, analysis_output):
 @click.option(
     "--la_code",
     required=True,
-    type=click.Choice(la_list, case_sensitive=False),
+    type=click.Choice(authorities.codes, case_sensitive=False),
     help="A three letter code, specifying the local authority that deposited the file",
 )
 @click.option(

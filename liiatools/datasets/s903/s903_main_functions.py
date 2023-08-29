@@ -1,51 +1,44 @@
-from pathlib import Path
-import yaml
 import logging
-import click_log
 from datetime import datetime
+from pathlib import Path
+
+import click_log
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
-    configuration as clean_config,
+    degrade,
+    file_creator,
+    filters,
+    logger,
     parse,
     populate,
-    filters,
-    degrade,
-    logger,
-    file_creator,
-    prep,
 )
 
 # dependencies for la_agg()
-from liiatools.datasets.s903.lds_ssda903_la_agg import configuration as agg_config
 from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
 
 # dependencies for pan_agg()
-from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_config
 from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for sufficiency_output()
-from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suff_config
 from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
-
-from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
-    flip_dict,
     check_file_type,
-    supported_file_types,
     check_year,
-    save_year_error,
-    save_incorrect_year_error,
     check_year_within_range,
+    flip_dict,
+    inherit_property,
+    save_incorrect_year_error,
+    save_year_error,
+    supported_file_types,
 )
+from liiatools.spec.common import authorities
+from liiatools.spec.s903 import load_schema
 
 log = logging.getLogger()
 click_log.basic_config(log)
 
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
-# Get all the possible LA codes that could be used
-with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
-    la_list = list(yaml.full_load(las)["data_codes"].values())
+
 YEARS_TO_GO_BACK = 7
 YEAR_START_MONTH = 1
 REFERENCE_DATE = datetime.now()
@@ -63,22 +56,22 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     # Prepare file
     # List of commonly submitted unneeded files
-    drop_file_list = [
-        "Extended Review",
-        "Pupil Premium Children",
-        "Children Ceasing to be looked after for other reasons",
-        "Distance and Placement Extended",
-        "Extended Adoption",
-        "Children Ceased Care During the Year",
-        "Children Looked After on 31st March",
-        "Children Started Care During the Year",
-    ]
-    prep.delete_unrequired_files(
-        input, drop_file_list=drop_file_list, la_log_dir=la_log_dir
-    )
-    if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
-        return
-    prep.drop_empty_rows(input, input)
+    # drop_file_list = [
+    #     "Extended Review",
+    #     "Pupil Premium Children",
+    #     "Children Ceasing to be looked after for other reasons",
+    #     "Distance and Placement Extended",
+    #     "Extended Adoption",
+    #     "Children Ceased Care During the Year",
+    #     "Children Looked After on 31st March",
+    #     "Children Started Care During the Year",
+    # ]
+    # prep.delete_unrequired_files(
+    #     input, drop_file_list=drop_file_list, la_log_dir=la_log_dir
+    # )
+    # if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
+    #     return
+    # prep.drop_empty_rows(input, input)
 
     # Configuration
     try:
@@ -97,8 +90,6 @@ def cleanfile(input, la_code, la_log_dir, output):
         save_incorrect_year_error(input, la_log_dir)
         return
 
-    config = clean_config.Config(year)
-    la_name = flip_dict(config["data_codes"])[la_code]
     if (
         check_file_type(
             input,
@@ -110,22 +101,19 @@ def cleanfile(input, la_code, la_log_dir, output):
     ):
         return
 
-    # Open & Parse file
-    stream = parse.parse_csv(input=input)
-    stream = populate.add_year_column(stream, year)
+    schema = load_schema(year)
 
-    # Configure stream
-    stream = clean_config.configure_stream(stream, config)
+    # stream = populate.add_year_column(stream, year)
 
-    # Clean stream
-    stream = filters.clean(stream)
-    stream = degrade.degrade(stream)
-    stream = logger.log_errors(stream)
-    stream = populate.create_la_child_id(stream, la_code=la_code)
+    # stream = degrade.degrade(stream)
+    # stream = logger.log_errors(stream)
+    # stream = populate.create_la_child_id(stream, la_code=la_code)
 
     # Output result
-    stream = file_creator.save_stream(stream, la_name=la_name, output=output)
-    stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
+    stream = file_creator.save_stream(
+        stream, la_name=authorities.get_by_code(la_code), output=output
+    )
+    # stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
     list(stream)
 
 

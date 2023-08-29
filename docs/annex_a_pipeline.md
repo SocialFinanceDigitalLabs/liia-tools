@@ -12,9 +12,10 @@ The overall flow of the pipeline is as follows:
 3. Apply Privacy Policy - degrade data to meet data minimisation rules
 4. History 1 - Archive data
 5. History 2 - Rollup data
-6. History 3 - Remove old data
-7. Client reports
-8. Prepare shareable reports
+6. Client reports
+7. Prepare shareable reports
+8. Data Retention 1 - Clear old history data
+9. Data Retention 2 - Clear old session data
 
 
 ## Annex A - Prepfile

@@ -1,7 +1,8 @@
-import re
 import logging
-from pathlib import Path
+import re
 from datetime import datetime
+from pathlib import Path
+from typing import Iterable, Union
 
 from sfdata_stream_parser import events
 
@@ -28,10 +29,10 @@ def check_postcode(postcode):
     :param postcode: A string with a UK-style post code
     :return: a post code, or if incorrect a blank string
     """
-    if postcode:
-        match = re.search(
-            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-        )
+    match = re.search(
+        r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
+    )
+    if match:
         return match.group(0)
     return ""
 
@@ -54,7 +55,7 @@ def to_short_postcode(postcode):
     return ""
 
 
-def inherit_property(stream, prop_name):
+def inherit_property(stream, prop_name: Union[str, Iterable[str]], override=False):
     """
     Reads a property from StartTable and sets that property (if it exists) on every event between this event
     and the next EndTable event.
@@ -63,15 +64,25 @@ def inherit_property(stream, prop_name):
     :param prop_name: The property name to inherit
     :return: An updated list of event objects
     """
+    if isinstance(prop_name, str):
+        prop_name = [prop_name]
+
     prop_value = None
     for event in stream:
         if isinstance(event, events.StartTable):
-            prop_value = getattr(event, prop_name, None)
+            prop_value = {k: getattr(event, k, None) for k in prop_name}
+            prop_value = {k: v for k, v in prop_value.items() if v is not None}
         elif isinstance(event, events.EndTable):
             prop_value = None
 
-        if prop_value and not hasattr(event, prop_name):
-            event = event.from_event(event, **{prop_name: prop_value})
+        if prop_value:
+            if override:
+                event_values = prop_value
+            else:
+                event_values = {
+                    k: v for k, v in prop_value.items() if not hasattr(event, k)
+                }
+            event = event.from_event(event, **event_values)
 
         yield event
 
@@ -84,7 +95,7 @@ def save_year_error(input, la_log_dir):
     :param la_log_dir: Path to the local authority's log folder
     :return: Text file containing the error information
     """
-    
+
     filename = Path(input).resolve().stem
     start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
     with open(
@@ -94,8 +105,8 @@ def save_year_error(input, la_log_dir):
         f.write(
             f"Could not process '{filename}' because no year was found in the name of the file"
         )
-        
-        
+
+
 def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date):
     """
     Check that year is within permitted range of data retention policy
@@ -114,13 +125,13 @@ def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date
     current_month = as_at_date.month
     if current_month < new_year_start_month:
         earliest_allowed_year = current_year - num_of_years
-        latest_allowed_year = current_year 
+        latest_allowed_year = current_year
     else:
         earliest_allowed_year = current_year - num_of_years + 1  # roll forward one year
         latest_allowed_year = current_year + 1
 
     return earliest_allowed_year <= year_to_check <= latest_allowed_year
-    
+
 
 def save_incorrect_year_error(input, la_log_dir):
     """
@@ -178,10 +189,16 @@ def check_year(filename):
 
     fy_match = re.search(r"(\d{2})(.{0,3}\d{2})(.*)(\d*)", filename)
     if fy_match:
-        if len(fy_match.group(2)) == 2 and int(fy_match.group(2)) == int(fy_match.group(1)) + 1:
+        if (
+            len(fy_match.group(2)) == 2
+            and int(fy_match.group(2)) == int(fy_match.group(1)) + 1
+        ):
             year = "20" + fy_match.group(2)
             return year
-        if len(fy_match.group(2)) == 3 and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1:
+        if (
+            len(fy_match.group(2)) == 3
+            and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1
+        ):
             year = "20" + fy_match.group(2)[-2:]
             return year
         if int(fy_match.group(3)[1:3]) == int(fy_match.group(2)[-2:]) + 1:

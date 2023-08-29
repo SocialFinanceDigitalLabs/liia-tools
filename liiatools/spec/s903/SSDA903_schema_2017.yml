@@ -164,10 +164,10 @@ column_map:
        - code: "OTHER"
        canbeblank: yes
       HOME_POST:
-       string: "alphanumeric"
+       string: "postcode"
        canbeblank: yes
       PL_POST:
-       string: "alphanumeric"
+       string: "postcode"
        canbeblank: yes
       URN:
        string: "alphanumeric"
