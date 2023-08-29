@@ -1,10 +1,10 @@
 import logging
 
-from sfdata_stream_parser.filters.generic import streamfilter, pass_event
+from sfdata_stream_parser.filters.generic import pass_event, streamfilter
 
 from liiatools.datasets.shared_functions.converters import (
-    to_short_postcode,
     to_month_only_dob,
+    to_short_postcode,
 )
 
 log = logging.getLogger(__name__)

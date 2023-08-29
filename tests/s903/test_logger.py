@@ -1,11 +1,11 @@
 import tempfile as tmp
-from unittest.mock import patch
-from pathlib import Path
 from datetime import datetime
-
-from liiatools.datasets.s903.lds_ssda903_clean import logger
+from pathlib import Path
+from unittest.mock import patch
 
 from sfdata_stream_parser import events
+
+from liiatools.ssda903_pipeline.lds_ssda903_clean import logger
 
 
 def test_create_formatting_error_count():

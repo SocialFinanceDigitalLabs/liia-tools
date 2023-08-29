@@ -1,7 +1,8 @@
-from liiatools.datasets.s903.lds_ssda903_clean import degrade
+from datetime import datetime
 
 from sfdata_stream_parser import events
-from datetime import datetime
+
+from liiatools.ssda903_pipeline.lds_ssda903_clean import degrade
 
 
 def test_degrade_postcodes():

@@ -1,5 +1,5 @@
-from liiatools.datasets.s903.lds_ssda903_clean import converters
-from liiatools.datasets.s903.spec import Column
+from liiatools.ssda903_pipeline.lds_ssda903_clean import converters
+from liiatools.ssda903_pipeline.spec import Column
 
 
 def test_to_category():

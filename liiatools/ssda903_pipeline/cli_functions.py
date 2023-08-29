@@ -4,24 +4,6 @@ from pathlib import Path
 
 import click_log
 
-# dependencies for cleanfile()
-from liiatools.datasets.s903.lds_ssda903_clean import (
-    degrade,
-    file_creator,
-    filters,
-    logger,
-    parse,
-    populate,
-)
-
-# dependencies for la_agg()
-from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
-
-# dependencies for pan_agg()
-from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
-
-# dependencies for sufficiency_output()
-from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
 from liiatools.datasets.shared_functions.common import (
     check_file_type,
     check_year,
@@ -34,6 +16,17 @@ from liiatools.datasets.shared_functions.common import (
 )
 from liiatools.spec.common import authorities
 
+# dependencies for cleanfile()
+from .lds_ssda903_clean import degrade, file_creator, filters, logger, parse, populate
+
+# dependencies for la_agg()
+from .lds_ssda903_la_agg import process as agg_process
+
+# dependencies for pan_agg()
+from .lds_ssda903_pan_agg import process as pan_process
+
+# dependencies for sufficiency_output()
+from .lds_ssda903_sufficiency import process as suff_process
 from .spec import load_schema
 
 log = logging.getLogger()

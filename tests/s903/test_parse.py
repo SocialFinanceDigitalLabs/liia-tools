@@ -1,12 +1,11 @@
-from pathlib import Path
 import tempfile as tmp
-from unittest.mock import patch, mock_open
+from pathlib import Path
+from unittest.mock import mock_open, patch
+
 import tablib
-
-from liiatools.datasets.s903.lds_ssda903_clean import parse
-
 from sfdata_stream_parser import events
 
+from liiatools.ssda903_pipeline.lds_ssda903_clean import parse
 
 # @patch("builtins.open", create=True)
 # def test_parse_csv(mock_data):

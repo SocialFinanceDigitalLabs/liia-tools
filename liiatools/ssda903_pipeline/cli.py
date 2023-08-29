@@ -5,9 +5,10 @@ import click as click
 import click_log
 import yaml
 
-# dependencies for cleanfile()
-from liiatools.datasets.s903 import s903_main_functions
 from liiatools.spec.common import authorities
+
+# dependencies for cleanfile()
+from . import cli_functions
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -56,7 +57,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    output = s903_main_functions.cleanfile(input, la_code, la_log_dir, output)
+    output = cli_functions.cleanfile(input, la_code, la_log_dir, output)
     return output
 
 
@@ -82,7 +83,7 @@ def la_agg(input, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    s903_main_functions.la_agg(input, output)
+    cli_functions.la_agg(input, output)
 
 
 @s903.command()
@@ -114,7 +115,7 @@ def pan_agg(input, la_code, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    s903_main_functions.pan_agg(input, la_code, output)
+    cli_functions.pan_agg(input, la_code, output)
 
 
 @s903.command()
@@ -139,4 +140,4 @@ def sufficiency_output(input, output):
     :param output: should specify the path to the output folder
     :return: None
     """
-    s903_main_functions.sufficiency_output(input, output)
+    cli_functions.sufficiency_output(input, output)

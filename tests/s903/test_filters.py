@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sfdata_stream_parser import events
 
-from liiatools.datasets.s903.lds_ssda903_clean import filters
+from liiatools.ssda903_pipeline.lds_ssda903_clean import filters
 
 
 def test_add_table_name():

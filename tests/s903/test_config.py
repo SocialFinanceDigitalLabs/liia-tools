@@ -1,6 +1,6 @@
 import pytest
 
-from liiatools.datasets.s903.spec import SCHEMA_DIR, load_schema
+from liiatools.ssda903_pipeline.spec import SCHEMA_DIR, load_schema
 
 
 def test_load_schema():
