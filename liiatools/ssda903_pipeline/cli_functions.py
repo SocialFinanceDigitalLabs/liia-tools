@@ -13,7 +13,7 @@ from liiatools.datasets.shared_functions.common import (
     supported_file_types,
 )
 from liiatools.spec.common import authorities
-from liiatools.ssda903_pipeline.pipeline import task_enrich
+from liiatools.ssda903_pipeline.pipeline import task_degrade, task_enrich
 
 # dependencies for la_agg()
 from .lds_ssda903_la_agg import process as agg_process
@@ -23,7 +23,7 @@ from .lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for sufficiency_output()
 from .lds_ssda903_sufficiency import process as suff_process
-from .spec import load_schema
+from .spec import load_schema, pipeline_config
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -104,9 +104,17 @@ def cleanfile(input, la_code, la_log_dir, output):
     cleanfile_result = task_cleanfile(input_data, schema)
 
     for table_name, table_data in cleanfile_result.data.items():
-        table_data.to_csv(f"{output}/{table_name}.csv")
+        table_data.to_csv(f"{output}/{table_name}.csv", index=False)
 
-    enrich_result = task_enrich(cleanfile_result.data)
+    enrich_result = task_enrich(cleanfile_result.data, pipeline_config)
+
+    for table_name, table_data in enrich_result.items():
+        table_data.to_csv(f"{output}/enriched_{table_name}.csv", index=False)
+
+    degraded_result = task_degrade(enrich_result, pipeline_config)
+
+    for table_name, table_data in degraded_result.items():
+        table_data.to_csv(f"{output}/degraded_{table_name}.csv", index=False)
 
     # stream = populate.add_year_column(stream, year)
 

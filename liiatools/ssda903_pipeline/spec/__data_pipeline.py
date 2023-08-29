@@ -33,7 +33,7 @@ class TableConfig(BaseModel):
 class PipelineConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    table_list: List[TableConfig] = Field(..., alias="schema")
+    table_list: List[TableConfig]
 
     def __getitem__(self, value):
         ix = {t.id: t for t in self.table_list}
