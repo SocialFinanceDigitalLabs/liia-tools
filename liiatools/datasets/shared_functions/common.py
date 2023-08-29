@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Iterable, Union
 from warnings import warn
 
+from liiatools.datasets.shared_functions.converters import (
+    to_postcode as __check_postcode,
+)
 from liiatools.datasets.shared_functions.stream import (
     inherit_property as __inherit_property,
 )
@@ -14,36 +17,12 @@ log = logging.getLogger(__name__)
 supported_file_types = [".xml", ".csv", ".xlsx", ".xlsm"]
 
 
-def check_postcode(postcode):
-    """
-    Checks that the postcodes are in the right format
-    :param postcode: A string with a UK-style post code
-    :return: a post code, or if incorrect a blank string
-    """
-    if postcode:
-        match = re.search(
-            r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-        )
-        return match.group(0)
-    return ""
-
-
-def to_short_postcode(postcode):
-    """
-    Remove whitespace from the beginning and end of postcodes and the last two digits for anonymity
-    return blank if not in the right format
-    :param postcode: A string with a UK-style post code
-    :return: a shortened post code with the area, district, and sector. The units is removed
-    """
-    if postcode:
-        try:
-            match = re.search(
-                r"^[A-Z]{1,2}\d[A-Z\d]? *\d[A-Z]{2}$", postcode.strip(), re.IGNORECASE
-            )
-            return match.group(0)
-        except AttributeError:
-            return ""
-    return ""
+def check_postcode(*args, **kwargs):
+    warn(
+        "This function is deprecated. Use liiatools.datasets.shared_functions.converters.check_postcode instead.",
+        DeprecationWarning,
+    )
+    return __check_postcode(*args, **kwargs)
 
 
 def inherit_property(stream, prop_name: Union[str, Iterable[str]], override=False):

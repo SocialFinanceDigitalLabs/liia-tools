@@ -1,24 +1,60 @@
 import datetime
 import unittest
 
+import pytest
+
 from liiatools.datasets.shared_functions.common import (
     check_postcode,
     check_year,
     check_year_within_range,
 )
 from liiatools.datasets.shared_functions.converters import (
+    allow_blank,
     to_date,
+    to_integer,
     to_month_only_dob,
     to_short_postcode,
 )
+
+
+def test_allow_blank():
+    @allow_blank
+    def test_function(_):
+        return "CALLED"
+
+    assert test_function(None) == ""
+    assert test_function("") == ""
+    assert test_function("    \r\n   ") == ""
+
+    assert test_function("TEST") == "CALLED"
+
+    with pytest.raises(ValueError):
+        test_function(None, allow_blank=False)
+
+    with pytest.raises(ValueError):
+        test_function("", allow_blank=False)
+
+    with pytest.raises(ValueError):
+        test_function("    \r\n   ", allow_blank=False)
 
 
 def test_check_postcode():
     assert check_postcode("AA9 4AA") == "AA9 4AA"
     assert check_postcode("   AA9 4AA   ") == "AA9 4AA"
     assert check_postcode("") == ""
-    assert check_postcode("AA9         4AA") == "AA9         4AA"
-    assert check_postcode("AA94AA") == "AA94AA"
+    assert check_postcode(None) == ""
+    assert check_postcode("AA9         4AA") == "AA9 4AA"
+    assert check_postcode("AA94AA") == "AA9 4AA"
+    assert check_postcode("A A 9 4 A A") == "AA9 4AA"
+
+    with pytest.raises(ValueError):
+        check_postcode("ABCD 1234")
+
+    with pytest.raises(ValueError):
+        check_postcode(345)
+
+    with pytest.raises(ValueError):
+        check_postcode({})
 
 
 def test_to_short_postcode():
@@ -29,12 +65,17 @@ def test_to_short_postcode():
     assert to_short_postcode("AA9         4AA") == "AA9 4"
     assert to_short_postcode("AA94AA") == "AA9 4"
 
+    with pytest.raises(ValueError):
+        to_short_postcode("ABCD 1234")
+
 
 def test_to_month_only_dob():
     assert to_month_only_dob(datetime.datetime(2020, 5, 17)) == datetime.datetime(
         2020, 5, 1
     )
-    assert to_month_only_dob("Non Date Thing") == ""
+
+    with pytest.raises(ValueError):
+        to_month_only_dob("Non Date Thing")
 
 
 def test_to_date():
@@ -42,6 +83,18 @@ def test_to_date():
         to_date(datetime.datetime(2020, 3, 19)) == datetime.datetime(2020, 3, 19).date()
     )
     assert to_date("15/03/2017") == datetime.datetime(2017, 3, 15).date()
+
+
+def test_to_integer():
+    assert to_integer("3000") == 3000
+    assert to_integer(123) == 123
+    assert to_integer("") == ""
+    assert to_integer(None) == ""
+    assert to_integer("1.0") == 1
+    assert to_integer(0) == 0
+
+    with pytest.raises(ValueError):
+        to_integer("date")
 
 
 def test_check_year():

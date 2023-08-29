@@ -1,11 +1,11 @@
-from datetime import datetime, date
+from datetime import date, datetime
 
 from sfdata_stream_parser import events
 
 from liiatools.datasets.annex_a.lds_annexa_clean.cleaner import (
-    clean_integers,
     clean_cell_category,
     clean_dates,
+    clean_integers,
     clean_postcodes,
 )
 
@@ -191,7 +191,7 @@ def test_clean_postcodes():
     assert stream[3].formatting_error == "0"
     assert stream[4].value == ""
     assert stream[4].formatting_error == "0"
-    assert stream[5].value == "al1 3zv"
+    assert stream[5].value == "AL1 3ZV"
     assert stream[5].formatting_error == "0"
     assert stream[6].value == "random_value"
     assert not hasattr(stream[6], "error")

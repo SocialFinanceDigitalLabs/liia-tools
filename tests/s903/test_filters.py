@@ -160,10 +160,10 @@ def test_clean_categories():
     assert cleaned_event.cell == "0"
     assert cleaned_event.error == "0"
 
-    # event = events.Cell(cell="0.0", column_spec=category_spec)
-    # cleaned_event = list(filters.clean_categories(event))[0]
-    # assert cleaned_event.cell == "0"
-    # assert cleaned_event.error == "0"
+    event = events.Cell(cell="0.0", column_spec=category_spec)
+    cleaned_event = list(filters.clean_categories(event))[0]
+    assert cleaned_event.cell == "0"
+    assert cleaned_event.error == "0"
 
     event = events.Cell(cell=0, column_spec=category_spec)
     cleaned_event = list(filters.clean_categories(event))[0]
@@ -224,15 +224,9 @@ def test_clean_integers():
     assert cleaned_event.error == "0"
 
     event = events.Cell(cell=datetime(2017, 3, 17), column_spec=integer_spec)
-    cleaned_event = list(filters.clean_integers(event))[0]
+    cleaned_event = list(filters.clean_integers([event]))[0]
     assert cleaned_event.cell == ""
     assert cleaned_event.error == "1"
-
-    event = events.Cell(
-        cell=datetime(2017, 3, 17), config_dict={"not_numeric": "integer"}
-    )
-    cleaned_event = list(filters.clean_integers(event))[0]
-    assert cleaned_event.cell == datetime(2017, 3, 17)
 
 
 def test_clean_postcodes():

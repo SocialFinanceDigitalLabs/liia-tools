@@ -9,11 +9,14 @@ from sfdata_stream_parser.filters.generic import (
     streamfilter,
 )
 
-from liiatools.datasets.shared_functions.common import check_postcode
-from liiatools.datasets.shared_functions.converters import to_date
+from liiatools.datasets.shared_functions.converters import (
+    to_date,
+    to_integer,
+    to_postcode,
+)
 
 from ..spec import Column, DataSchema
-from .converters import check_empty_cell, to_category, to_integer
+from .converters import to_category
 
 log = logging.getLogger(__name__)
 
@@ -101,15 +104,14 @@ def clean_categories(event, preserve_value=False):
     :return: An updated list of event objects
     """
     cell_value = getattr(event, "cell", None)
-    cell_value = check_empty_cell(cell_value)
-    if cell_value != "":
+
+    try:
         cell_value = to_category(cell_value, event.column_spec)
-    if cell_value is None:
+        return event.from_event(event, cell=cell_value, error="0")
+    except ValueError:
         return event.from_event(
             event, cell=event.cell if preserve_value else "", error="1"
         )
-    else:
-        return event.from_event(event, cell=cell_value, error="0")
 
 
 @streamfilter(check=cell_type_check("integer"), fail_function=pass_event)
@@ -121,16 +123,13 @@ def clean_integers(event, preserve_value=False):
     :return: An updated list of event objects
     """
     cell_value = getattr(event, "cell", None)
-    cell_value = check_empty_cell(cell_value)
-    if cell_value != "":
+    try:
         cell_value = to_integer(cell_value)
-
-    if cell_value is None:
+        return event.from_event(event, cell=cell_value, error="0")
+    except ValueError:
         return event.from_event(
             event, cell=event.cell if preserve_value else "", error="1"
         )
-    else:
-        return event.from_event(event, cell=cell_value, error="0")
 
 
 @streamfilter(check=cell_type_check("postcode"), fail_function=pass_event)
@@ -142,20 +141,13 @@ def clean_postcodes(event, preserve_value=False):
     :return: An updated list of event objects
     """
     cell_value = getattr(event, "cell", None)
-    cell_value = check_empty_cell(cell_value)
-    if cell_value != "":
-        try:
-            cell_value = check_postcode(str(cell_value))
-        except AttributeError:
-            # This happens when the test value doesn't match the pattern
-            cell_value = None
-
-    if cell_value is None:
+    try:
+        cell_value = to_postcode(cell_value)
+        return event.from_event(event, cell=cell_value, error="0")
+    except ValueError:
         return event.from_event(
             event, cell=event.cell if preserve_value else "", error="1"
         )
-    else:
-        return event.from_event(event, cell=cell_value, error="0")
 
 
 @collectors.collector(

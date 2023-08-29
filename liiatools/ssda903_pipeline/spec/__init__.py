@@ -29,8 +29,24 @@ class Category(BaseModel):
         if self.name:
             self.__values.add(self.name.lower())
 
+        self._is_numeric = self.code.isnumeric() or (
+            self.name and self.name.isnumeric()
+        )
+
     def __contains__(self, item):
-        return item in self.__values
+        if item in self.__values:
+            return True
+
+        # If one of the categories are numeric, then we try to see if we can convert the item to a number if we didn't get any direct hits
+        if self._is_numeric:
+            try:
+                int_value = str(int(float(item)))
+                if int_value in self.__values:
+                    return True
+            except (TypeError, ValueError):
+                pass
+
+        return False
 
 
 class Column(BaseModel):

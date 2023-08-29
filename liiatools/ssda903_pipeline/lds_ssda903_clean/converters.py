@@ -1,10 +1,13 @@
 import logging
 
+from liiatools.datasets.shared_functions.converters import allow_blank
+
 from ..spec import Column
 
 log = logging.getLogger(__name__)
 
 
+@allow_blank
 def to_category(value: str, column: Column):
     """
     Matches a string to a category based on categories given in a config file
@@ -15,36 +18,8 @@ def to_category(value: str, column: Column):
     :param categories: A list of dictionaries containing different category:value pairs
     :return: Either a category value, "error" or blank string
     """
-    value = str(value).strip()
-    if value == "":
-        return ""
-    return column.match_category(value)
+    match = column.match_category(str(value).strip())
+    if match:
+        return match
 
-
-def to_integer(value):
-    """
-    Convert any strings that should be integers based on the config into integers.
-
-    :param value: Some value to convert to an integer
-    :return: Either an integer value or a blank string
-    """
-    try:
-        return int(float(value))
-    except Exception as e:
-        return None
-
-
-def check_empty_cell(value):
-    """
-    Check if a cell is empty, if it is return a blank string.
-
-    "empty" cells are either None or all whitespace
-
-    :param value: Some value to check
-    :return: Either the value or a blank string
-    """
-    if value is None:
-        return ""
-    if isinstance(value, str) and value.strip() == "":
-        return ""
-    return value
+    raise ValueError(f"Could not match {value} to a category")
