@@ -33,7 +33,8 @@ from liiatools.datasets.shared_functions.common import (
     supported_file_types,
 )
 from liiatools.spec.common import authorities
-from liiatools.spec.s903 import load_schema
+
+from .spec import load_schema
 
 log = logging.getLogger()
 click_log.basic_config(log)

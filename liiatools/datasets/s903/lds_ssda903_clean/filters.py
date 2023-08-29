@@ -4,9 +4,9 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.checks import and_check, type_check
 from sfdata_stream_parser.filters.generic import pass_event, streamfilter
 
-from ....spec.s903 import DataSchema
 from ...shared_functions.common import check_postcode
 from ...shared_functions.converters import to_date
+from ..spec import DataSchema
 from .converters import to_category, to_integer
 
 log = logging.getLogger(__name__)

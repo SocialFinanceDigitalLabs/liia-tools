@@ -1,6 +1,6 @@
 import logging
 
-from ....spec.s903 import Column
+from ..spec import Column
 
 log = logging.getLogger(__name__)
 
