@@ -736,13 +736,13 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.4)", "pytest-co
 
 [[package]]
 name = "pluggy"
-version = "1.2.0"
+version = "1.3.0"
 description = "plugin and hook calling mechanisms for python"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "pluggy-1.2.0-py3-none-any.whl", hash = "sha256:c2fd55a7d7a3863cba1a013e4e2414658b1d07b6bc57b3919e0c63c9abb99849"},
-    {file = "pluggy-1.2.0.tar.gz", hash = "sha256:d12f0c4b579b15f5e054301bb226ee85eeeba08ffec228092f8defbaa3a4c4b3"},
+    {file = "pluggy-1.3.0-py3-none-any.whl", hash = "sha256:d89c696a773f8bd377d18e5ecda92b7a3793cbe66c87060a6fb58c7b6e1061f7"},
+    {file = "pluggy-1.3.0.tar.gz", hash = "sha256:cf61ae8f126ac6f7c451172cf30e3e43d3ca77615509771b3a984a0730651e12"},
 ]
 
 [package.extras]
@@ -1254,13 +1254,13 @@ testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (
 
 [[package]]
 name = "sfdata-stream-parser"
-version = "0.4.1"
+version = "0.6.0"
 description = "Loosely inspired by the Streaming API for XML (StAX), this library provides a Python iterator interface for working with tabular documents."
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "sfdata-stream-parser-0.4.1.tar.gz", hash = "sha256:321a119279c6b4814efecef498654905b8e3ad7b9d3eca49ceaa30341137c31b"},
-    {file = "sfdata_stream_parser-0.4.1-py3-none-any.whl", hash = "sha256:807bb8392341a3906e69d6d9acb5b76c64a805721fb38b1cd2379a6d46b7f49c"},
+    {file = "sfdata_stream_parser-0.6.0-py3-none-any.whl", hash = "sha256:c628726914049bc5b263fb255faad29032c150ff45c07afe0e08aa66774b5d9a"},
+    {file = "sfdata_stream_parser-0.6.0.tar.gz", hash = "sha256:dc2fb1bb3781953d075f588edfc5237c89cee049d2c8b4510fbd42fbe324f1ad"},
 ]
 
 [package.dependencies]
@@ -1422,4 +1422,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "ed5b8b50055351f037810ca9345d23366df2ad19e7475f41901d8a660804b74a"
+content-hash = "cf5b4ab95ce92eca3eb4134c91e51c08d1218b93880cf66b738619dec8641c54"

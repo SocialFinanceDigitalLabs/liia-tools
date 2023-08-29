@@ -1,8 +1,66 @@
 from datetime import datetime
 
 from sfdata_stream_parser import events
+from sfdata_stream_parser.filters import generic
 
 from liiatools.ssda903_pipeline.lds_ssda903_clean import filters
+from liiatools.ssda903_pipeline.spec import Column
+
+
+def test_collect_row():
+    spec_int = Column(numeric="integer")
+    spec_str = Column(string="alphanumeric")
+    stream = [
+        events.StartContainer(),
+        events.StartTable(),
+        events.StartRow(),
+        events.Cell(header="CHILD", cell=123, column_spec=spec_int),
+        events.Cell(header="DOB", cell="01/01/2019", column_spec=spec_str),
+        events.EndRow(),
+        events.StartRow(),
+        events.Cell(header="CHILD", cell=123, column_spec=spec_int),
+        events.Cell(header="DOB", cell="01/01/2019", column_spec=spec_str),
+        events.Cell(header="OTHER", cell="other"),
+        events.EndRow(),
+        events.EndTable(),
+        events.EndContainer(),
+    ]
+    stream = filters.collect_cell_values_for_row(stream)
+    rows = [event for event in stream if isinstance(event, events.StartRow)]
+
+    assert rows[0].row_values == {"CHILD": 123, "DOB": "01/01/2019"}
+    assert rows[1].row_values == {"CHILD": 123, "DOB": "01/01/2019"}
+
+
+def test_collect_tables():
+    stream = [
+        events.StartContainer(),
+        events.StartTable(),
+        events.StartRow(
+            table_name="Episodes", row_values={"CHILD": 123, "DOB": "01/01/2019"}
+        ),
+        events.Cell(),
+        events.Cell(),
+        events.EndRow(),
+        events.StartRow(
+            table_name="Episodes", row_values={"CHILD": 123, "DOB": "01/01/2019"}
+        ),
+        events.Cell(),
+        events.Cell(),
+        events.EndRow(),
+        events.EndTable(),
+        events.EndContainer(),
+    ]
+
+    dataset, stream = filters.collect_tables(stream)
+    generic.consume(stream)
+
+    dataset = dataset.value
+
+    assert dataset["Episodes"] == [
+        {"CHILD": 123, "DOB": "01/01/2019"},
+        {"CHILD": 123, "DOB": "01/01/2019"},
+    ]
 
 
 def test_add_table_name():

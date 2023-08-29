@@ -71,6 +71,7 @@ def cleanfile(input, la_code, la_log_dir, output):
     try:
         filename = str(Path(input).resolve().stem)
         year = check_year(filename)
+        year = int(year)
     except (AttributeError, ValueError):
         save_year_error(input, la_log_dir)
         return
@@ -97,6 +98,18 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     schema = load_schema(year)
 
+    import tablib
+
+    from .pipeline import task_cleanfile
+
+    with open(input, "rt") as f:
+        input_data = tablib.import_set(f, "csv")
+
+    cleanfile_result = task_cleanfile(input_data, schema)
+
+    for table_name, table_data in cleanfile_result.data.items():
+        table_data.to_csv(f"{output}/{table_name}.csv")
+
     # stream = populate.add_year_column(stream, year)
 
     # stream = degrade.degrade(stream)
@@ -104,11 +117,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     # stream = populate.create_la_child_id(stream, la_code=la_code)
 
     # Output result
-    stream = file_creator.save_stream(
-        stream, la_name=authorities.get_by_code(la_code), output=output
-    )
+    # stream = file_creator.save_stream(
+    #     stream, la_name=authorities.get_by_code(la_code), output=output
+    # )
     # stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
-    list(stream)
 
 
 def la_agg(input, output):

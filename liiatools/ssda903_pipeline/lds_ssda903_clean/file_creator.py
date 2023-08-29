@@ -1,4 +1,3 @@
-import functools
 import logging
 import os
 
@@ -102,8 +101,3 @@ def save_stream(stream, la_name, output):
     stream = create_tables(stream, la_name=la_name)
     stream = save_tables(stream, output=output)
     return stream
-
-
-@functools.cache
-def lookup_column_config(table_name, column_name):
-    return None

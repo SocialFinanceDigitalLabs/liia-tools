@@ -1,16 +1,22 @@
-from typing import Union
+from dataclasses import dataclass
+from typing import Any, Dict, List, Union
 
+import pandas as pd
 import tablib
+from sfdata_stream_parser import collectors, events
+from sfdata_stream_parser.filters import generic
 
-from liiatools.datasets.s903.lds_ssda903_clean import filters
 from liiatools.datasets.shared_functions import common as common_functions
 from liiatools.datasets.shared_functions import filesystem
 from liiatools.datasets.shared_functions import stream as stream_functions
-from liiatools.spec.s903 import DataSchema
+
+from .lds_ssda903_clean import filters
+from .spec import Column, DataSchema
 
 
+@dataclass
 class CleanFileResult:
-    pass
+    data: Dict[str, pd.DataFrame]
 
 
 def task_cleanfile(
@@ -37,4 +43,15 @@ def task_cleanfile(
     stream = filters.clean_integers(stream)
     stream = filters.clean_postcodes(stream)
 
-    # TODO: Collect errors and data
+    # Create dataset
+    stream = filters.collect_cell_values_for_row(stream)
+    dataset_holder, stream = filters.collect_tables(stream)
+
+    # Consume stream so we know it's been processed
+    generic.consume(stream)
+
+    dataset = dataset_holder.value
+
+    dataset = {k: pd.DataFrame(v) for k, v in dataset.items()}
+
+    return CleanFileResult(data=dataset)

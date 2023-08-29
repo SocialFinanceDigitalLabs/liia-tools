@@ -1,13 +1,18 @@
 import logging
+from typing import Dict, List
 
-from sfdata_stream_parser import events
+from sfdata_stream_parser import collectors, events
 from sfdata_stream_parser.checks import and_check, type_check
-from sfdata_stream_parser.filters.generic import pass_event, streamfilter
+from sfdata_stream_parser.filters.generic import (
+    generator_with_value,
+    pass_event,
+    streamfilter,
+)
 
 from liiatools.datasets.shared_functions.common import check_postcode
 from liiatools.datasets.shared_functions.converters import to_date
 
-from ..spec import DataSchema
+from ..spec import Column, DataSchema
 from .converters import to_category, to_integer
 
 log = logging.getLogger(__name__)
@@ -115,3 +120,76 @@ def clean_postcodes(event):
     except (AttributeError, TypeError, ValueError):
         error = "1"
     return event.from_event(event, cell=text, error=error)
+
+
+@collectors.collector(
+    check=collectors.block_check(events.StartRow), receive_stream=True
+)
+def collect_cell_values_for_row(row):
+    """
+    Collects the cell values for each row and set these as `column_spec` on the StartRow event.
+
+    Requires:
+        * `table_spec` on Cell events to idenfity this column as part of the table
+        * `header` on Cell events with the column key
+        * `cell` on Cell events with the value
+
+    Provides:
+        * `row_values` on StartRow events with a dictionary of column values for the row
+
+    Yields:
+        * All the events
+
+    """
+    # Read the row
+    row = list(row)
+
+    # Get the start and end row events
+    start_row = row.pop(0)
+    end_row = row.pop(-1)
+
+    # Where we have identified the column, set values on the start row
+    values = {}
+    for cell in row:
+        schema: Column = getattr(cell, "column_spec", None)
+        if schema:
+            values[cell.header] = cell.cell
+
+    # Yield events
+    yield start_row.from_event(start_row, row_values=values)
+    yield from row
+    yield end_row
+
+
+@generator_with_value
+def collect_tables(stream):
+    """Collects all the tables into a dictionary of lists of rows.
+
+    This filter requires that the stream has been processed by `collect_cell_values_for_row` first, or at least
+    something that sets `table_name` and `row_values` on StartRow events prior to this filter.
+
+    Requires:
+        * `table_name` on StartRow events
+        * `row_values` on StartRow events
+
+
+    Yields:
+        * All the events
+
+    Returns:
+        * `datasets` - A dictionary of lists of rows, keyed by table name.
+
+    """
+    # A dict to hold all the tables we find in the stream
+    dataset: Dict[str, List] = {}
+
+    # Iterate over the stream and collect the tables from the StartRow events
+    for event in stream:
+        if isinstance(event, events.StartRow) and hasattr(event, "table_name"):
+            table_data = dataset.setdefault(event.table_name, [])
+            table_data.append(event.row_values)
+
+        yield event
+
+    # With the stream fully consumed, we can return the populated dataset
+    return dataset

@@ -43,7 +43,7 @@ class Column(BaseModel):
     dictionary: Dict = None
     category: List[Category] = None
 
-    canbeblank: bool
+    canbeblank: bool = True
 
     def model_post_init(self, __context: Any):
         if self.string == "alphanumeric":
