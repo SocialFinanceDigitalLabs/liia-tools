@@ -75,11 +75,9 @@ def clean_numeric(event):
             clean_text = to_numeric(value=event.text, config=numeric)
         elif numeric == "decimal":
             decimal_places = int(event.schema_dict["decimal"])
-            # min_inclusive = event.schema_dict["min_inclusive"]
-            # print(f"min_inclusive = {min_inclusive}")
-            # max_inclusive = event.schema_dict["max_inclusive"]
-            # print(f"max_inclusive = {max_inclusive}")
-            clean_text = to_numeric(value=event.text, config=numeric, decimal_places=decimal_places) #  min_inclusive=min_inclusive, max_inclusive=max_inclusive
+            min_inclusive = event.schema_dict.get("min_inclusive", None)
+            max_inclusive = event.schema_dict.get("max_inclusive", None)
+            clean_text = to_numeric(value=event.text, config=numeric, decimal_places=decimal_places, min_inclusive=min_inclusive, max_inclusive=max_inclusive)
         if clean_text != "error":
             return event.from_event(event, text=clean_text, formatting_error="0")
         return event.from_event(event, text="", formatting_error="1")

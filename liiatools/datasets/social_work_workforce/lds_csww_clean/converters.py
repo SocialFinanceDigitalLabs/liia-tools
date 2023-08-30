@@ -31,7 +31,7 @@ def to_category(string, categories):
     return "error"
 
 
-def to_numeric(value, config, decimal_places=0): # min_inclusive=None, max_inclusive=None
+def to_numeric(value, config, decimal_places=0, min_inclusive=None, max_inclusive=None):
     """
     Convert any strings that should be integer or decimal based on the config into integer or decimal
 
@@ -46,10 +46,12 @@ def to_numeric(value, config, decimal_places=0): # min_inclusive=None, max_inclu
         if value or value == 0:
             try:
                 float(value)
-                round_to_dp = round(float(value), decimal_places)
-                return round_to_dp
             except (ValueError, TypeError):
-                return "error" # value incorrectly formatted
+                return "error" # value is not a float
+            round_to_dp = round(float(value), decimal_places)
+            if (min_inclusive is None or round_to_dp >= min_inclusive) and (max_inclusive is None or round_to_dp <= max_inclusive):
+                return round_to_dp
+            return "error" # min/max error
         return "" # no value provided
     if config == "integer":
         if value or value==0:
