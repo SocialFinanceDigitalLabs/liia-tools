@@ -2,10 +2,10 @@ from pathlib import Path
 
 import yaml
 
-LA_CODE_FILE = Path(__file__).parent / "LA-codes.yml"
+LA_CODE_FILE = Path(__file__).parent / "_authorities.yml"
 
 
-class __LACodeLookup:
+class LACodeLookup:
     def __init__(self):
         with open(LA_CODE_FILE, "rt") as FILE:
             self.__mappings = yaml.safe_load(FILE)
@@ -42,6 +42,3 @@ class __LACodeLookup:
     @property
     def codes(self):
         return self.__codes.keys()
-
-
-authorities = __LACodeLookup()

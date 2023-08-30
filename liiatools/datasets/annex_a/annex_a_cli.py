@@ -6,6 +6,7 @@ import click_log
 from sfdata_stream_parser.filters.column_headers import promote_first_row
 from sfdata_stream_parser.parser import openpyxl
 
+from liiatools.common.reference import authorities
 from liiatools.datasets.annex_a.lds_annexa_clean import cleaner
 from liiatools.datasets.annex_a.lds_annexa_clean import configuration as clean_config
 from liiatools.datasets.annex_a.lds_annexa_clean import (
@@ -22,7 +23,6 @@ from liiatools.datasets.shared_functions.common import (
     check_file_type,
     supported_file_types,
 )
-from liiatools.spec.common import authorities
 
 log = logging.getLogger()
 click_log.basic_config(log)

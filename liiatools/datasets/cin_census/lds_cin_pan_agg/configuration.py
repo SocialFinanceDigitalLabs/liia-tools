@@ -1,17 +1,17 @@
-from pathlib import Path
-import logging
 import datetime
+import logging
 import os
-import yaml
+from pathlib import Path
 from string import Template
 
+import yaml
+
+from liiatools.common.reference import _authorities as common_asset_dir
 from liiatools.spec import cin_census as cin_asset_dir
-from liiatools.spec import common as common_asset_dir
 
 log = logging.getLogger(__name__)
 
 DEFAULT_CONFIG_DIR = Path(cin_asset_dir.__file__).parent
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
 class Config(dict):
@@ -21,14 +21,11 @@ class Config(dict):
         if not config_files:
             config_files = [
                 "PAN_AGG_CONFIG",
-                "LA_CODES_CONFIG",
             ]
 
         for file in config_files:
             if file == "PAN_AGG_CONFIG":
                 file = DEFAULT_CONFIG_DIR / "agg.yml"
-            elif file == "LA_CODES_CONFIG":
-                file = COMMON_CONFIG_DIR / "LA-codes.yml"
             self.load_config(file, conditional=False)
 
         self["config_date"] = datetime.datetime.now().isoformat()

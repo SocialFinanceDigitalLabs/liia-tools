@@ -2,21 +2,19 @@ import datetime
 import logging
 import os
 from pathlib import Path
-import yaml
 from string import Template
+
+import yaml
+from sfdata_stream_parser import checks, events
+from sfdata_stream_parser.filters.generic import pass_event, streamfilter
 
 from liiatools.datasets.annex_a.lds_annexa_clean.regex import parse_regex
 from liiatools.datasets.shared_functions.common import inherit_property
 from liiatools.spec import annex_a as annex_a_asset_dir
-from liiatools.spec import common as common_asset_dir
-
-from sfdata_stream_parser import events, checks
-from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 log = logging.getLogger(__name__)
 
 DEFAULT_CONFIG_DIR = Path(annex_a_asset_dir.__file__).parent
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
 def _match_column_name(actual_value, expected_value, expected_expressions=None):
@@ -202,7 +200,9 @@ def convert_column_header_to_match(event, config):
                     p = parse_regex(r)
                     if p.match(str(event.column_header)) is not None:
                         return event.from_event(event, column_header=c)
-            except AttributeError:  # Raised in case a config item empty which is acceptable
+            except (
+                AttributeError
+            ):  # Raised in case a config item empty which is acceptable
                 pass
     return event.from_event(event, column_header="Unknown")
 
@@ -227,7 +227,9 @@ def match_property_config_to_cell(event, config, prop_name):
         sheet_config = config[event.sheet_name]
         config_dict = sheet_config[event.column_header]
         return event.from_event(event, **{prop_name: config_dict})
-    except KeyError:  # Raised in case there is no property item for the given sheet name and cell header
+    except (
+        KeyError
+    ):  # Raised in case there is no property item for the given sheet name and cell header
         return event
 
 
@@ -239,7 +241,6 @@ class Config(dict):
             config_files = [
                 "DEFAULT_DATA_SOURCES",
                 "DEFAULT_DATA_MAP",
-                "DEFAULT_DATA_CODES",
             ]
 
         for file in config_files:
@@ -247,8 +248,6 @@ class Config(dict):
                 file = DEFAULT_CONFIG_DIR / "annex-a-merge.yml"
             elif file == "DEFAULT_DATA_MAP":
                 file = DEFAULT_CONFIG_DIR / "data-map.yml"
-            elif file == "DEFAULT_DATA_CODES":
-                file = COMMON_CONFIG_DIR / "LA-codes.yml"
             self.load_config(file, conditional=False)
 
         self["config_date"] = datetime.datetime.now().isoformat()

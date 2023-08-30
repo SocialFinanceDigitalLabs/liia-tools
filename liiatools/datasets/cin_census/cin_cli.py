@@ -9,6 +9,7 @@ import yaml
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
 
+from liiatools.common.reference import authorities
 from liiatools.datasets.cin_census.lds_cin_clean import cin_record
 from liiatools.datasets.cin_census.lds_cin_clean import configuration as clean_config
 from liiatools.datasets.cin_census.lds_cin_clean import (
@@ -36,7 +37,6 @@ from liiatools.datasets.shared_functions.common import (
     save_year_error,
     supported_file_types,
 )
-from liiatools.spec.common import authorities
 
 log = logging.getLogger()
 click_log.basic_config(log)

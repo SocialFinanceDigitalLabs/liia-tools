@@ -6,6 +6,7 @@ import click as click
 import click_log
 import tablib
 
+from liiatools.common.reference import authorities
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 from liiatools.datasets.shared_functions.common import (
     check_file_type,
@@ -15,7 +16,6 @@ from liiatools.datasets.shared_functions.common import (
     save_year_error,
     supported_file_types,
 )
-from liiatools.spec.common import authorities
 
 from .spec import load_pipeline_config, load_schema
 from .stream_pipeline import task_cleanfile

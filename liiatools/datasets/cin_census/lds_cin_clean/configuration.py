@@ -2,14 +2,13 @@ import datetime
 import logging
 import os
 from pathlib import Path
-import yaml
 from string import Template
 
-from liiatools.spec import common as common_asset_dir
+import yaml
+
+from liiatools.common.reference import _authorities as common_asset_dir
 
 log = logging.getLogger(__name__)
-
-COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 
 class Config(dict):
@@ -17,13 +16,9 @@ class Config(dict):
         super().__init__()
 
         if not config_files:
-            config_files = [
-                "DEFAULT_DATA_CODES",
-            ]
+            config_files = []
 
         for file in config_files:
-            if file == "DEFAULT_DATA_CODES":
-                file = COMMON_CONFIG_DIR / "LA-codes.yml"
             self.load_config(file, conditional=False)
 
         self["config_date"] = datetime.datetime.now().isoformat()

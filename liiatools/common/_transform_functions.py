@@ -1,10 +1,10 @@
 import pandas as pd
 
+from liiatools.common.reference import authorities
 from liiatools.datasets.shared_functions.converters import (
     to_nth_of_month,
     to_short_postcode,
 )
-from liiatools.spec.common import authorities
 
 from .data import ColumnConfig, Metadata
 
