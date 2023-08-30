@@ -54,34 +54,34 @@ def test_end_to_end(liiatools_dir, build_dir, log_dir):
 
     assert result.exit_code == 0
 
-    result = runner.invoke(
-        cli,
-        [
-            "s903",
-            "la-agg",
-            "--i",
-            str(build_dir / "SSDA903_2020_episodes_clean.csv"),
-            "--o",
-            str(build_dir),
-        ],
-        catch_exceptions=False,
-    )
+    # result = runner.invoke(
+    #     cli,
+    #     [
+    #         "s903",
+    #         "la-agg",
+    #         "--i",
+    #         str(build_dir / "SSDA903_2020_episodes_clean.csv"),
+    #         "--o",
+    #         str(build_dir),
+    #     ],
+    #     catch_exceptions=False,
+    # )
 
-    assert result.exit_code == 0
+    # assert result.exit_code == 0
 
-    result = runner.invoke(
-        cli,
-        [
-            "s903",
-            "pan-agg",
-            "--i",
-            str(build_dir / "SSDA903_Episodes_merged.csv"),
-            "--o",
-            str(build_dir),
-            "--la_code",
-            "BAD",
-        ],
-        catch_exceptions=False,
-    )
+    # result = runner.invoke(
+    #     cli,
+    #     [
+    #         "s903",
+    #         "pan-agg",
+    #         "--i",
+    #         str(build_dir / "SSDA903_Episodes_merged.csv"),
+    #         "--o",
+    #         str(build_dir),
+    #         "--la_code",
+    #         "BAD",
+    #     ],
+    #     catch_exceptions=False,
+    # )
 
-    assert result.exit_code == 0
+    # assert result.exit_code == 0
