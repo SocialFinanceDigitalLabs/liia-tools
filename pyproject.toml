@@ -31,6 +31,8 @@ python-decouple = "^3.8"
 faust-cchardet = "^2.1.19"
 pydantic = "^2.3.0"
 pydantic-yaml = "^1.1.1"
+pyarrow = "^13.0.0"
+fs = "^2.4.16"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0.1"

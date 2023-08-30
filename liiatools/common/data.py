@@ -30,6 +30,12 @@ class TableConfig(BaseModel):
         ix = {t.id: t for t in self.columns}
         return ix[value]
 
+    @property
+    def sort_keys(self):
+        sort_keys = [(c.id, c.sort) for c in self.columns if c.sort]
+        sort_keys.sort(key=lambda x: x[1])
+        return [c[0] for c in sort_keys]
+
     def columns_for_profile(self, profile: str):
         return [c for c in self.columns if profile not in c.exclude]
 
