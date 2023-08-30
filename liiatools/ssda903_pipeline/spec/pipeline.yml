@@ -24,7 +24,7 @@ table_list:
     type: category
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -68,7 +68,7 @@ table_list:
     type: string
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -105,7 +105,7 @@ table_list:
     - SUFFICIENCY
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     unique_key: true
@@ -133,7 +133,7 @@ table_list:
     type: date
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -192,7 +192,7 @@ table_list:
   - id: LA
     type: string
     unique_key: true
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     unique_key: true
@@ -222,7 +222,7 @@ table_list:
   - id: LA
     type: string
     unique_key: true
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     unique_key: true
@@ -246,7 +246,7 @@ table_list:
     type: category
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -271,7 +271,7 @@ table_list:
     unique_key: true
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -294,7 +294,7 @@ table_list:
     type: category
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -318,7 +318,7 @@ table_list:
     sort: 0
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
@@ -341,7 +341,7 @@ table_list:
     type: category
   - id: LA
     type: string
-    enrich: la_code
+    enrich: la_name
   - id: YEAR
     type: integer
     enrich: year
