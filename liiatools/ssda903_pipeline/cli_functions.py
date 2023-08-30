@@ -4,6 +4,7 @@ from pathlib import Path
 
 import click_log
 
+from liiatools.common.transform import degrade_data, enrich_data
 from liiatools.datasets.shared_functions.common import (
     check_file_type,
     check_year,
@@ -13,7 +14,6 @@ from liiatools.datasets.shared_functions.common import (
     supported_file_types,
 )
 from liiatools.spec.common import authorities
-from liiatools.ssda903_pipeline.pipeline import task_degrade, task_enrich
 
 # dependencies for la_agg()
 from .lds_ssda903_la_agg import process as agg_process
@@ -23,7 +23,7 @@ from .lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for sufficiency_output()
 from .lds_ssda903_sufficiency import process as suff_process
-from .spec import load_schema, pipeline_config
+from .spec import load_pipeline_config, load_schema
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -93,10 +93,11 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     schema = load_schema(year)
+    metadata = dict(year=year, schema=schema, la_code=la_code)
 
     import tablib
 
-    from .pipeline import task_cleanfile
+    from .stream_pipeline import task_cleanfile
 
     with open(input, "rt") as f:
         input_data = tablib.import_set(f, "csv")
@@ -106,12 +107,14 @@ def cleanfile(input, la_code, la_log_dir, output):
     for table_name, table_data in cleanfile_result.data.items():
         table_data.to_csv(f"{output}/{table_name}.csv", index=False)
 
-    enrich_result = task_enrich(cleanfile_result.data, pipeline_config)
+    pipeline_config = load_pipeline_config()
+
+    enrich_result = enrich_data(cleanfile_result.data, pipeline_config, metadata)
 
     for table_name, table_data in enrich_result.items():
         table_data.to_csv(f"{output}/enriched_{table_name}.csv", index=False)
 
-    degraded_result = task_degrade(enrich_result, pipeline_config)
+    degraded_result = degrade_data(enrich_result, pipeline_config, metadata)
 
     for table_name, table_data in degraded_result.items():
         table_data.to_csv(f"{output}/degraded_{table_name}.csv", index=False)

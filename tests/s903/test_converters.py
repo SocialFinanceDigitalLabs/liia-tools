@@ -1,6 +1,6 @@
 import pytest
 
-from liiatools.ssda903_pipeline.lds_ssda903_clean import converters
+from liiatools.ssda903_pipeline import converters
 from liiatools.ssda903_pipeline.spec import Column
 
 

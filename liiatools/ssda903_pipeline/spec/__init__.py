@@ -6,12 +6,8 @@ from pathlib import Path
 import yaml
 from pydantic_yaml import parse_yaml_file_as
 
-from .__data_pipeline import (
-    ColumnConfig,
-    PipelineConfig,
-    TableConfig,
-    build_data_from_old_config,
-)
+from liiatools.common.data import PipelineConfig
+
 from .__data_schema import Category, Column, DataSchema
 
 __ALL__ = ["load_schema", "DataSchema", "Category", "Column"]
@@ -20,8 +16,11 @@ logger = logging.getLogger(__name__)
 
 SCHEMA_DIR = Path(__file__).parent
 
-with open(SCHEMA_DIR / "pipeline.yml", "rt") as FILE:
-    pipeline_config = parse_yaml_file_as(PipelineConfig, FILE)
+
+@lru_cache
+def load_pipeline_config():
+    with open(SCHEMA_DIR / "pipeline.yml", "rt") as FILE:
+        return parse_yaml_file_as(PipelineConfig, FILE)
 
 
 @lru_cache

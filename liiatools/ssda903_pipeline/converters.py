@@ -2,7 +2,7 @@ import logging
 
 from liiatools.datasets.shared_functions.converters import allow_blank
 
-from ..spec import Column
+from .spec import Column
 
 log = logging.getLogger(__name__)
 

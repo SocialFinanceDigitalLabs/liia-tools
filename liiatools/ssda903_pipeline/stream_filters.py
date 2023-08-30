@@ -15,8 +15,8 @@ from liiatools.datasets.shared_functions.converters import (
     to_postcode,
 )
 
-from ..spec import Column, DataSchema
 from .converters import to_category
+from .spec import Column, DataSchema
 
 log = logging.getLogger(__name__)
 
