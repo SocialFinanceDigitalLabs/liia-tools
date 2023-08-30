@@ -3,8 +3,9 @@ from datetime import datetime
 from pathlib import Path
 
 import click_log
+import tablib
 
-from liiatools.common.transform import degrade_data, enrich_data
+from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 from liiatools.datasets.shared_functions.common import (
     check_file_type,
     check_year,
@@ -24,6 +25,7 @@ from .lds_ssda903_pan_agg import process as pan_process
 # dependencies for sufficiency_output()
 from .lds_ssda903_sufficiency import process as suff_process
 from .spec import load_pipeline_config, load_schema
+from .stream_pipeline import task_cleanfile
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -95,10 +97,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     schema = load_schema(year)
     metadata = dict(year=year, schema=schema, la_code=la_code)
 
-    import tablib
-
-    from .stream_pipeline import task_cleanfile
-
     with open(input, "rt") as f:
         input_data = tablib.import_set(f, "csv")
 
@@ -106,6 +104,8 @@ def cleanfile(input, la_code, la_log_dir, output):
 
     for table_name, table_data in cleanfile_result.data.items():
         table_data.to_csv(f"{output}/{table_name}.csv", index=False)
+
+    # TODO: Write data quality report
 
     pipeline_config = load_pipeline_config()
 
@@ -119,17 +119,10 @@ def cleanfile(input, la_code, la_log_dir, output):
     for table_name, table_data in degraded_result.items():
         table_data.to_csv(f"{output}/degraded_{table_name}.csv", index=False)
 
-    # stream = populate.add_year_column(stream, year)
-
-    # stream = degrade.degrade(stream)
-    # stream = logger.log_errors(stream)
-    # stream = populate.create_la_child_id(stream, la_code=la_code)
-
-    # Output result
-    # stream = file_creator.save_stream(
-    #     stream, la_name=authorities.get_by_code(la_code), output=output
-    # )
-    # stream = logger.save_errors_la(stream, la_log_dir=la_log_dir)
+    for report in ["PAN", "SUFFICIENCY"]:
+        report_data = prepare_export(degraded_result, pipeline_config, profile=report)
+        for table_name, table_data in report_data.items():
+            table_data.to_csv(f"{output}/report_{report}_{table_name}.csv", index=False)
 
 
 def la_agg(input, output):

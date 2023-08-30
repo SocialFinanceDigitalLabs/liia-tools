@@ -76,3 +76,36 @@ def degrade_data(
         metadata = {}
 
     return data_transforms(data, config, metadata, "degrade", degrade_functions)
+
+
+def prepare_export(
+    data: DataContainer, config: PipelineConfig, profile: str = None
+) -> DataContainer:
+    """Prepare data for export by removing columns that are not required for the given profile"""
+    data_container = {}
+
+    table_list = config.tables_for_profile(profile) if profile else config.table_list
+
+    # Loop over known tables
+    for table_config in table_list:
+        table_name = table_config.id
+        table_columns = (
+            table_config.columns_for_profile(profile)
+            if profile
+            else table_config.columns
+        )
+        table_columns = [column.id for column in table_columns]
+
+        # Only export if the table is in the data
+        if table_name in data:
+            table = data[table_name].copy()
+
+            # Create any missing columns
+            for column_name in table_columns:
+                if column_name not in table.columns:
+                    table[column_name] = None
+
+            # Return the subset
+            data_container[table_name] = table[table_columns].copy()
+
+    return data_container
