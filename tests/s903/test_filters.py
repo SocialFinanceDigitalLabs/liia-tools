@@ -116,38 +116,54 @@ def test_match_config_to_cell():
     assert match_cell(table_name=None, header="CHILD") is None
 
 
+def assert_errors(event, *types):
+    errors = getattr(event, "errors", [])
+    error_types = [error["type"] for error in errors]
+    if types:
+        assert error_types == list(types)
+    else:
+        assert not errors
+
+
 def test_clean_dates():
     date_spec = Column(date="%d/%m/%Y")
 
     event = events.Cell(cell=datetime(2019, 1, 15), column_spec=date_spec)
-    cleaned_event = list(stream_filters.clean_dates(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == datetime(2019, 1, 15).date()
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="15/1/2019", column_spec=date_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == datetime(2019, 1, 15).date()
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="2019/1/15", column_spec=date_spec)
-    cleaned_event = list(stream_filters.clean_dates(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
     event = events.Cell(
         cell=datetime(2019, 1, 15), config_dict={"not_date": "%d/%m/%Y"}
     )
-    cleaned_event = list(stream_filters.clean_dates(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == datetime(2019, 1, 15)
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="string", config_dict={"not_date": "%d/%m/%Y"})
-    cleaned_event = list(stream_filters.clean_dates(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "string"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell=None, column_spec=date_spec)
-    cleaned_event = list(stream_filters.clean_dates(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="", column_spec=date_spec)
-    cleaned_event = list(stream_filters.clean_dates(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
 
 def test_clean_categories():
@@ -156,107 +172,107 @@ def test_clean_categories():
     )
 
     event = events.Cell(cell="0", column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "0"
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="0.0", column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "0"
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell=0, column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "0"
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="true", column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "1"
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell=123, column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
     event = events.Cell(cell="string", column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
     event = events.Cell(cell=None, column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="", column_spec=category_spec)
-    cleaned_event = list(stream_filters.clean_categories(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
 
 def test_clean_integers():
     integer_spec = Column(numeric="integer")
     event = events.Cell(cell=123, column_spec=integer_spec)
-    cleaned_event = list(stream_filters.clean_integers(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == 123
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="123", column_spec=integer_spec)
-    cleaned_event = list(stream_filters.clean_integers(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == 123
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="string", column_spec=integer_spec)
-    cleaned_event = list(stream_filters.clean_integers(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
     event = events.Cell(cell="", column_spec=integer_spec)
-    cleaned_event = list(stream_filters.clean_integers(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell=None, column_spec=integer_spec)
-    cleaned_event = list(stream_filters.clean_integers(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell=datetime(2017, 3, 17), column_spec=integer_spec)
-    cleaned_event = list(stream_filters.clean_integers([event]))[0]
+    cleaned_event = list(stream_filters.conform_cell_types([event]))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
 
-def test_clean_postcodes():
+def test_conform_cell_types():
     pc_spec = Column(string="postcode")
     event = events.Cell(cell="G62 7PS", column_spec=pc_spec)
-    cleaned_event = list(stream_filters.clean_postcodes(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "G62 7PS"
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="CW3 9PU", column_spec=pc_spec)
-    cleaned_event = list(stream_filters.clean_postcodes(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == "CW3 9PU"
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell="string", column_spec=pc_spec)
-    cleaned_event = list(stream_filters.clean_postcodes(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
     event = events.Cell(cell=123, column_spec=pc_spec)
-    cleaned_event = list(stream_filters.clean_postcodes(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "1"
+    assert_errors(cleaned_event, "ConversionError")
 
     event = events.Cell(cell="", column_spec=pc_spec)
-    cleaned_event = list(stream_filters.clean_postcodes(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)
 
     event = events.Cell(cell=None, column_spec=pc_spec)
-    cleaned_event = list(stream_filters.clean_postcodes(event))[0]
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
-    assert cleaned_event.error == "0"
+    assert_errors(cleaned_event)

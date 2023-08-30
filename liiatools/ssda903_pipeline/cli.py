@@ -4,6 +4,7 @@ from pathlib import Path
 
 import click as click
 import click_log
+import pandas as pd
 import tablib
 
 from liiatools.common.reference import authorities
@@ -132,6 +133,12 @@ def cleanfile(input, la_code, la_log_dir, output):
         table_data.to_csv(f"{output}/{table_name}.csv", index=False)
 
     # TODO: Write data quality report
+    error_report = pd.DataFrame(cleanfile_result.errors)
+    error_report = error_report[
+        ["table_name", "header", "r_ix", "c_ix", "type", "message"]
+    ]
+    error_report.columns = ["Table", "Header", "Row", "Column", "Type", "Message"]
+    error_report.to_csv(f"{output}/error_report.csv", index=False)
 
     pipeline_config = load_pipeline_config()
 

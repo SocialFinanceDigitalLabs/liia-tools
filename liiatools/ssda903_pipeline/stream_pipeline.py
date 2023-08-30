@@ -17,6 +17,7 @@ from .spec import DataSchema
 @dataclass
 class CleanFileResult:
     data: DataContainer
+    errors: List[Dict[str, Any]]
 
 
 def task_cleanfile(
@@ -38,14 +39,13 @@ def task_cleanfile(
     stream = stream_filters.match_config_to_cell(stream, schema=schema)
 
     # Clean stream
-    stream = stream_filters.clean_dates(stream)
-    stream = stream_filters.clean_categories(stream)
-    stream = stream_filters.clean_integers(stream)
-    stream = stream_filters.clean_postcodes(stream)
+    stream = stream_filters.log_blanks(stream)
+    stream = stream_filters.conform_cell_types(stream)
 
     # Create dataset
     stream = stream_filters.collect_cell_values_for_row(stream)
     dataset_holder, stream = stream_filters.collect_tables(stream)
+    errror_holder, stream = stream_filters.collect_errors(stream)
 
     # Consume stream so we know it's been processed
     generic.consume(stream)
@@ -54,4 +54,4 @@ def task_cleanfile(
 
     dataset = {k: pd.DataFrame(v) for k, v in dataset.items()}
 
-    return CleanFileResult(data=dataset)
+    return CleanFileResult(data=dataset, errors=errror_holder.value)
