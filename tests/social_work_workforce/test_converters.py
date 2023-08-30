@@ -37,6 +37,11 @@ def test_to_numeric():
     assert converters.to_numeric("date", "") == "date"
     assert converters.to_numeric("", "decimal", decimal_places) == ""
     assert converters.to_numeric(None, "decimal", decimal_places) == ""
+    assert converters.to_numeric("0.3", "decimal", decimal_places, min_inclusive=0, max_inclusive=1) == 0.3
+    assert converters.to_numeric("0.3", "decimal", decimal_places, min_inclusive=0) == 0.3
+    assert converters.to_numeric("0.3", "decimal", decimal_places, max_inclusive=1) == 0.3
+    assert converters.to_numeric("1.99", "decimal", decimal_places, min_inclusive=0, max_inclusive=1) == "error"
+    assert converters.to_numeric("0.3", "decimal", decimal_places, min_inclusive=1, max_inclusive=99) == "error"
     assert converters.to_numeric("3000", "integer") == 3000
     assert converters.to_numeric(123, "integer") == 123
     assert converters.to_numeric("1.0", "integer") == 1
