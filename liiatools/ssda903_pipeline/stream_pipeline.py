@@ -2,13 +2,11 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
 import pandas as pd
-import tablib
 from sfdata_stream_parser.filters import generic
 
-from liiatools.common.data import DataContainer
+from liiatools.common import stream_filters as stream_functions
+from liiatools.common.data import DataContainer, FileLocator
 from liiatools.datasets.shared_functions import common as common_functions
-from liiatools.datasets.shared_functions import filesystem
-from liiatools.datasets.shared_functions import stream as stream_functions
 
 from . import stream_filters
 from .spec import DataSchema
@@ -20,18 +18,9 @@ class CleanFileResult:
     errors: List[Dict[str, Any]]
 
 
-def task_cleanfile(
-    src_file: Union[tablib.Dataset, str], schema: DataSchema
-) -> CleanFileResult:
-    # TODO: We can improve this to make it easier - but let's see how the other datasets come along first
-    if isinstance(src_file, tablib.Dataset):
-        dataset = src_file
-    else:
-        with filesystem.open_file(src_file) as f:
-            dataset = tablib.import_set(f, format="csv")
-
+def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> CleanFileResult:
     # Open & Parse file
-    stream = stream_functions.tablib_to_stream(dataset)
+    stream = stream_functions.tablib_parse(src_file)
 
     # Configure stream
     stream = stream_filters.add_table_name(stream, schema=schema)

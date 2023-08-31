@@ -258,7 +258,13 @@ def collect_errors(stream):
             for error_entry in errors:
                 error_entry = error_entry.copy()
                 _populate_error_entry(
-                    event, error_entry, "r_ix", "c_ix", "table_name", "header"
+                    event,
+                    error_entry,
+                    "filename",
+                    "r_ix",
+                    "c_ix",
+                    "table_name",
+                    "header",
                 )
                 collected_errors.append(error_entry)
 

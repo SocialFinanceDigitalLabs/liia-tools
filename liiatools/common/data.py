@@ -1,10 +1,95 @@
+from contextlib import contextmanager
 from typing import Any, Dict, List
 
 import pandas as pd
-from pydantic import BaseModel, ConfigDict, Field
+from fs.base import FS
+from pydantic import BaseModel, ConfigDict
+from tablib import Databook, Dataset, import_set
+from tablib.formats import registry as tablib_registry
 
 DataContainer = Dict[str, pd.DataFrame]
 Metadata = Dict[str, Any]
+
+
+class FileLocator:
+    def __init__(self, fs: FS, path: str, metadata: Metadata = None):
+        self.__fs = fs
+        self.__path = path
+
+        self.__metadata = metadata or {}
+
+    @property
+    def path(self) -> str:
+        return self.__path
+
+    @property
+    def meta(self) -> Metadata:
+        return self.__metadata
+
+    def open(self, mode: str = "r"):
+        return self.__fs.open(self.__path, mode)
+
+
+class DataContainer(Dict[str, pd.DataFrame]):
+    """
+    DataContainer is a dictionary of DataFrames, with some helper methods to convert to tablib objects and export to filesystems.
+
+    The object can be passed around between pipeline jobs.
+    """
+
+    def to_dataset(self, key: str) -> Dataset:
+        dataset = import_set(self[key], "df")
+        dataset.title = key
+        return dataset
+
+    def to_databook(self) -> Databook:
+        return Databook([self.to_dataset(k) for k in self.keys()])
+
+    def export(self, fs: FS, basename: str, format="csv"):
+        """
+        Export the data to a filesystem. Supports any format supported by tablib, plus parquet.
+
+        If the format supports multiple sheets (e.g. xlsx), then each table will be exported to a separate sheet in the same file,
+        otherwise each table will be exported to a separate file.
+        """
+        if format == "parquet":
+            return self._export_parquet(fs, basename)
+
+        fmt = tablib_registry.get_format(format)
+        fmt_ext = fmt.extensions[0]
+
+        if hasattr(fmt, "export_book"):
+            book = self.to_databook()
+            data = book.export(format)
+            self._write(fs, f"{basename}.{fmt_ext}", data)
+        else:
+            for table_name in self:
+                dataset = self.to_dataset(table_name)
+                data = dataset.export(format)
+                self._write(fs, f"{basename}{table_name}.{fmt_ext}", data)
+
+    def _export_parquet(self, fs: FS, basename: str):
+        for table_name in self:
+            df = self[table_name]
+            with fs.open(f"{basename}{table_name}.parquet", "wb") as f:
+                df.to_parquet(f, index=False)
+
+    def _write(self, fs: FS, path: str, data: Any):
+        format = "wt" if isinstance(data, str) else "wb"
+        with fs.open(path, format) as f:
+            f.write(data)
+
+
+class ErrorContainer(List[Dict[str, Any]]):
+    """
+    Used for holding data quality errors during processing. Can be used to filter the list of errors by a property so can limit to specific context, e.g. for a particular file.
+    """
+
+    def filter(self, prop: str, value: Any) -> "ErrorContainer":
+        return ErrorContainer([e for e in self if e.get(prop) == value])
+
+    def with_prop(self, prop: str) -> "ErrorContainer":
+        return ErrorContainer([e for e in self if prop in e])
 
 
 class ColumnConfig(BaseModel):

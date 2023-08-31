@@ -1,6 +1,12 @@
 from sfdata_stream_parser.events import ParseEvent
 
 
+class StreamError(Exception):
+    """Exception used to flag a stream exception"""
+
+    pass
+
+
 class EventErrors:
     """A very basic 'error' container based on a list of dicts
 

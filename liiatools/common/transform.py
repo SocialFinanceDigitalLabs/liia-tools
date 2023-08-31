@@ -81,7 +81,19 @@ def degrade_data(
 def prepare_export(
     data: DataContainer, config: PipelineConfig, profile: str = None
 ) -> DataContainer:
-    """Prepare data for export by removing columns that are not required for the given profile"""
+    """
+    Prepare data for export by removing columns that are not required for the given profile
+    or for all configured tables if no profile is given.
+
+    The DataContainer will only hold tables and columns that are configured in the config,
+    and only tables that also exist in the data. If a configured column is missing from a table,
+    it will be created. The columns will also be in the order specified in the config.
+
+    :param data: The data to prepare for export
+    :param config: The pipeline config
+    :param profile: The profile to export for (optional)
+    :return: The prepared data
+    """
     data_container = {}
 
     table_list = config.tables_for_profile(profile) if profile else config.table_list

@@ -6,7 +6,9 @@ import click as click
 import click_log
 import pandas as pd
 import tablib
+from fs import open_fs
 
+from liiatools.common import pipeline as pl
 from liiatools.common.reference import authorities
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 from liiatools.datasets.shared_functions.common import (
@@ -37,117 +39,73 @@ def s903():
 
 @s903.command()
 @click.option(
-    "--i",
-    "input",
-    required=True,
-    type=str,
-    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
-)
-@click.option(
-    "--la_code",
+    "--la-code",
+    "-c",
     required=True,
     type=click.Choice(authorities.codes, case_sensitive=False),
-    help="A three letter code, specifying the local authority that deposited the file",
+    help="Local authority code",
 )
 @click.option(
-    "--la_log_dir",
+    "--output",
+    "-o",
     required=True,
-    type=str,
-    help="A string specifying the location that the log files for the LA should be output, usable by a pathlib Path function.",
+    type=click.Path(file_okay=False, writable=True),
+    help="Output folder",
 )
 @click.option(
-    "--o",
-    "output",
-    required=True,
-    type=str,
-    help="A string specifying the output directory location",
+    "--input",
+    "-i",
+    type=click.Path(exists=True, file_okay=False, readable=True),
 )
 @click_log.simple_verbosity_option(log)
-def cleanfile(input, la_code, la_log_dir, output):
-    """
-    Cleans input SSDA903 csv files according to config and outputs cleaned csv files.
-    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
-    :param la_code: should be a three-letter string for the local authority depositing the file
-    :param la_log_dir: should specify the path to the local authority's log folder
-    :param output: should specify the path to the output folder
-    :return: None
-    """
-
-    # Prepare file
-    # List of commonly submitted unneeded files
-    # drop_file_list = [
-    #     "Extended Review",
-    #     "Pupil Premium Children",
-    #     "Children Ceasing to be looked after for other reasons",
-    #     "Distance and Placement Extended",
-    #     "Extended Adoption",
-    #     "Children Ceased Care During the Year",
-    #     "Children Looked After on 31st March",
-    #     "Children Started Care During the Year",
-    # ]
-    # prep.delete_unrequired_files(
-    #     input, drop_file_list=drop_file_list, la_log_dir=la_log_dir
-    # )
-    # if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
-    #     return
-    # prep.drop_empty_rows(input, input)
-
-    # Configuration
-    try:
-        filename = str(Path(input).resolve().stem)
-        year = check_year(filename)
-        year = int(year)
-    except (AttributeError, ValueError):
-        save_year_error(input, la_log_dir)
-        return
-
-    if (
-        check_year_within_range(
-            year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
-        )
-        is False
-    ):
-        save_incorrect_year_error(input, la_log_dir)
-        return
-
-    if (
-        check_file_type(
-            input,
-            file_types=[".csv"],
-            supported_file_types=supported_file_types,
-            la_log_dir=la_log_dir,
-        )
-        == "incorrect file type"
-    ):
-        return
-
-    schema = load_schema(year)
-    metadata = dict(year=year, schema=schema, la_code=la_code)
-
-    with open(input, "rt") as f:
-        input_data = tablib.import_set(f, "csv")
-
-    cleanfile_result = task_cleanfile(input_data, schema)
-
-    for table_name, table_data in cleanfile_result.data.items():
-        table_data.to_csv(f"{output}/{table_name}.csv", index=False)
-
-    # TODO: Write data quality report
-    error_report = pd.DataFrame(cleanfile_result.errors)
-    error_report = error_report[
-        ["table_name", "header", "r_ix", "c_ix", "type", "message"]
-    ]
-    error_report.columns = ["Table", "Header", "Row", "Column", "Type", "Message"]
-    error_report.to_csv(f"{output}/error_report.csv", index=False)
+def pipeline(input, la_code, output):
+    """Runs the full pipeline on a file or folder"""
 
     pipeline_config = load_pipeline_config()
 
-    enrich_result = enrich_data(cleanfile_result.data, pipeline_config, metadata)
+    # Source FS is the filesystem containing the input files
+    source_fs = open_fs(input)
 
-    for table_name, table_data in enrich_result.items():
-        table_data.to_csv(f"{output}/enriched_{table_name}.csv", index=False)
+    # Get the output filesystem
+    output_fs = open_fs(output)
 
-    degraded_result = degrade_data(enrich_result, pipeline_config, metadata)
+    # Create session folder and move all files into it
+    session_folder, locator_list = pl.create_session_folder(source_fs, output_fs)
+
+    cleaned_folder = session_folder.makedirs("cleaned")
+
+    for file_locator in locator_list:
+        year = pl.discover_year(file_locator)
+
+        if year is None:
+            # Write an error report entry
+            pass
+        else:
+            schema = load_schema(year)
+            metadata = dict(year=year, schema=schema, la_code=la_code)
+
+            cleanfile_result = task_cleanfile(file_locator, schema)
+
+            cleanfile_result.data.export(
+                cleaned_folder, file_locator.meta["uuid"], "parquet"
+            )
+
+            # # TODO: Write data quality report
+            # error_report = pd.DataFrame(cleanfile_result.errors)
+            # error_report = error_report[
+            #     ["table_name", "header", "r_ix", "c_ix", "type", "message"]
+            # ]
+            # error_report.columns = ["Table", "Header", "Row", "Column", "Type", "Message"]
+            # error_report.to_csv(f"{output}/error_report.csv", index=False)
+
+            enrich_result = enrich_data(
+                cleanfile_result.data, pipeline_config, metadata
+            )
+
+            for table_name, table_data in enrich_result.items():
+                table_data.to_csv(f"{output}/enriched_{table_name}.csv", index=False)
+
+            degraded_result = degrade_data(enrich_result, pipeline_config, metadata)
 
     # TODO: Create historic archive here
 

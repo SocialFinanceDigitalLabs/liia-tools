@@ -5,11 +5,9 @@ from pathlib import Path
 from typing import Iterable, Union
 from warnings import warn
 
+from liiatools.common.stream_filters import inherit_property as __inherit_property
 from liiatools.datasets.shared_functions.converters import (
     to_postcode as __check_postcode,
-)
-from liiatools.datasets.shared_functions.stream import (
-    inherit_property as __inherit_property,
 )
 
 log = logging.getLogger(__name__)
@@ -113,6 +111,7 @@ def check_year(filename):
 
     :param filename: Filename that probably contains a year
     :return: Year within the string
+    :raises ValueError: If no year is found
     """
     match = re.search(r"(20)(\d{2})(.{0,3}\d{2})*", filename)
     if match:
@@ -153,11 +152,8 @@ def check_year(filename):
         if int(fy_match.group(2)[-2:]) == int(fy_match.group(2)[-4:-2]) + 1:
             year = "20" + fy_match.group(2)[-2:]
             return year
-        else:
-            raise AttributeError
 
-    else:
-        raise AttributeError
+    raise ValueError
 
 
 def check_file_type(input, file_types, supported_file_types, la_log_dir):
