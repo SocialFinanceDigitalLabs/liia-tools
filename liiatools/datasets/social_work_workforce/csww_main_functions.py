@@ -2,13 +2,11 @@ from pathlib import Path
 from datetime import datetime
 import yaml
 
-from liiatools.datasets.social_work_workforce.sample_data import (
-    generate_sample_csww_file,
-)
-from liiatools.csdatatools.util.stream import consume
+from liiatools.datasets.social_work_workforce.lds_csww_data_generator.sample_data import generate_sample_csww_file
+from liiatools.datasets.social_work_workforce.lds_csww_data_generator.stream import consume
 
 # Dependencies for cleanfile()
-from liiatools.datasets.social_work_workforce.lds_csww_clean.xml import (
+from liiatools.datasets.social_work_workforce.lds_csww_clean.parse import (
     etree,
     to_xml,
     dom_parse,
