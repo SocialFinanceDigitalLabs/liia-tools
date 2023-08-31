@@ -73,7 +73,7 @@ def find_year_of_return(
         else:
             quarter = "Q4" if quarter == "Q0" else quarter
             year = year + 1 if quarter == "Q1" or quarter == "Q2" else year
-            if year in range(reference_year - retention_period, 2022):
+            if year in range(reference_year - retention_period, 2023):
                 _save_year_error(input, la_log_dir, DataType.OLD_DATA, year=year)
                 return None, None
             else:
