@@ -111,9 +111,6 @@ def pipeline(input, la_code, output):
                 enriched_folder, file_locator.meta["uuid"] + "_", "parquet"
             )
 
-            for table_name, table_data in enrich_result.items():
-                table_data.to_csv(f"{output}/enriched_{table_name}.csv", index=False)
-
             degraded_result = degrade_data(enrich_result, pipeline_config, metadata)
             degraded_result.export(
                 degraded_folder, file_locator.meta["uuid"] + "_", "parquet"
