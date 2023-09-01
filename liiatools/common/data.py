@@ -32,7 +32,7 @@ class FileLocator:
         return self.__fs.open(self.__path, mode)
 
     def __getstate__(self):
-        state = super().__getstate__()
+        state = self.__dict__.copy()
         state["_FileLocator__fs"] = fs_ser.serialise(self.__fs)
         return state
 
