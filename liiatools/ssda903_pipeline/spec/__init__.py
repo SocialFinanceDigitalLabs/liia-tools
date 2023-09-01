@@ -71,4 +71,4 @@ def load_schema(year: int) -> DataSchema:
             parent[path[-1]] = diff_obj["value"]
 
     # Now we can parse the full schema into a DataSchema object from the dict
-    return DataSchema.model_validate(full_schema)
+    return DataSchema(**full_schema)

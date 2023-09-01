@@ -1,6 +1,6 @@
 from typing import Any, Dict, Iterable, List, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Category(BaseModel):
@@ -15,24 +15,26 @@ class Category(BaseModel):
     code: str
     name: str = None
 
-    def model_post_init(self, __context: Any):
-        self.__values = {self.code.lower()}
-        if self.name:
-            self.__values.add(self.name.lower())
+    __values: str = Field("")
 
-        self._is_numeric = self.code.isnumeric() or (
-            self.name and self.name.isnumeric()
-        )
+    def __init__(self, **data):
+        super().__init__(**data)
 
     def __contains__(self, item):
-        if item in self.__values:
+        values = {self.code.lower()}
+        if self.name:
+            values.add(self.name.lower())
+
+        is_numeric = self.code.isnumeric() or (self.name and self.name.isnumeric())
+
+        if item in values:
             return True
 
         # If one of the categories are numeric, then we try to see if we can convert the item to a number if we didn't get any direct hits
-        if self._is_numeric:
+        if is_numeric:
             try:
                 int_value = str(int(float(item)))
-                if int_value in self.__values:
+                if int_value in values:
                     return True
             except (TypeError, ValueError):
                 pass
@@ -52,23 +54,20 @@ class Column(BaseModel):
 
     canbeblank: bool = True
 
-    def model_post_init(self, __context: Any):
-        if self.string == "alphanumeric":
-            self.__type = "string"
-        elif self.string == "postcode":
-            self.__type = "postcode"
-        elif self.numeric == "integer":
-            self.__type = "integer"
-        elif self.date:
-            self.__type = "date"
-        elif self.category:
-            self.__type = "category"
-        else:
-            raise ValueError("Unknown data type")
-
     @property
     def type(self):
-        return self.__type
+        if self.string == "alphanumeric":
+            return "string"
+        elif self.string == "postcode":
+            return "postcode"
+        elif self.numeric == "integer":
+            return "integer"
+        elif self.date:
+            return "date"
+        elif self.category:
+            return "category"
+        else:
+            raise ValueError("Unknown data type")
 
     def match_category(self, value: str) -> Optional[Category]:
         assert self.category, "Column is not a category"
