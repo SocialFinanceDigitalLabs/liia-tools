@@ -129,7 +129,7 @@ def test_clean_categories():
     assert cleaned_event.formatting_error == "0"
 
 
-def test_clean_numeric_integer():
+def test_clean_numeric():
     event = events.TextNode(text=123, schema_dict={"numeric": "integer"})
     cleaned_event = list(cleaner.clean_numeric(event))[0]
     assert cleaned_event.text == 123
@@ -166,8 +166,6 @@ def test_clean_numeric_integer():
     cleaned_event = list(cleaner.clean_numeric(event))[0]
     assert cleaned_event.text == datetime(2017, 3, 17)
 
-
-def test_clean_numeric_decimal():
     event = events.TextNode(text=123.45, schema_dict={"numeric": "decimal", "decimal": 2})
     cleaned_event = list(cleaner.clean_numeric(event))[0]
     assert cleaned_event.text == 123.45
@@ -203,15 +201,30 @@ def test_clean_numeric_decimal():
     assert cleaned_event.text == 123.46
     assert cleaned_event.formatting_error == "0"
 
+    event = events.TextNode(text="0.45", schema_dict={"numeric": "decimal", "decimal": 2, "min_inclusive": 0, "max_inclusive": 1})
+    cleaned_event = list(cleaner.clean_numeric(event))[0]
+    assert cleaned_event.text == 0.45
+    assert cleaned_event.formatting_error == "0"
+
+    event = events.TextNode(text="1.99", schema_dict={"numeric": "decimal", "decimal": 2, "min_inclusive": 0, "max_inclusive": 1})
+    cleaned_event = list(cleaner.clean_numeric(event))[0]
+    assert cleaned_event.text == ""
+    assert cleaned_event.formatting_error == "1" # exceeds maximum value
+
+    event = events.TextNode(text="0.50", schema_dict={"numeric": "decimal", "decimal": 2, "min_inclusive": 1, "max_inclusive": 9})
+    cleaned_event = list(cleaner.clean_numeric(event))[0]
+    assert cleaned_event.text == ""
+    assert cleaned_event.formatting_error == "1" # less than minimum value
+
     event = events.TextNode(text="string", schema_dict={"numeric": "decimal", "decimal": 2})
     cleaned_event = list(cleaner.clean_numeric(event))[0]
     assert cleaned_event.text == ""
-    assert cleaned_event.formatting_error == "1"
+    assert cleaned_event.formatting_error == "1" # not a decimal
 
     event = events.TextNode(text=datetime(2017, 3, 17), schema_dict={"numeric": "decimal", "decimal": 2})
     cleaned_event = list(cleaner.clean_numeric(event))[0]
     assert cleaned_event.text == ""
-    assert cleaned_event.formatting_error == "1"
+    assert cleaned_event.formatting_error == "1" # not a decimal
 
     event = events.TextNode(
         text=datetime(2017, 3, 17), schema_dict={"not_numeric": "decimal"}
@@ -262,7 +275,6 @@ def test_clean_regex_string():
 
 # test_clean_dates()
 # test_clean_categories()
-# test_clean_numeric_integer()
-# test_clean_numeric_decimal()
+# test_clean_numeric()
 # test_clean_regex_string()
 

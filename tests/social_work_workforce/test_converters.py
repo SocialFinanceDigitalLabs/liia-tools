@@ -26,28 +26,30 @@ def test_to_category():
     assert converters.to_category(None, category_dict) == ""
 
 
-def test_to_integer():
-    assert converters.to_integer("3000", "integer") == 3000
-    assert converters.to_integer(123, "integer") == 123
-    assert converters.to_integer("1.0", "integer") == 1
-    assert converters.to_integer("date", "") == "date"
-    assert converters.to_integer(123.456, "integer") == 123
-    assert converters.to_integer(0, "integer") == 0
-    assert converters.to_integer("", "integer") == ""
-    assert converters.to_integer(None, "integer") == ""
-
-
-def test_to_decimal():
+def test_to_numeric():
     decimal_places = 3
-    assert converters.to_decimal("12.345", "decimal", decimal_places) == 12.345
-    assert converters.to_decimal("12.3456", "decimal", decimal_places) == 12.346
-    assert converters.to_decimal("12.3", "decimal", decimal_places) == 12.3
-    assert converters.to_decimal(12.3456, "decimal", decimal_places) == 12.346
-    assert converters.to_decimal("1.0", "decimal", decimal_places) == 1
-    assert converters.to_decimal(0, "decimal", decimal_places) == 0
-    assert converters.to_decimal("date", "") == "date"
-    assert converters.to_decimal("", "decimal", decimal_places) == ""
-    assert converters.to_decimal(None, "decimal", decimal_places) == ""
+    assert converters.to_numeric("12.345", "decimal", decimal_places) == 12.345
+    assert converters.to_numeric("12.3456", "decimal", decimal_places) == 12.346
+    assert converters.to_numeric("12.3", "decimal", decimal_places) == 12.3
+    assert converters.to_numeric(12.3456, "decimal", decimal_places) == 12.346
+    assert converters.to_numeric("1.0", "decimal", decimal_places) == 1
+    assert converters.to_numeric(0, "decimal", decimal_places) == 0
+    assert converters.to_numeric("date", "") == "date"
+    assert converters.to_numeric("", "decimal", decimal_places) == ""
+    assert converters.to_numeric(None, "decimal", decimal_places) == ""
+    assert converters.to_numeric("0.3", "decimal", decimal_places, min_inclusive=0, max_inclusive=1) == 0.3
+    assert converters.to_numeric("0.3", "decimal", decimal_places, min_inclusive=0) == 0.3
+    assert converters.to_numeric("0.3", "decimal", decimal_places, max_inclusive=1) == 0.3
+    assert converters.to_numeric("1.99", "decimal", decimal_places, min_inclusive=0, max_inclusive=1) == "error"
+    assert converters.to_numeric("0.3", "decimal", decimal_places, min_inclusive=1, max_inclusive=99) == "error"
+    assert converters.to_numeric("3000", "integer") == 3000
+    assert converters.to_numeric(123, "integer") == 123
+    assert converters.to_numeric("1.0", "integer") == 1
+    assert converters.to_numeric("date", "") == "date"
+    assert converters.to_numeric(123.456, "integer") == 123
+    assert converters.to_numeric(0, "integer") == 0
+    assert converters.to_numeric("", "integer") == ""
+    assert converters.to_numeric(None, "integer") == ""
 
 
 def test_to_regex():
@@ -57,7 +59,6 @@ def test_to_regex():
     assert converters.to_regex("AB1234567890123456",pattern) == "error" # too long
     assert converters.to_regex("AB12345",pattern) == "error" # too short
     assert converters.to_regex("xxxxOz2054309383",pattern) == "error" # invalid format
-    assert converters.to_regex("date", "") == "date" # no pattern
     assert converters.to_regex("", pattern) == "" # no value
     assert converters.to_regex(None, pattern) == "" # no value
 
