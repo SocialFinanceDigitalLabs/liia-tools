@@ -4,31 +4,19 @@ from pathlib import Path
 
 import click as click
 import click_log
-import pandas as pd
-import tablib
 from fs import open_fs
 
 from liiatools.common import pipeline as pl
+from liiatools.common.archive import DataframeArchive
+from liiatools.common.data import ErrorContainer
 from liiatools.common.reference import authorities
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
-from liiatools.datasets.shared_functions.common import (
-    check_file_type,
-    check_year,
-    check_year_within_range,
-    save_incorrect_year_error,
-    save_year_error,
-    supported_file_types,
-)
 
 from .spec import load_pipeline_config, load_schema
 from .stream_pipeline import task_cleanfile
 
 log = logging.getLogger()
 click_log.basic_config(log)
-
-YEARS_TO_GO_BACK = 7
-YEAR_START_MONTH = 1
-REFERENCE_DATE = datetime.now()
 
 
 @click.group()
@@ -72,14 +60,39 @@ def pipeline(input, la_code, output):
     # Create session folder and move all files into it
     session_folder, locator_list = pl.create_session_folder(source_fs, output_fs)
 
-    cleaned_folder = session_folder.makedirs("cleaned")
+    # Archive holds rolling archive
+    archive_folder = output_fs.makedirs("archive", recreate=True)
+    archive = DataframeArchive(archive_folder, pipeline_config)
+
+    # These are process folders tracking the different stages of the pipeline
+    processing_folder = session_folder.makedirs("processing")
+    cleaned_folder = processing_folder.makedirs("cleaned")
+    degraded_folder = processing_folder.makedirs("degraded")
+    enriched_folder = processing_folder.makedirs("enriched")
+    error_container = ErrorContainer()
+
+    # Current snapshot of the data - outside of session
+    current_folder = output_fs.makedirs("current", recreate=True)
+
+    # And these are files for export
+    export_folder = output_fs.makedirs("export", recreate=True)
 
     for file_locator in locator_list:
         year = pl.discover_year(file_locator)
+        filename = (
+            file_locator.meta["name"]
+            if "name" in file_locator.meta
+            else file_locator.path
+        )
 
         if year is None:
-            # Write an error report entry
-            pass
+            error_container.append(
+                dict(
+                    filename=filename,
+                    type="MissingYear",
+                    message="Could not find a year in the filename or path",
+                )
+            )
         else:
             schema = load_schema(year)
             metadata = dict(year=year, schema=schema, la_code=la_code)
@@ -87,32 +100,41 @@ def pipeline(input, la_code, output):
             cleanfile_result = task_cleanfile(file_locator, schema)
 
             cleanfile_result.data.export(
-                cleaned_folder, file_locator.meta["uuid"], "parquet"
+                cleaned_folder, file_locator.meta["uuid"] + "_", "parquet"
             )
-
-            # # TODO: Write data quality report
-            # error_report = pd.DataFrame(cleanfile_result.errors)
-            # error_report = error_report[
-            #     ["table_name", "header", "r_ix", "c_ix", "type", "message"]
-            # ]
-            # error_report.columns = ["Table", "Header", "Row", "Column", "Type", "Message"]
-            # error_report.to_csv(f"{output}/error_report.csv", index=False)
+            error_container.extend(cleanfile_result.errors)
 
             enrich_result = enrich_data(
                 cleanfile_result.data, pipeline_config, metadata
+            )
+            enrich_result.export(
+                enriched_folder, file_locator.meta["uuid"] + "_", "parquet"
             )
 
             for table_name, table_data in enrich_result.items():
                 table_data.to_csv(f"{output}/enriched_{table_name}.csv", index=False)
 
             degraded_result = degrade_data(enrich_result, pipeline_config, metadata)
+            degraded_result.export(
+                degraded_folder, file_locator.meta["uuid"] + "_", "parquet"
+            )
+            archive.add(degraded_result)
 
-    # TODO: Create historic archive here
+        # Write log specific file
+        with session_folder.open(f"{file_locator.meta['uuid']}_log.txt", "wt") as FILE:
+            error_container.filter("filename", filename).to_dataframe().to_csv(
+                FILE, index=False
+            )
 
-    for table_name, table_data in degraded_result.items():
-        table_data.to_csv(f"{output}/degraded_{table_name}.csv", index=False)
+    # Write complete log file
+    with session_folder.open(f"session_log.txt", "wt") as FILE:
+        error_container.to_dataframe().to_csv(FILE, index=False)
+
+    current_data = archive.current()
+    # Write archive
+    current_data.export(current_folder, "ssda903_current_", "csv")
 
     for report in ["PAN", "SUFFICIENCY"]:
-        report_data = prepare_export(degraded_result, pipeline_config, profile=report)
-        for table_name, table_data in report_data.items():
-            table_data.to_csv(f"{output}/report_{report}_{table_name}.csv", index=False)
+        report_data = prepare_export(current_data, pipeline_config, profile=report)
+        report_folder = export_folder.makedirs(report, recreate=True)
+        report_data.export(report_folder, "ssda903_", "csv")

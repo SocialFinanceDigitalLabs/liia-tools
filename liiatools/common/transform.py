@@ -47,7 +47,7 @@ def data_transforms(
     """
 
     # Create a copy of the data so we don't mutate the original
-    data = {k: v.copy() for k, v in data.items()}
+    data = data.copy()
 
     # Loop over known tables
     for table_config in config.table_list:
@@ -94,7 +94,7 @@ def prepare_export(
     :param profile: The profile to export for (optional)
     :return: The prepared data
     """
-    data_container = {}
+    data_container = DataContainer()
 
     table_list = config.tables_for_profile(profile) if profile else config.table_list
 

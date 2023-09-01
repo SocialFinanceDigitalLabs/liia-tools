@@ -45,6 +45,12 @@ class DataContainer(Dict[str, pd.DataFrame]):
     def to_databook(self) -> Databook:
         return Databook([self.to_dataset(k) for k in self.keys()])
 
+    def copy(self) -> DataContainer:
+        """
+        Returns a deep copy of the DataContainer
+        """
+        return DataContainer({k: v.copy() for k, v in self.items()})
+
     def export(self, fs: FS, basename: str, format="csv"):
         """
         Export the data to a filesystem. Supports any format supported by tablib, plus parquet.
@@ -90,6 +96,9 @@ class ErrorContainer(List[Dict[str, Any]]):
 
     def with_prop(self, prop: str) -> "ErrorContainer":
         return ErrorContainer([e for e in self if prop in e])
+
+    def to_dataframe(self):
+        return pd.DataFrame(self)
 
 
 class ColumnConfig(BaseModel):

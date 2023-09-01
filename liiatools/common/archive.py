@@ -1,10 +1,14 @@
+import logging
 from datetime import datetime
-from typing import Iterable, List, Literal
+from typing import Iterable, List, Literal, Tuple
 
 import pandas as pd
 from fs.base import FS
+from fs.errors import CreateFailed
 
 from liiatools.common.data import DataContainer, PipelineConfig, TableConfig
+
+logger = logging.getLogger(__name__)
 
 
 def _normalise_table(df: pd.DataFrame, table_spec: TableConfig) -> pd.DataFrame:
@@ -24,8 +28,21 @@ def _normalise_table(df: pd.DataFrame, table_spec: TableConfig) -> pd.DataFrame:
     return df
 
 
-def _get_timestamp():
-    return datetime.utcnow().strftime("%Y%m%dT%H%M%S.%f")
+def _create_unique_folder(fs: FS, suffix: str = "") -> Tuple[FS, str]:
+    timestamp = datetime.utcnow().strftime("%Y%m%dT%H%M%S")
+    existing_snapshots = fs.listdir(".")
+    snap_index = 0
+
+    if len(existing_snapshots) > 0:
+        # Remove suffixes
+        existing_snapshots = [s[:20] for s in existing_snapshots]
+        existing_snapshots.sort()
+        max_snapshot = existing_snapshots[-1]
+        if timestamp in max_snapshot:
+            snap_index = int(max_snapshot[16:20]) + 1
+
+    filename = f"{timestamp}-{snap_index:04}{suffix}"
+    return fs.makedir(filename), filename
 
 
 _rollup_suffix = "-rollup"
@@ -56,14 +73,13 @@ class DataframeArchive:
         Add a new snapshot to the archive.
         """
 
-        timestamp = _get_timestamp()
-        snap_dir = self.fs.makedir(timestamp)
+        snap_dir, snap_name = _create_unique_folder(self.fs)
 
         for table_spec in self.config.table_list:
             if table_spec.id in data:
                 self._add_table(snap_dir, table_spec, data[table_spec.id])
 
-        return timestamp
+        return snap_name
 
     def _add_table(self, snap_dir: FS, table_spec: TableConfig, df: pd.DataFrame):
         """
@@ -130,8 +146,7 @@ class DataframeArchive:
 
         combined = self.combine_snapshots(snap_ids)
 
-        timestamp = _get_timestamp() + _rollup_suffix
-        snap_dir = self.fs.makedir(timestamp)
+        snap_dir, snap_name = _create_unique_folder(self.fs, _rollup_suffix)
 
         snap_dir.writetext("snapshots.txt", "\n".join(snap_ids))
 
@@ -139,7 +154,7 @@ class DataframeArchive:
             if table_spec.id in combined:
                 self._add_table(snap_dir, table_spec, combined[table_spec.id])
 
-        return timestamp
+        return snap_name
 
     def load_snapshot(self, snap_id) -> DataContainer:
         """
@@ -170,7 +185,7 @@ class DataframeArchive:
         """
         assert deduplicate_mode in ["E", "A", "N"]
 
-        combined = {}
+        combined = DataContainer()
         for snap_id in snap_ids:
             combined = self._combine_snapshots(
                 combined,
@@ -210,7 +225,7 @@ class DataframeArchive:
         """
         Combine a new snapshot into an existing set of dataframes.
         """
-        data = {}
+        data = DataContainer()
 
         for table_spec in self.config.table_list:
             table_id = table_spec.id

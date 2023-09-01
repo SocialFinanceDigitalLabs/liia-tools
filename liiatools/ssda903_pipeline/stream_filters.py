@@ -9,6 +9,7 @@ from sfdata_stream_parser.filters.generic import (
     streamfilter,
 )
 
+from liiatools.common.data import DataContainer
 from liiatools.common.stream_errors import EventErrors
 from liiatools.datasets.shared_functions.converters import (
     to_date,
@@ -210,7 +211,7 @@ def collect_tables(stream):
 
     """
     # A dict to hold all the tables we find in the stream
-    dataset: Dict[str, List] = {}
+    dataset = {}
 
     # Iterate over the stream and collect the tables from the StartRow events
     for event in stream:

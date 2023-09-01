@@ -38,19 +38,6 @@ def fs():
 @pytest.fixture
 def archive(fs, cfg: PipelineConfig) -> DataframeArchive:
     archive = DataframeArchive(fs, cfg)
-
-    # We have to make sure that there is a delay between adding snapshots, otherwise the timestamps will be the same
-    def delay(func):
-        import time
-
-        def wrapper(*args, **kwargs):
-            time.sleep(0.1)
-            return func(*args, **kwargs)
-
-        return wrapper
-
-    archive.add = delay(archive.add)
-    archive.rollup = delay(archive.rollup)
     return archive
 
 

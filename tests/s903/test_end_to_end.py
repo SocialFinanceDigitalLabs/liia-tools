@@ -6,6 +6,7 @@ from click.testing import CliRunner
 
 import liiatools
 from liiatools.__main__ import cli
+from liiatools.ssda903_pipeline.spec.samples import EPISODES_2020, HEADER_2020
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -23,14 +24,40 @@ def build_dir(liiatools_dir):
     return build_dir
 
 
-@pytest.fixture(scope="session", autouse=True)
-def log_dir(build_dir):
-    log_dir = build_dir / "log"
-    log_dir.mkdir(parents=True, exist_ok=True)
-    return build_dir
+def test_end_to_end(build_dir):
+    incoming_dir = build_dir / "incoming"
+    incoming_dir.mkdir(parents=True, exist_ok=True)
+    pipeline_dir = build_dir / "pipeline"
+    pipeline_dir.mkdir(parents=True, exist_ok=True)
+
+    for year in range(2020, 2024):
+        year_dir = incoming_dir / str(year)
+        year_dir.mkdir(parents=True, exist_ok=True)
+
+        shutil.copy(EPISODES_2020, year_dir / f"SSDA903_{year}_episodes.csv")
+        shutil.copy(HEADER_2020, year_dir / f"SSDA903_{year}_header.csv")
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        [
+            "s903",
+            "pipeline",
+            "-c",
+            "BAD",
+            "--input",
+            incoming_dir.as_posix(),
+            "--output",
+            pipeline_dir.as_posix(),
+        ],
+        catch_exceptions=False,
+    )
+
+    assert result.exit_code == 0
 
 
-def test_end_to_end(liiatools_dir, build_dir, log_dir):
+@pytest.mark.skip("Old pipeline")
+def test_end_to_end_old(liiatools_dir, build_dir, log_dir):
     runner = CliRunner()
     result = runner.invoke(
         cli,
