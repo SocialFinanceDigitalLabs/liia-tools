@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "liiatools-dagster"
-version = "0.1.2"
+version = "0.1.3"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
     "Michael Hanks <michael.hanks@socialfinance.org.uk>",
