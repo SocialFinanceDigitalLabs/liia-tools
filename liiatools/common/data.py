@@ -7,9 +7,6 @@ from pydantic import BaseModel, ConfigDict
 from tablib import Databook, Dataset, import_set
 from tablib.formats import registry as tablib_registry
 
-from . import _fs_serializer as fs_ser
-
-DataContainer = Dict[str, pd.DataFrame]
 Metadata = Dict[str, Any]
 
 
@@ -31,16 +28,6 @@ class FileLocator:
     def open(self, mode: str = "r"):
         return self.__fs.open(self.__path, mode)
 
-    def __getstate__(self):
-        state = self.__dict__.copy()
-        state["_FileLocator__fs"] = fs_ser.serialise(self.__fs)
-        return state
-
-    def __setstate__(self, state):
-        self.__fs = fs_ser.deserialise(state["_FileLocator__fs"])
-        self.__path = state["_FileLocator__path"]
-        self.__metadata = state["_FileLocator__metadata"]
-
 
 class DataContainer(Dict[str, pd.DataFrame]):
     """
@@ -57,7 +44,7 @@ class DataContainer(Dict[str, pd.DataFrame]):
     def to_databook(self) -> Databook:
         return Databook([self.to_dataset(k) for k in self.keys()])
 
-    def copy(self) -> DataContainer:
+    def copy(self) -> "DataContainer":
         """
         Returns a deep copy of the DataContainer
         """

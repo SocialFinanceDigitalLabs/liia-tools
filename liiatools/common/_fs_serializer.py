@@ -15,14 +15,54 @@ def serialise(fs: FS) -> dict:
     if isinstance(fs, OSFS):
         return dict(type="osfs", path=fs.root_path, subpath=path)
 
+    try:
+        from fs_s3fs import S3FS
+
+        if isinstance(fs, S3FS):
+            return dict(type="s3", bucket=fs._bucket_name, subpath=path)
+    except ImportError:
+        pass
+
     raise NotImplementedError(f"Cannot serialize {fs}")
 
 
 def deserialise(data: dict) -> FS:
     if data["type"] == "osfs":
         fs = OSFS(data["path"])
-        if data["subpath"]:
-            fs = fs.opendir(data["subpath"])
-        return fs
+    elif data["type"] == "s3":
+        from fs_s3fs import S3FS
 
-    raise NotImplementedError(f"Cannot deserialize {data}")
+        fs = S3FS(data["bucket"])
+    else:
+        raise NotImplementedError(f"Cannot deserialize {data}")
+
+    if data["subpath"]:
+        fs = fs.opendir(data["subpath"])
+    return fs
+
+
+def pickle_FS(obj):
+    # This example will only save the 'data' attribute
+    # Modify this function to handle your actual serialization logic.
+    serialized = serialise(obj)
+    return unpickle_FS, (serialized,)
+
+
+def unpickle_FS(data):
+    # Modify this function to handle your actual deserialization logic.
+    return deserialise(data)
+
+
+def register():
+    import copyreg
+
+    copyreg.pickle(FS, pickle_FS)
+    copyreg.pickle(SubFS, pickle_FS)
+    copyreg.pickle(OSFS, pickle_FS)
+
+    try:
+        from fs_s3fs import S3FS
+
+        copyreg.pickle(S3FS, pickle_FS)
+    except ImportError:
+        pass

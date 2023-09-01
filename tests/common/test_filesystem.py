@@ -2,10 +2,13 @@ import pickle
 import uuid
 from pathlib import Path
 
+import pytest
 from fs import open_fs
 
-from liiatools.common._fs_serializer import deserialise, serialise
+from liiatools.common._fs_serializer import deserialise, register, serialise
 from liiatools.common.data import FileLocator
+
+register()
 
 
 def test_filesystem():
@@ -59,3 +62,26 @@ def test_pickle():
 
     with unpickled.open("rt") as FILE:
         assert FILE.read() == unique_string
+
+
+def test_fs_pickle():
+    myfs = open_fs("build")
+    test_folder = myfs.makedirs("test", recreate=True)
+    subfolder = test_folder.makedirs("subfolder", recreate=True)
+
+    pickled = pickle.dumps(subfolder)
+    unpickled = pickle.loads(pickled)
+
+    assert unpickled
+
+
+def test_s3_pickle():
+    pytest.importorskip("fs_s3fs")
+
+    myfs = open_fs("s3://mybucket")
+
+    pickled = pickle.dumps(myfs)
+    unpickled = pickle.loads(pickled)
+
+    assert unpickled
+    assert type(unpickled).__name__ == "S3FS"
