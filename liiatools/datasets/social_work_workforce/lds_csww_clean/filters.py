@@ -2,11 +2,9 @@ import logging
 from typing import List
 import xml.etree.ElementTree as ET
 import xmlschema
-from xmlschema import XMLSchemaValidatorError
 
 from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
-from sfdata_stream_parser.collectors import collector, block_check
 from sfdata_stream_parser.filters.generic import streamfilter, pass_event
 
 log = logging.getLogger(__name__)
@@ -88,6 +86,14 @@ def _create_category_dict(field: str, file: str):
 
 
 def _create_float_dict(field: str, file: str):
+    """
+    Create a dictionary containing the different float parameters of a given field to conform floats
+    e.g. {'numeric': 'decimal', 'fixed': 'true', 'decimal': '6', 'min_inclusive': '0', 'max_inclusive': '1'}
+
+    :param field: Name of the float field you want to find the parameters for
+    :param file: Path to the .xsd schema containing possible float parameters
+    :return: Dictionary of float parameters
+    """
     float_dict = None
 
     xsd_xml = ET.parse(file)
@@ -173,7 +179,11 @@ def add_schema(event, schema: xmlschema.XMLSchema):
     return event.from_event(event, path=path, schema=el)
 
 
-@streamfilter(check=type_check(events.TextNode), fail_function=pass_event)
+@streamfilter(
+    check=type_check(events.TextNode),
+    fail_function=pass_event,
+    error_function=pass_event,
+)
 def add_schema_dict(event, schema_path: str):
     """
     Add a dictionary of schema attributes to an event object based on its type and occurrence
@@ -206,76 +216,3 @@ def add_schema_dict(event, schema_path: str):
                 schema_dict = {**schema_dict, **{"canbeblank": False}}
 
     return event.from_event(event, schema_dict=schema_dict)
-
-
-def _get_validation_error(schema, node) -> XMLSchemaValidatorError:
-    try:
-        schema.validate(node)
-        return None
-    except XMLSchemaValidatorError as e:
-        return e
-
-
-@streamfilter(check=type_check(events.StartElement), fail_function=pass_event)
-def validate_elements(event):
-    """
-    Validates each element, and if not valid, sets the properties:
-
-    * valid - (always False)
-    * validation_message - a descriptive validation message
-    """
-    validation_error = _get_validation_error(event.schema, event.node)
-    if validation_error is None:
-        return event
-
-    message = (
-        validation_error.reason
-        if hasattr(validation_error, "reason")
-        else validation_error.message
-    )
-    return events.StartElement.from_event(
-        event, valid=False, validation_message=message
-    )
-
-
-@streamfilter(check=type_check(events.StartElement), fail_function=pass_event)
-def prop_to_attribute(event, prop_name):
-    """
-    Elevates an event property to an XML attribute.
-    """
-    if hasattr(event, prop_name):
-        attrs = getattr(event, "attrs", {})
-        attrs[prop_name] = getattr(event, prop_name)
-        return events.StartElement.from_event(event, attrs=attrs)
-    else:
-        return event
-
-
-@collector(check=block_check(events.StartElement), receive_stream=True)
-def remove_invalid(stream, tag_name):
-    """
-    Filters out events with the given tag name if they are not valid
-    """
-    stream = list(stream)
-    first = stream[0]
-    last = stream[-1]
-    stream = stream[1:-1]
-
-    if first.tag == tag_name and not getattr(first, "valid", True):
-        yield from []
-    else:
-        yield first
-
-        if len(stream) > 0:
-            yield from remove_invalid(stream, tag_name=tag_name)
-
-        yield last
-
-
-@streamfilter(check=lambda x: True)
-def counter(event, counter_check, context):
-    if counter_check(event):
-        context["pass"] += 1
-    else:
-        context["fail"] += 1
-    return event

@@ -137,9 +137,11 @@ def seniority_forecast_04():
         AppLogs.log(f"FileNotFoundError: {e.filename}", console_output=True)
         return
 
-    
     if dfSen.empty:
-        AppLogs.log("seniority_forecast_04 error: No data in FTESum_2020.xlsx", console_output=True)
+        AppLogs.log(
+            "seniority_forecast_04 error: No data in FTESum_2020.xlsx",
+            console_output=True,
+        )
     else:
         # ===== Rename column ===== #
         dfSen.rename(columns={"FTESum": "2020"}, inplace=True)
@@ -160,9 +162,13 @@ def seniority_forecast_04():
                 dfSen[str(countYearBefore)] / p_df.loc[0, str(countYearBefore)]
             ) * p_df.loc[0, str(countYearNext)]
             # Barking and Dagenham
-            dfSen.loc[dfSen["LEAName"] == "Barking and Dagenham", str(countYearNext)] = (
+            dfSen.loc[
+                dfSen["LEAName"] == "Barking and Dagenham", str(countYearNext)
+            ] = (
                 dfSen[str(countYearBefore)] / p_df.loc[1, str(countYearBefore)]
-            ) * p_df.loc[1, str(countYearNext)]
+            ) * p_df.loc[
+                1, str(countYearNext)
+            ]
             # Redbridge
             dfSen.loc[dfSen["LEAName"] == "Redbridge", str(countYearNext)] = (
                 dfSen[str(countYearBefore)] / p_df.loc[2, str(countYearBefore)]

@@ -40,7 +40,7 @@ def FTESum_2020():
 
     :return: Excel file with the name FTESum_2020.xlsx and the same path as the input file
     """
-    
+
     # ===== Read file ===== #
     file = "CompMergSen.csv"
     requestPath = work_path.request
@@ -48,11 +48,13 @@ def FTESum_2020():
     df = pd.read_csv(pathFile)
 
     df2020 = df[df["YearCensus"] == 2020]
-    
+
     if df2020.empty:
         AppLogs.log("FTESum_2020 error: No data for year 2020", console_output=True)
     else:
-        df5D = df2020[["LEAName", "YearCensus", "SeniorityCode", "SeniorityName", "FTE"]]
+        df5D = df2020[
+            ["LEAName", "YearCensus", "SeniorityCode", "SeniorityName", "FTE"]
+        ]
 
         df5D = df2020.groupby(
             ["LEAName", "YearCensus", "SeniorityCode", "SeniorityName"]

@@ -31,10 +31,7 @@ def create_formatting_error_list(stream):
                 formatting_error_list=formatting_error_list,
             )
             formatting_error_list = None
-        elif (
-            formatting_error_list is not None
-            and isinstance(event, events.TextNode)
-        ):
+        elif formatting_error_list is not None and isinstance(event, events.TextNode):
             try:
                 if event.formatting_error == "1":
                     formatting_error_list.append(event.schema.name)
@@ -44,7 +41,9 @@ def create_formatting_error_list(stream):
 
 
 @streamfilter(
-    check=type_check(events.TextNode), fail_function=pass_event, error_function=pass_event
+    check=type_check(events.TextNode),
+    fail_function=pass_event,
+    error_function=pass_event,
 )
 def blank_error_check(event):
     """
@@ -82,15 +81,33 @@ def create_blank_error_list(stream):
         elif isinstance(event, ErrorTable):
             yield ErrorTable.from_event(event, blank_error_list=blank_error_list)
             blank_error_list = None
-        elif (
-            blank_error_list is not None
-            and isinstance(event, events.TextNode)
-        ):
+        elif blank_error_list is not None and isinstance(event, events.TextNode):
             try:
                 if event.blank_error == "1":
                     blank_error_list.append(event.schema.name)
             except AttributeError:  # Raised in case there is no event.blank_error
                 pass
+        yield event
+
+
+def create_validation_error_list(stream):
+    """
+    Create a list of the validation errors
+
+    :param stream: A filtered list of event objects
+    :return: An updated list of event objects
+    """
+    validation_error_list = []
+    for event in stream:
+        if isinstance(event, ErrorTable):
+            yield ErrorTable.from_event(
+                event, validation_error_list=validation_error_list
+            )
+            validation_error_list = None
+        elif isinstance(event, events.StartElement):
+            validation_message = getattr(event, "validation_message", None)
+            if validation_message is not None:
+                validation_error_list.append(validation_message)
         yield event
 
 
@@ -110,8 +127,13 @@ def save_errors_la(stream, la_log_dir, filename):
             if isinstance(event, ErrorTable) and (
                 event.formatting_error_list is not None
                 and event.blank_error_list is not None
+                and event.validation_error_list is not None
             ):
-                if event.formatting_error_list or event.blank_error_list:
+                if (
+                    event.formatting_error_list
+                    or event.blank_error_list
+                    or event.validation_error_list
+                ):
                     with open(
                         f"{os.path.join(la_log_dir, filename)}_error_log_{start_time}.txt",
                         "a",
@@ -138,6 +160,14 @@ def save_errors_la(stream, la_log_dir, filename):
                                 str(blank_counter_dict)[9:-2]
                             )  # Remove "Counter({" and "})" from string
                             f.write("\n")
+                        if event.validation_error_list:
+                            event.validation_error_list = list(
+                                dict.fromkeys(event.validation_error_list)
+                            )  # Remove duplicate information from list but
+                            # keep order
+                            for item in event.validation_error_list:
+                                f.write(item)
+                                f.write("\n")
         except AttributeError:
             pass
 
@@ -154,4 +184,5 @@ def log_errors(stream):
     stream = blank_error_check(stream)
     stream = create_formatting_error_list(stream)
     stream = create_blank_error_list(stream)
+    stream = create_validation_error_list(stream)
     return stream

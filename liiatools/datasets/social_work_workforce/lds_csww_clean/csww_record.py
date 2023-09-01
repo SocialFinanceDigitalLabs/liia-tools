@@ -34,7 +34,7 @@ def text_collector(stream):
     Create a dictionary of text values for each element
 
     :param stream: An iterator of events from an XML parser
-    :return: Dictionary containing element name and text values 
+    :return: Dictionary containing element name and text values
     """
     data_dict = {}
     current_element = None
@@ -82,9 +82,15 @@ __EXPORT_HEADERS_CSWWWORKER = [
     "GenderCurrent",
     "Ethnicity",
     "QualInst",
+    "QualLevel",
     "StepUpGrad",
+    "OrgRole",
     "RoleStartDate",
     "StartOrigin",
+    "RoleEndDate",
+    "LeaverDestination",
+    "ReasonLeave",
+    "FTE30",
     "Cases30",
     "WorkingDaysLost",
     "ContractWeeks",

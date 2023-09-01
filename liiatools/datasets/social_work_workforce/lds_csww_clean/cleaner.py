@@ -71,13 +71,16 @@ def clean_numeric(event):
     """
     numeric = event.schema_dict["numeric"]
     try:
-        if numeric == "integer":
-            clean_text = to_numeric(value=event.text, config=numeric)
-        elif numeric == "decimal":
-            decimal_places = int(event.schema_dict["decimal"])
-            min_inclusive = event.schema_dict.get("min_inclusive", None)
-            max_inclusive = event.schema_dict.get("max_inclusive", None)
-            clean_text = to_numeric(value=event.text, config=numeric, decimal_places=decimal_places, min_inclusive=min_inclusive, max_inclusive=max_inclusive)
+        decimal_places = event.schema_dict.get("decimal", None)
+        min_inclusive = event.schema_dict.get("min_inclusive", None)
+        max_inclusive = event.schema_dict.get("max_inclusive", None)
+        clean_text = to_numeric(
+            value=event.text,
+            config=numeric,
+            decimal_places=decimal_places,
+            min_inclusive=min_inclusive,
+            max_inclusive=max_inclusive,
+        )
         if clean_text != "error":
             return event.from_event(event, text=clean_text, formatting_error="0")
         return event.from_event(event, text="", formatting_error="1")
@@ -111,7 +114,7 @@ def clean(stream):
     """
     Compile the cleaning functions
 
-    :param event: A list of event objects
+    :param stream: A list of event objects
     :return: An updated list of event objects
     """
     stream = clean_dates(stream)

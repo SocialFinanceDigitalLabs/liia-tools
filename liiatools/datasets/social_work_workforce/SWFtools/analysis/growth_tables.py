@@ -12,7 +12,7 @@ def growth_tables():
     """
     Create two Excel files with tables of growth rates and population growth for six LEAs
     """
-    
+
     growth_rate_df = {
         "LEAName": [
             "Havering",
