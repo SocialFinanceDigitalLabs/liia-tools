@@ -23,7 +23,7 @@ class TestSaveYearError(unittest.TestCase):
         # Generate expected output
         filename = Path(input_file).resolve().stem
         expected_output = (
-            f"Could not process '{filename}' because placement end date column was not found which is used to "
+            f"Could not process '{filename}' because end date column was not found which is used to "
             f"identify the year of return"
         )
 
@@ -53,7 +53,7 @@ class TestSaveYearError(unittest.TestCase):
         # Generate expected output
         filename = Path(input_file).resolve().stem
         expected_output = (
-            f"Could not process '{filename}' because placement end date column was empty which is used to "
+            f"Could not process '{filename}' because end date column was empty which is used to "
             f"identify the year of return"
         )
 
@@ -172,7 +172,7 @@ class TestFindYearOfReturn(unittest.TestCase):
         with open(error_log_file, "r") as f:
             error_message = f.read()
             self.assertIn(
-                "Could not process 's251_test' because placement end date column was not found which "
+                "Could not process 's251_test' because end date column was not found which "
                 "is used to identify the year of return",
                 error_message,
             )
@@ -215,7 +215,7 @@ class TestFindYearOfReturn(unittest.TestCase):
         with open(error_log_file, "r") as f:
             error_message = f.read()
             self.assertIn(
-                "Could not process 's251_test' because placement end date column was empty which is used to "
+                "Could not process 's251_test' because end date column was empty which is used to "
                 "identify the year of return",
                 error_message,
             )

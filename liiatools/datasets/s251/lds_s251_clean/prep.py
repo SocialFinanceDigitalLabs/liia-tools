@@ -32,19 +32,35 @@ def _save_year_error(
     ) as f:
         if data_type == DataType.MISSING_COLUMN:
             f.write(
-                f"Could not process '{filename}' because placement end date column was not found which is used to "
+                f"Could not process '{filename}' because end date column was not found which is used to "
                 f"identify the year of return"
             )
         if data_type == DataType.EMPTY_COLUMN:
             f.write(
-                f"Could not process '{filename}' because placement end date column was empty which is used to "
-                f"identify the year of return"
+                f"Could not process '{filename}' because end date column was empty which is used to identify "
+                f"the year of return"
             )
         if data_type == DataType.OLD_DATA:
             f.write(
                 f"Could not process '{filename}' because this file is from the year {year} and we are only accepting "
                 f"data from 2023 onwards"
             )
+
+
+def _calculate_year_quarter(input: pd.DataFrame, date_column: str):
+    """
+    Calculate the minimum year and quarter of a given dataframe based on data_column
+
+    :param input: Dataframe that we need to find the year and quarter of return
+    :param date_column: Column which contains date information required to find year of return
+    :return: Minimum year and quarter from the given date_column
+    """
+    input[date_column] = pd.to_datetime(
+        input[date_column], format="%d/%m/%Y", errors="coerce"
+    )
+    year = input[date_column].min().year
+    quarter = f"Q{(input[date_column].min().month - 1) // 3}"
+    return year, quarter
 
 
 def find_year_of_return(
@@ -60,25 +76,26 @@ def find_year_of_return(
     :return: A year and quarter of return
     """
     infile = Path(input)
-    try:
-        data = pd.read_csv(infile, usecols=["Placement end date"])
-        data["Placement end date"] = pd.to_datetime(
-            data["Placement end date"], format="%d/%m/%Y", errors="coerce"
-        )
-        year = data["Placement end date"].min().year
-        quarter = f'Q{(data["Placement end date"].min().month - 1) // 3}'
-        if year is np.nan:
-            _save_year_error(input, la_log_dir, DataType.EMPTY_COLUMN)
+    data = pd.read_csv(
+        infile, usecols=lambda x: x in ["Placement end date", "End date"]
+    )
+
+    if "Placement end date" in data:
+        year, quarter = _calculate_year_quarter(data, "Placement end date")
+    elif "End date" in data:
+        year, quarter = _calculate_year_quarter(data, "End date")
+    else:
+        _save_year_error(input, la_log_dir, DataType.MISSING_COLUMN)
+        return None, None
+
+    if year is np.nan:
+        _save_year_error(input, la_log_dir, DataType.EMPTY_COLUMN)
+        return None, None
+    else:
+        quarter = "Q4" if quarter == "Q0" else quarter
+        year = year + 1 if quarter == "Q1" or quarter == "Q2" else year
+        if year in range(reference_year - retention_period, 2023):
+            _save_year_error(input, la_log_dir, DataType.OLD_DATA, year=year)
             return None, None
         else:
-            quarter = "Q4" if quarter == "Q0" else quarter
-            year = year + 1 if quarter == "Q1" or quarter == "Q2" else year
-            if year in range(reference_year - retention_period, 2023):
-                _save_year_error(input, la_log_dir, DataType.OLD_DATA, year=year)
-                return None, None
-            else:
-                return year, quarter
-    except ValueError as e:
-        if "columns expected but not found: ['Placement end date']" in str(e):
-            _save_year_error(input, la_log_dir, DataType.MISSING_COLUMN)
-            return None, None
+            return year, quarter
