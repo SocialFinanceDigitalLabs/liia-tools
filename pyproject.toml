@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "liiatools"
-version = "0.1.5.3"
+name = "liiatools-dagster"
+version = "0.1.0"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
     "Michael Hanks <michael.hanks@socialfinance.org.uk>",
@@ -10,6 +10,7 @@ authors = [
     "Matthew Pugh <matthew.pugh@socialfinance.org.uk>"
 ]
 license = "MIT"
+packages = [{include = "liiatools"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
