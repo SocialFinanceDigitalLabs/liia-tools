@@ -29,6 +29,7 @@ def load_schema(year: int) -> DataSchema:
 
     # Build index of all schema files
     all_schema_files = list(SCHEMA_DIR.glob("SSDA903_schema_*.yml"))
+    all_schema_files.sort()
     schema_lookup = []
     for fn in all_schema_files:
         match = pattern.match(fn.name)
