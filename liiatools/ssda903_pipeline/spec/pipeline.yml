@@ -100,7 +100,6 @@ table_list:
   - id: MC_DOB
     type: date
     degrade: first_of_month
-    sort: 0
     exclude:
     - SUFFICIENCY
   - id: LA
@@ -108,7 +107,6 @@ table_list:
     enrich: la_name
   - id: YEAR
     type: integer
-    unique_key: true
     enrich: year
     sort: 1
 - id: Missing

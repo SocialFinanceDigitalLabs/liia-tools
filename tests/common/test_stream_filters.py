@@ -10,9 +10,7 @@ from liiatools.ssda903_pipeline.spec.samples import DIR as DIR_903
 def test_parse_tabular_csv():
     samples_fs = open_fs(DIR_903.as_posix())
 
-    locator = FileLocator(
-        samples_fs, "SSDA903_2020_episodes.csv", {"name": "SSDA903_2020_episodes.csv"}
-    )
+    locator = FileLocator(samples_fs, "SSDA903_2020_episodes.csv")
     stream = tablib_parse(locator)
 
     stream = list(stream)
@@ -23,9 +21,22 @@ def test_parse_tabular_csv():
 def test_parse_tabular_xlsx():
     samples_fs = open_fs(DIR_AA.as_posix())
 
-    locator = FileLocator(samples_fs, "Annex_A.xlsx", {"name": "Annex_A.xlsx"})
+    locator = FileLocator(samples_fs, "Annex_A.xlsx")
     stream = tablib_parse(locator)
 
     stream = list(stream)
     assert stream
     assert stream[0] == StartContainer(filename="Annex_A.xlsx", sheetname="List 1")
+
+
+def test_parse_with_alternative_name():
+    samples_fs = open_fs(DIR_903.as_posix())
+
+    locator = FileLocator(
+        samples_fs, "SSDA903_2020_episodes.csv", original_path="/year/2020/episodes.csv"
+    )
+    stream = tablib_parse(locator)
+
+    stream = list(stream)
+    assert stream
+    assert stream[0] == StartContainer(filename="/year/2020/episodes.csv")

@@ -5,17 +5,11 @@ import pandas as pd
 from sfdata_stream_parser.filters import generic
 
 from liiatools.common import stream_filters as stream_functions
-from liiatools.common.data import DataContainer, FileLocator
+from liiatools.common.data import DataContainer, FileLocator, ProcessResult
 from liiatools.datasets.shared_functions import common as common_functions
 
 from . import stream_filters
 from .spec import Column, DataSchema
-
-
-@dataclass
-class CleanFileResult:
-    data: DataContainer
-    errors: List[Dict[str, Any]]
 
 
 def _to_dataframe(data: List[Dict], table_config: Dict[str, Column]) -> pd.DataFrame:
@@ -30,7 +24,7 @@ def _to_dataframe(data: List[Dict], table_config: Dict[str, Column]) -> pd.DataF
     return df
 
 
-def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> CleanFileResult:
+def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> ProcessResult:
     # Open & Parse file
     stream = stream_functions.tablib_parse(src_file)
 
@@ -46,15 +40,16 @@ def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> CleanFileResult
     # Create dataset
     stream = stream_filters.collect_cell_values_for_row(stream)
     dataset_holder, stream = stream_filters.collect_tables(stream)
-    errror_holder, stream = stream_filters.collect_errors(stream)
+    error_holder, stream = stream_filters.collect_errors(stream)
 
     # Consume stream so we know it's been processed
     generic.consume(stream)
 
     dataset = dataset_holder.value
+    errors = error_holder.value
 
     dataset = DataContainer(
         {k: _to_dataframe(v, schema.table[k]) for k, v in dataset.items()}
     )
 
-    return CleanFileResult(data=dataset, errors=errror_holder.value)
+    return ProcessResult(data=dataset, errors=errors)

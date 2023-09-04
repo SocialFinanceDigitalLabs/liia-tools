@@ -1,8 +1,9 @@
 import hashlib
+import logging
 import uuid
 from datetime import datetime
-from os.path import dirname
-from typing import Dict, List, Tuple
+from os.path import basename, dirname
+from typing import Iterable, List, Tuple
 
 import pandas as pd
 import yaml
@@ -10,9 +11,12 @@ from fs.base import FS
 from fs.info import Info
 from fs.move import move_file
 
+from liiatools.common.constants import ProcessNames, SessionNames
 from liiatools.datasets.shared_functions.common import check_year
 
 from .data import FileLocator
+
+logger = logging.getLogger(__name__)
 
 
 def _get_timestamp():
@@ -28,10 +32,11 @@ def _move_incoming_file(
     file_uuid = uuid.uuid4().hex
     file_sha = hashlib.sha256(source_fs.readbytes(file_path)).hexdigest()
 
-    metadata = FileLocator(
+    file_locator = FileLocator(
         dest_fs,
         file_uuid,
-        {
+        original_path=file_path,
+        metadata={
             "path": file_path,
             "name": file_info.name,
             "size": file_info.size,
@@ -41,49 +46,71 @@ def _move_incoming_file(
         },
     )
 
-    dest_fs.writetext(f"{file_uuid}_meta.yaml", yaml.dump(metadata.meta))
+    dest_fs.writetext(f"{file_uuid}_meta.yaml", yaml.dump(file_locator.meta))
     move_file(source_fs, file_path, dest_fs, file_uuid)
 
-    return metadata
+    return file_locator
 
 
-SESSION_FOLDER_PREFIX = "sessions"
-SESSION_INCOMING_PREFIX = "incoming"
-
-
-def create_session_folder(
-    source_fs: FS, destionation_fs: FS
-) -> Tuple[FS, List[FileLocator]]:
+def create_process_folders(destionation_fs: FS):
     """
-    Create a new session folder in the output filesystem, and move all the source files into it.
+    Ensures that all the standard process folders are created
+    """
+    for folder in ProcessNames:
+        destionation_fs.makedirs(folder, recreate=True)
+
+
+def create_session_folder(destionation_fs: FS) -> Tuple[FS, str]:
+    """
+    Create a new session folder in the output filesystem with the standard folders
     """
     session_id = _get_timestamp()
-    session_fs = destionation_fs.makedirs(f"{SESSION_FOLDER_PREFIX}/{session_id}")
-    destination_fs = session_fs.makedirs(SESSION_INCOMING_PREFIX)
+    session_folder = destionation_fs.makedirs(
+        f"{ProcessNames.SESSIONS_FOLDER}/{session_id}"
+    )
+    for folder in SessionNames:
+        session_folder.makedirs(folder)
+    return session_folder, session_id
 
+
+def move_files_for_processing(
+    source_fs: FS, session_fs: FS, continue_on_error: bool = False
+) -> Iterable[FileLocator]:
+    """
+    Moves all files from the source filesystem to the session folder. This is a generator function that yields a FileLocator for each file moved.
+    """
+
+    destination_fs = session_fs.opendir(SessionNames.INCOMING_FOLDER)
     source_file_list = source_fs.walk.info(namespaces=["details"])
 
-    file_locators = []
     for file_path, file_info in source_file_list:
         if file_info.is_file:
-            md = _move_incoming_file(source_fs, destination_fs, file_path, file_info)
-            file_locators.append(md)
-
-    return session_fs, file_locators
+            try:
+                yield _move_incoming_file(
+                    source_fs, destination_fs, file_path, file_info
+                )
+            except Exception as e:
+                logger.error(f"Error moving file {file_path} to session folder")
+                if continue_on_error:
+                    pass
+                else:
+                    raise e
 
 
 def restore_session_folder(session_fs: FS) -> List[FileLocator]:
     """
     Should we ever need to re-run a pipeline, this function will restore the session folder and return the metadata just like the create_session_folder function.
     """
-    incoming_fs = session_fs.opendir(SESSION_INCOMING_PREFIX)
+    incoming_fs = session_fs.opendir(SessionNames.INCOMING_FOLDER)
     files = incoming_fs.listdir(".")
     metadata_files = [f"{f}" for f in files if f.endswith("_meta.yaml")]
 
     file_locators = []
     for filename in metadata_files:
         md = yaml.safe_load(incoming_fs.readtext(filename))
-        file_locators.append(FileLocator(incoming_fs, md["uuid"], md))
+        file_locators.append(
+            FileLocator(incoming_fs, md["uuid"], original_path=md["path"], metadata=md)
+        )
 
     return file_locators
 
@@ -96,9 +123,8 @@ def discover_year(file_locator: FileLocator) -> int:
 
     If the year is found, it will be added to the file metadata.
     """
-    file_path = file_locator.meta["path"]
-    file_dir = dirname(file_path)
-    file_name = file_locator.meta["name"]
+    file_dir = dirname(file_locator.name)
+    file_name = basename(file_locator.name)
 
     # Check year doesn't currently return an int
     def _check_year(s: str) -> int:

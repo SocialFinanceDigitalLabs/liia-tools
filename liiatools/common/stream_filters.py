@@ -17,7 +17,7 @@ def tablib_parse(source: FileLocator):
     """
     Parse any of the tabular formats supported by TabLib
     """
-    filename = source.meta.get("name")
+    filename = source.name
     with source.open("rb") as f:
         data = f.read()
 
@@ -39,7 +39,7 @@ def tablib_parse(source: FileLocator):
     except Exception as e:
         pass
 
-    raise StreamError(f"Could not parse {source.path} as a tabular format")
+    raise StreamError(f"Could not parse {source} as a tabular format")
 
 
 def _tablib_dataset_to_stream(dataset: tablib.Dataset, **kwargs):

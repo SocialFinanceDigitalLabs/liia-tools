@@ -1,32 +1,10 @@
-from contextlib import contextmanager
+from dataclasses import dataclass
 from typing import Any, Dict, List
 
 import pandas as pd
 from fs.base import FS
-from pydantic import BaseModel, ConfigDict
 from tablib import Databook, Dataset, import_set
 from tablib.formats import registry as tablib_registry
-
-Metadata = Dict[str, Any]
-
-
-class FileLocator:
-    def __init__(self, fs: FS, path: str, metadata: Metadata = None):
-        self.__fs = fs
-        self.__path = path
-
-        self.__metadata = metadata or {}
-
-    @property
-    def path(self) -> str:
-        return self.__path
-
-    @property
-    def meta(self) -> Metadata:
-        return self.__metadata
-
-    def open(self, mode: str = "r"):
-        return self.__fs.open(self.__path, mode)
 
 
 class DataContainer(Dict[str, pd.DataFrame]):
@@ -90,57 +68,34 @@ class ErrorContainer(List[Dict[str, Any]]):
     Used for holding data quality errors during processing. Can be used to filter the list of errors by a property so can limit to specific context, e.g. for a particular file.
     """
 
+    def set_property(self, prop: str, value: Any, override: bool = False):
+        """
+        Sets the property on all errors in the container. If override is False, then the property will only be set if it is not already set.
+        """
+        for e in self:
+            if override or prop not in e:
+                e[prop] = value
+
     def filter(self, prop: str, value: Any) -> "ErrorContainer":
+        """
+        Returns a new ErrorContainer with only the errors that have the specified property set to the specified value.
+        """
         return ErrorContainer([e for e in self if e.get(prop) == value])
 
     def with_prop(self, prop: str) -> "ErrorContainer":
+        """
+        Returns a new ErrorContainer with only the errors that have the specified property set.
+        """
         return ErrorContainer([e for e in self if prop in e])
 
     def to_dataframe(self):
+        """
+        Converts the ErrorContainer to a pandas DataFrame
+        """
         return pd.DataFrame(self)
 
 
-class ColumnConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    id: str
-    type: str
-    unique_key: bool = False
-    enrich: str = None
-    degrade: str = None
-    sort: int = None
-    exclude: List[str] = []
-
-
-class TableConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    id: str
-    retain: List[str] = []
-    columns: List[ColumnConfig]
-
-    def __getitem__(self, value):
-        ix = {t.id: t for t in self.columns}
-        return ix[value]
-
-    @property
-    def sort_keys(self):
-        sort_keys = [(c.id, c.sort) for c in self.columns if c.sort]
-        sort_keys.sort(key=lambda x: x[1])
-        return [c[0] for c in sort_keys]
-
-    def columns_for_profile(self, profile: str):
-        return [c for c in self.columns if profile not in c.exclude]
-
-
-class PipelineConfig(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    table_list: List[TableConfig]
-
-    def __getitem__(self, value):
-        ix = {t.id: t for t in self.table_list}
-        return ix[value]
-
-    def tables_for_profile(self, profile: str):
-        return [t for t in self.table_list if profile in t.retain]
+@dataclass
+class ProcessResult:
+    data: DataContainer
+    errors: ErrorContainer

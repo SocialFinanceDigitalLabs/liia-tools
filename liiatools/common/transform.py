@@ -1,16 +1,20 @@
+import logging
 from typing import Callable, Dict
 
 import pandas as pd
 
 from liiatools.common.data import (
-    ColumnConfig,
     DataContainer,
+    ErrorContainer,
     Metadata,
     PipelineConfig,
+    ProcessResult,
     TableConfig,
 )
 
 from ._transform_functions import degrade_functions, enrich_functions
+
+logger = logging.getLogger(__name__)
 
 
 def _transform(
@@ -39,7 +43,7 @@ def data_transforms(
     metadata: Metadata,
     property: str,
     functions: Dict[str, Callable],
-) -> DataContainer:
+) -> ProcessResult:
     """Pipelines can have a set of data transforms that are applied to the data after it has been cleaned.
 
     The standard ones we have are enrich and degrade. Enrich adds new columns to the data, degrade modifies existing
@@ -49,18 +53,27 @@ def data_transforms(
     # Create a copy of the data so we don't mutate the original
     data = data.copy()
 
+    errors = ErrorContainer()
+
     # Loop over known tables
-    for table_config in config.table_list:
-        if table_config.id in data:
-            _transform(
-                data[table_config.id], table_config, metadata, property, functions
-            )
-    return data
+    try:
+        for table_config in config.table_list:
+            if table_config.id in data:
+                _transform(
+                    data[table_config.id], table_config, metadata, property, functions
+                )
+    except Exception as e:
+        # As this step is crucial for ensure privacy, if we have any errors we should fail and return no data for this dataset.
+        logger.exception(f"Error in {property} transform")
+        data = DataContainer()
+        errors.append(dict(type="TransformError", message=str(e)))
+
+    return ProcessResult(data=data, errors=errors)
 
 
 def enrich_data(
     data: DataContainer, config: PipelineConfig, metadata: Metadata = None
-) -> DataContainer:
+) -> ProcessResult:
     """Standard set of enrichment transforms adding or modifying columns in the dataset."""
     if metadata is None:
         metadata = {}
@@ -70,7 +83,7 @@ def enrich_data(
 
 def degrade_data(
     data: DataContainer, config: PipelineConfig, metadata: Metadata = None
-) -> DataContainer:
+) -> ProcessResult:
     """Standard set of degradation transforms removing or modifying columns in the dataset."""
     if metadata is None:
         metadata = {}
@@ -80,7 +93,7 @@ def degrade_data(
 
 def prepare_export(
     data: DataContainer, config: PipelineConfig, profile: str = None
-) -> DataContainer:
+) -> ProcessResult:
     """
     Prepare data for export by removing columns that are not required for the given profile
     or for all configured tables if no profile is given.
@@ -120,4 +133,4 @@ def prepare_export(
             # Return the subset
             data_container[table_name] = table[table_columns].copy()
 
-    return data_container
+    return ProcessResult(data=data_container, errors=None)
