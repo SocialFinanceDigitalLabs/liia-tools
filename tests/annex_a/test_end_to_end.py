@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 
@@ -30,6 +31,7 @@ def log_dir(build_dir):
     return build_dir
 
 
+@pytest.mark.skipif(os.environ.get("SKIP_E2E"), reason="Skipping end-to-end tests")
 def test_end_to_end(liiatools_dir, build_dir, log_dir):
     runner = CliRunner()
     result = runner.invoke(
