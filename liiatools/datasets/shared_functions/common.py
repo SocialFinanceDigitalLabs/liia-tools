@@ -83,9 +83,9 @@ def save_year_error(input, la_log_dir):
     :param la_log_dir: Path to the local authority's log folder
     :return: Text file containing the error information
     """
-    
+
     filename = Path(input).resolve().stem
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     with open(
         f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
         "a",
@@ -93,8 +93,8 @@ def save_year_error(input, la_log_dir):
         f.write(
             f"Could not process '{filename}' because no year was found in the name of the file"
         )
-        
-        
+
+
 def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date):
     """
     Check that year is within permitted range of data retention policy
@@ -113,30 +113,32 @@ def check_year_within_range(year, num_of_years, new_year_start_month, as_at_date
     current_month = as_at_date.month
     if current_month < new_year_start_month:
         earliest_allowed_year = current_year - num_of_years
-        latest_allowed_year = current_year 
+        latest_allowed_year = current_year
     else:
         earliest_allowed_year = current_year - num_of_years + 1  # roll forward one year
         latest_allowed_year = current_year + 1
 
     return earliest_allowed_year <= year_to_check <= latest_allowed_year
-    
 
-def save_incorrect_year_error(input, la_log_dir):
+
+def save_incorrect_year_error(input, la_log_dir, retention_period):
     """
     Save errors to a text file in the LA log directory
 
     :param input: The input file location, including file name and suffix, and be usable by a Path function
     :param la_log_dir: Path to the local authority's log folder
+    :param retention_period: Number of years in the retention period
     :return: Text file containing the error information
     """
     filename = Path(input).resolve().stem
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     with open(
         f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
         "a",
     ) as f:
         f.write(
-            f"Could not process '{filename}'. This file is not within the year ranges of data retention policy."
+            f"Could not process '{filename}'. This file is not within the year ranges of data retention policy. The "
+            f"retention policy allows for files up to {retention_period} years old"
         )
 
 
@@ -177,10 +179,16 @@ def check_year(filename):
 
     fy_match = re.search(r"(\d{2})(.{0,3}\d{2})(.*)(\d*)", filename)
     if fy_match:
-        if len(fy_match.group(2)) == 2 and int(fy_match.group(2)) == int(fy_match.group(1)) + 1:
+        if (
+            len(fy_match.group(2)) == 2
+            and int(fy_match.group(2)) == int(fy_match.group(1)) + 1
+        ):
             year = "20" + fy_match.group(2)
             return year
-        if len(fy_match.group(2)) == 3 and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1:
+        if (
+            len(fy_match.group(2)) == 3
+            and int(fy_match.group(2)[-2:]) == int(fy_match.group(1)) + 1
+        ):
             year = "20" + fy_match.group(2)[-2:]
             return year
         if int(fy_match.group(3)[1:3]) == int(fy_match.group(2)[-2:]) + 1:
@@ -208,7 +216,7 @@ def check_file_type(input, file_types, supported_file_types, la_log_dir):
     :param la_log_dir: Location to save the error log
     :return: Continue if correct, error log if incorrect
     """
-    start_time = f"{datetime.now():%d-%m-%Y %Hh-%Mm-%Ss}"
+    start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
     extension = Path(input).suffix
     filename = Path(input).resolve().stem
 

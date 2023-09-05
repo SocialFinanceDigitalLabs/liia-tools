@@ -12,13 +12,13 @@ def test_add_year_column():
             events.EndRow(),
             events.EndTable(),
         ],
-        year = "2022"
+        year="2022",
     )
     stream = list(stream)
     assert stream[0].year == "2022"
     assert stream[1].year == "2022"
     assert not hasattr(stream[2], "year")
-    
+
 
 def test_create_la_child_id():
     stream = populate.create_la_child_id(

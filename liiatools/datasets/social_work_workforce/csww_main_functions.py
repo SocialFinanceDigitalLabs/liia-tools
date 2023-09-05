@@ -1,8 +1,10 @@
-from liiatools.datasets.social_work_workforce.lds_csww_data_generator.sample_data import generate_sample_csww_file
-from liiatools.datasets.social_work_workforce.lds_csww_data_generator.stream import consume
-from liiatools.datasets.social_work_workforce.lds_csww_clean.parse import (
-    etree,
-    to_xml)
+from liiatools.datasets.social_work_workforce.lds_csww_data_generator.sample_data import (
+    generate_sample_csww_file,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_data_generator.stream import (
+    consume,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_clean.parse import etree, to_xml
 
 
 def generate_sample(output: str):

@@ -28,7 +28,7 @@ from liiatools.datasets.shared_functions.common import (
     check_year,
     check_year_within_range,
     save_year_error,
-    save_incorrect_year_error
+    save_incorrect_year_error,
 )
 
 # Dependencies for la_agg()
@@ -118,8 +118,13 @@ def cleanfile(input, la_code, la_log_dir, output):
     years_to_go_back = 6
     year_start_month = 6
     reference_date = datetime.now()
-    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
-        save_incorrect_year_error(input, la_log_dir)
+    if (
+        check_year_within_range(
+            input_year, years_to_go_back, year_start_month, reference_date
+        )
+        is False
+    ):
+        save_incorrect_year_error(input, la_log_dir, retention_period=years_to_go_back)
         return
 
     # Configure stream

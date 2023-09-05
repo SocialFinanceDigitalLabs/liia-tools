@@ -15,7 +15,7 @@ def test_convert_true_false():
         [
             events.TextNode(text="false", schema=Schema()),
             events.TextNode(text="true", schema=Schema()),
-            events.TextNode(text="TRUE", schema=Schema())
+            events.TextNode(text="TRUE", schema=Schema()),
         ]
     )
     stream = list(stream)
@@ -38,5 +38,3 @@ def test_convert_true_false():
     assert stream[0].text == "false"
     assert stream[1].text == "true"
     assert stream[2].text == "true"
-
-
