@@ -1,10 +1,16 @@
-from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
+from urllib.error import URLError
+
+import pytest
+
+from liiatools.cin_census_pipeline.spec import load_schema
 
 
 def test_schema():
-
-    schema=Schema(2022).schema
+    schema = load_schema(2022)
     assert schema.name == "CIN_schema_2022.xsd"
 
-    schema=Schema(2017).schema
+    schema = load_schema(2017)
     assert schema.name == "CIN_schema_2017.xsd"
+
+    with pytest.raises(URLError):
+        load_schema(2016)

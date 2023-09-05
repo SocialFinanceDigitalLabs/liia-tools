@@ -1,7 +1,7 @@
 from typing import Iterator
+
 import tablib
 from more_itertools import peekable
-
 from sfdata_stream_parser import events
 from sfdata_stream_parser.collectors import xml_collector
 
@@ -15,6 +15,27 @@ class HeaderEvent(events.ParseEvent):
 
 
 def _reduce_dict(dict_instance):
+    """
+    Reduces the values of a dictionary by unwrapping single-item lists.
+
+    Parameters:
+    - dict_instance (dict): A dictionary where each key maps to a list.
+
+    Returns:
+    - dict: A new dictionary where single-item lists are unwrapped to their sole element.
+
+    Behavior:
+    - Iterates through each (key, value) pair in the input dictionary.
+    - If the value is a list with a single element, the function replaces the list with that element.
+    - Otherwise, the value is left as is.
+
+    Examples:
+    >>> _reduce_dict({'a': [1], 'b': [2, 3], 'c': [4, 5, 6]})
+    {'a': 1, 'b': [2, 3], 'c': [4, 5, 6]}
+
+    >>> _reduce_dict({'x': ['single'], 'y': ['multi', 'elements']})
+    {'x': 'single', 'y': ['multi', 'elements']}
+    """
     new_dict = {}
     for key, value in dict_instance.items():
         if len(value) == 1:
@@ -136,6 +157,28 @@ __EXPORT_HEADERS = [
 
 
 def _maybe_list(value):
+    """
+    Ensures that the given value is a list.
+
+    Parameters:
+    - value: The value to be converted to a list. It can be of any type.
+
+    Returns:
+    - A list containing the original value(s).
+
+    Behavior:
+    - If the input value is None, the function returns an empty list.
+    - If the input value is already a list, it is returned as is.
+    - For any other value, the function wraps it in a list and returns it.
+
+    Examples:
+    >>> _maybe_list(None)
+    []
+    >>> _maybe_list(42)
+    [42]
+    >>> _maybe_list([1, 2, 3])
+    [1, 2, 3]
+    """
     if value is None:
         value = []
     if not isinstance(value, list):
@@ -144,6 +187,37 @@ def _maybe_list(value):
 
 
 def cin_event(record, property, event_name=None):
+    """
+    Create an event record based on the given property from the original record.
+
+    This function takes a dictionary `record` and extracts the value of a specified
+    `property`. If the property exists and is non-empty, it creates a new dictionary
+    with keys "Date" and "Type" where "Date" is the value of the specified property
+    and "Type" is the name of the event. The new dictionary is then filtered based
+    on the keys specified in the global variable `__EXPORT_HEADERS`.
+
+    Parameters:
+    - record (dict): The original record containing various key-value pairs.
+    - property (str): The key in the `record` dictionary to look for.
+    - event_name (str, optional): The name of the event. Defaults to the value of `property` if not specified.
+
+    Returns:
+    - tuple: A single-element tuple containing the new filtered dictionary, or an empty tuple if `property` is not found or its value is empty.
+
+    Example:
+    >>> record = {'Name': 'John', 'DOB': '2000-01-01'}
+    >>> property = 'DOB'
+    >>> event_name = 'Date of Birth'
+    >>> cin_event(record, property, event_name)
+    ({'Date': '2000-01-01', 'Type': 'Date of Birth'},)
+
+    >>> cin_event(record, 'UnknownProperty')
+    ()
+
+    Note:
+    - Assumes that a global variable `__EXPORT_HEADERS` exists that specifies which keys to include in the returned dictionary.
+    - The reason this returns a tuple is that when called, it is used with 'yield from' which expects an iterable. An empty tuple results in no records being yielded.
+    """
     if event_name is None:
         event_name = property
     value = record.get(property)
@@ -155,6 +229,26 @@ def cin_event(record, property, event_name=None):
 
 
 def event_to_records(event: CINEvent) -> Iterator[dict]:
+    """
+    Transforms a CINEvent into a series of event records.
+
+    The CINEvent has to have a record. This is generated from :func:`child_collector`
+
+    Parameters:
+    - event (CINEvent): A CINEvent object containing the record and various details related to it.
+
+    Returns:
+    - Iterator[dict]: An iterator that yields dictionaries representing individual event records.
+
+    Behavior:
+    - The function first creates a 'child' dictionary by merging the "ChildIdentifiers" and "ChildCharacteristics" from the original event record.
+    - It then processes various sub-records within the event, including "CINdetails", "Assessments", "CINPlanDates", "Section47", and "ChildProtectionPlans".
+    - Each sub-record is further processed and emitted as an individual event record.
+
+    Examples:
+    >>> list(event_to_records(CINEvent(...)))
+    [{'field1': 'value1', 'field2': 'value2'}, ...]
+    """
     record = event.record
     child = {
         **record.get("ChildIdentifiers", {}),

@@ -1,22 +1,17 @@
-import logging
-
-from fs.base import FS
+from fs import FS
 
 from liiatools.common import pipeline as pl
 from liiatools.common.archive import DataframeArchive
 from liiatools.common.constants import ProcessNames, SessionNames
 from liiatools.common.data import (
+    DataContainer,
     ErrorContainer,
     FileLocator,
     PipelineConfig,
     ProcessResult,
+    TableConfig,
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
-
-from .spec import load_pipeline_config, load_schema
-from .stream_pipeline import task_cleanfile
-
-logger = logging.getLogger()
 
 
 def process_file(
@@ -40,10 +35,7 @@ def process_file(
     # We save these files based on the session UUID - so UUID must exist
     uuid = file_locator.meta["uuid"]
 
-    # Load schema and set on processing metadata
-    schema = load_schema(year)
     metadata = dict(year=year, schema=schema, la_code=la_code)
-
     # Normalise the data and export to the session 'cleaned' folder
     try:
         cleanfile_result = task_cleanfile(file_locator, schema)
@@ -58,36 +50,8 @@ def process_file(
         )
         return ProcessResult(data=None, errors=errors)
 
-    # Export the cleaned data to the session 'cleaned' folder
-    cleanfile_result.data.export(
-        session_folder, f"{SessionNames.CLEANED_FOLDER}/{uuid}_", "parquet"
-    )
-    errors.extend(cleanfile_result.errors)
-
-    # Enrich the data and export to the session 'enriched' folder
-    enrich_result = enrich_data(cleanfile_result.data, pipeline_config, metadata)
-    enrich_result.data.export(
-        session_folder, f"{SessionNames.ENRICHED_FOLDER}/{uuid}_", "parquet"
-    )
-    errors.extend(enrich_result.errors)
-
-    # Degrade the data and export to the session 'degraded' folder
-    degraded_result = degrade_data(enrich_result.data, pipeline_config, metadata)
-    degraded_result.data.export(
-        session_folder, f"{SessionNames.DEGRADED_FOLDER}/{uuid}_", "parquet"
-    )
-    errors.extend(degraded_result.errors)
-
-    errors.set_property("filename", file_locator.name)
-    errors.set_property("uuid", uuid)
-
-    return ProcessResult(data=degraded_result.data, errors=errors)
-
 
 def process_session(source_fs: FS, output_fs: FS, la_code: str):
-    # Before we start - load configuration for this dataset
-    pipeline_config = load_pipeline_config()
-
     # Ensure all processing folders exist
     pl.create_process_folders(output_fs)
 
@@ -122,12 +86,5 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     # Export the current snapshot of the archive
     current_data = archive.current()
     current_data.export(
-        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "ssda903_current_", "csv"
+        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "cin_cencus_current_", "csv"
     )
-
-    # Create the different reports
-    export_folder = output_fs.opendir(ProcessNames.EXPORT_FOLDER)
-    for report in ["PAN", "SUFFICIENCY"]:
-        report_data = prepare_export(current_data, pipeline_config, profile=report)
-        report_folder = export_folder.makedirs(report, recreate=True)
-        report_data.data.export(report_folder, "ssda903_", "csv")

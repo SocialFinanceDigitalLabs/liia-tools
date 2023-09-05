@@ -1,11 +1,12 @@
-from pathlib import Path
-import logging
 import datetime
+import logging
 import os
-import yaml
+from pathlib import Path
 from string import Template
 
-from liiatools.spec import cin_census as cin_asset_dir
+import yaml
+
+from liiatools.cin_census_pipeline import spec as cin_asset_dir
 
 log = logging.getLogger(__name__)
 

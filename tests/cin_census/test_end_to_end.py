@@ -40,7 +40,7 @@ def test_end_to_end(liiatools_dir, build_dir, log_dir):
             "cin-census",
             "cleanfile",
             "--i",
-            str(liiatools_dir / "spec/cin_census/samples/cin-2022.xml"),
+            str(liiatools_dir / "cin_census_pipeline/spec/samples/cin-2022.xml"),
             "--o",
             str(build_dir),
             "--la_log_dir",

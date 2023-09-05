@@ -1,11 +1,11 @@
 import logging
-from xmlschema import XMLSchemaValidatorError
 import re
 
-from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser import events
-from sfdata_stream_parser.filters.generic import streamfilter, pass_event
-from sfdata_stream_parser.collectors import collector, block_check
+from sfdata_stream_parser.checks import type_check
+from sfdata_stream_parser.collectors import block_check, collector
+from sfdata_stream_parser.filters.generic import pass_event, streamfilter
+from xmlschema import XMLSchemaValidatorError
 
 log = logging.getLogger(__name__)
 
@@ -52,7 +52,9 @@ def _get_validation_error(
                 return event.from_event(event, reason="blank")
             else:
                 return event
-    except AttributeError:  # Return event information, so it can be written to a log for the Local Authority
+    except (
+        AttributeError
+    ) as e:  # Return event information, so it can be written to a log for the Local Authority
         return event
 
 
