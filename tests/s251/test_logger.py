@@ -3,14 +3,14 @@ from unittest.mock import patch
 from pathlib import Path
 from datetime import datetime
 
-from liiatools.datasets.s903.lds_ssda903_clean import logger
+from liiatools.datasets.s251.lds_s251_clean import logger
 
 from sfdata_stream_parser import events
 
 
 def test_create_formatting_error_list():
     stream = (
-        events.StartTable(table_name="AD1"),
+        events.StartTable(),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_header", formatting_error="0"),
@@ -27,7 +27,7 @@ def test_create_formatting_error_list():
             ]
 
     stream = (
-        events.StartTable(table_name="AD1"),
+        events.StartTable(),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_other_header", formatting_error="1"),
         events.Cell(header="some_header"),
@@ -44,7 +44,7 @@ def test_create_formatting_error_list():
             ]
 
     stream = (
-        events.StartTable(table_name="AD1"),
+        events.StartTable(),
         events.Cell(header="some_header", formatting_error="1"),
         events.Cell(header="some_header_2", formatting_error=None),
         events.Cell(header="some_header_3", formatting_error=""),
@@ -85,28 +85,32 @@ def test_create_extra_column_error():
     assert (
         event_with_extra_column_error[0].extra_column_error
         == "Additional columns were found in file titled "
-        "'test_file.csv' than those expected from schema "
-        "for filetype = test_table, so these columns have "
-        "been removed: ['column_3']"
+        "'test_file.csv' than those expected from the "
+        "schema so these columns have been removed: "
+        "['column_3']"
     )
 
 
 def test_create_file_match_error():
+    config = {
+        "placement_costs": {"Child ID": {"string": "alphanumeric", "canbeblank": False}}
+    }
+
     stream = logger.create_file_match_error(
-        [events.StartTable(expected_columns=["column_1", "column_2"])]
+        [events.StartTable(expected_columns=["Child ID"])], config=config
     )
     event_without_file_match_error = list(stream)
     assert not hasattr(event_without_file_match_error[0], "match_error")
 
     stream = logger.create_file_match_error(
-        [events.StartTable(filename="test_file.csv", headers=["column_1", "column_2"])]
+        [events.StartTable(filename="test_file.csv", headers=["column_1", "column_2"])],
+        config=config,
     )
     event_with_file_match_error = list(stream)
     assert (
         event_with_file_match_error[0].match_error
-        == "Failed to find a set of matching columns headers for "
-        "file titled 'test_file.csv' which contains column headers "
-        "['column_1', 'column_2'] so no output has been produced"
+        == "Failed to find a set of matching columns headers for file titled 'test_file.csv' which is "
+        "missing column headers ['Child ID'] so no output has been produced"
     )
 
 
@@ -122,8 +126,8 @@ def test_save_errors_la(mock_save):
                 formatting_error_list=["CHILD", "CHILD", "AGE"],
                 blank_error_list=["POSTCODE", "POSTCODE", "DATE"],
                 below_zero_error_list=["AGE"],
-                table_name="List 1",
                 extra_column_error=["list", "of", "headers"],
+                expected_columns=["CHILD", "AGE", "DATE", "POSTCODE"],
             ),
         ],
         la_log_dir,

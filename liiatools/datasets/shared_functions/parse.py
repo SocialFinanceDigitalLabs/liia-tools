@@ -1,7 +1,6 @@
 import tablib
 import logging
 from pathlib import Path
-from datetime import datetime
 
 from sfdata_stream_parser import events
 

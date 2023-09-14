@@ -26,20 +26,20 @@ def create_tables(stream, la_name):
         if isinstance(event, events.StartTable):
             match_error = getattr(event, "match_error", None)
             year_error = getattr(event, "year_error", None)
-            if match_error or year_error is not None:
+            if match_error is not None or year_error is not None:
                 data = None
             else:
-                data = tablib.Dataset(headers=event.expected_columns + ["LA", "YEAR"])
+                data = tablib.Dataset(
+                    headers=event.expected_columns + ["LA", "Year", "Quarter"]
+                )
         elif isinstance(event, events.EndTable):
             yield event
             yield TableEvent.from_event(event, data=data)
             data = None
         elif data is not None and isinstance(event, RowEvent):
             try:
-                data.append(event.row + [la_name, event.year])
-            except (
-                AttributeError
-            ):  # raised in case event.year is missing so data is not added
+                data.append(event.row + [la_name, event.year, event.quarter])
+            except AttributeError:  # raised in case event.year is missing so data is not added
                 pass
         yield event
 

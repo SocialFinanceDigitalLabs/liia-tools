@@ -2,6 +2,62 @@ from datetime import datetime, date
 import re
 
 
+def to_category(string, categories):
+    """
+    Matches a string to a category based on categories given in a config file
+    the config file should contain a dictionary for each category for this function to loop through
+    return blank if no categories found
+
+    :param string: Some string to convert into a category value
+    :param categories: A list of dictionaries containing different category:value pairs
+    :return: Either a category value, "error" or blank string
+    """
+    for code in categories:
+        if (
+            str(string).lower() == str(code["code"]).lower()
+            or str(string).lower() == str(code["code"]).lower() + ".0"
+        ):
+            return code["code"]
+        elif "name" in code and string:
+            if str(code["name"]).lower() in str(string).lower():
+                return code["code"]
+        elif not string:
+            return ""
+    return "formatting_error"
+
+
+def to_integer(value, config):
+    """
+    Convert any strings that should be integers based on the config into integers
+
+    :param value: Some value to convert to an integer
+    :param config: The loaded configuration
+    :return: Either an integer value or a blank string
+    """
+    if config == "integer":
+        if value or value == 0:
+            int_value = int(float(value))
+            if int_value >= 0:
+                return int_value
+            else:
+                return "value_below_zero"
+        else:
+            return ""
+    if config == "currency":
+        if value or value == 0:
+            value = re.findall(r"[+-]*\d*\.*", str(value))
+            value = "".join(map(str, value))
+            float_value = float(value)
+            if float_value >= 0:
+                return float_value
+            else:
+                return "value_below_zero"
+        else:
+            return ""
+    else:
+        return value
+
+
 def to_date(datevalue, dateformat="%d/%m/%Y"):
     """
     Convert a string to a date based on the dateformat %d/%m/%Y and convert a datetime to a date

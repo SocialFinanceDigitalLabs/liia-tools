@@ -3,7 +3,7 @@ import tempfile as tmp
 from unittest.mock import patch, mock_open
 import tablib
 
-from liiatools.datasets.s903.lds_ssda903_clean import parse
+from liiatools.datasets.shared_functions import parse
 
 from sfdata_stream_parser import events
 

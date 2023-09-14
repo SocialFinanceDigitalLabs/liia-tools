@@ -5,15 +5,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def read_file(file):
-    """
-    Reads the csv file as a pandas DataFrame
-    """
-    filepath = Path(file)
-    s903_df = pd.read_csv(filepath, index_col=None)
-    return s903_df
-
-
 def match_load_file(s903_df, column_names):
     """
     Matches the columns in the DataFrame against one of the 10 SSDA903 file types
