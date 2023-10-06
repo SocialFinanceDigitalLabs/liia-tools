@@ -1,5 +1,5 @@
-import re
-from collections import defaultdict
+import logging
+from collections import defaultdict, deque
 from typing import List
 
 import xmlschema
@@ -7,45 +7,8 @@ from sfdata_stream_parser import events
 from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser.collectors import block_check, collector
 from sfdata_stream_parser.filters.generic import pass_event, streamfilter
-from xmlschema import XMLSchemaValidatorError
 
-_INVALID_TAGS_TO_REMOVE = [
-    "LAchildID",
-    "UPN",
-    "FormerUPN",
-    "UPNunknown",
-    "PersonBirthDate",
-    "GenderCurrent",
-    "PersonDeathDate",
-    "Ethnicity",
-    "Disability",
-    "CINreferralDate",
-    "ReferralSource",
-    "PrimaryNeedCode",
-    "CINclosureDate",
-    "ReasonForClosure",
-    "DateOfInitialCPC",
-    "AssessmentActualStartDate",
-    "AssessmentInternalReviewDate",
-    "AssessmentAuthorisationDate",
-    "AssessmentFactors",
-    "CINPlanStartDate",
-    "CINPlanEndDate",
-    "S47ActualStartDate",
-    "InitialCPCtarget",
-    "DateOfInitialCPC",
-    "ICPCnotRequired",
-    "ReferralNFA",
-    "CPPstartDate",
-    "CPPendDate",
-    "InitialCategoryOfAbuse",
-    "LatestCategoryOfAbuse",
-    "NumberOfPreviousCPP",
-    "CPPreviewDate",
-]
-
-_EXCEPTION_LINE_PATTERN = re.compile(r"(?=\(line.*?(\w+))", re.MULTILINE)
-_MISSING_FIELD_PATTERN = re.compile(r"(?=\sTag.*?(\w+))")
+logger = logging.getLogger(__name__)
 
 
 @streamfilter(check=type_check(events.TextNode), fail_function=pass_event)
@@ -222,17 +185,21 @@ def remove_invalid(stream):
     :param stream: A filtered list of event objects
     :return: An updated list of event objects
     """
-    stream = list(stream)
-    first = stream[0]
-    last = stream[-1]
-    stream = stream[1:-1]
+    stream = deque(stream)
+    first = stream.popleft()
+    last = stream.pop()
 
-    if first.tag in _INVALID_TAGS_TO_REMOVE and not getattr(first, "valid", True):
-        yield from []
-    else:
-        yield first
+    is_valid = getattr(first, "valid", True)
+    is_content = first.schema.type.is_simple()
 
-        if len(stream) > 0:
-            yield from remove_invalid(stream)
+    if is_content and not is_valid:
+        messages = ", ".join([e.reason for e in first.validation_errors])
+        logger.info("Removing invalid content in tag %s: %s", first.tag, messages)
+        return
 
-        yield last
+    yield first
+
+    if len(stream) > 0:
+        yield from remove_invalid(stream)
+
+    yield last

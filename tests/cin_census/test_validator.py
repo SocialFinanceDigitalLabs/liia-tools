@@ -14,6 +14,7 @@ from liiatools.cin_census_pipeline import stream_filters as filters
 from liiatools.cin_census_pipeline.spec import load_schema
 from liiatools.cin_census_pipeline.spec.samples import CIN_2022
 from liiatools.cin_census_pipeline.spec.samples import DIR as SAMPLES_DIR
+from liiatools.cin_census_pipeline.stream_pipeline import task_cleanfile
 from liiatools.datasets.cin_census.lds_cin_clean import validator
 from liiatools.datasets.cin_census.lds_cin_clean.parse import dom_parse
 
@@ -108,3 +109,34 @@ def test_validate_reordered_child_id():
     assert error.particle.name == "LAchildID"
     assert error.occurs == 0
     assert error.sourceline == 19
+
+
+class FakeLocator:
+    def __init__(self, data):
+        self.data = data
+        self.meta = {}
+
+    def open(self, mode: str = "r"):
+        return BytesIO(self.data)
+
+
+def test_remove_invalid():
+    with CIN_2022.open("rb") as f:
+        root = ET.parse(f).getroot()
+
+    xml_string = ET.tostring(root, encoding="utf-8")
+    locator = FakeLocator(xml_string)
+
+    data = task_cleanfile(locator, schema=load_schema(2022))
+    child_ids = set(data["LAchildID"])
+    assert child_ids == {"DfEX0000001"}
+
+    el = root.find(".//LAchildID")
+    el.text = ""
+
+    xml_string = ET.tostring(root, encoding="utf-8")
+    locator = FakeLocator(xml_string)
+
+    data = task_cleanfile(locator, schema=load_schema(2022))
+    child_ids = set(data["LAchildID"])
+    assert child_ids == {None}
