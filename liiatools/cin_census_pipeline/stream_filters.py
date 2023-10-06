@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 from typing import List
 
 import xmlschema
@@ -140,56 +141,21 @@ def inherit_LAchildID(stream):
             yield event
 
 
-@streamfilter(check=type_check(events.StartElement), fail_function=pass_event)
-def validate_elements(event):
-    """
-    Validates each element, and if not valid, sets the properties:
-        * valid - (always False)
-        * validation_message - a descriptive validation message
-
-    Looks for specific text related to errors:
-        * LAchildID is missing
-        * Any other field is missing
-        * Required field is blank
-        * Attribute error (I think) this is when no schema is attached to a node because it wasn't expected. So am unexpected node error
-
-    :param event: A filtered list of event objects
-    :param LAchildID_error: An empty list to save child ID errors
-    :param field_error: An empty list to save field errors
-
-    """
-    if not hasattr(event, "schema"):
-        return event.from_event(event, valid=False, validation_error_type="NoSchema")
-
-    try:
-        event.schema.validate(event.node)
-        return event
-    except XMLSchemaValidatorError as e:
-        validation_error = e
-
-    full_error_message = str(validation_error)
-
-    match = _EXCEPTION_LINE_PATTERN.search(full_error_message)
-    error_line = match.group(1) if match else None
-
-    attribs = dict(valid=False, validation_error=validation_error)
-    if error_line:
-        attribs["error_line"] = error_line
-
-    if "Unexpected" and "LAchildID" in validation_error.reason:
-        attribs["error_type"] = "MissingLAchildID"
-    elif " expected" in validation_error.reason:
-        attribs["error_type"] = "MissingField"
-        match = _MISSING_FIELD_PATTERN.search(validation_error.reason)
-        missing_field = match.group(1) if match else None
-        if missing_field:
-            attribs["missing_field"] = missing_field
-    elif "failed validating ''" in validation_error.message:
-        attribs["error_type"] = "BlankField"
-    else:
-        attribs["error_type"] = "Other"
-
-    return event.from_event(event, **attribs)
+def validate_elements(stream):
+    error_dict = {}
+    for event in stream:
+        # Only validate root element
+        if isinstance(event, events.StartElement) and event.node.getparent() is None:
+            error_list = list(event.schema.iter_errors(event.node))
+            error_dict = defaultdict(list)
+            for e in error_list:
+                error_dict[e.elem].append(e)
+        if isinstance(event, events.StartElement):
+            if event.node in error_dict:
+                event = event.from_event(
+                    event, valid=False, validation_errors=error_dict[event.node]
+                )
+        yield event
 
 
 @streamfilter(check=lambda x: True)

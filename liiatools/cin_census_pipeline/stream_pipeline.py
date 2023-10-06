@@ -19,37 +19,32 @@ from . import stream_filters as filters
 def task_cleanfile(src_file: FileLocator, schema: XMLSchema) -> ProcessResult:
     with src_file.open("rb") as f:
         stream = dom_parse(f)
-        stream = list(stream)  # We need to read the whole file before we close it
 
-    stream = filters.strip_text(stream)
-    stream = filters.add_context(stream)
-    stream = filters.add_schema(stream, schema=schema)
-    # stream = filters.inherit_LAchildID(stream)
+        stream = filters.strip_text(stream)
+        stream = filters.add_context(stream)
+        stream = filters.add_schema(stream, schema=schema)
+        # stream = filters.inherit_LAchildID(stream)
 
-    la_child_id_error_list = []
-    field_error_list = []
-    stream = filters.validate_elements(
-        stream, LAchildID_error=la_child_id_error_list, field_error=field_error_list
-    )
+        stream = filters.validate_elements(stream)
 
-    # value_error = []
-    # structural_error = []
-    # blank_error = []
-    # stream = filters.counter(
-    #     stream,
-    #     counter_check=lambda e: isinstance(e, events.StartElement)
-    #     and hasattr(e, "valid"),
-    #     value_error=value_error,
-    #     structural_error=structural_error,
-    #     blank_error=blank_error,
-    # )
+        # value_error = []
+        # structural_error = []
+        # blank_error = []
+        # stream = filters.counter(
+        #     stream,
+        #     counter_check=lambda e: isinstance(e, events.StartElement)
+        #     and hasattr(e, "valid"),
+        #     value_error=value_error,
+        #     structural_error=structural_error,
+        #     blank_error=blank_error,
+        # )
 
-    stream = filters.convert_true_false(stream)
+        stream = filters.convert_true_false(stream)
 
-    stream = filters.remove_invalid(stream)
+        stream = filters.remove_invalid(stream)
 
-    stream = cin_record.message_collector(stream)
-    data = cin_record.export_table(stream)
+        stream = cin_record.message_collector(stream)
+        data = cin_record.export_table(stream)
     # data = file_creator.add_fields(input_year, data, la_name, la_code)
     # file_creator.export_file(input, output, data)
     # logger.save_errors_la(
