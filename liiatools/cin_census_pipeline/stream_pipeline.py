@@ -1,22 +1,16 @@
-from dataclasses import dataclass
-from typing import Any, Dict, List, Union
-
-import pandas as pd
-from sfdata_stream_parser import events
-from sfdata_stream_parser.filters import generic
-from sfdata_stream_parser.parser.xml import parse
+import tablib
 from xmlschema import XMLSchema
 
-from liiatools.common import stream_filters as stream_functions
-from liiatools.common.data import DataContainer, FileLocator, ProcessResult
+from liiatools.common.data import FileLocator, ProcessResult
 from liiatools.datasets.cin_census.lds_cin_clean import cin_record
 from liiatools.datasets.cin_census.lds_cin_clean.parse import dom_parse
-from liiatools.datasets.shared_functions import common as common_functions
 
 from . import stream_filters as filters
 
+# TODO: Should return a ProcessResult with a dataframe, not tablib
 
-def task_cleanfile(src_file: FileLocator, schema: XMLSchema) -> ProcessResult:
+
+def task_cleanfile(src_file: FileLocator, schema: XMLSchema) -> tablib.Dataset:
     with src_file.open("rb") as f:
         stream = dom_parse(f)
 
