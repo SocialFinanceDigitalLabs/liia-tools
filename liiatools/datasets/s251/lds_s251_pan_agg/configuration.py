@@ -5,12 +5,12 @@ import os
 import yaml
 from string import Template
 
-from liiatools.spec import s903 as s903_asset_dir
+from liiatools.spec import s251 as s251_asset_dir
 from liiatools.spec import common as common_asset_dir
 
 log = logging.getLogger(__name__)
 
-DEFAULT_CONFIG_DIR = Path(s903_asset_dir.__file__).parent
+DEFAULT_CONFIG_DIR = Path(s251_asset_dir.__file__).parent
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 
 

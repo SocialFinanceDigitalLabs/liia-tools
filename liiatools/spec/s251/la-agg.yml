@@ -1,50 +1,74 @@
-column_names:
-    - Child ID
-    - Date of birth
-    - Gender
-    - Ethnicity
-    - Disability
-    - Category of need
-    - Date of last assessment
-    - Does the child have an EHCP
-    - Is the child UASC
-    - Number of missing episodes in current period of care
-    - Legal status
-    - Placement start date
-    - Placement end date
-    - Date of start of current care period
-    - Reason for placement change
-    - Number of placements in last 12 months
-    - Number of placements in current care period
-    - Placement type
-    - Provider type
-    - Procurement platform
-    - Procurement framework
-    - Ofsted URN
-    - Home postcode
-    - Placement postcode
-    - LA of placement
-    - Total committed cost accrued in FY to date
-    - Contribution from social care provider/s
-    - Contribution from health provider/s
-    - Contribution from education provider/s
-    - LA
-    - Year
-    - Quarter
+table_name:
+    placement_costs:
+        - Child ID
+        - Date of birth
+        - Gender
+        - Ethnicity
+        - Disability
+        - Category of need
+        - Date of last assessment
+        - Does the child have an EHCP
+        - Is the child UASC
+        - Number of missing episodes in current period of care
+        - Legal status
+        - Placement start date
+        - Placement end date
+        - Date of start of current care period
+        - Reason for placement change
+        - Number of placements in last 12 months
+        - Number of placements in current care period
+        - Placement type
+        - Provider type
+        - Procurement platform
+        - Procurement framework
+        - Ofsted URN
+        - Home postcode
+        - Placement postcode
+        - LA of placement
+        - Total committed cost accrued in FY to date
+        - Contribution from social care provider/s
+        - Contribution from health provider/s
+        - Contribution from education provider/s
+        - LA
+        - Year
+        - Quarter
+    internal_residential_costs:
+        - Asset name
+        - Ofsted URN
+        - Start date
+        - End date
+        - Total committed cost accrued in FY to date
+        - LA
+        - Year
+        - Quarter
 
 dates:
-    - Date of birth
-    - Date of last assessment
-    - Placement start date
-    - Placement end date
-    - Date of start of current care period
+    placement_costs:
+        - Date of birth
+        - Date of last assessment
+        - Placement start date
+        - Placement end date
+        - Date of start of current care period
+    internal_residential_costs:
+        - Start date
+        - End date
 
 sort_order:
-    - Year
-    - Quarter
+    placement_costs:
+        - Year
+        - Quarter
+    internal_residential_costs:
+        - Year
+        - Quarter
 
 dedup:
-    - Child ID
-    - Placement start date
-    - Year
-    - Quarter
+    placement_costs:
+        - Child ID
+        - Placement start date
+        - Year
+        - Quarter
+    internal_residential_costs:
+        - Asset name
+        - Start date
+        - Year
+        - Quarter

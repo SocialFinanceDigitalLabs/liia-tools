@@ -12,6 +12,7 @@ from liiatools.datasets.shared_functions.logger import (
     create_blank_error_list,
     ErrorTable,
     create_below_zero_error_list,
+    create_file_match_error,
 )
 
 log = logging.getLogger(__name__)
@@ -78,31 +79,6 @@ def create_extra_column_error(event):
             f"'{event.filename}' than those expected from schema for filetype = {event.table_name}, so these "
             f"columns have been removed: {extra_columns}",
         )
-
-
-@streamfilter(
-    check=type_check(events.StartTable),
-    fail_function=pass_event,
-    error_function=pass_event,
-)
-def create_file_match_error(event):
-    """
-    Add a match_error to StartTables that do not have an event.expected_columns so these errors can be written to the
-    log.txt file. If there is no event.expected_columns for a given StartTable that means its headers did not match
-    those in the config file
-
-    :param event: A filtered list of event objects of type StartTable
-    :return: An updated list of event objects
-    """
-    expected_columns = getattr(event, "expected_columns", None)
-    if expected_columns is None:
-        return event.from_event(
-            event,
-            match_error=f"Failed to find a set of matching columns headers for file titled '{event.filename}' "
-            f"which contains column headers {event.headers} so no output has been produced",
-        )
-    else:
-        return event
 
 
 def save_errors_la(stream, la_log_dir):
