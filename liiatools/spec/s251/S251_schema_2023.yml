@@ -306,10 +306,10 @@ table_name:
         Asset name:
             *alphanumeric-not-blank
         Ofsted URN:
-            *alphanumeric-blank
+            *alphanumeric-not-blank
         Start date:
             *date-not-blank
         End date:
-            *date-blank
+            *date-not-blank
         Total committed cost accrued in FY to date:
             *currency-not-blank

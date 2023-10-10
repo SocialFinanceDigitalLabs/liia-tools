@@ -86,16 +86,16 @@ def find_year_of_return(
         year, quarter = _calculate_year_quarter(data, "End date")
     else:
         _save_year_error(input, la_log_dir, DataType.MISSING_COLUMN)
-        return None, None
+        return None, None, None
 
     if year is np.nan:
         _save_year_error(input, la_log_dir, DataType.EMPTY_COLUMN)
-        return None, None
+        return None, None, None
     else:
         quarter = "Q4" if quarter == "Q0" else quarter
-        year = year + 1 if quarter == "Q1" or quarter == "Q2" else year
-        if year in range(reference_year - retention_period, 2023):
+        financial_year = year + 1 if quarter in ["Q1", "Q2", "Q3"] else year
+        if financial_year in range(reference_year - retention_period, 2023):
             _save_year_error(input, la_log_dir, DataType.OLD_DATA, year=year)
-            return None, None
+            return None, None, None
         else:
-            return year, quarter
+            return year, financial_year, quarter

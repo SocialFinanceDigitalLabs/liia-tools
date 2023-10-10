@@ -119,3 +119,22 @@ def test_create_below_zero_error_list():
                 "some_header",
                 "some_header_2",
             ]
+
+
+def test_create_file_match_error():
+    stream = logger.create_file_match_error(
+        [events.StartTable(expected_columns=["column_1", "column_2"])]
+    )
+    event_without_file_match_error = list(stream)
+    assert not hasattr(event_without_file_match_error[0], "match_error")
+
+    stream = logger.create_file_match_error(
+        [events.StartTable(filename="test_file.csv", headers=["column_1", "column_2"])]
+    )
+    event_with_file_match_error = list(stream)
+    assert (
+        event_with_file_match_error[0].match_error
+        == "Failed to find a set of matching columns headers for "
+        "file titled 'test_file.csv' which contains column headers "
+        "['column_1', 'column_2'] so no output has been produced"
+    )

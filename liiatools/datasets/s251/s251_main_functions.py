@@ -66,7 +66,7 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
         == "incorrect file type"
     ):
         return
-    year, quarter = prep.find_year_of_return(
+    year, financial_year, quarter = prep.find_year_of_return(
         input,
         la_log_dir,
         retention_period=YEARS_TO_GO_BACK - 1,
@@ -77,7 +77,7 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
 
     if (
         common.check_year_within_range(
-            year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
+            financial_year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
         )
         is False
     ):
@@ -91,7 +91,7 @@ def cleanfile(input: str, la_code: str, la_log_dir: str, output: str):
     stream = populate.add_year_column(stream, year=year, quarter=quarter)
 
     # Configure stream
-    config = clean_config.Config(year)
+    config = clean_config.Config(financial_year)
     la_name = common.flip_dict(config["data_codes"])[la_code]
     stream = clean_config.configure_stream(stream, config)
 
