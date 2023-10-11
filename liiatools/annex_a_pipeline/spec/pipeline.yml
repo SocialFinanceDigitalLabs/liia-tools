@@ -1,0 +1,482 @@
+table_list:
+- id: List 1
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Date of Contact
+    type: date
+    unique_key: true
+  - id: Contact Source
+    type: category
+    unique_key: true
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 2
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Assessment start date
+    type: date
+    unique_key: true
+  - id: Assessment completion date
+    type: date
+  - id: Organisation completing assessment
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 3
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: category
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Date of referral
+    type: date
+    unique_key: true
+  - id: Referral Source
+    type: category
+    unique_key: true
+  - id: Referral NFA?
+    type: category
+  - id: Number of Referrals in Last 12 Months
+    type: integer
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 4
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Does the Child have a Disability
+    type: category
+  - id: Continuous Assessment Start Date
+    type: date
+    unique_key: true
+  - id: Child Seen During Continuous Assessment
+    type: category
+  - id: Continuous Assessment Date of Authorisation
+    type: date
+  - id: Was the child assessed as requiring LA children's social care support?
+    type: category
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 5
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Does the Child have a Disability
+    type: category
+  - id: Strategy discussion initiating Section 47 Enquiry Start Date
+    type: date
+    unique_key: true
+  - id: Was an Initial Child Protection Conference deemed unnecessary?
+    type: category
+  - id: Date of Initial Child Protection Conference
+    type: date
+  - id: Did the Initial Child Protection Conference Result in a Child Protection Plan
+    type: category
+  - id: Number of Section 47 Enquiries in the last 12 months
+    type: integer
+  - id: Number of ICPCs in the last 12 months
+    type: integer
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 6
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Does the Child have a Disability
+    type: category
+  - id: CIN Start Date
+    type: date
+    unique_key: true
+  - id: Primary Need Code
+    type: category
+  - id: Date Child Was Last Seen
+    type: date
+  - id: CIN Closure Date
+    type: date
+  - id: Reason for Closure
+    type: category
+  - id: Case Status
+    type: category
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 7
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Does the Child have a Disability
+    type: category
+  - id: Child Protection Plan Start Date
+    type: date
+    unique_key: true
+  - id: Initial Category of Abuse
+    type: category
+  - id: Latest Category of Abuse
+    type: category
+  - id: Date of the Last Statutory Visit
+    type: date
+  - id: Was the Child Seen Alone?
+    type: category
+  - id: Date of latest review conference
+    type: date
+  - id: Child Protection Plan End Date
+    type: date
+  - id: Subject to Emergency Protection Order or Protected Under Police Powers in Last Six Months (Y/N)
+    type: category
+  - id: Number of Previous Child Protection Plans
+    type: integer
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 8
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Unaccompanied Asylum Seeking Child (UASC) within the Last 12 Months (Y/N)
+    type: category
+  - id: Does the Child have a Disability
+    type: category
+  - id: Date Started to be Looked After
+    type: date
+    unique_key: true
+  - id: Child's Category of Need
+    type: category
+  - id: Is this a second or subsequent period of being a Looked After Child within the last 12 months (Y/N)
+    type: category
+  - id: Start date of current legal status
+    type: date
+  - id: Child's Legal Status
+    type: category
+    unique_key: true
+  - id: Date of Latest Statutory Review
+    type: date
+  - id: Date of Last Social Work Visit
+    type: date
+  - id: What is the permanence plan for this child?
+    type: category
+  - id: Date of Last IRO Visit / Contact to the Child
+    type: date
+  - id: Date of Last Health Assessment
+    type: date
+  - id: Date of Last Dental Check
+    type: date
+  - id: Number of Placements in the Last 12 months
+    type: integer
+  - id: Date Ceased to be Looked After
+    type: date
+  - id: Reason Ceased to be Looked After
+    type: category
+  - id: Start Date of Most Recent Placement
+    type: date
+  - id: Placement Type
+    type: category
+    unique_key: true
+  - id: Placement Provider
+    type: category
+    unique_key: true
+  - id: Placement postcode
+    type: postcode
+    degrade: short_postcode
+    unique_key: true
+  - id: URN of Placement
+    type: string
+  - id: Placement Location
+    type: category
+  - id: LA of Placement
+    type: category
+  - id: Number of Episodes the Child has been 'Missing' from their Placement in the last 12 months
+    type: integer
+  - id: Number of Episodes the Child has been 'Absent' from their Placement in the last 12 months
+    type: integer
+  - id: Was the child offered a Return Interview after their last missing episode (Y/N)?
+    type: category
+  - id: Did the child accept a Return Interview after their last missing episode (Y/N)?
+    type: category
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 9
+  retain:
+  - PAN
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Does the Child have a Disability
+    type: category
+  - id: Allocated Team
+    type: string
+    exclude:
+    - PAN
+  - id: Allocated Worker
+    type: string
+    exclude:
+    - PAN
+  - id: Eligibility Category
+    type: category
+  - id: LA in Touch
+    type: category
+  - id: Type of Accommodation
+    type: category
+  - id: Suitability of Accommodation
+    type: category
+  - id: Activity Status
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 10
+  columns:
+  - id: Child Unique ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Family identifier
+    type: string
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Date of Birth
+    type: date
+    degrade: first_of_month
+  - id: Age of Child (Years)
+    type: integer
+  - id: Does the Child have a Disability
+    type: category
+  - id: Date the Child Entered Care
+    type: date
+  - id: Date of Decision that Child Should be Placed for Adoption
+    type: date
+    unique_key: true
+  - id: Date of Placement Order
+    type: date
+  - id: Date of Matching Child and Prospective Adopters
+    type: date
+  - id: Date Placed for Adoption
+    type: date
+  - id: Date of Adoption Order
+    type: date
+  - id: Date of Decision that Child Should No Longer be Placed for Adoption
+    type: date
+  - id: Reason Why Child No Longer Placed for Adoption
+    type: category
+  - id: Date the child was placed for fostering in FFA or concurrent planning placement
+    type: date
+  - id: LA
+    type: string
+    enrich: la_name
+- id: List 11
+  columns:
+  - id: Individual adopter identifier
+    type: string
+    unique_key: true
+  - id: Family identifier
+    type: string
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Disability
+    type: category
+  - id: Is the (prospective) adopter fostering for adoption?
+    type: string
+  - id: Date enquiry received
+    type: date
+    unique_key: true
+  - id: Date Stage 1 started
+    type: date
+  - id: Date Stage 1 ended
+    type: date
+  - id: Date Stage 2 started
+    type: date
+  - id: Date Stage 2 ended
+    type: date
+  - id: Date application submitted
+    type: date
+  - id: Date application approved
+    type: date
+  - id: Date adopter matched with child(ren)
+    type: date
+  - id: Date child/children placed with adopter(s)
+    type: date
+  - id: No. of children placed
+    type: integer
+  - id: Date of Adoption Order
+    type: date
+  - id: Date of leaving adoption process
+    type: date
+  - id: Reason for leaving adoption process
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
