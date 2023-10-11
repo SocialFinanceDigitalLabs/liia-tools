@@ -3364,9 +3364,10 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy (>=0.9.1)", "pytest-ruff"]
 
 [extras]
+jupyter = ["jupyterlab"]
 s3 = ["fs-s3fs"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "ec276c3feaa89e39a6d809b92ea6e6ac2e40e079f10dc19d4fb6fa305fec3161"
+content-hash = "46de57753db396b29d8f8ec82034bc5a96aa4df5434891f1a84e55d1451875cc"
