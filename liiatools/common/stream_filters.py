@@ -29,14 +29,22 @@ def tablib_parse(source: FileLocator):
 
     try:
         databook = import_book(data)
+        logger.debug(
+            "Opened %s as a book with the following sheets: %s",
+            filename,
+            [s.title for s in databook.sheets()],
+        )
         return tablib_to_stream(databook, filename=filename)
     except Exception as e:
+        logger.debug("Failed to open %s as a book", filename, exc_info=e)
         pass
 
     try:
         dataset = import_set(data)
+        logger.debug("Opened %s as a sheet", filename)
         return tablib_to_stream(dataset, filename=filename)
     except Exception as e:
+        logger.debug("Failed to open %s as a sheet", filename)
         pass
 
     raise StreamError(f"Could not parse {source} as a tabular format")
@@ -70,10 +78,11 @@ def tablib_to_stream(
     :return: List of event objects containing filename, header and cell information
     """
     if isinstance(data, tablib.Dataset):
+        logger.debug("Export %s as a single sheet", type(data).__name__)
         return _tablib_dataset_to_stream(data, filename=filename)
 
     for sheet in data.sheets():
-        return _tablib_dataset_to_stream(
+        yield from _tablib_dataset_to_stream(
             sheet, filename=filename, sheetname=sheet.title
         )
 

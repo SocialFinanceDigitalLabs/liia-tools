@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
@@ -11,10 +12,14 @@ from liiatools.datasets.shared_functions import common as common_functions
 from . import stream_filters
 from .spec import Column, DataSchema
 
+logger = logging.getLogger(__name__)
+
 
 def _to_dataframe(data: List[Dict], table_config: Dict[str, Column]) -> pd.DataFrame:
     df = pd.DataFrame(data)
     for column_name, column_spec in table_config.items():
+        if column_name not in df.columns:
+            continue
         if column_spec.type == "date":
             # Set dtype on date columns
             df[column_name] = pd.to_datetime(df[column_name], errors="raise").dt.date
@@ -48,6 +53,12 @@ def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> ProcessResult:
 
     dataset = dataset_holder.value
     errors = error_holder.value
+
+    logger.info(
+        "Completed processing file %s with the following tables: %s",
+        src_file.name,
+        list(dataset.keys()),
+    )
 
     dataset = DataContainer(
         {k: _to_dataframe(v, schema.table[k]) for k, v in dataset.items()}

@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
@@ -5,6 +6,8 @@ import pandas as pd
 from fs.base import FS
 from tablib import Databook, Dataset, import_set
 from tablib.formats import registry as tablib_registry
+
+logger = logging.getLogger(__name__)
 
 
 class DataContainer(Dict[str, pd.DataFrame]):
@@ -35,6 +38,7 @@ class DataContainer(Dict[str, pd.DataFrame]):
         If the format supports multiple sheets (e.g. xlsx), then each table will be exported to a separate sheet in the same file,
         otherwise each table will be exported to a separate file.
         """
+        logger.debug("Exporting data to %s", basename)
         if format == "parquet":
             return self._export_parquet(fs, basename)
 

@@ -25,6 +25,10 @@ def process_file(
     pipeline_config: PipelineConfig,
     la_code: str,
 ) -> ProcessResult:
+    logger.debug(
+        f"Processing file %s with metadata: %s", file_locator.name, file_locator.meta
+    )
+
     errors = ErrorContainer()
     year = 2020
     # We save these files based on the session UUID - so UUID must exist
