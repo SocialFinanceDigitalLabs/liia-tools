@@ -9,7 +9,7 @@ import pandas as pd
 import yaml
 from fs.base import FS
 from fs.info import Info
-from fs.move import move_file
+from fs.move import move_file, copy_file
 
 from liiatools.common.constants import ProcessNames, SessionNames
 from liiatools.datasets.shared_functions.common import check_year
@@ -47,7 +47,7 @@ def _move_incoming_file(
     )
 
     dest_fs.writetext(f"{file_uuid}_meta.yaml", yaml.dump(file_locator.meta))
-    move_file(source_fs, file_path, dest_fs, file_uuid)
+    copy_file(source_fs, file_path, dest_fs, file_uuid)
 
     return file_locator
 
