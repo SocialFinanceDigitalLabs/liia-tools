@@ -24,34 +24,15 @@ def build_dir(liiatools_dir):
     return build_dir
 
 
+@pytest.fixture(scope="session", autouse=True)
+def log_dir(build_dir):
+    log_dir = build_dir / "log"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    return build_dir
+
+
 @pytest.mark.skipif(os.environ.get("SKIP_E2E"), reason="Skipping end-to-end tests")
-def test_end_to_end(build_dir):
-    incoming_dir = build_dir / "incoming"
-    incoming_dir.mkdir(parents=True, exist_ok=True)
-    pipeline_dir = build_dir / "pipeline"
-    pipeline_dir.mkdir(parents=True, exist_ok=True)
-
-    runner = CliRunner()
-    result = runner.invoke(
-        cli,
-        [
-            "annex-a",
-            "pipeline",
-            "-c",
-            "BAD",
-            "--input",
-            incoming_dir.as_posix(),
-            "--output",
-            pipeline_dir.as_posix(),
-        ],
-        catch_exceptions=False,
-    )
-
-    assert result.exit_code == 0
-
-
-@pytest.mark.skip("Old pipeline")
-def test_end_to_end_old(liiatools_dir, build_dir, log_dir):
+def test_end_to_end(liiatools_dir, build_dir, log_dir):
     runner = CliRunner()
     result = runner.invoke(
         cli,
@@ -59,14 +40,43 @@ def test_end_to_end_old(liiatools_dir, build_dir, log_dir):
             "annex-a",
             "cleanfile",
             "--i",
-            str(
-                liiatools_dir
-                / "annex_a_pipeline/spec/samples/Annex_A.xlsx"
-            ),
+            str(liiatools_dir / "spec/annex_a/samples/Annex_A.xlsx"),
             "--o",
             str(build_dir),
             "--la_log_dir",
             str(log_dir),
+            "--la_code",
+            "BAD",
+        ],
+        catch_exceptions=False,
+    )
+
+    assert result.exit_code == 0
+
+    result = runner.invoke(
+        cli,
+        [
+            "annex-a",
+            "la-agg",
+            "--i",
+            str(build_dir / "Annex_A_clean.xlsx"),
+            "--o",
+            str(build_dir),
+        ],
+        catch_exceptions=False,
+    )
+
+    assert result.exit_code == 0
+
+    result = runner.invoke(
+        cli,
+        [
+            "annex-a",
+            "pan-agg",
+            "--i",
+            str(build_dir / "AnnexA_merged.xlsx"),
+            "--o",
+            str(build_dir),
             "--la_code",
             "BAD",
         ],

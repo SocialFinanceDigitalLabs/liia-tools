@@ -252,6 +252,11 @@ column_map:
                       cell_regex:
                         - /.*external/i
                         - /.*5C.*/i
+                    - code: 'p1) 5D: LA services'
+                      name: LA SERVICES – early help
+                      cell_regex:
+                        - /.*early/i
+                        - /.*5D.*/i
                     - code: 'n) 5A: LA services' # Moving down for regex purposes
                       name: LA SERVICES – social care for example adults social care services
                       cell_regex:
@@ -337,11 +342,6 @@ column_map:
                   cell_regex:
                     - /N.*/i
                     - /b\).*/i
-                - code: c) Unknown
-                  name: "Unknown"
-                  cell_regex:
-                    - /unkn.*/i
-                    - /c\).*/i
                 canbeblank: false
         Number of Referrals in Last 12 Months:
             &integer-not-blank
@@ -356,43 +356,8 @@ column_map:
         Ethnicity: *eth
         Date of Birth: *dob
         Age of Child (Years): *age
-        Does the Child have a Disability: *bool-not-blank
-        Continuous Assessment Start Date: *date-not-blank
-        Child Seen During Continuous Assessment: *bool-not-blank
-        Continuous Assessment Date of Authorisation: *date-blank
-        "Was the child assessed as requiring LA children's social care support?":
-            category:
-            - code: a) Yes
-              name: "Yes"
-              cell_regex:
-                - /Y.*/i
-                - /a\).*/i
-            - code: b) No
-              name: "No"
-              cell_regex:
-                - /N.*/i
-                - /b\).*/i
-            - code: c) Unknown
-              name: "Unknown"
-              cell_regex:
-                - /unkn.*/i
-                - /c\).*/i
-            canbeblank: true
-            header_regex:
-              - /.*was the child assessed.*social care support.*/i
-        Allocated Team: *not-blank
-        Allocated Worker: *not-blank
-
-    List 5:
-        Child Unique ID: *child-id
-        Gender: *gen
-        Ethnicity: *eth
-        Date of Birth: *dob
-        Age of Child (Years): *age
-        Does the Child have a Disability: *bool-not-blank
-        Strategy discussion initiating Section 47 Enquiry Start Date: *date-not-blank
-        Was an Initial Child Protection Conference deemed unnecessary?:
-            &bool-blank
+        Does the Child have a Disability:
+            &bool-unknown-not-blank
                 category:
                 - code: a) Yes
                   name: "Yes"
@@ -409,6 +374,38 @@ column_map:
                   cell_regex:
                     - /unkn.*/i
                     - /c\).*/i
+                canbeblank: false
+        Continuous Assessment Start Date: *date-not-blank
+        Child Seen During Continuous Assessment: *bool-unknown-not-blank
+        Continuous Assessment Date of Authorisation: *date-blank
+        "Was the child assessed as requiring LA children's social care support?":
+            <<: *bool-unknown-blank
+            header_regex:
+              - /.*was the child assessed.*social care support.*/i
+        Allocated Team: *not-blank
+        Allocated Worker: *not-blank
+
+    List 5:
+        Child Unique ID: *child-id
+        Gender: *gen
+        Ethnicity: *eth
+        Date of Birth: *dob
+        Age of Child (Years): *age
+        Does the Child have a Disability: *bool-unknown-not-blank
+        Strategy discussion initiating Section 47 Enquiry Start Date: *date-not-blank
+        Was an Initial Child Protection Conference deemed unnecessary?:
+            &bool-blank
+                category:
+                - code: a) Yes
+                  name: "Yes"
+                  cell_regex:
+                    - /Y.*/i
+                    - /a\).*/i
+                - code: b) No
+                  name: "No"
+                  cell_regex:
+                    - /N.*/i
+                    - /b\).*/i
                 canbeblank: true
         Date of Initial Child Protection Conference: *date-blank
         Did the Initial Child Protection Conference Result in a Child Protection Plan: *bool-blank
@@ -423,7 +420,7 @@ column_map:
         Ethnicity: *eth
         Date of Birth: *dob
         Age of Child (Years): *age
-        Does the Child have a Disability: *bool-not-blank
+        Does the Child have a Disability: *bool-unknown-not-blank
         CIN Start Date: *date-blank
         Primary Need Code:
             &needcode
@@ -526,10 +523,16 @@ column_map:
             - code: RC8 - Case closed after assessment, no further action
               name: Case closed after assessment, no further action
               cell_regex:
-                - /.*closed.*\sassess.*/i
+                - /.*closed.*\sassess.*no.*/i
                 - /.*no further action.*/i
                 - /.*NFA.*/i
                 - /.*RC8.*/i
+            - code: RC9 - Case closed after assessment, referred to early help
+              name: Case closed after assessment, referred to early help
+              cell_regex:
+                - /.*closed.*\sassess.*ref.*/i
+                - /.*referred to early help.*/i
+                - /.*RC9.*/i
             canbeblank: true
         Case Status:
             category:
@@ -568,7 +571,7 @@ column_map:
         Ethnicity: *eth
         Date of Birth: *dob
         Age of Child (Years): *age
-        Does the Child have a Disability: *bool-not-blank
+        Does the Child have a Disability: *bool-unknown-not-blank
         Child Protection Plan Start Date: *date-not-blank
         Initial Category of Abuse:
             &cat-abuse
@@ -602,7 +605,25 @@ column_map:
                 canbeblank: false
         Latest Category of Abuse: *cat-abuse
         Date of the Last Statutory Visit: *date-blank
-        Was the Child Seen Alone?: *bool-blank
+        Was the Child Seen Alone?: *bool-unknown-blank
+            &bool-unknown-blank
+                category:
+                - code: a) Yes
+                  name: "Yes"
+                  cell_regex:
+                    - /Y.*/i
+                    - /a\).*/i
+                - code: b) No
+                  name: "No"
+                  cell_regex:
+                    - /N.*/i
+                    - /b\).*/i
+                - code: c) Unknown
+                  name: "Unknown"
+                  cell_regex:
+                    - /unkn.*/i
+                    - /c\).*/i
+                canbeblank: true
         Date of latest review conference: *date-blank
         Child Protection Plan End Date: *date-blank
         Subject to Emergency Protection Order or Protected Under Police Powers in Last Six Months (Y/N):
@@ -623,7 +644,7 @@ column_map:
             <<: *bool-not-blank
             header_regex:
               - /.*Unaccompanied Asylum Seeking Child.*/i
-        Does the Child have a Disability: *bool-not-blank
+        Does the Child have a Disability: *bool-unknown-not-blank
         Date Started to be Looked After: *date-not-blank
         "Child's Category of Need":
             <<: *needcode
@@ -1073,8 +1094,8 @@ column_map:
             <<: *integer-not-blank
             header_regex:
               - /.*Number of Episodes the Child has been.*Absent.*from their Placement in the last 12 months.*/i
-        Was the child offered a Return Interview after their last missing episode (Y/N)?: *bool-blank
-        Did the child accept a Return Interview after their last missing episode (Y/N)?: *bool-blank
+        Was the child offered a Return Interview after their last missing episode (Y/N)?: *bool-unknown-blank
+        Did the child accept a Return Interview after their last missing episode (Y/N)?: *bool-unknown-blank
         Allocated Team: *not-blank
         Allocated Worker: *not-blank
 
@@ -1084,9 +1105,11 @@ column_map:
         Ethnicity: *eth
         Date of Birth: *dob
         Age of Child (Years): *age
-        Does the Child have a Disability: *bool-not-blank
+        Unaccompanied Asylum Seeking Child (UASC), or formerly UASC if 18 or over (Y/N): *bool-blank
+        Does the Child have a Disability: *bool-unknown-not-blank
         Allocated Team: *not-blank
         Allocated Worker: *not-blank
+        Allocated Personal Advisor: *not-blank
         Eligibility Category:
             category:
             - code: a) Relevant child
@@ -1106,7 +1129,13 @@ column_map:
                 - /qual.*/i
                 - /care.*/i
                 - /leaver.*/i
+            - code: d) Eligible child
+              name: Eligible child
+              cell_regex:
+                - /d\).*/i
+                - /eligible.*/i
             canbeblank: false
+        Latest Pathway Plan Review Date: *date-blank
         LA in Touch:
             category:
             - code: a) Yes
@@ -1141,6 +1170,7 @@ column_map:
                 - /f\).*/i
                 - /.*rhom/i
             canbeblank: false
+        Latest Date of Contact: *date-blank
         Type of Accommodation:
             category:
             - code: 'B: Parents/relatives'
@@ -1287,6 +1317,28 @@ column_map:
                 - /P3\).*/i
                 - /.*part.*time.*trainig.*/i
                 - /.*part.*time.*employment.*/i
+            - code: 'F4: Young person engaged full time in an apprenticeship'
+              name: full time apprenticeship
+              cell_regex:
+                - /F4\).*/i
+                - /.*full.*time.*apprenticeship.*/i
+            - code: 'P4: Young person engaged part time in an apprenticeship'
+              name: part time apprenticeship
+              cell_regex:
+                - /P4\).*/i
+                - /.*part.*time.*apprenticeship.*/i
+            - code: 'F5: Young person engaged full time in training or employment (not apprenticeship)'
+              name: full time training
+              cell_regex:
+                - /F5\).*/i
+                - /.*full.*time.*trainig.*/i
+                - /.*full.*time.*employment.*/i
+            - code: 'P5: Young person engaged part time in training or employment (not apprenticeship)'
+              name: part time training
+              cell_regex:
+                - /P5\).*/i
+                - /.*full.*time.*trainig.*/i
+                - /.*full.*time.*employment.*/i
             - code: 'G4: Not in education, employment or training - illness or disability'
               name: illness or disability
               cell_regex:
@@ -1313,7 +1365,7 @@ column_map:
         Ethnicity: *eth
         Date of Birth: *dob
         Age of Child (Years): *age
-        Does the Child have a Disability: *bool-not-blank
+        Does the Child have a Disability: *bool-unknown-not-blank
         Date the Child Entered Care: *date-not-blank
         Date of Decision that Child Should be Placed for Adoption: *date-not-blank
         Date of Placement Order: *date-blank

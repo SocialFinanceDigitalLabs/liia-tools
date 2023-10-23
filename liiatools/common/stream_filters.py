@@ -70,12 +70,13 @@ def tablib_to_stream(
     :return: List of event objects containing filename, header and cell information
     """
     if isinstance(data, tablib.Dataset):
-        return _tablib_dataset_to_stream(data, filename=filename)
+        yield from _tablib_dataset_to_stream(data, filename=filename)
 
-    for sheet in data.sheets():
-        return _tablib_dataset_to_stream(
-            sheet, filename=filename, sheetname=sheet.title
-        )
+    elif isinstance(data, tablib.Databook):
+        for sheet in data.sheets():
+            yield from _tablib_dataset_to_stream(
+                sheet, filename=filename, sheetname=sheet.title
+            )
 
 
 def inherit_property(stream, prop_name: Union[str, Iterable[str]], override=False):
