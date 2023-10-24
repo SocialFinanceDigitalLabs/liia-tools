@@ -26,13 +26,12 @@ def process_file(
     la_code: str,
 ) -> ProcessResult:
     errors = ErrorContainer()
-    year = 2020
     # We save these files based on the session UUID - so UUID must exist
     uuid = file_locator.meta["uuid"]
 
     # Load schema and set on processing metadata
-    schema = load_schema(year)
-    metadata = dict(year=year, schema=schema, la_code=la_code)
+    schema = load_schema()
+    metadata = dict(schema=schema, la_code=la_code)
 
     # Normalise the data and export to the session 'cleaned' folder
     try:
@@ -112,7 +111,7 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     # Export the current snapshot of the archive
     current_data = archive.current()
     current_data.export(
-        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "annex_a_current_", "xlsx"
+        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "annex_a_current", "xlsx"
     )
 
     # Create the different reports
@@ -120,4 +119,4 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     for report in ["PAN"]:
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
-        report_data.data.export(report_folder, "annex_a_", "xlsx")
+        report_data.data.export(report_folder, "annex_a", "xlsx")

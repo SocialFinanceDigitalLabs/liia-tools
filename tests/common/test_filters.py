@@ -3,8 +3,11 @@ from datetime import datetime
 from sfdata_stream_parser import events
 from sfdata_stream_parser.filters import generic
 
-from liiatools.ssda903_pipeline import stream_filters
-from liiatools.ssda903_pipeline.spec import Column, load_schema
+from liiatools.common import stream_filters
+from liiatools.common.spec.__data_schema import Column
+
+from liiatools.ssda903_pipeline.spec import load_schema as s903_schema
+from liiatools.annex_a_pipeline.spec import load_schema as annex_a_schema
 
 
 def test_collect_row():
@@ -64,7 +67,7 @@ def test_collect_tables():
 
 
 def test_add_table_name():
-    schema = load_schema(2040)
+    schema = s903_schema(2040)
 
     def get_table_name(headers):
         stream = [events.StartTable(headers=headers)]
@@ -81,17 +84,31 @@ def test_add_table_name():
         headers = list(table_data.keys())
         assert get_table_name(headers) == table_name
 
-    assert get_table_name(["incorrect", "header", "values"]) == None
+    assert get_table_name(["incorrect", "header", "values"]) is None
 
-    assert get_table_name([""]) == None
+    assert get_table_name([""]) is None
 
-    assert get_table_name([]) == None
+    assert get_table_name([]) is None
 
-    assert get_table_name(None) == None
+    assert get_table_name(None) is None
+
+    schema = annex_a_schema()
+
+    assert (
+        get_table_name(["Child Unique ID", "Gender", "Ethnicity", "Date of Birth",
+                        "Age of Child (Years)", "Date of Contact", "Contact Source"])
+        == "List 1"
+    )
+
+    assert (
+            get_table_name(["Child ID", "Gender", "Ethnicity", "Date Birth",
+                            "Age", "Age", "Date of Contact", "Contact Source"])
+            == "List 1"
+    )
 
 
 def test_match_config_to_cell():
-    schema = load_schema(2040)
+    schema = s903_schema(2040)
 
     def match_cell(**cell_properties):
         stream = [events.Cell(**cell_properties)]
@@ -114,6 +131,14 @@ def test_match_config_to_cell():
     assert match_cell(table_name="Header", header=None) is None
 
     assert match_cell(table_name=None, header="CHILD") is None
+
+    schema = annex_a_schema()
+
+    assert match_cell(table_name="List 1", header="Child Unique ID").string == "alphanumeric"
+
+    assert match_cell(table_name="List 1", header="Child Unique ID").header_regex == ["/.*child.*id.*/i"]
+
+    assert match_cell(table_name="List 1", header="Gender").category[0].code == "b) Female"
 
 
 def assert_errors(event, *types):
@@ -210,6 +235,36 @@ def test_clean_categories():
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
     assert_errors(cleaned_event)
+
+    category_spec = Column(
+        category=[
+            {
+                "code": "b) Female",
+                "name": "F",
+                "cell_regex": ["/.*fem.*/i", "/b\).*/i"]
+            },
+            {
+                "code": "a) Male",
+                "name": "M",
+                "cell_regex": ["/^mal.*/i", "/a\).*/i"]
+            }
+        ],
+    )
+
+    event = events.Cell(cell="F", column_spec=category_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "b) Female"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="a)", column_spec=category_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "a) Male"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="string", column_spec=category_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
 
 
 def test_clean_integers():

@@ -129,7 +129,7 @@ class DataSchema(BaseModel):
         If no table is found, returns None
         """
         headers = set(headers)
-        for sheet_name, table_config in self.column_map.items():
+        for table_name, table_config in self.column_map.items():
             matched_columns = []
 
             # Creates a list of tuples holding (column_name, column_regex_list) for each configured column
@@ -156,7 +156,7 @@ class DataSchema(BaseModel):
 
             # If all the expected columns are present, then we have a match
             if set(table_config.keys()) - set(matched_columns) == set():
-                return sheet_name
+                return table_name
         return None
 
     @property

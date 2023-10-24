@@ -379,7 +379,23 @@ column_map:
         Child Seen During Continuous Assessment: *bool-unknown-not-blank
         Continuous Assessment Date of Authorisation: *date-blank
         "Was the child assessed as requiring LA children's social care support?":
-            <<: *bool-unknown-blank
+            category:
+            - code: a) Yes
+              name: "Yes"
+              cell_regex:
+                - /Y.*/i
+                - /a\).*/i
+            - code: b) No
+              name: "No"
+              cell_regex:
+                - /N.*/i
+                - /b\).*/i
+            - code: c) Unknown
+              name: "Unknown"
+              cell_regex:
+                - /unkn.*/i
+                - /c\).*/i
+            canbeblank: true
             header_regex:
               - /.*was the child assessed.*social care support.*/i
         Allocated Team: *not-blank
@@ -605,7 +621,7 @@ column_map:
                 canbeblank: false
         Latest Category of Abuse: *cat-abuse
         Date of the Last Statutory Visit: *date-blank
-        Was the Child Seen Alone?: *bool-unknown-blank
+        Was the Child Seen Alone?:
             &bool-unknown-blank
                 category:
                 - code: a) Yes
