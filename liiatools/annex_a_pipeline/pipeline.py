@@ -25,6 +25,14 @@ def process_file(
     pipeline_config: PipelineConfig,
     la_code: str,
 ) -> ProcessResult:
+    """
+    Clean, enrich and degrade data
+    :param file_locator: The pointer to a file in a virtual filesystem
+    :param session_folder: The path to the session folder
+    :param pipeline_config: The pipeline configuration
+    :param la_code: A three-letter string for the local authority depositing the file
+    :return: A class containing a DataContainer and ErrorContainer
+    """
     errors = ErrorContainer()
     # We save these files based on the session UUID - so UUID must exist
     uuid = file_locator.meta["uuid"]
@@ -74,6 +82,13 @@ def process_file(
 
 
 def process_session(source_fs: FS, output_fs: FS, la_code: str):
+    """
+    Runs the full pipeline on a file or folder
+    :param source_fs: File system containing the input files
+    :param output_fs: File system for the output files
+    :param la_code: A three-letter string for the local authority depositing the file
+    :return: None
+    """
     # Before we start - load configuration for this dataset
     pipeline_config = load_pipeline_config()
 

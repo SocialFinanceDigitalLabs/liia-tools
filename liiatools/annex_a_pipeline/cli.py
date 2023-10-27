@@ -40,7 +40,13 @@ def annex_a():
 )
 @click_log.simple_verbosity_option(log)
 def pipeline(input, la_code, output):
-    """Runs the full pipeline on a file or folder"""
+    """
+    Runs the full pipeline on a file or folder
+    :param input: The path to the input folder
+    :param la_code: A three-letter string for the local authority depositing the file
+    :param output: The path to the output folder
+    :return: None
+    """
 
     # Source FS is the filesystem containing the input files
     source_fs = open_fs(input)

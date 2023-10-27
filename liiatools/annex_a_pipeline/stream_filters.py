@@ -17,6 +17,7 @@ def convert_column_header_to_match(event, schema: DataSchema):
     """
     Converts the column header to the correct column header it was matched with e.g. Age -> Age of Child (Years)
     :param event: A filtered list of event objects of type Cell
+    :param schema: The data schema in a DataSchema class
     :return: An updated list of event objects
     """
     if hasattr(event, "table_name") and hasattr(event, "header"):

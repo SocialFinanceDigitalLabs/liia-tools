@@ -1,5 +1,4 @@
 import logging
-import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -18,12 +17,20 @@ SCHEMA_DIR = Path(__file__).parent
 
 @lru_cache
 def load_pipeline_config():
+    """
+    Load the pipeline config file
+    :return: Parsed pipeline config file
+    """
     with open(SCHEMA_DIR / "pipeline.yml", "rt") as FILE:
         return parse_yaml_file_as(PipelineConfig, FILE)
 
 
 @lru_cache
 def load_schema() -> DataSchema:
+    """
+    Load the data schema file
+    :return: The data schema in a DataSchema class
+    """
     schema_path = Path(SCHEMA_DIR, "Annex_A_schema.yml")
 
     # If we have no schema files, raise an error

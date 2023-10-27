@@ -25,7 +25,7 @@ def build_dir(liiatools_dir):
 
 
 @pytest.mark.skipif(os.environ.get("SKIP_E2E"), reason="Skipping end-to-end tests")
-def test_end_to_end(build_dir):
+def test_end_to_end(liiatools_dir, build_dir):
     incoming_dir = build_dir / "incoming"
     incoming_dir.mkdir(parents=True, exist_ok=True)
     pipeline_dir = build_dir / "pipeline"
@@ -40,7 +40,7 @@ def test_end_to_end(build_dir):
             "-c",
             "BAD",
             "--input",
-            incoming_dir.as_posix(),
+            str(liiatools_dir / "spec/annex_a/samples/Annex_A.xlsx"),
             "--output",
             pipeline_dir.as_posix(),
         ],
