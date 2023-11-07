@@ -66,9 +66,7 @@ def counter(event, counter_check, value_error, structural_error, blank_error):
                 )
         else:
             if hasattr(event, "validation_message"):
-                blank_error.append(
-                    f"LAchildID: blank, Node: {event.schema.name}"
-                )
+                blank_error.append(f"LAchildID: blank, Node: {event.schema.name}")
             elif hasattr(event.schema, "name"):
                 value_error.append(f"LAchildID: blank, Node: {event.schema.name}")
             else:
@@ -100,13 +98,7 @@ def save_errors_la(
     """
     filename = str(Path(input).resolve().stem)
     start_time = f"{datetime.now():%Y-%m-%dT%H%M%SZ}"
-    if (
-        value_error
-        or structural_error
-        or field_error
-        or blank_error
-        or LAchildID_error
-    ):
+    if value_error or structural_error or field_error or blank_error or LAchildID_error:
         with open(
             f"{Path(la_log_dir, filename)}_error_log_{start_time}.txt",
             "a",

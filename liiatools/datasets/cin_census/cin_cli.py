@@ -118,7 +118,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         )
         is False
     ):
-        save_incorrect_year_error(input, la_log_dir)
+        save_incorrect_year_error(input, la_log_dir, retention_period=years_to_go_back)
         return
 
     # Configure stream

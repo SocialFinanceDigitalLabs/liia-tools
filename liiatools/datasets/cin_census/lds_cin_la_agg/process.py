@@ -111,7 +111,7 @@ def _time_between_date_series(later_date_series, earlier_date_series, years=0, d
 
     elif years == 1:
         years_series = (days_series / 365).apply(np.floor)
-        years_series = years_series.astype('Int32')
+        years_series = years_series.astype("Int32")
         return years_series
 
 
