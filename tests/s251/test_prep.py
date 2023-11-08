@@ -23,7 +23,7 @@ class TestSaveYearError(unittest.TestCase):
         # Generate expected output
         filename = Path(input_file).resolve().stem
         expected_output = (
-            f"Could not process '{filename}' because placement end date column was not found which is used to "
+            f"Could not process '{filename}' because end date column was not found which is used to "
             f"identify the year of return"
         )
 
@@ -53,7 +53,7 @@ class TestSaveYearError(unittest.TestCase):
         # Generate expected output
         filename = Path(input_file).resolve().stem
         expected_output = (
-            f"Could not process '{filename}' because placement end date column was empty which is used to "
+            f"Could not process '{filename}' because end date column was empty which is used to "
             f"identify the year of return"
         )
 
@@ -115,7 +115,7 @@ class TestFindYearOfReturn(unittest.TestCase):
         csv_data = [
             ["Placement end date"],
             ["15/07/2023"],
-            ["28/02/2023"],
+            ["31/12/2022"],
             ["not a date"],
             ["15/02/3022"],
         ]
@@ -126,18 +126,14 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(
+        year, financial_year, quarter = prep.find_year_of_return(
             str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
         )
 
         # Assertions
-        self.assertEqual(year, 2023)
-        self.assertEqual(quarter, "Q4")
-
-        # Clean up temporary files and directories
-        for file in temp_dir.glob("*"):
-            file.unlink()
-        temp_dir.rmdir()
+        self.assertEqual(year, 2022)
+        self.assertEqual(financial_year, 2023)
+        self.assertEqual(quarter, "Q3")
 
     def test_find_year_of_return_missing_column(self):
         # Create a temporary directory for testing
@@ -157,12 +153,13 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(
+        year, financial_year, quarter = prep.find_year_of_return(
             str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
         )
 
         # Assertions
         self.assertIsNone(year)
+        self.assertIsNone(financial_year)
         self.assertIsNone(quarter)
 
         # Verify the error log file is created with the correct message
@@ -172,15 +169,10 @@ class TestFindYearOfReturn(unittest.TestCase):
         with open(error_log_file, "r") as f:
             error_message = f.read()
             self.assertIn(
-                "Could not process 's251_test' because placement end date column was not found which "
+                "Could not process 's251_test' because end date column was not found which "
                 "is used to identify the year of return",
                 error_message,
             )
-
-        # Clean up temporary files and directories
-        for file in temp_dir.glob("*"):
-            file.unlink()
-        temp_dir.rmdir()
 
     def test_find_year_of_return_empty_column(self):
         # Create a temporary directory for testing
@@ -200,12 +192,13 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(
+        year, financial_year, quarter = prep.find_year_of_return(
             str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
         )
 
         # Assertions
         self.assertIsNone(year)
+        self.assertIsNone(financial_year)
         self.assertIsNone(quarter)
 
         # Verify the error log file is created with the correct message
@@ -215,15 +208,10 @@ class TestFindYearOfReturn(unittest.TestCase):
         with open(error_log_file, "r") as f:
             error_message = f.read()
             self.assertIn(
-                "Could not process 's251_test' because placement end date column was empty which is used to "
+                "Could not process 's251_test' because end date column was empty which is used to "
                 "identify the year of return",
                 error_message,
             )
-
-        # Clean up temporary files and directories
-        for file in temp_dir.glob("*"):
-            file.unlink()
-        temp_dir.rmdir()
 
     def test_find_year_of_return_old_data(self):
         # Create a temporary directory for testing
@@ -243,12 +231,13 @@ class TestFindYearOfReturn(unittest.TestCase):
             writer.writerows(csv_data)
 
         # Call the function to be tested
-        year, quarter = prep.find_year_of_return(
+        year, financial_year, quarter = prep.find_year_of_return(
             str(input_file_path), str(temp_dir), retention_period=6, reference_year=2023
         )
 
         # Assertions
         self.assertIsNone(year)
+        self.assertIsNone(financial_year)
         self.assertIsNone(quarter)
 
         # Verify the error log file is created with the correct message
@@ -263,7 +252,9 @@ class TestFindYearOfReturn(unittest.TestCase):
                 error_message,
             )
 
-        # Clean up temporary files and directories
+    def tearDown(self):
+        # Clean up temporary directory after each test
+        temp_dir = Path("temp_logs")
         for file in temp_dir.glob("*"):
             file.unlink()
         temp_dir.rmdir()

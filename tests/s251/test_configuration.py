@@ -42,71 +42,77 @@ def test_add_matched_headers():
         configuration.add_matched_headers(event, config=config)
     )[0]
     assert hasattr(event_with_matched_headers, "expected_columns")
+    assert hasattr(event_with_matched_headers, "table_name")
 
     event = events.StartTable(headers=["incorrect", "header", "values"])
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )
     assert not hasattr(event_with_matched_headers, "expected_columns")
+    assert not hasattr(event_with_matched_headers, "table_name")
 
     event = events.StartTable(headers=[""])
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )
     assert not hasattr(event_with_matched_headers, "expected_columns")
+    assert not hasattr(event_with_matched_headers, "table_name")
 
     event = events.StartTable(headers=[None])
     event_with_matched_headers = list(
         configuration.add_matched_headers(event, config=config)
     )
     assert not hasattr(event_with_matched_headers, "expected_columns")
+    assert not hasattr(event_with_matched_headers, "table_name")
 
 
 def test_match_config_to_cell():
-    event = events.Cell(header="Date of birth")
-    config_dict = {"Date of birth": {"date": "%d/%m/%Y", "canbeblank": False}}
+    event = events.Cell(header="Date of birth", table_name="S251")
+    config_dict = {"S251": {"Date of birth": {"date": "%d/%m/%Y", "canbeblank": False}}}
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
-    assert event_with_config.config_dict == config_dict["Date of birth"]
+    assert event_with_config.config_dict == config_dict["S251"]["Date of birth"]
 
-    event = events.Cell(header="Gender")
-    config_dict = {
-        "Gender": {
-            "category": [
-                {"code": "1", "name": "Male"},
-                {"code": "2", "name": "Female"},
-            ],
-            "canbeblank": False,
+    event = events.Cell(header="Gender", table_name="S251")
+    config_dict = {"S251":
+        {
+            "Gender": {
+                "category": [
+                    {"code": "1", "name": "Male"},
+                    {"code": "2", "name": "Female"},
+                ],
+                "canbeblank": False,
+            }
         }
     }
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
-    assert event_with_config.config_dict == config_dict["Gender"]
+    assert event_with_config.config_dict == config_dict["S251"]["Gender"]
 
-    event = events.Cell(header="Gender")
+    event = events.Cell(header="Gender", table_name="S251")
     config_dict = {}
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config == event
 
-    event = events.Cell(header="Gender")
+    event = events.Cell(header="Gender", table_name="S251")
     config_dict = None
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config == event
 
-    event = events.Cell(header="Gender")
+    event = events.Cell(header="Gender", table_name="S251")
     config_dict = 700
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)
     )[0]
     assert event_with_config == event
 
-    event = events.Cell(header="Gender")
+    event = events.Cell(header="Gender", table_name="S251")
     config_dict = "random_string"
     event_with_config = list(
         configuration.match_config_to_cell(event, config=config_dict)

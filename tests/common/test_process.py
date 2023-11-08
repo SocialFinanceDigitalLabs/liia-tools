@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime
-from liiatools.datasets.s903.lds_ssda903_la_agg import process
+from liiatools.datasets.shared_functions import process
 
 
 def test_match_load_file():
@@ -58,16 +58,30 @@ def test_remove_old_data():
         }
     )
     output_df_1 = process.remove_old_data(
-        s903_df=test_df_1,
+        df=test_df_1,
         num_of_years=7,
         new_year_start_month=1,
         as_at_date=datetime.datetime(2023, 7, 15),
+        year_column="YEAR"
     )
     assert len(output_df_1) == 6
     output_df_2 = process.remove_old_data(
-        s903_df=test_df_1,
+        df=test_df_1,
         num_of_years=7,
         new_year_start_month=1,
         as_at_date=datetime.datetime(2024, 1, 15),
+        year_column="YEAR"
     )
     assert len(output_df_2) == 5
+
+
+def test_merge_dfs():
+    new_df_1 = pd.DataFrame({"LA": ["a"]})
+    old_df = pd.DataFrame({"LA": ["b"]})
+    assert_df = pd.DataFrame({"LA": ["a", "b"]})
+    output_1 = process._merge_dfs(new_df_1, old_df, "a")
+    assert output_1.equals(assert_df)
+    new_df_2 = pd.DataFrame({"LA": ["b"]})
+    output_2 = process._merge_dfs(new_df_2, old_df, "b")
+    assert output_2.equals(new_df_2)
+    assert output_2.equals(assert_df) is False

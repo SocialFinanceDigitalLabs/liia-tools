@@ -22,15 +22,18 @@ SHARED_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 @streamfilter(check=type_check(events.StartTable), fail_function=pass_event)
 def add_matched_headers(event, config):
     """
-    Match the loaded table headers against the S251 table headers
+    Match the loaded table headers against one of two S251 table headers
 
     :param event: A filtered list of event objects of type StartTable
     :param config: The loaded configuration to use
     :return: An updated list of event objects
     """
-    expected_columns = list(config["placement_costs"].keys())
-    if set(expected_columns).issubset(set(event.headers)):
-        return event.from_event(event, expected_columns=expected_columns)
+    for table_name, expected_columns in config["table_name"].items():
+        expected_columns = list(expected_columns.keys())
+        if set(expected_columns).issubset(set(event.headers)):
+            return event.from_event(
+                event, expected_columns=expected_columns, table_name=table_name
+            )
     return event
 
 
@@ -46,7 +49,8 @@ def match_config_to_cell(event, config):
     :return: An updated list of event objects
     """
     try:
-        config_dict = config[event.header]
+        table_config = config[event.table_name]
+        config_dict = table_config[event.header]
         return event.from_event(event, config_dict=config_dict)
     except (
         AttributeError,
@@ -65,8 +69,9 @@ def configure_stream(stream, config):
     :return: An updated set of events/stream with matched configuration
     """
     stream = add_matched_headers(stream, config=config)
+    stream = inherit_property(stream, "table_name")
     stream = inherit_property(stream, "expected_columns")
-    stream = match_config_to_cell(stream, config=config["placement_costs"])
+    stream = match_config_to_cell(stream, config=config["table_name"])
     return stream
 
 

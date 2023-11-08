@@ -16,11 +16,9 @@ from liiatools.datasets.s903.lds_ssda903_clean import (
 
 # dependencies for la_agg()
 from liiatools.datasets.s903.lds_ssda903_la_agg import configuration as agg_config
-from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
 
 # dependencies for pan_agg()
 from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_config
-from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for sufficiency_output()
 from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suff_config
@@ -126,28 +124,31 @@ def la_agg(input, output):
     # Open file as DataFrame and match file type
     s903_df = common_process.read_file(input)
     column_names = config["column_names"]
-    table_name = agg_process.match_load_file(s903_df, column_names)
+    table_name = common_process.match_load_file(s903_df, column_names)
 
     # Merge file with existing file of the same type in LA output folder
-    s903_df = agg_process.merge_la_files(output, s903_df, table_name)
+    s903_df = common_process.merge_la_files(
+        output, s903_df, table_name, filename="SSDA903"
+    )
 
     # De-duplicate and remove old data according to schema
     dates = config["dates"]
-    s903_df = agg_process.convert_datetimes(s903_df, dates, table_name)
+    s903_df = common_process.convert_datetimes(s903_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
-    s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
-    s903_df = agg_process.remove_old_data(
+    s903_df = common_process.deduplicate(s903_df, table_name, sort_order, dedup)
+    s903_df = common_process.remove_old_data(
         s903_df,
         num_of_years=YEARS_TO_GO_BACK,
         new_year_start_month=YEAR_START_MONTH,
         as_at_date=REFERENCE_DATE,
+        year_column="YEAR",
     )
 
     # If file still has data, after removing old data: re-format and export merged file
     if len(s903_df) > 0:
-        s903_df = agg_process.convert_dates(s903_df, dates, table_name)
-        agg_process.export_la_file(output, table_name, s903_df)
+        s903_df = common_process.convert_dates(s903_df, dates, table_name)
+        common_process.export_la_file(output, table_name, s903_df, filename="SSDA903")
 
 
 def pan_agg(input, la_code, output):
@@ -165,14 +166,16 @@ def pan_agg(input, la_code, output):
     # Read file and match type
     s903_df = common_process.read_file(input)
     column_names = config["column_names"]
-    table_name = pan_process.match_load_file(s903_df, column_names)
+    table_name = common_process.match_load_file(s903_df, column_names)
 
     # Remove unwanted datasets and merge wanted with existing output
     pan_data_kept = config["pan_data_kept"]
     if table_name in pan_data_kept:
         la_name = common.flip_dict(config["data_codes"])[la_code]
-        s903_df = pan_process.merge_agg_files(output, table_name, s903_df, la_name)
-        pan_process.export_pan_file(output, table_name, s903_df)
+        s903_df = common_process.merge_agg_files(
+            output, table_name, s903_df, la_name, filename="SSDA903"
+        )
+        common_process.export_pan_file(output, table_name, s903_df, filename="SSDA903")
 
 
 def sufficiency_output(input, output):
