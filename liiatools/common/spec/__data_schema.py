@@ -48,7 +48,7 @@ class Column(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     string: Literal["alphanumeric", "postcode"] = None
-    numeric: Literal["integer"] = None
+    numeric: Literal["integer", "float"] = None
     date: str = None
 
     dictionary: Dict = None
@@ -66,6 +66,8 @@ class Column(BaseModel):
             return "postcode"
         elif self.numeric == "integer":
             return "integer"
+        elif self.numeric == "float":
+            return "float"
         elif self.date:
             return "date"
         elif self.category:

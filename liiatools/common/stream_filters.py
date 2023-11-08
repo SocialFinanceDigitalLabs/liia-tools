@@ -24,6 +24,7 @@ from liiatools.datasets.shared_functions.converters import (
     to_date,
     to_integer,
     to_postcode,
+    to_float,
 )
 
 from .converters import to_category
@@ -235,6 +236,8 @@ def conform_cell_types(event, preserve_value=False):
         converter = lambda x: to_date(x, column_spec.date)
     elif column_spec.type == "integer":
         converter = to_integer
+    elif column_spec.type == "float":
+        converter = to_float
     elif column_spec.type == "postcode":
         converter = to_postcode
     elif column_spec.type == "string":

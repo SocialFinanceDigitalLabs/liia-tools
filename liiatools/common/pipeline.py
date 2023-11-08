@@ -4,8 +4,11 @@ import uuid
 from datetime import datetime
 from os.path import basename, dirname
 from typing import Iterable, List, Tuple
+from pathlib import Path
+from enum import Enum
 
 import pandas as pd
+import numpy as np
 import yaml
 from fs.base import FS
 from fs.info import Info
@@ -139,3 +142,60 @@ def discover_year(file_locator: FileLocator) -> int:
         return _check_year(file_name)
     except ValueError:
         pass
+
+
+class DataType(Enum):
+    EMPTY_COLUMN = "empty_column"
+    MISSING_COLUMN = "missing_column"
+    OLD_DATA = "old_data"
+
+
+def _calculate_year_quarter(input: pd.DataFrame, date_column: str):
+    """
+    Calculate the minimum year and quarter of a given dataframe based on data_column
+
+    :param input: Dataframe that we need to find the year and quarter of return
+    :param date_column: Column which contains date information required to find year of return
+    :return: Minimum year and quarter from the given date_column
+    """
+    input[date_column] = pd.to_datetime(
+        input[date_column], format="%d/%m/%Y", errors="coerce"
+    )
+    year = input[date_column].min().year
+    quarter = f"Q{(input[date_column].min().month - 1) // 3}"
+    return year, quarter
+
+
+def find_year_from_column(
+    file_locator: FileLocator, columns: list, retention_period: int, reference_year: int
+):
+    """
+    Check the minimum year of a given column(s) to find year and quarter of return
+
+    :param file_locator: The pointer to a file in a virtual filesystem that we need to find the year of return from
+    :param columns: List of column(s) to check for minimum year
+    :param retention_period: Number of years in the retention period
+    :param reference_year: The reference date against which we are checking the valid range
+    :return: A year and quarter of return
+    """
+    data = file_locator.meta
+    print(data)
+    # data = pd.read_csv(
+    #     file_name, usecols=lambda x: x in columns
+    # )
+
+    for column in columns:
+        if column in data:
+            year, quarter = _calculate_year_quarter(data, column)
+        else:
+            return None, None, None, DataType.MISSING_COLUMN
+
+        if year is np.nan:
+            return None, None, None, DataType.EMPTY_COLUMN
+        else:
+            quarter = "Q4" if quarter == "Q0" else quarter
+            financial_year = year + 1 if quarter in ["Q1", "Q2", "Q3"] else year
+            if financial_year in range(reference_year - retention_period, 2023):
+                return year, None, None, DataType.OLD_DATA
+            else:
+                return year, financial_year, quarter, None

@@ -3,7 +3,7 @@ from sfdata_stream_parser.events import StartContainer
 
 from liiatools.common.data import FileLocator
 from liiatools.common.stream_filters import tablib_parse
-from liiatools.spec.annex_a.samples import DIR as DIR_AA
+from liiatools.annex_a_pipeline.spec.samples import DIR as DIR_AA
 from liiatools.ssda903_pipeline.spec.samples import DIR as DIR_903
 
 

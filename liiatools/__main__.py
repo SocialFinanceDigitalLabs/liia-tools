@@ -4,7 +4,7 @@ from liiatools.annex_a_pipeline.cli import annex_a
 from liiatools.datasets.cin_census.cin_cli import cin_census
 from liiatools.datasets.social_work_workforce.csww_cli import csww
 from liiatools.ssda903_pipeline.cli import s903
-from liiatools.datasets.s251.s251_cli import s251
+from liiatools.s251_pipeline.cli import s251
 
 
 @click.group()

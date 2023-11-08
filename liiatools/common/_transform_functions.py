@@ -37,11 +37,16 @@ def add_year(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) ->
     return metadata["year"]
 
 
+def add_quarter(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) -> str:
+    return metadata["quarter"]
+
+
 enrich_functions = {
     "add_la_suffix": add_la_suffix,
     "la_code": add_la_code,
     "la_name": add_la_name,
     "year": add_year,
+    "quarter": add_quarter,
 }
 
 

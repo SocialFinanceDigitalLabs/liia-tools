@@ -1,0 +1,110 @@
+table_list:
+- id: placement_costs
+  retain:
+  - PAN
+  columns:
+  - id: Child ID
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Date of birth
+    type: date
+    degrade: first_of_month
+  - id: Gender
+    type: category
+  - id: Ethnicity
+    type: category
+  - id: Disability
+    type: category
+  - id: Category of need
+    type: category
+  - id: Date of last assessment
+    type: date
+  - id: Does the child have an EHCP
+    type: category
+  - id: Is the child UASC
+    type: category
+  - id: Number of missing episodes in current period of care
+    type: integer
+  - id: Legal status
+    type: category
+  - id: Placement start date
+    type: date
+    unique_key: true
+  - id: Placement end date
+    type: date
+  - id: Date of start of current care period
+    type: date
+  - id: Reason for placement change
+    type: category
+  - id: Number of placements in last 12 months
+    type: integer
+  - id: Number of placements in current care period
+    type: integer
+  - id: Placement type
+    type: category
+  - id: Provider type
+    type: category
+  - id: Procurement platform
+    type: category
+  - id: Procurement framework
+    type: string
+  - id: Ofsted URN
+    type: string
+  - id: Home postcode
+    type: postcode
+  - id: Placement postcode
+    type: postcode
+  - id: LA of placement
+    type: string
+  - id: Total committed cost accrued in FY to date
+    type: float
+  - id: Contribution from social care provider/s
+    type: float
+  - id: Contribution from health provider/s
+    type: float
+  - id: Contribution from education provider/s
+    type: float
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    unique_key: true
+    enrich: year
+    sort: 0
+  - id: Quarter
+    type: string
+    unique_key: true
+    sort: 1
+    enrich: quarter
+- id: internal_residential_costs
+  retain:
+  - PAN
+  columns:
+  - id: Asset name
+    type: string
+    unique_key: true
+    enrich: add_la_suffix
+  - id: Ofsted URN
+    type: string
+  - id: Start date
+    type: date
+    unique_key: true
+  - id: End date
+    type: date
+  - id: Total committed cost accrued in FY to date
+    type: float
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    unique_key: true
+    enrich: year
+    sort: 0
+  - id: Quarter
+    type: string
+    unique_key: true
+    sort: 1
+    enrich: quarter

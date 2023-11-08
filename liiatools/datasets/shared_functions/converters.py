@@ -83,6 +83,20 @@ def to_integer(value):
 
 
 @allow_blank
+def to_float(value):
+    """
+    Convert any strings that should be floats based on the config into floats.
+
+    :param value: Some value to convert to a float
+    :return: Either a float value or a blank string
+    """
+    try:
+        return float(value)
+    except Exception as e:
+        raise ValueError(f"Invalid float: {value}") from e
+
+
+@allow_blank
 def to_date(value, dateformat="%d/%m/%Y"):
     """
     Convert a string to a date based on the dateformat %d/%m/%Y and convert a datetime to a date
