@@ -20,7 +20,7 @@ with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
 @click.group()
 def csww():
     """
-    Functions for creating CSWW Census sample file generator
+    Functions for cleaning, minimising and aggregating CSWW files
     """
     pass
 
