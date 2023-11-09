@@ -35,36 +35,34 @@ def process_file(
     :return: A class containing a DataContainer and ErrorContainer
     """
     errors = ErrorContainer()
-    # year, financial_year, quarter, error = pl.find_year_from_column(
-    #     file_locator,
-    #     columns=["Placement end date", "End date"],
-    #     retention_period=7,
-    #     reference_year=datetime.now().year
-    # )
-    # if error is not None:
-    #     if error == pl.DataType.MISSING_COLUMN:
-    #         message = "Could not find column which is used to identify year of return"
-    #     elif error == pl.DataType.EMPTY_COLUMN:
-    #         message = "Column used to identify year of return was empty"
-    #     elif error == pl.DataType.OLD_DATA:
-    #         message = f"File is from {year} and we are only accepting data from 2023 onwards"
-    #
-    #     errors.append(
-    #         dict(
-    #             type="MissingYear",
-    #             message=message,
-    #             filename=file_locator.name,
-    #         )
-    #     )
-    #     return ProcessResult(data=None, errors=errors)
-    year = 2023
-    quarter = "Q1"
+    year, financial_year, quarter, error = pl.find_year_from_column(
+        file_locator,
+        columns=["Placement end date", "End date"],
+        retention_period=7,
+        reference_year=datetime.now().year
+    )
+    if error is not None:
+        if error == pl.DataType.MISSING_COLUMN:
+            message = "Could not find column which is used to identify year of return"
+        elif error == pl.DataType.EMPTY_COLUMN:
+            message = "Column used to identify year of return was empty"
+        elif error == pl.DataType.OLD_DATA:
+            message = f"File is from {financial_year} and we are only accepting data from 2023 onwards"
+
+        errors.append(
+            dict(
+                type="MissingYear",
+                message=message,
+                filename=file_locator.name,
+            )
+        )
+        return ProcessResult(data=None, errors=errors)
 
     # We save these files based on the session UUID - so UUID must exist
     uuid = file_locator.meta["uuid"]
 
     # Load schema and set on processing metadata
-    schema = load_schema(year)
+    schema = load_schema(financial_year)
     metadata = dict(year=year, quarter=quarter, schema=schema, la_code=la_code)
 
     # Normalise the data and export to the session 'cleaned' folder

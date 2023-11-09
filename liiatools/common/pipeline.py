@@ -4,7 +4,6 @@ import uuid
 from datetime import datetime
 from os.path import basename, dirname
 from typing import Iterable, List, Tuple
-from pathlib import Path
 from enum import Enum
 
 import pandas as pd
@@ -178,11 +177,8 @@ def find_year_from_column(
     :param reference_year: The reference date against which we are checking the valid range
     :return: A year and quarter of return
     """
-    data = file_locator.meta
-    print(data)
-    # data = pd.read_csv(
-    #     file_name, usecols=lambda x: x in columns
-    # )
+    with file_locator.open() as f:
+        data = pd.read_csv(f)
 
     for column in columns:
         if column in data:
@@ -196,6 +192,6 @@ def find_year_from_column(
             quarter = "Q4" if quarter == "Q0" else quarter
             financial_year = year + 1 if quarter in ["Q1", "Q2", "Q3"] else year
             if financial_year in range(reference_year - retention_period, 2023):
-                return year, None, None, DataType.OLD_DATA
+                return None, financial_year, None, DataType.OLD_DATA
             else:
                 return year, financial_year, quarter, None
