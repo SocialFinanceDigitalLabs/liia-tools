@@ -8,7 +8,7 @@ from liiatools.common.pipeline import (
     move_files_for_processing,
     restore_session_folder,
 )
-from liiatools.spec.annex_a.samples import DIR as DIR_AA
+from liiatools.annex_a_pipeline.spec.samples import DIR as DIR_AA
 
 
 def test_create_session_folder():

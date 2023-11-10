@@ -43,15 +43,22 @@ def process_file(
     )
     if error is not None:
         if error == pl.DataType.MISSING_COLUMN:
+            error_type = "MissingYear"
             message = "Could not find column which is used to identify year of return"
         elif error == pl.DataType.EMPTY_COLUMN:
+            error_type = "MissingYear"
             message = "Column used to identify year of return was empty"
         elif error == pl.DataType.OLD_DATA:
+            error_type = "OldYear"
             message = f"File is from {financial_year} and we are only accepting data from 2023 onwards"
+        elif error == pl.DataType.ENCODING_ERROR:
+            error_type = "EncodingError"
+            message = f"File was saved in the wrong format. The correct format is CSV UTF-8. To fix this open the " \
+                      f"file in Excel, click 'Save As' and select 'CSV UTF-8 (Comma delimited) (*csv)'"
 
         errors.append(
             dict(
-                type="MissingYear",
+                type=error_type,
                 message=message,
                 filename=file_locator.name,
             )

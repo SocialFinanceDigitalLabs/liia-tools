@@ -147,6 +147,7 @@ class DataType(Enum):
     EMPTY_COLUMN = "empty_column"
     MISSING_COLUMN = "missing_column"
     OLD_DATA = "old_data"
+    ENCODING_ERROR = "encoding_error"
 
 
 def _calculate_year_quarter(input: pd.DataFrame, date_column: str):
@@ -178,7 +179,10 @@ def find_year_from_column(
     :return: A year and quarter of return
     """
     with file_locator.open() as f:
-        data = pd.read_csv(f)
+        try:
+            data = pd.read_csv(f)
+        except UnicodeDecodeError:
+            return None, None, None, DataType.ENCODING_ERROR
 
     for column in columns:
         if column in data:
