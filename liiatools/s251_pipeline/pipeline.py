@@ -167,11 +167,3 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
         report_data.data.export(report_folder, "s251_", "csv")
-
-
-from fs import open_fs
-
-infile = r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\S251\pipeline\input"
-outfile = r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\S251\pipeline\output"
-
-process_session(source_fs=open_fs(infile), output_fs=open_fs(outfile), la_code="BAR")
