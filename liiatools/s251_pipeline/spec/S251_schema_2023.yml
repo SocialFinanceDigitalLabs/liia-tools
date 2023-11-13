@@ -188,7 +188,9 @@ column_map:
             *yes-no-blank
         'Number of missing episodes in current period of care':
             &integer-blank
-            numeric: "integer"
+            numeric:
+              type: "integer"
+              min_value: 0
             canbeblank: yes
         Legal status:
             category:
@@ -292,11 +294,17 @@ column_map:
             *alphanumeric-blank
         Total committed cost accrued in FY to date:
             &float-not-blank
-            numeric: "float"
+            numeric: 
+              type: "float"
+              min_value: 0
+              decimal_places: 2
             canbeblank: no
         Contribution from social care provider/s:
             &float-blank
-            numeric: "float"
+            numeric: 
+              type: "float"
+              min_value: 0
+              decimal_places: 2
             canbeblank: yes
         Contribution from health provider/s:
             *float-blank

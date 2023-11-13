@@ -44,11 +44,26 @@ class Category(BaseModel):
         return False
 
 
+class Numeric(BaseModel):
+    """
+    Represents a numeric value in a column, including the minimum value, maximum value and decimal places
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    type: str
+    min_value: int = None
+    max_value: int = None
+    decimal_places: int = 0
+
+    def __init__(self, **data):
+        super().__init__(**data)
+
+
 class Column(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     string: Literal["alphanumeric", "postcode"] = None
-    numeric: Literal["integer", "float"] = None
+    numeric: Numeric = None
     date: str = None
 
     dictionary: Dict = None
@@ -64,10 +79,8 @@ class Column(BaseModel):
             return "string"
         elif self.string == "postcode":
             return "postcode"
-        elif self.numeric == "integer":
-            return "integer"
-        elif self.numeric == "float":
-            return "float"
+        elif self.numeric:
+            return "numeric"
         elif self.date:
             return "date"
         elif self.category:

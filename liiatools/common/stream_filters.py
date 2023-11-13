@@ -22,9 +22,8 @@ from liiatools.common.data import DataContainer
 from liiatools.common.stream_errors import EventErrors
 from liiatools.datasets.shared_functions.converters import (
     to_date,
-    to_integer,
+    to_numeric,
     to_postcode,
-    to_float,
 )
 
 from .converters import to_category
@@ -234,10 +233,14 @@ def conform_cell_types(event, preserve_value=False):
         converter = lambda x: to_category(x, column_spec)
     elif column_spec.type == "date":
         converter = lambda x: to_date(x, column_spec.date)
-    elif column_spec.type == "integer":
-        converter = to_integer
-    elif column_spec.type == "float":
-        converter = to_float
+    elif column_spec.type == "numeric":
+        converter = lambda x: to_numeric(
+            x,
+            column_spec.numeric.type,
+            column_spec.numeric.min_value,
+            column_spec.numeric.max_value,
+            column_spec.numeric.decimal_places,
+        )
     elif column_spec.type == "postcode":
         converter = to_postcode
     elif column_spec.type == "string":

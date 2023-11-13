@@ -25,7 +25,7 @@ table_list:
   - id: Is the child UASC
     type: category
   - id: Number of missing episodes in current period of care
-    type: integer
+    type: numeric
   - id: Legal status
     type: category
   - id: Placement start date
@@ -38,9 +38,9 @@ table_list:
   - id: Reason for placement change
     type: category
   - id: Number of placements in last 12 months
-    type: integer
+    type: numeric
   - id: Number of placements in current care period
-    type: integer
+    type: numeric
   - id: Placement type
     type: category
   - id: Provider type
@@ -58,18 +58,18 @@ table_list:
   - id: LA of placement
     type: string
   - id: Total committed cost accrued in FY to date
-    type: float
+    type: numeric
   - id: Contribution from social care provider/s
-    type: float
+    type: numeric
   - id: Contribution from health provider/s
-    type: float
+    type: numeric
   - id: Contribution from education provider/s
-    type: float
+    type: numeric
   - id: LA
     type: string
     enrich: la_name
   - id: Year
-    type: integer
+    type: numeric
     unique_key: true
     enrich: year
     sort: 0
@@ -94,12 +94,12 @@ table_list:
   - id: End date
     type: date
   - id: Total committed cost accrued in FY to date
-    type: float
+    type: numeric
   - id: LA
     type: string
     enrich: la_name
   - id: Year
-    type: integer
+    type: numeric
     unique_key: true
     enrich: year
     sort: 0

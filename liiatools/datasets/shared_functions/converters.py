@@ -68,32 +68,33 @@ def to_short_postcode(value):
     return f"{match.group(1)} {match.group(2)}"
 
 
-@allow_blank
-def to_integer(value):
-    """
-    Convert any strings that should be integers based on the config into integers.
-
-    :param value: Some value to convert to an integer
-    :return: Either an integer value or a blank string
-    """
-    try:
-        return int(float(value))
-    except Exception as e:
-        raise ValueError(f"Invalid integer: {value}") from e
+def _check_range(value, min_value=None, max_value=None):
+    if not (min_value is None or value >= min_value) and (max_value is None or value <= max_value):
+        raise ValueError(f"Value: {value} not in acceptable range: {min_value}-{max_value}")
+    return value
 
 
 @allow_blank
-def to_float(value):
+def to_numeric(value, _type, min_value=None, max_value=None, decimal_places=0):
     """
-    Convert any strings that should be floats based on the config into floats.
+    Convert any strings that should be numeric values based on the config into numeric values.
 
-    :param value: Some value to convert to a float
-    :return: Either a float value or a blank string
+    :param value: Some value to convert to a number
+    :param _type: Type of numeric value, integer or float
+    :param min_value: Minimum value allowed
+    :param max_value: Maximum value allowed
+    :param decimal_places: The number of decimal places to apply
+    :return: Either a numeric value or a blank string
     """
     try:
-        return float(value)
+        value = float(value)
+        _check_range(value, min_value, max_value)
+        if _type == "float":
+            return round(value, decimal_places)
+        elif _type == "integer":
+            return int(value)
     except Exception as e:
-        raise ValueError(f"Invalid float: {value}") from e
+        raise ValueError(f"Invalid numeric: {value}") from e
 
 
 @allow_blank
