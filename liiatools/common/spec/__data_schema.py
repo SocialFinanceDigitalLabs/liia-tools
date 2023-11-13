@@ -50,10 +50,10 @@ class Numeric(BaseModel):
     """
     model_config = ConfigDict(extra="forbid")
 
-    type: str
+    type: Literal["integer", "float"]
     min_value: int = None
     max_value: int = None
-    decimal_places: int = 0
+    decimal_places: int = None
 
     def __init__(self, **data):
         super().__init__(**data)

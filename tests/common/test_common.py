@@ -11,7 +11,7 @@ from liiatools.datasets.shared_functions.common import (
 from liiatools.datasets.shared_functions.converters import (
     allow_blank,
     to_date,
-    to_integer,
+    to_numeric,
     to_month_only_dob,
     to_short_postcode,
 )
@@ -85,16 +85,26 @@ def test_to_date():
     assert to_date("15/03/2017") == datetime.datetime(2017, 3, 15).date()
 
 
-def test_to_integer():
-    assert to_integer("3000") == 3000
-    assert to_integer(123) == 123
-    assert to_integer("") == ""
-    assert to_integer(None) == ""
-    assert to_integer("1.0") == 1
-    assert to_integer(0) == 0
+def test_to_numeric():
+    assert to_numeric("3000", "integer") == 3000
+    assert to_numeric(123, "integer") == 123
+    assert to_numeric("", "integer") == ""
+    assert to_numeric(None, "integer") == ""
+    assert to_numeric("1.0", "integer") == 1
+    assert to_numeric(0, "integer") == 0
+
+    assert to_numeric(1.23, "float") == 1.23
+    assert to_numeric("1.23", "float") == 1.23
+    assert to_numeric("", "float") == ""
+    assert to_numeric(None, "float") == ""
+    assert to_numeric(0.5, "float", min_value=0, max_value=1) == 0.5
+    assert to_numeric(0.2, "float", min_value=0) == 0.2
+    assert to_numeric(0.1234, "float", decimal_places=3) == 0.123
 
     with pytest.raises(ValueError):
-        to_integer("date")
+        to_numeric("date", "integer")
+        to_numeric(1.5, "float", min_value=0, max_value=1)
+        to_numeric(1.5, "float", min_value=2)
 
 
 def test_check_year():

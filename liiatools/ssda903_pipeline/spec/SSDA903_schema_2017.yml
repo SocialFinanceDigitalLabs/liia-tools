@@ -21,7 +21,8 @@ column_map:
        dictionary: {"False" : "0", "True" : "1", False: "0", True : "1", "FALSE" : "0", "TRUE" : "1"}
        canbeblank: no
       NB_ADOPTR:
-       numeric: "integer"
+       numeric: 
+         type: "integer"
        canbeblank: no
       SEX_ADOPTR:
        category:
@@ -288,7 +289,10 @@ column_map:
        date: "%d/%m/%Y"
        canbeblank: no
       SDQ_SCORE:
-       numeric: "integer"
+       numeric: 
+         type: "integer"
+         min_value: 0
+         max_value: 40
        canbeblank: yes
       SDQ_REASON:
        category:

@@ -164,7 +164,9 @@ column_map:
                 canbeblank: true
         Age of Child (Years):
             &age
-                numeric: "integer"
+                numeric: 
+                  type: "integer"
+                  min_value: 0
                 header_regex:
                   - /.*age.*/i
                 canbeblank: true
@@ -345,7 +347,9 @@ column_map:
                 canbeblank: false
         Number of Referrals in Last 12 Months:
             &integer-not-blank
-                numeric: "integer"
+                numeric: 
+                  type: "integer"
+                  min_value: 0
                 canbeblank: false
         Allocated Team: *not-blank
         Allocated Worker: *not-blank
@@ -1434,7 +1438,9 @@ column_map:
         Date adopter matched with child(ren): *date-blank
         Date child/children placed with adopter(s): *date-blank
         No. of children placed:
-            numeric: "integer"
+            numeric: 
+              type: "integer"
+              min_value: 0
             canbeblank: true
         Date of Adoption Order: *date-blank
         Date of leaving adoption process: *date-blank

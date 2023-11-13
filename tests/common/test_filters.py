@@ -11,7 +11,7 @@ from liiatools.annex_a_pipeline.spec import load_schema as annex_a_schema
 
 
 def test_collect_row():
-    spec_int = Column(numeric="integer")
+    spec_int = Column(numeric={"type": "integer"})
     spec_str = Column(string="alphanumeric")
     stream = [
         events.StartContainer(),
@@ -268,7 +268,7 @@ def test_clean_categories():
 
 
 def test_clean_integers():
-    integer_spec = Column(numeric="integer")
+    integer_spec = Column(numeric={"type": "integer"})
     event = events.Cell(cell=123, column_spec=integer_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == 123

@@ -40,7 +40,7 @@ def test_end_to_end(liiatools_dir, build_dir):
             "-c",
             "BAD",
             "--input",
-            str(liiatools_dir / "spec/annex_a/samples/Annex_A.xlsx"),
+            incoming_dir.as_posix(),
             "--output",
             pipeline_dir.as_posix(),
         ],
