@@ -1,3 +1,5 @@
+import logging
+
 from sfdata_stream_parser.filters import generic
 
 from liiatools.common import stream_filters as stream_functions
@@ -7,6 +9,8 @@ from liiatools.common.spec.__data_schema import DataSchema
 from liiatools.common.stream_pipeline import to_dataframe
 
 from . import stream_filters
+
+logger = logging.getLogger(__name__)
 
 
 def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> ProcessResult:
@@ -39,6 +43,12 @@ def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> ProcessResult:
 
     dataset = dataset_holder.value
     errors = error_holder.value
+
+    logger.info(
+        "Completed processing file %s with the following tables: %s",
+        src_file.name,
+        list(dataset.keys()),
+    )
 
     dataset = DataContainer(
         {k: to_dataframe(v, schema.table[k]) for k, v in dataset.items()}

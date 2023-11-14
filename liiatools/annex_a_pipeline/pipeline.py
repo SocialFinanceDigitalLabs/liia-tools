@@ -33,6 +33,9 @@ def process_file(
     :param la_code: A three-letter string for the local authority depositing the file
     :return: A class containing a DataContainer and ErrorContainer
     """
+    logger.debug(
+        f"Processing file %s with metadata: %s", file_locator.name, file_locator.meta
+    )
     errors = ErrorContainer()
     # We save these files based on the session UUID - so UUID must exist
     uuid = file_locator.meta["uuid"]

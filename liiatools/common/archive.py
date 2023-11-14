@@ -75,6 +75,10 @@ class DataframeArchive:
 
         snap_dir, snap_name = _create_unique_folder(self.fs)
 
+        logger.debug(
+            "Adding snapshot of tables %s to archive %s", list(data.keys()), snap_name
+        )
+
         for table_spec in self.config.table_list:
             if table_spec.id in data:
                 self._add_table(snap_dir, table_spec, data[table_spec.id])
