@@ -24,6 +24,7 @@ from liiatools.datasets.shared_functions.converters import (
     to_date,
     to_numeric,
     to_postcode,
+    to_regex
 )
 
 from .converters import to_category
@@ -188,7 +189,7 @@ def match_config_to_cell(event, schema: DataSchema):
     return event
 
 
-@streamfilter(check=type_check(events.Cell), fail_function=pass_event)
+@streamfilter(check=type_check((events.Cell, events.TextNode)), fail_function=pass_event)
 def log_blanks(event):
     """Creates a EventErrors for cells flagged as not allowing blank but that are empty (None or blank string)."""
     column_spec = getattr(event, "column_spec", None)
@@ -201,7 +202,7 @@ def log_blanks(event):
     if column_spec.canbeblank:
         return event
 
-    cell_value = getattr(event, "cell", None)
+    cell_value = getattr(event, "cell", None) or getattr(event, "text", None)
     if isinstance(cell_value, str):
         cell_value = cell_value.strip()
 
@@ -216,7 +217,7 @@ def log_blanks(event):
     return event
 
 
-@streamfilter(check=type_check(events.Cell), fail_function=pass_event)
+@streamfilter(check=type_check((events.Cell, events.TextNode)), fail_function=pass_event)
 def conform_cell_types(event, preserve_value=False):
     """
     A streamfilter that conforms known cell types to the correct type.
@@ -254,12 +255,14 @@ def conform_cell_types(event, preserve_value=False):
         converter = to_postcode
     elif column_spec.type == "string":
         converter = lambda x: str(x)
+    elif column_spec.type == "regex":
+        converter = lambda x: to_regex(x, column_spec.cell_regex)
     else:
         return EventErrors.add_to_event(
             event, type="UnknownType", message=f"Unknown cell type {column_spec.type}"
         )
 
-    cell_value = getattr(event, "cell", None)
+    cell_value = getattr(event, "cell", None) or getattr(event, "text", None)
 
     try:
         cell_value = converter(cell_value)

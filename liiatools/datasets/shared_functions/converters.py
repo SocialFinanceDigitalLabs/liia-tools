@@ -150,3 +150,20 @@ def to_nth_of_month(value: date, n: int = 1):
         return value.replace(day=n)
     except Exception as e:
         raise ValueError(f"Invalid date: {value}") from e
+
+
+@allow_blank
+def to_regex(value: str, pattern: str):
+    """
+    Confirm any strings that should conform to regex pattern based on the schema do
+
+    :param value: A value to convert to a regex string
+    :param pattern: A regex pattern
+    :return: A string matching the regex pattern
+    """
+    try:
+        value = value.strip()
+        match = re.fullmatch(pattern, value)
+        return match.string
+    except Exception as e:
+        raise ValueError(f"Invalid value: {value}") from e

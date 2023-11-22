@@ -62,7 +62,7 @@ class Numeric(BaseModel):
 class Column(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    string: Literal["alphanumeric", "postcode"] = None
+    string: Literal["alphanumeric", "postcode", "regex"] = None
     numeric: Numeric = None
     date: str = None
 
@@ -70,6 +70,7 @@ class Column(BaseModel):
     category: List[Category] = None
 
     header_regex: Any
+    cell_regex: Any
 
     canbeblank: bool = True
 
@@ -79,6 +80,8 @@ class Column(BaseModel):
             return "string"
         elif self.string == "postcode":
             return "postcode"
+        elif self.string == "regex":
+            return "regex"
         elif self.numeric:
             return "numeric"
         elif self.date:

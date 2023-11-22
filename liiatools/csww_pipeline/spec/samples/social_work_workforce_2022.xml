@@ -1,0 +1,45 @@
+<Message>
+  <Header>
+    <CollectionDetails>
+      <Collection>CSWW</Collection>
+      <Year>2022</Year>
+      <ReferenceDate>2022-09-30</ReferenceDate>
+    </CollectionDetails>
+    <Source>
+      <SourceLevel>L</SourceLevel>
+      <LEA>301</LEA>
+      <SoftwareCode>liiatools.datasets.social_work_workforce.sample_data</SoftwareCode>
+      <DateTime>2023-03-28T14:54:55Z</DateTime>
+    </Source>
+  </Header>
+  <LALevelVacancies>
+    <NumberOfVacancies>79.68</NumberOfVacancies>
+    <NoAgencyFTE>59.82</NoAgencyFTE>
+    <NoAgencyHeadcount>71</NoAgencyHeadcount>
+  </LALevelVacancies>
+  <CSWWWorker>
+    <AgencyWorker>1</AgencyWorker>
+    <SWENo>Oz2054309383</SWENo>
+    <FTE>0.521371</FTE>
+    <PersonBirthDate>1967-01-04</PersonBirthDate>
+    <GenderCurrent>1</GenderCurrent>
+    <Ethnicity>REFU</Ethnicity>
+    <QualInst>Institution Name</QualInst>
+	<QualLevel>1</QualLevel>
+    <StepUpGrad>0</StepUpGrad>
+	<OrgRole>3</OrgRole>
+    <RoleStartDate>1988-04-07</RoleStartDate>
+    <StartOrigin>9</StartOrigin>
+	<RoleEndDate>1990-04-07</RoleEndDate>
+	<LeaverDestination>1</LeaverDestination>
+	<ReasonLeave>2</ReasonLeave>
+	<FTE30>0.123456</FTE30>
+    <Cases30>72</Cases30>
+    <WorkingDaysLost>15.31</WorkingDaysLost>
+    <ContractWeeks>288.7</ContractWeeks>
+    <FrontlineGrad>1</FrontlineGrad>
+    <Absat30Sept>0</Absat30Sept>
+    <ReasonAbsence>TRN</ReasonAbsence>
+    <CFKSSstatus>1</CFKSSstatus>
+  </CSWWWorker>
+</Message>
