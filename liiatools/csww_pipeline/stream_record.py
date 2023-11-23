@@ -54,8 +54,8 @@ def text_collector(stream):
     for event in stream:
         if isinstance(event, events.StartElement):
             current_element = event.tag
-        if isinstance(event, events.TextNode) and event.text:
-            data_dict.setdefault(current_element, []).append(event.text)
+        if isinstance(event, events.TextNode) and event.cell:
+            data_dict.setdefault(current_element, []).append(event.cell)
     return _reduce_dict(data_dict)
 
 

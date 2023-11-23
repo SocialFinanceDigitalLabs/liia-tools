@@ -202,7 +202,7 @@ def log_blanks(event):
     if column_spec.canbeblank:
         return event
 
-    cell_value = getattr(event, "cell", None) or getattr(event, "text", None)
+    cell_value = getattr(event, "cell", None)
     if isinstance(cell_value, str):
         cell_value = cell_value.strip()
 
@@ -262,7 +262,7 @@ def conform_cell_types(event, preserve_value=False):
             event, type="UnknownType", message=f"Unknown cell type {column_spec.type}"
         )
 
-    cell_value = getattr(event, "cell", None) or getattr(event, "text", None)
+    cell_value = getattr(event, "cell", None)
 
     try:
         cell_value = converter(cell_value)

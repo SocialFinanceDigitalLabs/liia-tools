@@ -70,7 +70,7 @@ def hash_column_sha256(
         return value
 
     digest = hashlib.sha256()
-    digest.update(value.encode("utf-8"))
+    digest.update(str(value).encode("utf-8"))
 
     salt = _get_first(metadata, f"sha256_salt_{column_config.id}", "sha256_salt")
     if salt:

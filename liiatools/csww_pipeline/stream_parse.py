@@ -21,14 +21,14 @@ def dom_parse(source, filename, **kwargs):
     for action, elem in parser:
         if action == "start":
             yield StartElement(tag=elem.tag, attrib=elem.attrib, node=elem, filename=filename)
-            yield TextNode(text=elem.text, filename=filename)
+            yield TextNode(cell=elem.text, filename=filename, text=None)
         elif action == "end":
             yield EndElement(tag=elem.tag, node=elem, filename=filename)
             if elem.tail:
-                yield TextNode(text=elem.tail, filename=filename)
+                yield TextNode(cell=elem.tail, filename=filename, text=None)
         elif action == "comment":
-            yield CommentNode(text=elem.text, node=elem, filename=filename)
+            yield CommentNode(cell=elem.text, node=elem, filename=filename, text=None)
         elif action == "pi":
-            yield ProcessingInstructionNode(name=elem.target, text=elem.text, node=elem, filename=filename)
+            yield ProcessingInstructionNode(name=elem.target, cell=elem.text, node=elem, filename=filename, text=None)
         else:
             raise ValueError(f"Unknown event: {action}")

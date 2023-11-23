@@ -23,15 +23,15 @@ def strip_text(event):
 
     If there is no content at all, then the node is not returned.
     """
-    if not hasattr(event, "text"):
+    if not hasattr(event, "cell"):
         return event
 
-    if event.text is None:
+    if event.cell is None:
         return event
 
-    text = event.text.strip()
-    if len(text) > 0:
-        return event.from_event(event, text=text)
+    cell = event.cell.strip()
+    if len(cell) > 0:
+        return event.from_event(event, cell=cell)
     else:
         return None
 

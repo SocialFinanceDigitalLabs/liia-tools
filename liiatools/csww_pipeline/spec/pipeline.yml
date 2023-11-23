@@ -1,100 +1,99 @@
 table_list:
-- id: placement_costs
+- id: Worker
   retain:
   - PAN
   columns:
-  - id: Child ID
+  - id: AgencyWorker
+    type: category
+    unique_key: true
+  - id: SWENo
     type: string
     unique_key: true
-    enrich: add_la_suffix
-  - id: Date of birth
+    degrade: hash_sha256
+  - id: FTE
+    type: numeric
+    unique_key: true
+  - id: PersonBirthDate
     type: date
-    degrade: first_of_month
-  - id: Gender
+    unique_key: true
+  - id: GenderCurrent
     type: category
+    unique_key: true
   - id: Ethnicity
     type: category
-  - id: Disability
+    unique_key: true
+  - id: QualInst
+    type: string
+    unique_key: true
+  - id: QualLevel
     type: category
-  - id: Category of need
+    unique_key: true
+  - id: StepUpGrad
     type: category
-  - id: Date of last assessment
-    type: date
-  - id: Does the child have an EHCP
+    unique_key: true
+  - id: OrgRole
     type: category
-  - id: Is the child UASC
-    type: category
-  - id: Number of missing episodes in current period of care
-    type: numeric
-  - id: Legal status
-    type: category
-  - id: Placement start date
+    unique_key: true
+  - id: RoleStartDate
     type: date
     unique_key: true
-  - id: Placement end date
+  - id: StartOrigin
+    type: category
+    unique_key: true
+  - id: RoleEndDate
     type: date
-  - id: Date of start of current care period
-    type: date
-  - id: Reason for placement change
+    unique_key: true
+  - id: LeaverDestination
     type: category
-  - id: Number of placements in last 12 months
-    type: numeric
-  - id: Number of placements in current care period
-    type: numeric
-  - id: Placement type
+    unique_key: true
+  - id: ReasonLeave
     type: category
-  - id: Provider type
+    unique_key: true
+  - id: FTE30
+    type: numeric
+    unique_key: true
+  - id: Cases30
+    type: numeric
+    unique_key: true
+  - id: WorkingDaysLost
+    type: numeric
+    unique_key: true
+  - id: ContractWeeks
+    type: numeric
+    unique_key: true
+  - id: FrontlineGrad
     type: category
-  - id: Procurement platform
+    unique_key: true
+  - id: Absat30Sept
     type: category
-  - id: Procurement framework
-    type: string
-  - id: Ofsted URN
-    type: string
-  - id: Home postcode
-    type: postcode
-  - id: Placement postcode
-    type: postcode
-  - id: LA of placement
-    type: string
-  - id: Total committed cost accrued in FY to date
-    type: numeric
-  - id: Contribution from social care provider/s
-    type: numeric
-  - id: Contribution from health provider/s
-    type: numeric
-  - id: Contribution from education provider/s
-    type: numeric
+    unique_key: true
+  - id: ReasonAbsence
+    type: category
+    unique_key: true
+  - id: CFKSSstatus
+    type: category
+    unique_key: true
   - id: LA
     type: string
+    unique_key: true
     enrich: la_name
   - id: Year
     type: numeric
     unique_key: true
     enrich: year
     sort: 0
-  - id: Quarter
-    type: string
-    unique_key: true
-    sort: 1
-    enrich: quarter
-- id: internal_residential_costs
+- id: LA_Level
   retain:
   - PAN
   columns:
-  - id: Asset name
-    type: string
-    unique_key: true
-    enrich: add_la_suffix
-  - id: Ofsted URN
-    type: string
-  - id: Start date
-    type: date
-    unique_key: true
-  - id: End date
-    type: date
-  - id: Total committed cost accrued in FY to date
+  - id: NumberOfVacancies
     type: numeric
+    unique_key: true
+  - id: NoAgencyFTE
+    type: numeric
+  - id: NoAgencyHeadcount
+    type: numeric
+    unique_key: true
   - id: LA
     type: string
     enrich: la_name
@@ -103,8 +102,3 @@ table_list:
     unique_key: true
     enrich: year
     sort: 0
-  - id: Quarter
-    type: string
-    unique_key: true
-    sort: 1
-    enrich: quarter

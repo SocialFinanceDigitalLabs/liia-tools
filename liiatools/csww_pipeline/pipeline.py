@@ -61,30 +61,30 @@ def process_file(
         )
         return ProcessResult(data=None, errors=errors)
 
-    # # Export the cleaned data to the session 'cleaned' folder
-    # cleanfile_result.data.export(
-    #     session_folder, f"{SessionNames.CLEANED_FOLDER}/{uuid}_", "parquet"
-    # )
+    # Export the cleaned data to the session 'cleaned' folder
+    cleanfile_result.data.export(
+        session_folder, f"{SessionNames.CLEANED_FOLDER}/{uuid}_", "parquet"
+    )
     # errors.extend(cleanfile_result.errors)
     #
-    # # Enrich the data and export to the session 'enriched' folder
-    # enrich_result = enrich_data(cleanfile_result.data, pipeline_config, metadata)
-    # enrich_result.data.export(
-    #     session_folder, f"{SessionNames.ENRICHED_FOLDER}/{uuid}_", "parquet"
-    # )
+    # Enrich the data and export to the session 'enriched' folder
+    enrich_result = enrich_data(cleanfile_result.data, pipeline_config, metadata)
+    enrich_result.data.export(
+        session_folder, f"{SessionNames.ENRICHED_FOLDER}/{uuid}_", "parquet"
+    )
     # errors.extend(enrich_result.errors)
     #
-    # # Degrade the data and export to the session 'degraded' folder
-    # degraded_result = degrade_data(enrich_result.data, pipeline_config, metadata)
-    # degraded_result.data.export(
-    #     session_folder, f"{SessionNames.DEGRADED_FOLDER}/{uuid}_", "parquet"
-    # )
+    # Degrade the data and export to the session 'degraded' folder
+    degraded_result = degrade_data(enrich_result.data, pipeline_config, metadata)
+    degraded_result.data.export(
+        session_folder, f"{SessionNames.DEGRADED_FOLDER}/{uuid}_", "parquet"
+    )
     # errors.extend(degraded_result.errors)
     #
     # errors.set_property("filename", file_locator.name)
     # errors.set_property("uuid", uuid)
     #
-    # return ProcessResult(data=degraded_result.data, errors=errors)
+    return ProcessResult(data=degraded_result.data, errors=errors)
 
 
 def process_session(source_fs: FS, output_fs: FS, la_code: str):
@@ -106,13 +106,13 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
         for locator in locator_list
     ]
 
-    # # Add processed files to archive
-    # archive = DataframeArchive(
-    #     output_fs.opendir(ProcessNames.ARCHIVE_FOLDER), pipeline_config
-    # )
-    # for result in processed_files:
-    #     if result.data:
-    #         archive.add(result.data)
+    # Add processed files to archive
+    archive = DataframeArchive(
+        output_fs.opendir(ProcessNames.ARCHIVE_FOLDER), pipeline_config
+    )
+    for result in processed_files:
+        if result.data:
+            archive.add(result.data)
     #
     # # Write the error summary
     # error_summary = ErrorContainer(
@@ -122,8 +122,15 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     # with session_folder.open("error_summary.csv", "w") as FILE:
     #     error_summary.to_dataframe().to_csv(FILE, index=False)
     #
-    # # Export the current snapshot of the archive
-    # current_data = archive.current()
-    # current_data.export(
-    #     output_fs.opendir(ProcessNames.CURRENT_FOLDER), "cin_cencus_current_", "csv"
-    # )
+    # Export the current snapshot of the archive
+    current_data = archive.current()
+    current_data.export(
+        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "csww_current_", "csv"
+    )
+
+    # Create the different reports
+    export_folder = output_fs.opendir(ProcessNames.EXPORT_FOLDER)
+    for report in ["PAN"]:
+        report_data = prepare_export(current_data, pipeline_config, profile=report)
+        report_folder = export_folder.makedirs(report, recreate=True)
+        report_data.data.export(report_folder, "csww_", "csv")
