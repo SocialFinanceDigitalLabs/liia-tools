@@ -1,0 +1,44 @@
+column_names:
+    - AgencyWorker
+    - SWENo
+    - FTE
+    - PersonBirthDate
+    - GenderCurrent
+    - Ethnicity
+    - QualInst
+    - QualLevel
+    - StepUpGrad
+    - OrgRole
+    - RoleStartDate
+    - StartOrigin
+    - RoleEndDate
+    - LeaverDestination
+    - ReasonLeave
+    - FTE30
+    - Cases30
+    - WorkingDaysLost
+    - ContractWeeks
+    - FrontlineGrad
+    - Absat30Sept
+    - ReasonAbsence
+    - CFKSSstatus
+    - LA
+    - YEAR
+
+dates:
+    - PersonBirthDate
+    - RoleStartDate
+    - RoleEndDate
+
+NON_AGENCY_MANDATORY_TAG:
+    - PersonBirthDate
+    - GenderCurrent
+    - Ethnicity
+    - QualInst
+    - StepUpGrad
+    - OrgRole
+    - RoleStartDate
+    - StartOrigin
+    - FTE30
+    - WorkingDaysLost
+    - FrontlineGrad

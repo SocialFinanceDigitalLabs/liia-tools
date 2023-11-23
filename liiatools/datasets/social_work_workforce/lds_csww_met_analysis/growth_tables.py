@@ -1,18 +1,10 @@
-"""
-  Growth rate table and Population growth table: 2020 to 2026
-"""
-
-import os
 import pandas as pd
-import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
-import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
 
 
 def growth_tables():
     """
-    Create two Excel files with tables of growth rates and population growth for six LEAs
+    Create two dataframes with growth rates and population growth for six LAs
     """
-
     growth_rate_df = {
         "LEAName": [
             "Havering",
@@ -30,20 +22,7 @@ def growth_tables():
         "2025": [0.0227, 0.0113, 0.0208, 0.0095, 0.0100, 0.0102],
         "2026": [0.023, 0.0107, 0.0243, 0.0093, 0.0118, 0.0058],
     }
-
     growth_rate_table = pd.DataFrame(growth_rate_df)
-
-    # ===== Save and export file ===== #
-    fileOutN = "growth_rate_table.xlsx"
-    requestPath = work_path.request
-    fileOut = os.path.join(requestPath, fileOutN)
-    growth_rate_table.to_excel(fileOut, index=False)
-
-    AppLogs.log(f"Auxiliary table: {fileOutN} created", console_output=True)
-
-    """
-      Population growth table: 2020 to 2026
-    """
 
     population_growth_df = {
         "LEAName": [
@@ -65,10 +44,4 @@ def growth_tables():
 
     population_growth_table = pd.DataFrame(population_growth_df)
 
-    # ===== Save and export file ===== #
-    fileOutN = "population_growth_table.xlsx"
-    requestPath = work_path.request
-    fileOut = os.path.join(requestPath, fileOutN)
-    population_growth_table.to_excel(fileOut, index=False)
-
-    AppLogs.log(f"Auxiliary table: {fileOutN} created", console_output=True)
+    return growth_rate_table, population_growth_table

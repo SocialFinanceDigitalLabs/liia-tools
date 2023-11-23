@@ -1,9 +1,7 @@
 """This file contains constants and functions used in converting and merging XML data from CSWW folder"""
 
-import hashlib
 import datetime as dt
 from typing import Final, Dict, List
-from decouple import config
 
 
 # === CONSTANTS === #
@@ -87,27 +85,6 @@ QUAL_LEVEL_DICT: Final[Dict[str, str]] = {
     "2": "Postgraduate",
     "3": "Other (for example any other qualification)",
 }
-
-
-# === FUNCTIONS === #
-def swe_hash(worker: Dict[str, str]):
-    """
-    Converts the **SWENo** field to a hash code represented in HEX
-    :param worker: A dictionary containing worker data
-    :return: None
-    """
-    swe_num = worker["SWENo"]
-
-    private_string = config("sec_str", default="")
-
-    private_key = swe_num + private_string
-
-    # Preparing plain text (SWENo) to hash it
-    plaintext = private_key.encode()
-
-    hash_algorithm = hashlib.sha3_256(plaintext)
-
-    worker["SWENo"] = hash_algorithm.hexdigest()
 
 
 def convert_dates(worker: Dict[str, str]):

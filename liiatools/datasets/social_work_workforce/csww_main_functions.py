@@ -54,6 +54,16 @@ from liiatools.datasets.social_work_workforce.lds_csww_pan_agg import (
     process as pan_process,
 )
 
+# dependencies for met_analysis()
+from liiatools.datasets.social_work_workforce.lds_csww_met_analysis import (
+    growth_tables,
+    pivotGen,
+    seniority,
+    FTESum,
+    process as met_process,
+    configuration as met_config,
+    validator as met_validator,
+)
 
 COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
@@ -219,3 +229,53 @@ def pan_agg(input, la_code, output):
         la_name = flip_dict(config["data_codes"])[la_code]
         csww_df = pan_process.merge_agg_files(output, table_name, csww_df, la_name)
         pan_process.export_pan_file(output, table_name, csww_df)
+
+
+def met_analysis(input):
+    # Configuration
+    config = met_config.Config()
+    dates = config["dates"]
+
+    # Open & Parse file
+    csww_df = met_process.read_file(input, dates)
+
+    # Validate data
+    non_agency_mandatory_tag = config["NON_AGENCY_MANDATORY_TAG"]
+    csww_df = met_validator.remove_invalid_worker_data(csww_df, non_agency_mandatory_tag)
+
+    # Analyse data
+    growth_rate_table, population_growth_table, = growth_tables.growth_tables()
+    pivot_table = pivotGen.pivotGen(csww_df)
+    seniority_table = seniority.create_seniority_table(csww_df)
+    progressed_table = seniority.progressed(seniority_table)
+    seniority_comp = seniority.seniority_comp(seniority_table)
+    comp_merge_sen = seniority.seniority_forecast_5c(data=csww_df, data_comp=seniority_comp)
+    fte_sum = FTESum.FTESum(comp_merge_sen)
+    fte_sum_2020 = FTESum.FTESum(comp_merge_sen, year=2020)
+    seniority_forecast = seniority.seniority_forecast_04(fte_sum_2020, population_growth_table)
+
+    return pivot_table, progressed_table, seniority_comp, comp_merge_sen, fte_sum, fte_sum_2020, seniority_forecast
+
+# cleanfile(
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\Analysis\cin\LA2\LA2_2022.xml",
+#     "RED",
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
+# )
+
+# la_agg(
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\LA2_2022_worker_clean.csv",
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
+# )
+
+
+# pan_agg(
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\CSWW_CSWWWorker_merged.csv",
+#     "RED",
+#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
+# )
+
+
+met_analysis(
+    r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\pan_London_CSWW_CSWWWorker.csv",
+)
