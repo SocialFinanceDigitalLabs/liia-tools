@@ -24,6 +24,9 @@ from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_con
 from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suff_config
 from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
 
+# dependencies for episodes fix()
+from liiatools.datasets.s903.lds_ssda903_episodes_fix import process as episodes_process
+
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions import (
     prep,
@@ -200,3 +203,30 @@ def sufficiency_output(input, output):
         minimise = config["minimise"]
         s903_df = suff_process.data_min(s903_df, minimise, table_name)
         suff_process.export_suff_file(output, table_name, s903_df)
+
+
+def episodes_fix(input, output):
+    """"
+    Applies fixes to la_agg SSDA903 Episodes files
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
+
+    # Read file and match type
+    s903_df = common_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = common_process.match_load_file(s903_df, column_names)
+    if table_name == "Episodes":
+        s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
+        s903_df_next = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
+        print(s903_df_next)
+
+
+episodes_fix(
+    r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\903\SSDA903_episodes.csv",
+    r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\903"
+)
