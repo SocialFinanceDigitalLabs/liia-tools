@@ -2,7 +2,20 @@ from pathlib import Path
 from datetime import datetime
 import yaml
 
+# Dependencies for generate_sample()
+from liiatools.datasets.social_work_workforce.lds_csww_data_generator.sample_data import (
+    generate_sample_csww_file,
+)
+from liiatools.datasets.social_work_workforce.lds_csww_data_generator.stream import (
+    consume,
+)
+
 # Dependencies for cleanfile()
+from liiatools.datasets.social_work_workforce.lds_csww_clean.parse import (
+    etree,
+    to_xml,
+    dom_parse,
+)
 from liiatools.datasets.social_work_workforce.lds_csww_clean.schema import (
     Schema,
     FilePath,
@@ -16,7 +29,6 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean import (
     logger,
     filters,
     validator as clean_validator,
-    xml,
 )
 
 from liiatools.spec import common as common_asset_dir
@@ -64,6 +76,28 @@ YEAR_START_MONTH = 1
 REFERENCE_DATE = datetime.now()
 
 
+def generate_sample(output: str):
+    """
+    Export a sample file for testing
+
+    :param output: string containing the desired location and name of sample file
+    :return: .xml sample file in desired location
+    """
+
+    stream = generate_sample_csww_file()
+    builder = etree.TreeBuilder()
+    stream = to_xml(stream, builder)
+    consume(stream)
+
+    element = builder.close()
+    element = etree.tostring(element, encoding="utf-8", pretty_print=True)
+    try:
+        with open(output, "wb") as FILE:
+            FILE.write(element)
+    except FileNotFoundError:
+        print("The file path provided does not exist")
+
+
 def cleanfile(input, la_code, la_log_dir, output):
     """
     Cleans input Children Social Work workforce xml files according to config and outputs cleaned csv files.
@@ -85,7 +119,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         == "incorrect file type"
     ):
         return
-    stream = xml.dom_parse(input)
+    stream = dom_parse(input)
 
     # Get year from input file
     filename = str(Path(input).resolve().stem)
@@ -102,7 +136,7 @@ def cleanfile(input, la_code, la_log_dir, output):
         )
         is False
     ):
-        save_incorrect_year_error(input, la_log_dir)
+        save_incorrect_year_error(input, la_log_dir, retention_period=YEARS_TO_GO_BACK-1)
         return
 
     # Configure stream

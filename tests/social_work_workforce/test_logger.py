@@ -1,8 +1,3 @@
-import tempfile as tmp
-from unittest.mock import patch
-from pathlib import Path
-from datetime import datetime
-
 from liiatools.datasets.social_work_workforce.lds_csww_clean import logger
 
 from sfdata_stream_parser import events
@@ -62,11 +57,21 @@ def test_create_formatting_error_list():
 def test_blank_error_check():
     mock_stream = logger.blank_error_check(
         [
-            events.TextNode(schema_dict={"canbeblank": False}, text="", formatting_error="0"),
-            events.TextNode(schema_dict={"canbeblank": False}, text=None, formatting_error="0"),
-            events.TextNode(schema_dict={"canbeblank": False}, text="", formatting_error="1"),
-            events.TextNode(schema_dict={"canbeblank": False}, text="string", formatting_error="0"),
-            events.TextNode(schema_dict={"canbeblank": True}, text="", formatting_error="0"),
+            events.TextNode(
+                schema_dict={"canbeblank": False}, text="", formatting_error="0"
+            ),
+            events.TextNode(
+                schema_dict={"canbeblank": False}, text=None, formatting_error="0"
+            ),
+            events.TextNode(
+                schema_dict={"canbeblank": False}, text="", formatting_error="1"
+            ),
+            events.TextNode(
+                schema_dict={"canbeblank": False}, text="string", formatting_error="0"
+            ),
+            events.TextNode(
+                schema_dict={"canbeblank": True}, text="", formatting_error="0"
+            ),
         ]
     )
     stream = list(mock_stream)
@@ -89,13 +94,25 @@ def test_create_blank_error_list():
     events_with_blank_error_list = list(logger.create_blank_error_list(mock_stream))
     for event in events_with_blank_error_list:
         if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            print(event.blank_error_list)
             assert event.blank_error_list == [
                 "some_header",
                 "some_header_2",
             ]
 
 
-test_create_formatting_error_list()
-test_blank_error_check()
-test_create_blank_error_list()
+def test_create_validation_error_list():
+    mock_stream = (
+        events.StartElement(tag="LALevelVacancies"),
+        events.TextNode(text="some_header", validation_error_list="error_message"),
+        events.TextNode(text="some_header_2", validation_error_list="error_message_2"),
+        events.TextNode(text="some_header_3", validation_error_list=""),
+        events.TextNode(text="some_header_4"),
+        events.EndElement(tag="Message"),
+    )
+    events_with_validation_error_list = list(logger.create_validation_error_list(mock_stream))
+    for event in events_with_validation_error_list:
+        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
+            assert event.validation_error_list == [
+                "error_message",
+                "error_message_2",
+            ]

@@ -7,9 +7,15 @@ column_names:
         - GenderCurrent
         - Ethnicity
         - QualInst
+        - QualLevel
         - StepUpGrad
+        - OrgRole
         - RoleStartDate
         - StartOrigin
+        - RoleEndDate
+        - LeaverDestination
+        - ReasonLeave
+        - FTE30
         - Cases30
         - WorkingDaysLost
         - ContractWeeks

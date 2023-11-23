@@ -2,7 +2,6 @@ from liiatools.datasets.cin_census.lds_cin_clean import file_creator
 
 import pandas as pd
 from datetime import datetime
-import tempfile as tmp
 
 
 def test_get_year():

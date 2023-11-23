@@ -15,13 +15,13 @@ def convert_to_dataframe(data):
     return data
 
 
-def get_year(data, year):
+def add_year(data, year):
     data["YEAR"] = year
     return data
 
 
 def convert_to_datetime(data):
-    if set(["PersonBirthDate", "RoleStartDate"]).issubset(data):
+    if {"PersonBirthDate", "RoleStartDate"}.issubset(data):
         data[["PersonBirthDate", "RoleStartDate"]] = data[
             ["PersonBirthDate", "RoleStartDate"]
         ].apply(pd.to_datetime)
@@ -48,7 +48,9 @@ def degrade_SWENo(data):
     """
     if "SWENo" in data:
         if data["SWENo"] is not None:
-            data["SWENo"] = data["SWENo"].apply(lambda row: swe_hash(row) if row else row )
+            data["SWENo"] = data["SWENo"].apply(
+                lambda row: swe_hash(row) if row else row
+            )
     return data
 
 
@@ -81,7 +83,7 @@ def add_fields(input_year, data, la_name):
     :return: Dataframe with year and LA added
     """
     data = convert_to_dataframe(data)
-    data = get_year(data, input_year)
+    data = add_year(data, input_year)
     data = add_la_name(data, la_name)
     return data
 

@@ -81,7 +81,10 @@ def _create_category_dict(field: str, file: str):
             documentation = element.findall(search_doc)
             for i, d in enumerate(documentation):
                 name_dict = {"name": d.text}
-                category_dict["category"][i] = {**category_dict["category"][i], **name_dict}
+                category_dict["category"][i] = {
+                    **category_dict["category"][i],
+                    **name_dict,
+                }
 
             return category_dict
 
@@ -99,7 +102,9 @@ def _create_float_dict(field: str, file: str):
     search_restriction = f".//{{http://www.w3.org/2001/XMLSchema}}restriction"
     restriction = element.findall(search_restriction)
     for r in restriction:
-        code_dict = {"numeric": r.get("base")[3:]}  # Remove the "xs:" from the start of the base string
+        code_dict = {
+            "numeric": r.get("base")[3:]
+        }  # Remove the "xs:" from the start of the base string
         if code_dict["numeric"] == "decimal":
             float_dict = code_dict
 

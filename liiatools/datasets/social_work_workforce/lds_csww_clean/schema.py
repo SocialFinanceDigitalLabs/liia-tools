@@ -12,7 +12,10 @@ class FilePath:
 
     @cached_property
     def path(self):
-        return Path(social_work_workforce_dir.__file__).parent / f"social_work_workforce_{self.__year}.xsd"
+        return (
+            Path(social_work_workforce_dir.__file__).parent
+            / f"social_work_workforce_{self.__year}.xsd"
+        )
 
 
 class Schema:

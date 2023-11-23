@@ -7,36 +7,29 @@ from datetime import datetime
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
     configuration as clean_config,
-    parse,
     populate,
     filters,
     degrade,
     logger,
     file_creator,
-    prep,
 )
 
 # dependencies for la_agg()
 from liiatools.datasets.s903.lds_ssda903_la_agg import configuration as agg_config
-from liiatools.datasets.s903.lds_ssda903_la_agg import process as agg_process
 
 # dependencies for pan_agg()
 from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_config
-from liiatools.datasets.s903.lds_ssda903_pan_agg import process as pan_process
 
 # dependencies for sufficiency_output()
 from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suff_config
 from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
 
 from liiatools.spec import common as common_asset_dir
-from liiatools.datasets.shared_functions.common import (
-    flip_dict,
-    check_file_type,
-    supported_file_types,
-    check_year,
-    save_year_error,
-    save_incorrect_year_error,
-    check_year_within_range,
+from liiatools.datasets.shared_functions import (
+    prep,
+    common,
+    parse,
+    process as common_process,
 )
 
 log = logging.getLogger()
@@ -62,20 +55,6 @@ def cleanfile(input, la_code, la_log_dir, output):
     """
 
     # Prepare file
-    # List of commonly submitted unneeded files
-    drop_file_list = [
-        "Extended Review",
-        "Pupil Premium Children",
-        "Children Ceasing to be looked after for other reasons",
-        "Distance and Placement Extended",
-        "Extended Adoption",
-        "Children Ceased Care During the Year",
-        "Children Looked After on 31st March",
-        "Children Started Care During the Year",
-    ]
-    prep.delete_unrequired_files(
-        input, drop_file_list=drop_file_list, la_log_dir=la_log_dir
-    )
     if prep.check_blank_file(input, la_log_dir=la_log_dir) == "empty":
         return
     prep.drop_empty_rows(input, input)
@@ -83,27 +62,29 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Configuration
     try:
         filename = str(Path(input).resolve().stem)
-        year = check_year(filename)
+        year = common.check_year(filename)
     except (AttributeError, ValueError):
-        save_year_error(input, la_log_dir)
+        common.save_year_error(input, la_log_dir)
         return
 
     if (
-        check_year_within_range(
+        common.check_year_within_range(
             year, YEARS_TO_GO_BACK, YEAR_START_MONTH, REFERENCE_DATE
         )
         is False
     ):
-        save_incorrect_year_error(input, la_log_dir)
+        common.save_incorrect_year_error(
+            input, la_log_dir, retention_period=YEARS_TO_GO_BACK - 1
+        )
         return
 
     config = clean_config.Config(year)
-    la_name = flip_dict(config["data_codes"])[la_code]
+    la_name = common.flip_dict(config["data_codes"])[la_code]
     if (
-        check_file_type(
+        common.check_file_type(
             input,
             file_types=[".csv"],
-            supported_file_types=supported_file_types,
+            supported_file_types=common.supported_file_types,
             la_log_dir=la_log_dir,
         )
         == "incorrect file type"
@@ -141,30 +122,33 @@ def la_agg(input, output):
     config = agg_config.Config()
 
     # Open file as DataFrame and match file type
-    s903_df = agg_process.read_file(input)
+    s903_df = common_process.read_file(input)
     column_names = config["column_names"]
-    table_name = agg_process.match_load_file(s903_df, column_names)
+    table_name = common_process.match_load_file(s903_df, column_names)
 
     # Merge file with existing file of the same type in LA output folder
-    s903_df = agg_process.merge_la_files(output, s903_df, table_name)
+    s903_df = common_process.merge_la_files(
+        output, s903_df, table_name, filename="SSDA903"
+    )
 
     # De-duplicate and remove old data according to schema
     dates = config["dates"]
-    s903_df = agg_process.convert_datetimes(s903_df, dates, table_name)
+    s903_df = common_process.convert_datetimes(s903_df, dates, table_name)
     sort_order = config["sort_order"]
     dedup = config["dedup"]
-    s903_df = agg_process.deduplicate(s903_df, table_name, sort_order, dedup)
-    s903_df = agg_process.remove_old_data(
+    s903_df = common_process.deduplicate(s903_df, table_name, sort_order, dedup)
+    s903_df = common_process.remove_old_data(
         s903_df,
         num_of_years=YEARS_TO_GO_BACK,
         new_year_start_month=YEAR_START_MONTH,
         as_at_date=REFERENCE_DATE,
+        year_column="YEAR",
     )
 
     # If file still has data, after removing old data: re-format and export merged file
     if len(s903_df) > 0:
-        s903_df = agg_process.convert_dates(s903_df, dates, table_name)
-        agg_process.export_la_file(output, table_name, s903_df)
+        s903_df = common_process.convert_dates(s903_df, dates, table_name)
+        common_process.export_la_file(output, table_name, s903_df, filename="SSDA903")
 
 
 def pan_agg(input, la_code, output):
@@ -180,16 +164,18 @@ def pan_agg(input, la_code, output):
     config = pan_config.Config()
 
     # Read file and match type
-    s903_df = pan_process.read_file(input)
+    s903_df = common_process.read_file(input)
     column_names = config["column_names"]
-    table_name = pan_process.match_load_file(s903_df, column_names)
+    table_name = common_process.match_load_file(s903_df, column_names)
 
     # Remove unwanted datasets and merge wanted with existing output
     pan_data_kept = config["pan_data_kept"]
     if table_name in pan_data_kept:
-        la_name = flip_dict(config["data_codes"])[la_code]
-        s903_df = pan_process.merge_agg_files(output, table_name, s903_df, la_name)
-        pan_process.export_pan_file(output, table_name, s903_df)
+        la_name = common.flip_dict(config["data_codes"])[la_code]
+        s903_df = common_process.merge_agg_files(
+            output, table_name, s903_df, la_name, filename="SSDA903"
+        )
+        common_process.export_pan_file(output, table_name, s903_df, filename="SSDA903")
 
 
 def sufficiency_output(input, output):
@@ -204,7 +190,7 @@ def sufficiency_output(input, output):
     config = suff_config.Config()
 
     # Read file and match type
-    s903_df = suff_process.read_file(input)
+    s903_df = common_process.read_file(input)
     column_names = config["column_names"]
     table_name = suff_process.match_load_file(s903_df, column_names)
 

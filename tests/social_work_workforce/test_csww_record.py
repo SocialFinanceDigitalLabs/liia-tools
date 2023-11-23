@@ -1,4 +1,3 @@
-# Import the unittest module and the code to be tested
 import unittest
 from sfdata_stream_parser.events import StartElement, EndElement, TextNode
 from liiatools.datasets.social_work_workforce.lds_csww_clean.csww_record import (
@@ -8,7 +7,6 @@ from liiatools.datasets.social_work_workforce.lds_csww_clean.csww_record import 
     LALevelEvent,
     HeaderEvent,
 )
-from liiatools.datasets.social_work_workforce.lds_csww_clean.xml import dom_parse
 
 
 class TestRecord(unittest.TestCase):
@@ -73,8 +71,3 @@ class TestRecord(unittest.TestCase):
         self.assertEqual(
             test_events[2].record, {"ID": "100", "SWENo": "AB123456789", "Agency": "0"}
         )
-
-
-# Run the tests
-if __name__ == "__main__":
-    unittest.main()
