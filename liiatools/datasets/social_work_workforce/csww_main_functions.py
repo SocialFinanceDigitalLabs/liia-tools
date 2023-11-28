@@ -255,27 +255,3 @@ def met_analysis(input):
     seniority_forecast = seniority.seniority_forecast_04(fte_sum_2020, population_growth_table)
 
     return pivot_table, progressed_table, seniority_comp, comp_merge_sen, fte_sum, fte_sum_2020, seniority_forecast
-
-# cleanfile(
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\Analysis\cin\LA2\LA2_2022.xml",
-#     "RED",
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
-# )
-
-# la_agg(
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\LA2_2022_worker_clean.csv",
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
-# )
-
-
-# pan_agg(
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\CSWW_CSWWWorker_merged.csv",
-#     "RED",
-#     r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW",
-# )
-
-
-met_analysis(
-    r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CSWW\pan_London_CSWW_CSWWWorker.csv",
-)

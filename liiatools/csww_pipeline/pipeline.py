@@ -15,10 +15,40 @@ from liiatools.common.data import (
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
-from .spec import load_schema, load_schema_path, load_pipeline_config
-from .stream_pipeline import task_cleanfile
+from liiatools.csww_pipeline.spec import load_schema, load_schema_path, load_pipeline_config
+from liiatools.csww_pipeline.stream_pipeline import task_cleanfile
+
+# dependencies for met_analysis()
+from liiatools.csww_pipeline.lds_csww_met_analysis import (
+    growth_tables,
+    pivotGen,
+    seniority,
+    FTESum,
+    validator as met_validator,
+)
 
 logger = logging.getLogger()
+
+
+def met_analysis(csww_df, public_fs):
+    # Load growth tables
+    population_growth_table = growth_tables.growth_tables(public_fs)
+
+    # Validate data
+    csww_df = met_validator.remove_invalid_worker_data(csww_df, met_validator.NON_AGENCY_MANDATORY_TAG)
+
+    # Create demographic table
+    csww_df = seniority.add_seniority_and_retention_columns(csww_df)
+    demographic_table = pivotGen.create_demographic_table(csww_df)
+
+    # Create forecast
+    csww_df = seniority.convert_codes_to_names(csww_df)
+    fte_sum = FTESum.FTESum(csww_df)
+    seniority_forecast = seniority.seniority_forecast_04(fte_sum, population_growth_table)
+
+    data = DataContainer({"demographics": demographic_table, "forecast": seniority_forecast})
+
+    return data
 
 
 def process_file(
@@ -65,25 +95,25 @@ def process_file(
     cleanfile_result.data.export(
         session_folder, f"{SessionNames.CLEANED_FOLDER}/{uuid}_", "parquet"
     )
-    # errors.extend(cleanfile_result.errors)
-    #
+    errors.extend(cleanfile_result.errors)
+
     # Enrich the data and export to the session 'enriched' folder
     enrich_result = enrich_data(cleanfile_result.data, pipeline_config, metadata)
     enrich_result.data.export(
         session_folder, f"{SessionNames.ENRICHED_FOLDER}/{uuid}_", "parquet"
     )
-    # errors.extend(enrich_result.errors)
-    #
+    errors.extend(enrich_result.errors)
+
     # Degrade the data and export to the session 'degraded' folder
     degraded_result = degrade_data(enrich_result.data, pipeline_config, metadata)
     degraded_result.data.export(
         session_folder, f"{SessionNames.DEGRADED_FOLDER}/{uuid}_", "parquet"
     )
-    # errors.extend(degraded_result.errors)
-    #
-    # errors.set_property("filename", file_locator.name)
-    # errors.set_property("uuid", uuid)
-    #
+    errors.extend(degraded_result.errors)
+
+    errors.set_property("filename", file_locator.name)
+    errors.set_property("uuid", uuid)
+
     return ProcessResult(data=degraded_result.data, errors=errors)
 
 
@@ -113,15 +143,15 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     for result in processed_files:
         if result.data:
             archive.add(result.data)
-    #
-    # # Write the error summary
-    # error_summary = ErrorContainer(
-    #     [error for result in processed_files for error in result.errors]
-    # )
-    # error_summary.set_property("session_id", session_id)
-    # with session_folder.open("error_summary.csv", "w") as FILE:
-    #     error_summary.to_dataframe().to_csv(FILE, index=False)
-    #
+
+    # Write the error summary
+    error_summary = ErrorContainer(
+        [error for result in processed_files for error in result.errors]
+    )
+    error_summary.set_property("session_id", session_id)
+    with session_folder.open("error_summary.csv", "w") as FILE:
+        error_summary.to_dataframe().to_csv(FILE, index=False)
+
     # Export the current snapshot of the archive
     current_data = archive.current()
     current_data.export(
@@ -134,3 +164,8 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
         report_data.data.export(report_folder, "csww_", "csv")
+
+    # Run MET analysis
+    # met_data = met_analysis(report_data.data["Worker"], public_fs)
+    # met_folder = export_folder.makedirs("MET", recreate=True)
+    # met_data.export(met_folder, "csww_", "csv")

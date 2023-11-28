@@ -37,10 +37,10 @@ def task_cleanfile(src_file: FileLocator, schema: XMLSchema, schema_path: Path) 
         generic.consume(stream)
 
         dataset = dataset_holder.value
-        # errors = error_holder.value
+        errors = error_holder.value
 
         dataset = DataContainer(
             {k: pd.DataFrame(v) for k, v in dataset.items()}
         )
 
-    return ProcessResult(data=dataset, errors=None)
+    return ProcessResult(data=dataset, errors=errors)
