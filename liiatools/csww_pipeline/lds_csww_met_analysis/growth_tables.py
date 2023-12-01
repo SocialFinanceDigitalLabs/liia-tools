@@ -21,8 +21,8 @@ def growth_tables(public_fs):
     """
     Create population growth tables for London LAs for children age 0-18
     """
-    with public_fs.open("population_persons.csv") as r:
-        population_growth_table = pd.read_csv(r)
+    with public_fs.open("rb") as f:
+        population_growth_table = pd.read_csv(f)
 
         population_growth_table = population_growth_table[
             population_growth_table["gss_name"].isin(authorities.names)

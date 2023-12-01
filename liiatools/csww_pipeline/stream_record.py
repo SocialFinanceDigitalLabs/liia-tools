@@ -59,7 +59,6 @@ def text_collector(stream):
     return _reduce_dict(data_dict)
 
 
-@xml_collector
 def message_collector(stream):
     """
     Collect messages from XML elements and yield events

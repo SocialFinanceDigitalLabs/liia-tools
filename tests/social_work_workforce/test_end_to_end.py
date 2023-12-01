@@ -1,13 +1,15 @@
 import os
 import shutil
 from pathlib import Path
+from fs import open_fs
 
 import pytest
 from click.testing import CliRunner
 
 import liiatools
 from liiatools.__main__ import cli
-from liiatools.csww_pipeline.spec.samples import CSWW_2022
+from liiatools.csww_pipeline.spec.samples import CSWW_2022, POPULATION
+from liiatools.common.data import FileLocator
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -31,8 +33,13 @@ def test_end_to_end(build_dir):
     incoming_dir.mkdir(parents=True, exist_ok=True)
     pipeline_dir = build_dir / "pipeline"
     pipeline_dir.mkdir(parents=True, exist_ok=True)
+    public_dir = build_dir / "public"
+    public_dir.mkdir(parents=True, exist_ok=True)
 
     shutil.copy(CSWW_2022, incoming_dir / f"social_work_workforce_2022.xml")
+    shutil.copy(POPULATION, public_dir / f"population_persons.csv")
+
+    public_file = FileLocator(fs=open_fs(public_dir.as_posix()), file_location=r"/population_persons.csv")
 
     runner = CliRunner()
     result = runner.invoke(
@@ -41,11 +48,13 @@ def test_end_to_end(build_dir):
             "csww",
             "pipeline",
             "-c",
-            "BAD",
+            "BAR",
             "--input",
             incoming_dir.as_posix(),
             "--output",
             pipeline_dir.as_posix(),
+            "--public_input",
+            public_file,
         ],
         catch_exceptions=False,
     )
