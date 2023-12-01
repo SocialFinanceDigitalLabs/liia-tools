@@ -1,19 +1,19 @@
+from enum import Enum
 from typing import Iterator
 
 import pandas as pd
 import tablib
 from more_itertools import peekable
-from enum import Enum
-
 from sfdata_stream_parser import events
 from sfdata_stream_parser.collectors import xml_collector
-from sfdata_stream_parser.filters.generic import (generator_with_value)
+from sfdata_stream_parser.filters.generic import generator_with_value
 
 
 class CSWWEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "Worker"
+
     pass
 
 
@@ -21,6 +21,7 @@ class LALevelEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "LA_Level"
+
     pass
 
 
@@ -28,6 +29,7 @@ class HeaderEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "Header"
+
     pass
 
 
