@@ -30,6 +30,13 @@ class HeaderEvent(events.ParseEvent):
 
 
 def _reduce_dict(dict_instance):
+    """
+    Reduce lists in dictionary values to a single value if there is only one value in the list,
+    otherwise return the list
+
+    :param dict_instance: Dictionary containing lists in the values
+    :return: Dictionary with single values in the dictionary values if list length is one
+    """
     new_dict = {}
     for key, value in dict_instance.items():
         if len(value) == 1:
@@ -86,6 +93,15 @@ def message_collector(stream):
 
 @generator_with_value
 def export_table(stream):
+    """
+    Collects all the records into a dictionary of lists of rows
+
+    This filter requires that the stream has been processed by `message_collector` first
+
+    :param stream: An iterator of events from message_collector
+    :yield: All events
+    :return: A dictionary of lists of rows, keyed by record name
+    """
     dataset = {}
     for event in stream:
         event_type = type(event)

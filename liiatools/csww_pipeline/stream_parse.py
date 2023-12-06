@@ -16,6 +16,10 @@ def dom_parse(source, filename, **kwargs):
     """
     Equivalent of the xml parse included in the sfdata_stream_parser package, but uses the ET DOM
     and allows direct DOM manipulation.
+
+    :param source: File to be parsed
+    :param filename: The name of the file
+    :return: Stream of events
     """
     parser = etree.iterparse(source, events=("start", "end", "comment", "pi"), **kwargs)
     for action, elem in parser:

@@ -1,5 +1,7 @@
+from datetime import datetime
 import logging
 
+import pandas as pd
 from fs.base import FS
 
 from liiatools.common import pipeline as pl
@@ -33,9 +35,17 @@ from liiatools.csww_pipeline.met_analysis import (
 logger = logging.getLogger()
 
 
-def met_analysis(csww_df, public_fs):
+def met_analysis(csww_df: pd.DataFrame, public_fs: FileLocator) -> DataContainer:
+    """
+    Run the MET analysis
+    :param csww_df: Children's Social Work Workforce data
+    :param public_fs: The pointer to the public data virtual filesystem
+    :return: DataContainer with demographic breakdown and forecast information
+    """
+    year = datetime.now().year
+
     # Load growth tables
-    population_growth_table = growth_tables.growth_tables(public_fs)
+    population_growth_table = growth_tables.growth_tables(public_fs, year=year)
 
     # Validate data
     csww_df = met_validator.remove_invalid_worker_data(
@@ -48,7 +58,7 @@ def met_analysis(csww_df, public_fs):
 
     # Create forecast
     csww_df = seniority.convert_codes_to_names(csww_df)
-    fte_sum = FTESum.FTESum(csww_df)
+    fte_sum = FTESum.FTESum(csww_df, year=year)
     seniority_forecast = seniority.seniority_forecast(fte_sum, population_growth_table)
 
     data = DataContainer(
@@ -64,6 +74,14 @@ def process_file(
     pipeline_config: PipelineConfig,
     la_code: str,
 ) -> ProcessResult:
+    """
+    Clean, enrich and degrade data
+    :param file_locator: The pointer to a file in a virtual filesystem
+    :param session_folder: The path to the session folder
+    :param pipeline_config: The pipeline configuration
+    :param la_code: A three-letter string for the local authority depositing the file
+    :return: A class containing a DataContainer and ErrorContainer
+    """
     errors = ErrorContainer()
     year = pl.discover_year(file_locator)
     if year is None:
@@ -125,6 +143,14 @@ def process_file(
 
 
 def process_session(source_fs: FS, output_fs: FS, la_code: str, public_fs: FileLocator):
+    """
+    Runs the full pipeline on a file or folder
+    :param source_fs: File system containing the input files
+    :param output_fs: File system for the output files
+    :param la_code: A three-letter string for the local authority depositing the file
+    :param public_fs: The FileLocator to public datasets needed for analysis
+    :return: None
+    """
     # Before we start - load configuration for this dataset
     pipeline_config = load_pipeline_config()
 

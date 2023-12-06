@@ -15,6 +15,13 @@ from . import stream_filters as filters
 def task_cleanfile(
     src_file: FileLocator, schema: XMLSchema, schema_path: Path
 ) -> ProcessResult:
+    """
+    Clean input CSWW xml files according to schema and output clean data and errors
+    :param src_file: The pointer to a file in a virtual filesystem
+    :param schema: The data schema
+    :param schema_path: Path to the data schema
+    :return: A class containing a DataContainer and ErrorContainer
+    """
     with src_file.open("rb") as f:
         # Open & Parse file
         stream = dom_parse(f, filename=src_file.name)

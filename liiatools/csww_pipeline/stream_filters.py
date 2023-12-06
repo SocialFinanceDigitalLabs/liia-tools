@@ -20,7 +20,8 @@ def strip_text(event):
     Strips surrounding whitespaces from :class:`sfdata_stream_parser.events.TextNode`. If the event does
     not have a text property then this filter fails silently.
 
-    If there is no content at all, then the node is not returned.
+    :param event: A filtered list of event objects
+    :return: Event with whitespace striped
     """
     if not hasattr(event, "cell"):
         return event
@@ -43,7 +44,9 @@ def add_context(event, context: List[str]):
 
     For all other events, the context tuple is set as-is.
 
-    Provides: context
+    :param event: A filtered list of event objects
+    :param context: A list to be populated with context information
+    :return: Event with context
     """
     if isinstance(event, events.StartElement):
         context.append(event.tag)
@@ -66,7 +69,9 @@ def add_schema(event, schema: xmlschema.XMLSchema):
     derived path (based on the context tags) joined by '/' and schema holding the
     corresponding schema element, if found.
 
-    Provides: path, schema
+    :param event: A filtered list of event objects
+    :param schema: The xml schema to be attached to a given event
+    :return: Event with path, schema and header attributes
     """
     assert (
         event.context
@@ -106,6 +111,7 @@ def validate_elements(event):
     Validates each element, and if not valid raises ValidationError:
 
     :param event: A filtered list of event objects
+    :return: Event if valid or event and error message if invalid
     """
     try:
         _get_validation_error(event, event.schema, event.node)

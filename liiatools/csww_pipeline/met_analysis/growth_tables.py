@@ -17,7 +17,7 @@ def _get_year_columns(year, length):
     return year_columns
 
 
-def growth_tables(public_fs):
+def growth_tables(public_fs, year):
     """
     Create population growth tables for London LAs for children age 0-18
     """
@@ -37,7 +37,7 @@ def growth_tables(public_fs):
             columns={"gss_name": "LEAName"}
         )
 
-        year_columns = _get_year_columns(year=datetime.now().year, length=10)
+        year_columns = _get_year_columns(year=year, length=10)
         population_growth_table = population_growth_table[["LEAName"] + year_columns]
 
     return population_growth_table
