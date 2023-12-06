@@ -18,7 +18,7 @@ from liiatools.csww_pipeline.spec import load_schema, load_schema_path, load_pip
 from liiatools.csww_pipeline.stream_pipeline import task_cleanfile
 
 # dependencies for met_analysis()
-from liiatools.csww_pipeline.lds_csww_met_analysis import (
+from liiatools.csww_pipeline.met_analysis import (
     growth_tables,
     pivotGen,
     seniority,

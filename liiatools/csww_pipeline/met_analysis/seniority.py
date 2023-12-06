@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 import numpy as np
-from liiatools.csww_pipeline.lds_csww_met_analysis.converter import (
+from liiatools.csww_pipeline.met_analysis.converter import (
     ORG_ROLE_DICT,
     SENIORITY_CODE_DICT,
 )

@@ -6,7 +6,7 @@ from fs import open_fs
 
 from liiatools.csww_pipeline.spec.samples import POPULATION
 from liiatools.common.data import FileLocator
-from liiatools.csww_pipeline.lds_csww_met_analysis import (
+from liiatools.csww_pipeline.met_analysis import (
     converter,
     FTESum,
     growth_tables,

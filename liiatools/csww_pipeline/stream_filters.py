@@ -1,5 +1,4 @@
 import logging
-import re
 from typing import List
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -92,20 +91,9 @@ def _get_validation_error(event, schema, node):
         validation_error_iterator = schema.iter_errors(node)
         for validation_error in validation_error_iterator:
             if " expected" in validation_error.reason:
-
-                reg_line = re.compile(
-                    r"(?=\(line.*?(\w+))", re.MULTILINE
-                )  # Search for the number after "line" in error
-                missing_field_line = reg_line.search(str(validation_error)).group(1)
-
-                reg_exp = re.compile(
-                    r"(?=\sTag.*?(\w+))"
-                )  # Search for the first word after "Tag"
-                missing_field = reg_exp.search(validation_error.reason).group(1)
-
                 raise ValueError(
-                    f"Missing required field: '{missing_field}' which occurs in the node starting on "
-                    f"line: {missing_field_line}"
+                    f"Missing required field: '{validation_error.particle.name}' which occurs in the node starting on "
+                    f"line: {validation_error.sourceline}"
                 )
 
     except AttributeError:  # Raised for nodes that don't exist in the schema
