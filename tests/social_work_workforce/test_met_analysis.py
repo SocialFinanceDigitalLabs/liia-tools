@@ -76,7 +76,7 @@ def test_growth_tables():
         fs=open_fs(POPULATION.parent.as_posix()),
         file_location=r"/population_persons.csv",
     )
-    growth_table = growth_tables.growth_tables(public_file)
+    growth_table = growth_tables.growth_tables(public_file, year=2023)
 
     assert growth_table.columns.to_list() == [
         "LEAName",
