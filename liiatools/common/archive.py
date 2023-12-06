@@ -4,7 +4,6 @@ from typing import Iterable, List, Literal, Tuple
 
 import pandas as pd
 from fs.base import FS
-from fs.errors import CreateFailed
 
 from liiatools.common.data import DataContainer, PipelineConfig, TableConfig
 

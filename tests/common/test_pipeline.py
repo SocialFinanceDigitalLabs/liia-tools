@@ -1,14 +1,15 @@
 from fs import open_fs
 
-from liiatools.common.constants import ProcessNames, SessionNames
+from liiatools.common.constants import SessionNames
 from liiatools.common.data import FileLocator
 from liiatools.common.pipeline import (
     create_session_folder,
     discover_year,
     move_files_for_processing,
     restore_session_folder,
+    discover_la,
 )
-from liiatools.spec.annex_a.samples import DIR as DIR_AA
+from liiatools.ssda903_pipeline.spec.samples import DIR as DIR_903
 
 
 def test_create_session_folder():
@@ -74,30 +75,46 @@ def test_restore_session_folder():
 
 
 def test_discover_year_no_year():
-    samples_fs = open_fs(DIR_AA.as_posix())
-    locator = FileLocator(samples_fs, "Annex_A.xlsx")
+    samples_fs = open_fs(DIR_903.as_posix())
+    locator = FileLocator(samples_fs, "SSDA903_episodes.csv.xlsx")
     assert discover_year(locator) is None
 
 
 def test_discover_year_dir_year():
-    samples_fs = open_fs(DIR_AA.as_posix())
+    samples_fs = open_fs(DIR_903.as_posix())
     locator = FileLocator(
-        samples_fs, "Annex_A.xlsx", original_path="/2020/Annex_A.xlsx"
+        samples_fs, "SSDA903_episodes.csv", original_path="/2020/SSDA903_episodes.csv"
     )
     assert discover_year(locator) == 2020
 
 
 def test_discover_year_file_year():
-    samples_fs = open_fs(DIR_AA.as_posix())
+    samples_fs = open_fs(DIR_903.as_posix())
     locator = FileLocator(
-        samples_fs, "Annex_A.xlsx", original_path="/Annex_A-2022-23.xlsx"
+        samples_fs, "SSDA903_episodes.csv", original_path="/SSDA903_2022-23_episodes.csv"
     )
     assert discover_year(locator) == 2023
 
 
 def test_discover_year_dir_and_file_year():
-    samples_fs = open_fs(DIR_AA.as_posix())
+    samples_fs = open_fs(DIR_903.as_posix())
     locator = FileLocator(
-        samples_fs, "Annex_A.xlsx", original_path="/2021/Annex_A-2022-23.xlsx"
+        samples_fs, "SSDA903_episodes.csv", original_path="/2021/SSDA903_2022-23_episodes.csv"
     )
     assert discover_year(locator) == 2021
+
+
+def test_discover_la():
+    samples_fs = open_fs(DIR_903.as_posix())
+    locator = FileLocator(
+        samples_fs, "SSDA903_2020_episodes.csv", original_path="/822_2020_episodes.csv"
+    )
+    assert discover_la(locator) == "822"
+
+
+def test_discover_la_no_la():
+    samples_fs = open_fs(DIR_903.as_posix())
+    locator = FileLocator(
+        samples_fs, "SSDA903_2020_episodes.csv", original_path="/SSDA903_2020_episodes.csv"
+    )
+    assert discover_la(locator) is None

@@ -7,8 +7,7 @@ import yaml
 from pydantic_yaml import parse_yaml_file_as
 
 from liiatools.common.data import PipelineConfig
-
-from .__data_schema import Category, Column, DataSchema
+from liiatools.common.spec.__data_schema import DataSchema
 
 __ALL__ = ["load_schema", "DataSchema", "Category", "Column"]
 
