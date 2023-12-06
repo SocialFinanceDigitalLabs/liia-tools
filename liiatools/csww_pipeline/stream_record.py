@@ -9,6 +9,7 @@ class CSWWEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "Worker"
+
     pass
 
 
@@ -16,6 +17,7 @@ class LALevelEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "LA_Level"
+
     pass
 
 
@@ -23,6 +25,7 @@ class HeaderEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "Header"
+
     pass
 
 
