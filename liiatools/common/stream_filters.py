@@ -14,9 +14,7 @@ from sfdata_stream_parser.filters.generic import (
 )
 
 from liiatools.common.data import FileLocator
-from liiatools.common.stream_errors import (
-    StreamError, EventErrors
-)
+from liiatools.common.stream_errors import StreamError, EventErrors
 from liiatools.common.converters import (
     to_date,
     to_numeric,
@@ -186,7 +184,9 @@ def match_config_to_cell(event, schema: DataSchema):
     return event
 
 
-@streamfilter(check=type_check((events.Cell, events.TextNode)), fail_function=pass_event)
+@streamfilter(
+    check=type_check((events.Cell, events.TextNode)), fail_function=pass_event
+)
 def log_blanks(event):
     """Creates a EventErrors for cells flagged as not allowing blank but that are empty (None or blank string)."""
     column_spec = getattr(event, "column_spec", None)
@@ -214,7 +214,9 @@ def log_blanks(event):
     return event
 
 
-@streamfilter(check=type_check((events.Cell, events.TextNode)), fail_function=pass_event)
+@streamfilter(
+    check=type_check((events.Cell, events.TextNode)), fail_function=pass_event
+)
 def conform_cell_types(event, preserve_value=False):
     """
     A streamfilter that conforms known cell types to the correct type.

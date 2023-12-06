@@ -39,7 +39,9 @@ def test_end_to_end(build_dir):
     shutil.copy(CSWW_2022, incoming_dir / f"social_work_workforce_2022.xml")
     shutil.copy(POPULATION, public_dir / f"population_persons.csv")
 
-    public_file = FileLocator(fs=open_fs(public_dir.as_posix()), file_location=r"/population_persons.csv")
+    public_file = FileLocator(
+        fs=open_fs(public_dir.as_posix()), file_location=r"/population_persons.csv"
+    )
 
     runner = CliRunner()
     result = runner.invoke(

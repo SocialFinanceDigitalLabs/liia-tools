@@ -95,15 +95,34 @@ def test_add_table_name():
     schema = annex_a_schema()
 
     assert (
-        get_table_name(["Child Unique ID", "Gender", "Ethnicity", "Date of Birth",
-                        "Age of Child (Years)", "Date of Contact", "Contact Source"])
+        get_table_name(
+            [
+                "Child Unique ID",
+                "Gender",
+                "Ethnicity",
+                "Date of Birth",
+                "Age of Child (Years)",
+                "Date of Contact",
+                "Contact Source",
+            ]
+        )
         == "List 1"
     )
 
     assert (
-            get_table_name(["Child ID", "Gender", "Ethnicity", "Date Birth",
-                            "Age", "Age", "Date of Contact", "Contact Source"])
-            == "List 1"
+        get_table_name(
+            [
+                "Child ID",
+                "Gender",
+                "Ethnicity",
+                "Date Birth",
+                "Age",
+                "Age",
+                "Date of Contact",
+                "Contact Source",
+            ]
+        )
+        == "List 1"
     )
 
 
@@ -134,11 +153,18 @@ def test_match_config_to_cell():
 
     schema = annex_a_schema()
 
-    assert match_cell(table_name="List 1", header="Child Unique ID").string == "alphanumeric"
+    assert (
+        match_cell(table_name="List 1", header="Child Unique ID").string
+        == "alphanumeric"
+    )
 
-    assert match_cell(table_name="List 1", header="Child Unique ID").header_regex == ["/.*child.*id.*/i"]
+    assert match_cell(table_name="List 1", header="Child Unique ID").header_regex == [
+        "/.*child.*id.*/i"
+    ]
 
-    assert match_cell(table_name="List 1", header="Gender").category[0].code == "b) Female"
+    assert (
+        match_cell(table_name="List 1", header="Gender").category[0].code == "b) Female"
+    )
 
 
 def assert_errors(event, *types):
@@ -241,13 +267,9 @@ def test_clean_categories():
             {
                 "code": "b) Female",
                 "name": "F",
-                "cell_regex": ["/.*fem.*/i", "/b\).*/i"]
+                "cell_regex": ["/.*fem.*/i", "/b\).*/i"],
             },
-            {
-                "code": "a) Male",
-                "name": "M",
-                "cell_regex": ["/^mal.*/i", "/a\).*/i"]
-            }
+            {"code": "a) Male", "name": "M", "cell_regex": ["/^mal.*/i", "/a\).*/i"]},
         ],
     )
 
@@ -299,7 +321,9 @@ def test_clean_numeric():
     assert cleaned_event.cell == ""
     assert_errors(cleaned_event, "ConversionError")
 
-    float_spec = Column(numeric={"type": "float", "min_value": 0, "max_value": 1, "decimal_places": 2})
+    float_spec = Column(
+        numeric={"type": "float", "min_value": 0, "max_value": 1, "decimal_places": 2}
+    )
     event = events.Cell(cell=0.123, column_spec=float_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == 0.12

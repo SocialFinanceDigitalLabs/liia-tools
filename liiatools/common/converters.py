@@ -99,7 +99,9 @@ def _check_range(value, min_value=None, max_value=None):
     :param max_value: Maximum value allowed
     :return: Value if it is within range or ValueError if not
     """
-    if not (min_value is None or value >= min_value) and (max_value is None or value <= max_value):
+    if not (min_value is None or value >= min_value) and (
+        max_value is None or value <= max_value
+    ):
         raise ValueError
     return value
 
@@ -128,7 +130,9 @@ def to_numeric(value, _type, min_value=None, max_value=None, decimal_places=None
     try:
         _check_range(value, min_value, max_value)
     except Exception as e:
-        raise ValueError(f"Value: {value} not in acceptable range: {min_value}-{max_value}") from e
+        raise ValueError(
+            f"Value: {value} not in acceptable range: {min_value}-{max_value}"
+        ) from e
 
     return value
 

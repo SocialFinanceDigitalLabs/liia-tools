@@ -112,10 +112,7 @@ def validate_elements(event):
         return event
     except ValueError as e:
         return EventErrors.add_to_event(
-            event,
-            type="ValidationError",
-            message=f"Invalid node",
-            exception=str(e)
+            event, type="ValidationError", message=f"Invalid node", exception=str(e)
         )
 
 
@@ -238,11 +235,15 @@ def add_column_spec(event, schema_path: Path):
         if config_type in ["swetype"]:
             column_spec.string = "regex"
             column_spec.cell_regex = _create_regex_spec(config_type, schema_path)
-        if config_type == "{http://www.w3.org/2001/XMLSchema}date"\
-                or config_type == "{http://www.w3.org/2001/XMLSchema}dateTime":
+        if (
+            config_type == "{http://www.w3.org/2001/XMLSchema}date"
+            or config_type == "{http://www.w3.org/2001/XMLSchema}dateTime"
+        ):
             column_spec.date = "%Y-%m-%d"
-        if config_type == "{http://www.w3.org/2001/XMLSchema}integer" \
-                or config_type == "{http://www.w3.org/2001/XMLSchema}gYear":
+        if (
+            config_type == "{http://www.w3.org/2001/XMLSchema}integer"
+            or config_type == "{http://www.w3.org/2001/XMLSchema}gYear"
+        ):
             column_spec.numeric = Numeric(type="integer")
         if config_type == "{http://www.w3.org/2001/XMLSchema}string":
             column_spec.string = "alphanumeric"

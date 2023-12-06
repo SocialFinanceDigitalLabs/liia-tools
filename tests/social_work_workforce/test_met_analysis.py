@@ -287,11 +287,7 @@ def test_progressed():
         }
     )
     test_data = seniority.progressed(test_data)
-    assert test_data["Progress"].to_list() == [
-        "Unknown",
-        "No",
-        "Progressed"
-    ]
+    assert test_data["Progress"].to_list() == ["Unknown", "No", "Progressed"]
 
 
 def test_seniority_forecast(create_population_growth_data):
@@ -318,6 +314,8 @@ def test_seniority_forecast(create_population_growth_data):
 def test_find_min_max_year_population_growth_table(create_population_growth_data):
     test_population_growth_data = create_population_growth_data
 
-    min_year, max_year = seniority._find_min_max_year_population_growth_table(test_population_growth_data)
+    min_year, max_year = seniority._find_min_max_year_population_growth_table(
+        test_population_growth_data
+    )
     assert min_year == 2023
     assert max_year == 2025

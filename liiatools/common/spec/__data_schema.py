@@ -48,6 +48,7 @@ class Numeric(BaseModel):
     """
     Represents a numeric value in a column, including the minimum value, maximum value and decimal places
     """
+
     model_config = ConfigDict(extra="forbid")
 
     type: Literal["integer", "float"]
@@ -158,7 +159,8 @@ class DataSchema(BaseModel):
             for actual_column in headers:
                 # Check the actual value against each of the configured columns and store values
                 header_matches = [
-                    self.match_column_name(actual_column, c[0], c[1]) for c in header_config
+                    self.match_column_name(actual_column, c[0], c[1])
+                    for c in header_config
                 ]
 
                 # Filter checks to only those that matched
@@ -185,7 +187,9 @@ class DataSchema(BaseModel):
         return self.column_map
 
     @staticmethod
-    def match_column_name(actual_value: str, expected_value: str, expected_expressions: str = None) -> Optional[str]:
+    def match_column_name(
+        actual_value: str, expected_value: str, expected_expressions: str = None
+    ) -> Optional[str]:
         """
         Matches an actual column name against an expected values. Can optionally take a list of expressions to test.
         Returns the expected value if a match is found, or None if no match is found.

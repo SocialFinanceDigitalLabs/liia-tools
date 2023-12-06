@@ -14,7 +14,11 @@ from liiatools.common.data import (
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
-from liiatools.csww_pipeline.spec import load_schema, load_schema_path, load_pipeline_config
+from liiatools.csww_pipeline.spec import (
+    load_schema,
+    load_schema_path,
+    load_pipeline_config,
+)
 from liiatools.csww_pipeline.stream_pipeline import task_cleanfile
 
 # dependencies for met_analysis()
@@ -34,7 +38,9 @@ def met_analysis(csww_df, public_fs):
     population_growth_table = growth_tables.growth_tables(public_fs)
 
     # Validate data
-    csww_df = met_validator.remove_invalid_worker_data(csww_df, met_validator.NON_AGENCY_MANDATORY_TAG)
+    csww_df = met_validator.remove_invalid_worker_data(
+        csww_df, met_validator.NON_AGENCY_MANDATORY_TAG
+    )
 
     # Create demographic table
     csww_df = seniority.add_seniority_and_retention_columns(csww_df)
@@ -45,7 +51,9 @@ def met_analysis(csww_df, public_fs):
     fte_sum = FTESum.FTESum(csww_df)
     seniority_forecast = seniority.seniority_forecast(fte_sum, population_growth_table)
 
-    data = DataContainer({"demographics": demographic_table, "forecast": seniority_forecast})
+    data = DataContainer(
+        {"demographics": demographic_table, "forecast": seniority_forecast}
+    )
 
     return data
 

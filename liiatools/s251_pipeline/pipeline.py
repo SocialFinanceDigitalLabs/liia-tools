@@ -39,7 +39,7 @@ def process_file(
         file_locator,
         columns=["Placement end date", "End date"],
         retention_period=7,
-        reference_year=datetime.now().year
+        reference_year=datetime.now().year,
     )
     if error is not None:
         if error == pl.DataType.MISSING_COLUMN:
@@ -53,8 +53,10 @@ def process_file(
             message = f"File is from {financial_year} and we are only accepting data from 2023 onwards"
         elif error == pl.DataType.ENCODING_ERROR:
             error_type = "EncodingError"
-            message = f"File was saved in the wrong format. The correct format is CSV UTF-8. To fix this open the " \
-                      f"file in Excel, click 'Save As' and select 'CSV UTF-8 (Comma delimited) (*csv)'"
+            message = (
+                f"File was saved in the wrong format. The correct format is CSV UTF-8. To fix this open the "
+                f"file in Excel, click 'Save As' and select 'CSV UTF-8 (Comma delimited) (*csv)'"
+            )
 
         errors.append(
             dict(

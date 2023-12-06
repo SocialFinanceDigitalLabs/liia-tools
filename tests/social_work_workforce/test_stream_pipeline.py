@@ -11,7 +11,9 @@ def test_task_cleanfile():
     samples_fs = open_fs(SAMPLES_DIR.as_posix())
     locator = FileLocator(samples_fs, CSWW_2022.name)
 
-    result = task_cleanfile(locator, schema=load_schema(2022), schema_path=load_schema_path(2022))
+    result = task_cleanfile(
+        locator, schema=load_schema(2022), schema_path=load_schema_path(2022)
+    )
 
     data = result.data
     errors = result.errors

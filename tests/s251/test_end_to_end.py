@@ -7,7 +7,10 @@ from click.testing import CliRunner
 
 import liiatools
 from liiatools.__main__ import cli
-from liiatools.s251_pipeline.spec.samples import S251_placement_costs, S251_internal_residential_costs
+from liiatools.s251_pipeline.spec.samples import (
+    S251_placement_costs,
+    S251_internal_residential_costs,
+)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -33,7 +36,10 @@ def test_end_to_end(build_dir):
     pipeline_dir.mkdir(parents=True, exist_ok=True)
 
     shutil.copy(S251_placement_costs, incoming_dir / f"S251_placement_costs.csv")
-    shutil.copy(S251_internal_residential_costs, incoming_dir / f"S251_internal_residential_costs.csv")
+    shutil.copy(
+        S251_internal_residential_costs,
+        incoming_dir / f"S251_internal_residential_costs.csv",
+    )
 
     runner = CliRunner()
     result = runner.invoke(

@@ -59,10 +59,7 @@ def test_end_to_end_old(liiatools_dir, build_dir, log_dir):
             "annex-a",
             "cleanfile",
             "--i",
-            str(
-                liiatools_dir
-                / "annex_a_pipeline/spec/samples/Annex_A.xlsx"
-            ),
+            str(liiatools_dir / "annex_a_pipeline/spec/samples/Annex_A.xlsx"),
             "--o",
             str(build_dir),
             "--la_log_dir",

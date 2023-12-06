@@ -1,6 +1,7 @@
 import click as click
 
 from liiatools.annex_a_pipeline.cli import annex_a
+
 # from liiatools.datasets.cin_census.cin_cli import cin_census
 from liiatools.csww_pipeline.cli import csww
 from liiatools.ssda903_pipeline.cli import s903

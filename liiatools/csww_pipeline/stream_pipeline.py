@@ -12,7 +12,9 @@ from liiatools.csww_pipeline.stream_parse import dom_parse
 from . import stream_filters as filters
 
 
-def task_cleanfile(src_file: FileLocator, schema: XMLSchema, schema_path: Path) -> ProcessResult:
+def task_cleanfile(
+    src_file: FileLocator, schema: XMLSchema, schema_path: Path
+) -> ProcessResult:
     with src_file.open("rb") as f:
         # Open & Parse file
         stream = dom_parse(f, filename=src_file.name)
@@ -39,8 +41,6 @@ def task_cleanfile(src_file: FileLocator, schema: XMLSchema, schema_path: Path) 
         dataset = dataset_holder.value
         errors = error_holder.value
 
-        dataset = DataContainer(
-            {k: pd.DataFrame(v) for k, v in dataset.items()}
-        )
+        dataset = DataContainer({k: pd.DataFrame(v) for k, v in dataset.items()})
 
     return ProcessResult(data=dataset, errors=errors)

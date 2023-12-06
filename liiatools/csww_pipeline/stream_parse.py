@@ -20,7 +20,9 @@ def dom_parse(source, filename, **kwargs):
     parser = etree.iterparse(source, events=("start", "end", "comment", "pi"), **kwargs)
     for action, elem in parser:
         if action == "start":
-            yield StartElement(tag=elem.tag, attrib=elem.attrib, node=elem, filename=filename)
+            yield StartElement(
+                tag=elem.tag, attrib=elem.attrib, node=elem, filename=filename
+            )
             yield TextNode(cell=elem.text, filename=filename, text=None)
         elif action == "end":
             yield EndElement(tag=elem.tag, node=elem, filename=filename)
@@ -29,6 +31,12 @@ def dom_parse(source, filename, **kwargs):
         elif action == "comment":
             yield CommentNode(cell=elem.text, node=elem, filename=filename, text=None)
         elif action == "pi":
-            yield ProcessingInstructionNode(name=elem.target, cell=elem.text, node=elem, filename=filename, text=None)
+            yield ProcessingInstructionNode(
+                name=elem.target,
+                cell=elem.text,
+                node=elem,
+                filename=filename,
+                text=None,
+            )
         else:
             raise ValueError(f"Unknown event: {action}")

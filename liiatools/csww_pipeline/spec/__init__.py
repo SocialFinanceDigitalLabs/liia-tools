@@ -18,7 +18,9 @@ def load_pipeline_config():
 
 @lru_cache
 def load_schema(year: int) -> xmlschema.XMLSchema:
-    return xmlschema.XMLSchema(SCHEMA_DIR / f"social_work_workforce_schema_{year:04d}.xsd")
+    return xmlschema.XMLSchema(
+        SCHEMA_DIR / f"social_work_workforce_schema_{year:04d}.xsd"
+    )
 
 
 def load_schema_path(year: int) -> Path:
