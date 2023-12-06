@@ -1,6 +1,6 @@
 from fs import open_fs
 
-from liiatools.common.constants import ProcessNames, SessionNames
+from liiatools.common.constants import SessionNames
 from liiatools.common.data import FileLocator
 from liiatools.common.pipeline import (
     create_session_folder,

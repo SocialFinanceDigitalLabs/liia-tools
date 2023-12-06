@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 import numpy as np
-from liiatools.datasets.social_work_workforce.lds_csww_met_analysis.converter import (
+from liiatools.csww_pipeline.lds_csww_met_analysis.converter import (
     ORG_ROLE_DICT,
     SENIORITY_CODE_DICT,
 )
@@ -99,7 +99,7 @@ def _find_min_max_year_population_growth_table(
     return min_year, max_year
 
 
-def seniority_forecast_04(
+def seniority_forecast(
     data: pd.DataFrame, population_growth_table: pd.DataFrame
 ) -> pd.DataFrame:
     """

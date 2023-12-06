@@ -14,7 +14,7 @@ from fs.info import Info
 from fs.move import move_file, copy_file
 
 from liiatools.common.constants import ProcessNames, SessionNames
-from liiatools.datasets.shared_functions.common import check_year
+from liiatools.common.checks import check_year
 
 from .data import FileLocator
 

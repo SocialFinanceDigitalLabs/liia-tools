@@ -4,7 +4,7 @@ from typing import Dict
 import pandas as pd
 
 from liiatools.common.reference import authorities
-from liiatools.datasets.shared_functions.converters import (
+from liiatools.common.converters import (
     to_nth_of_month,
     to_short_postcode,
 )

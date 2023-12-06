@@ -267,7 +267,7 @@ def test_clean_categories():
     assert_errors(cleaned_event, "ConversionError")
 
 
-def test_clean_integers():
+def test_clean_numeric():
     integer_spec = Column(numeric={"type": "integer"})
     event = events.Cell(cell=123, column_spec=integer_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
@@ -299,8 +299,29 @@ def test_clean_integers():
     assert cleaned_event.cell == ""
     assert_errors(cleaned_event, "ConversionError")
 
+    float_spec = Column(numeric={"type": "float", "min_value": 0, "max_value": 1, "decimal_places": 2})
+    event = events.Cell(cell=0.123, column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == 0.12
+    assert_errors(cleaned_event)
 
-def test_conform_cell_types():
+    event = events.Cell(cell="0.2", column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == 0.2
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="string", column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+    event = events.Cell(cell=-1, column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+
+def test_clean_postcodes():
     pc_spec = Column(string="postcode")
     event = events.Cell(cell="G62 7PS", column_spec=pc_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
@@ -328,6 +349,39 @@ def test_conform_cell_types():
     assert_errors(cleaned_event)
 
     event = events.Cell(cell=None, column_spec=pc_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event)
+
+
+def test_clean_regex():
+    regex_spec = Column(string="regex", cell_regex=r"[A-Za-z]{2}\d{10}")
+    event = events.Cell(cell="AB1234567890", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "AB1234567890"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="  AB1234567890  ", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "AB1234567890"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="AB1234567890abcd", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+    event = events.Cell(cell="AB123", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+    event = events.Cell(cell="", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell=None, column_spec=regex_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
     assert_errors(cleaned_event)

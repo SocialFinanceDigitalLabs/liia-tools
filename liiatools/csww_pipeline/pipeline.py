@@ -11,7 +11,6 @@ from liiatools.common.data import (
     FileLocator,
     PipelineConfig,
     ProcessResult,
-    TableConfig,
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
@@ -44,7 +43,7 @@ def met_analysis(csww_df, public_fs):
     # Create forecast
     csww_df = seniority.convert_codes_to_names(csww_df)
     fte_sum = FTESum.FTESum(csww_df)
-    seniority_forecast = seniority.seniority_forecast_04(fte_sum, population_growth_table)
+    seniority_forecast = seniority.seniority_forecast(fte_sum, population_growth_table)
 
     data = DataContainer({"demographics": demographic_table, "forecast": seniority_forecast})
 

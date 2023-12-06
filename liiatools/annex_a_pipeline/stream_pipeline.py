@@ -4,7 +4,6 @@ from sfdata_stream_parser.filters import generic
 
 from liiatools.common import stream_filters as stream_functions
 from liiatools.common.data import DataContainer, FileLocator, ProcessResult
-from liiatools.datasets.shared_functions import common as common_functions
 from liiatools.common.spec.__data_schema import DataSchema
 from liiatools.common.stream_pipeline import to_dataframe
 
@@ -25,7 +24,7 @@ def task_cleanfile(src_file: FileLocator, schema: DataSchema) -> ProcessResult:
 
     # Configure stream
     stream = stream_functions.add_table_name(stream, schema=schema)
-    stream = common_functions.inherit_property(stream, ["table_name", "table_spec"])
+    stream = stream_functions.inherit_property(stream, ["table_name", "table_spec"])
     stream = stream_filters.convert_column_header_to_match(stream, schema=schema)
     stream = stream_functions.match_config_to_cell(stream, schema=schema)
 

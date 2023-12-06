@@ -1,15 +1,10 @@
 import logging
 from io import BytesIO, StringIO
-from typing import Iterable, Union, Any, Dict, List
+from typing import Iterable, Union, Any, Dict
 
 import tablib
 from sfdata_stream_parser import events, collectors
 from tablib import import_book, import_set
-from tablib.core import detect_format
-
-from liiatools.common.data import FileLocator
-from liiatools.common.stream_errors import StreamError
-
 
 from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser.filters.generic import (
@@ -18,16 +13,18 @@ from sfdata_stream_parser.filters.generic import (
     streamfilter,
 )
 
-from liiatools.common.data import DataContainer
-from liiatools.common.stream_errors import EventErrors
-from liiatools.datasets.shared_functions.converters import (
+from liiatools.common.data import FileLocator
+from liiatools.common.stream_errors import (
+    StreamError, EventErrors
+)
+from liiatools.common.converters import (
     to_date,
     to_numeric,
     to_postcode,
-    to_regex
+    to_regex,
+    to_category,
 )
 
-from .converters import to_category
 from .spec.__data_schema import Column, DataSchema
 
 logger = logging.getLogger(__name__)

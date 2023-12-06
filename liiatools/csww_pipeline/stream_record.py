@@ -1,13 +1,8 @@
-from typing import Iterator
-
-import pandas as pd
-import tablib
 from more_itertools import peekable
-from enum import Enum
 
 from sfdata_stream_parser import events
 from sfdata_stream_parser.collectors import xml_collector
-from sfdata_stream_parser.filters.generic import (generator_with_value)
+from sfdata_stream_parser.filters.generic import generator_with_value
 
 
 class CSWWEvent(events.ParseEvent):
