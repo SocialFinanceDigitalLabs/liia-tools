@@ -222,6 +222,7 @@ def test_add_column_spec():
     numeric_schema = Schema((0, 1), Name("onedecimalplace"))
     regex_schema = Schema((0, 1), Name("swetype"))
     date_schema = Schema((0, 1), Name("{http://www.w3.org/2001/XMLSchema}date"))
+    date_time_schema = Schema((0, 1), Name("{http://www.w3.org/2001/XMLSchema}dateTime"))
     integer_schema = Schema((0, 1), Name("http://www.w3.org/2001/XMLSchema}integer"))
     string_schema = Schema((0, 1), Name("{http://www.w3.org/2001/XMLSchema}string"))
     alphanumeric_schema = Schema((1, 1), Name(None))
@@ -232,6 +233,7 @@ def test_add_column_spec():
         TextNode(text=None, schema=numeric_schema),
         TextNode(text=None, schema=regex_schema),
         TextNode(text=None, schema=date_schema),
+        TextNode(text=None, schema=date_time_schema),
         TextNode(text=None, schema=integer_schema),
         TextNode(text=None, schema=string_schema),
         TextNode(text=None, schema=alphanumeric_schema),
@@ -309,7 +311,7 @@ def test_add_column_spec():
     assert column_spec[4].column_spec == Column(
         string=None,
         numeric=None,
-        date=None,
+        date="%Y-%m-%dT%H:%M:%SZ",
         dictionary=None,
         category=None,
         header_regex=None,
@@ -319,7 +321,7 @@ def test_add_column_spec():
     )
 
     assert column_spec[5].column_spec == Column(
-        string="alphanumeric",
+        string=None,
         numeric=None,
         date=None,
         dictionary=None,
@@ -331,6 +333,18 @@ def test_add_column_spec():
     )
 
     assert column_spec[6].column_spec == Column(
+        string="alphanumeric",
+        numeric=None,
+        date=None,
+        dictionary=None,
+        category=None,
+        header_regex=None,
+        cell_regex=None,
+        canbeblank=True,
+        model_config={"extra": "forbid"},
+    )
+
+    assert column_spec[7].column_spec == Column(
         string="alphanumeric",
         numeric=None,
         date=None,

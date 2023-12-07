@@ -113,13 +113,17 @@ def validate_elements(event):
     :param event: A filtered list of event objects
     :return: Event if valid or event and error message if invalid
     """
-    try:
-        _get_validation_error(event, event.schema, event.node)
+    # Only validate root element and elements with no schema
+    if isinstance(event, events.StartElement) and (event.node.getparent() is None or event.schema is None):
+        try:
+            _get_validation_error(event, event.schema, event.node)
+            return event
+        except ValueError as e:
+            return EventErrors.add_to_event(
+                event, type="ValidationError", message=f"Invalid node", exception=str(e)
+            )
+    else:
         return event
-    except ValueError as e:
-        return EventErrors.add_to_event(
-            event, type="ValidationError", message=f"Invalid node", exception=str(e)
-        )
 
 
 def _create_category_spec(field: str, file: Path) -> List[Category] | None:
@@ -243,9 +247,12 @@ def add_column_spec(event, schema_path: Path):
             column_spec.cell_regex = _create_regex_spec(config_type, schema_path)
         if (
             config_type == "{http://www.w3.org/2001/XMLSchema}date"
-            or config_type == "{http://www.w3.org/2001/XMLSchema}dateTime"
         ):
             column_spec.date = "%Y-%m-%d"
+        if (
+            config_type == "{http://www.w3.org/2001/XMLSchema}dateTime"
+        ):
+            column_spec.date = "%Y-%m-%dT%H:%M:%SZ"
         if (
             config_type == "{http://www.w3.org/2001/XMLSchema}integer"
             or config_type == "{http://www.w3.org/2001/XMLSchema}gYear"
