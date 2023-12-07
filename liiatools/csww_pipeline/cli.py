@@ -1,5 +1,4 @@
 import logging
-
 import click as click
 import click_log
 from fs import open_fs
@@ -11,6 +10,13 @@ from .pipeline import process_session
 
 log = logging.getLogger()
 click_log.basic_config(log)
+
+
+class FileLocatorParamType(click.ParamType):
+    FileLocator(None, None)
+
+
+file_locator = FileLocatorParamType()
 
 
 @click.group()
@@ -42,7 +48,7 @@ def csww():
 @click.option(
     "--public_input",
     "-pi",
-    type=FileLocator,
+    type=file_locator,
 )
 @click_log.simple_verbosity_option(log)
 def pipeline(input, la_code, output, public_input):
