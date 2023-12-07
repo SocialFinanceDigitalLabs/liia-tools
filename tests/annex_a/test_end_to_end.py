@@ -7,6 +7,7 @@ from click.testing import CliRunner
 
 import liiatools
 from liiatools.__main__ import cli
+from liiatools.annex_a_pipeline.spec.samples import ANNEX_A
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -30,6 +31,8 @@ def test_end_to_end(liiatools_dir, build_dir):
     incoming_dir.mkdir(parents=True, exist_ok=True)
     pipeline_dir = build_dir / "pipeline"
     pipeline_dir.mkdir(parents=True, exist_ok=True)
+
+    shutil.copy(ANNEX_A, incoming_dir / f"Annex_A.xlsx")
 
     runner = CliRunner()
     result = runner.invoke(
