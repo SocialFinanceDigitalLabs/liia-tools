@@ -39,7 +39,7 @@ COMMON_CONFIG_DIR = Path(common_asset_dir.__file__).parent
 # Get all the possible LA codes that could be used
 with open(f"{COMMON_CONFIG_DIR}/LA-codes.yml") as las:
     la_list = list(yaml.full_load(las)["data_codes"].values())
-YEARS_TO_GO_BACK = 13
+YEARS_TO_GO_BACK = 12
 YEAR_START_MONTH = 1
 REFERENCE_DATE = datetime.now()
 
