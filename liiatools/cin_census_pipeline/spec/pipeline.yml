@@ -1,0 +1,90 @@
+table_list:
+- id: CIN
+  retain:
+  - PAN
+  columns:
+  - id: LAchildID
+    type: string
+    unique_key: true
+  - id: Date
+    type: date
+    unique_key: true
+  - id: Type
+    type: string
+    unique_key: true
+  - id: CINreferralDate
+    type: date
+  - id: ReferralSource
+    type: category
+    unique_key: true
+  - id: PrimaryNeedCode
+    type: category
+  - id: CINclosureDate
+    type: date
+  - id: ReasonForClosure
+    type: category
+  - id: DateOfInitialCPC
+    type: date
+  - id: ReferralNFA
+    type: category
+  - id: CINPlanStartDate
+    type: date
+  - id: CINPlanEndDate
+    type: date
+  - id: S47ActualStartDate
+    type: date
+  - id: InitialCPCtarget
+    type: date
+    sort: 2
+  - id: ICPCnotRequired
+    type: category
+  - id: AssessmentActualStartDate
+    type: date
+  - id: AssessmentInternalReviewDate
+    type: date
+    sort: 1
+  - id: AssessmentAuthorisationDate
+    type: date
+  - id: Factors
+    type: category
+  - id: CPPstartDate
+    type: date
+  - id: CPPendDate
+    type: date
+  - id: InitialCategoryOfAbuse
+    type: category
+  - id: LatestCategoryOfAbuse
+    type: category
+  - id: NumberOfPreviousCPP
+    type: numeric
+  - id: UPN
+    type: string
+  - id: FormerUPN
+    type: string
+  - id: UPNunknown
+    type: category
+  - id: PersonBirthDate
+    type: date
+    degrade: first_of_month
+  - id: ExpectedPersonBirthDate
+    type: date
+    degrade: first_of_month
+  - id: GenderCurrent
+    type: category
+  - id: PersonDeathDate
+    type: date
+    degrade: first_of_month
+  - id: PersonSchoolYear
+    type: numeric
+    enrich: school_year
+  - id: Ethnicity
+    type: category
+  - id: Disabilities
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0

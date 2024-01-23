@@ -60,4 +60,4 @@ def test_task_cleanfile_error():
     assert errors[0]["filename"] == "social_work_workforce_2022_error.xml"
     assert errors[0]["header"] == "DateTime"
 
-    os.remove(SAMPLES_DIR / 'social_work_workforce_2022_error.xml')
+    os.remove(SAMPLES_DIR / "social_work_workforce_2022_error.xml")

@@ -2,10 +2,10 @@ import pandas as pd
 
 
 def expanded_assessment_factors(
-    data: pd.DataFrame, column_name="AssessmentFactor", prefix: str = ""
+    data: pd.DataFrame, column_name="Factors", prefix: str = ""
 ) -> pd.DataFrame:
     """
-    Expects to receive a dataframe with a column named 'AssessmentFactor' containing a comma-separated list of values.
+    Expects to receive a dataframe with a column named "Factors" containing a comma-separated list of values.
 
     Expands these values into a "one-hot" encoding of the values. Can optionally prefix the column names with a
     prefix string.

@@ -41,12 +41,24 @@ def add_quarter(row: pd.Series, column_config: ColumnConfig, metadata: Metadata)
     return metadata["quarter"]
 
 
+def add_school_year(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) -> str:
+    date_value = row["PersonBirthDate"]
+    if date_value.month >= 9:
+        school_year = date_value.year
+    elif date_value.month <= 8:
+        school_year = date_value.year - 1
+    else:
+        school_year = None
+    return school_year
+
+
 enrich_functions = {
     "add_la_suffix": add_la_suffix,
     "la_code": add_la_code,
     "la_name": add_la_name,
     "year": add_year,
     "quarter": add_quarter,
+    "school_year": add_school_year,
 }
 
 

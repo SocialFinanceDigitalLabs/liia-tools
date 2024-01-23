@@ -76,7 +76,7 @@
 
   <xs:complexType name="childidentifierstype">
     <xs:sequence>
-      <xs:element name="LAchildID" type="nonEmptyString" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="LAchildID" type="xs:string" minOccurs="1" maxOccurs="1"/>
       <xs:element name="UPN" type="upntype" minOccurs="0" maxOccurs="1"/>
       <xs:element name="FormerUPN" type="upntype" minOccurs="0" maxOccurs="1"/>
       <xs:element name="UPNunknown" type="unknownupntype" minOccurs="0" maxOccurs="1"/>
@@ -143,9 +143,9 @@
     <xs:sequence>
       <xs:element name="CPPstartDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
       <xs:element name="CPPendDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="InitialCategoryOfAbuse" type="categoryofabuse" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="LatestCategoryOfAbuse" type="categoryofabuse" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="NumberOfPreviousCPP" type="xs:positiveInteger" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="InitialCategoryOfAbuse" type="categoryofabusetype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="LatestCategoryOfAbuse" type="categoryofabusetype" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="NumberOfPreviousCPP" type="positiveintegertype" minOccurs="1" maxOccurs="1"/>
       <xs:element name="Reviews" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:sequence>
@@ -162,21 +162,22 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="positiveintegertype">
+    <xs:restriction base="xs:integer">
+		<xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="yesnotype">
     <xs:restriction base="nonEmptyString">
-      <xs:enumeration value="true" />
-      <xs:enumeration value="false" />
-	  <xs:enumeration value="TRUE" />
-      <xs:enumeration value="FALSE" />
-      <xs:enumeration value="0" />
-      <xs:enumeration value="1" />
+	  <xs:enumeration value="0"><xs:annotation><xs:documentation>False</xs:documentation></xs:annotation></xs:enumeration>
+	  <xs:enumeration value="1"><xs:annotation><xs:documentation>True</xs:documentation></xs:annotation></xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="upntype">
     <xs:restriction base="xs:string">
-      <xs:pattern value="[A-Za-z]\d{12}"/>
-      <xs:pattern value="[A-Za-z]\d{11}[A-Za-z]"/>
+      <xs:pattern value="[A-Za-z]\d{11}(\d|[A-Za-z])"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -279,7 +280,7 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="categoryofabuse">
+  <xs:simpleType name="categoryofabusetype">
     <xs:restriction base="nonEmptyString">
       <xs:enumeration value="NEG"><xs:annotation><xs:documentation>Neglect</xs:documentation></xs:annotation></xs:enumeration>
       <xs:enumeration value="PHY"><xs:annotation><xs:documentation>Physical abuse</xs:documentation></xs:annotation></xs:enumeration>

@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from liiatools.csww_pipeline.stream_parse import dom_parse
+from liiatools.common.stream_parse import dom_parse
 from sfdata_stream_parser.events import (
     StartElement,
     EndElement,

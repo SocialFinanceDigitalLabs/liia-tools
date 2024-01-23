@@ -1,6 +1,9 @@
 import pandas as pd
 
-from liiatools.cin_census_pipeline.reports import expanded_assessment_factors
+from liiatools.cin_census_pipeline.reports import (
+    expanded_assessment_factors,
+    referral_outcomes
+)
 
 
 def test_assessment_factors():

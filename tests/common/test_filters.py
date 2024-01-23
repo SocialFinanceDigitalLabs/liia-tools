@@ -409,3 +409,14 @@ def test_clean_regex():
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
     assert_errors(cleaned_event)
+
+    regex_spec = Column(string="regex", cell_regex=r"[A-Za-z]\d{11}(\d|[A-Za-z])")
+    event = events.Cell(cell="A123456789012", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "A123456789012"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="A12345678901B", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "A12345678901B"
+    assert_errors(cleaned_event)

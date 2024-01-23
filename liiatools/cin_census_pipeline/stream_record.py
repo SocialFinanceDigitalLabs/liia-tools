@@ -1,65 +1,30 @@
+from more_itertools import peekable
 from typing import Iterator
 
-import tablib
-from more_itertools import peekable
-from sfdata_stream_parser import events
 from sfdata_stream_parser.collectors import xml_collector
+from sfdata_stream_parser import events
+from sfdata_stream_parser.filters.generic import generator_with_value
+
+from liiatools.common.stream_record import text_collector, HeaderEvent, _reduce_dict
 
 
 class CINEvent(events.ParseEvent):
+    @staticmethod
+    def name():
+        return "CIN"
+    
     pass
-
-
-class HeaderEvent(events.ParseEvent):
-    pass
-
-
-def _reduce_dict(dict_instance):
-    """
-    Reduces the values of a dictionary by unwrapping single-item lists.
-
-    Parameters:
-    - dict_instance (dict): A dictionary where each key maps to a list.
-
-    Returns:
-    - dict: A new dictionary where single-item lists are unwrapped to their sole element.
-
-    Behavior:
-    - Iterates through each (key, value) pair in the input dictionary.
-    - If the value is a list with a single element, the function replaces the list with that element.
-    - Otherwise, the value is left as is.
-
-    Examples:
-    >>> _reduce_dict({'a': [1], 'b': [2, 3], 'c': [4, 5, 6]})
-    {'a': 1, 'b': [2, 3], 'c': [4, 5, 6]}
-
-    >>> _reduce_dict({'x': ['single'], 'y': ['multi', 'elements']})
-    {'x': 'single', 'y': ['multi', 'elements']}
-    """
-    new_dict = {}
-    for key, value in dict_instance.items():
-        if len(value) == 1:
-            new_dict[key] = value[0]
-        else:
-            new_dict[key] = value
-    return new_dict
-
-
-@xml_collector
-def text_collector(stream):
-    data_dict = {}
-    current_element = None
-    for event in stream:
-        if isinstance(event, events.StartElement):
-            current_element = event.tag
-        if isinstance(event, events.TextNode) and event.text:
-            data_dict.setdefault(current_element, []).append(event.text)
-
-    return _reduce_dict(data_dict)
 
 
 @xml_collector
 def cin_collector(stream):
+    """
+    Create a dictionary of text values for each CIN element;
+    Assessments, CINPlanDates, Section47 and ChildProtectionPlans
+
+    :param stream: An iterator of events from an XML parser
+    :return: Dictionary containing element name and text values
+    """
     data_dict = {}
     stream = peekable(stream)
     last_tag = None
@@ -74,8 +39,8 @@ def cin_collector(stream):
         ):
             data_dict.setdefault(event.tag, []).append(text_collector(stream))
         else:
-            if isinstance(event, events.TextNode) and event.text:
-                data_dict.setdefault(last_tag, []).append(event.text)
+            if isinstance(event, events.TextNode) and event.cell:
+                data_dict.setdefault(last_tag, []).append(event.cell)
             next(stream)
 
     return _reduce_dict(data_dict)
@@ -83,6 +48,12 @@ def cin_collector(stream):
 
 @xml_collector
 def child_collector(stream):
+    """
+    Create a dictionary of text values for each Child element; ChildIdentifiers, ChildCharacteristics and CINdetails
+
+    :param stream: An iterator of events from an XML parser
+    :return: Dictionary containing element name and text values
+    """
     data_dict = {}
     stream = peekable(stream)
     assert stream.peek().tag == "Child"
@@ -98,8 +69,13 @@ def child_collector(stream):
     return _reduce_dict(data_dict)
 
 
-@xml_collector
 def message_collector(stream):
+    """
+    Collect messages from XML elements and yield events
+
+    :param stream: An iterator of events from an XML parser
+    :yield: Events of type HeaderEvent or CINEvent
+    """
     stream = peekable(stream)
     assert stream.peek().tag == "Message", "Expected Message, got {}".format(
         stream.peek().tag
@@ -150,7 +126,6 @@ __EXPORT_HEADERS = [
     "ExpectedPersonBirthDate",
     "GenderCurrent",
     "PersonDeathDate",
-    "PersonSchoolYear",
     "Ethnicity",
     "Disabilities",
 ]
@@ -223,7 +198,7 @@ def cin_event(record, property, event_name=None):
     value = record.get(property)
     if value:
         new_record = {**record, "Date": value, "Type": event_name}
-        return ({k: new_record.get(k) for k in __EXPORT_HEADERS},)
+        return {k: new_record.get(k) for k in __EXPORT_HEADERS},
 
     return ()
 
@@ -291,10 +266,21 @@ def event_to_records(event: CINEvent) -> Iterator[dict]:
                 )
 
 
+@generator_with_value
 def export_table(stream):
-    data = tablib.Dataset(headers=__EXPORT_HEADERS)
+    """
+    Collects all the records into a dictionary of lists of rows
+
+    This filter requires that the stream has been processed by `message_collector` first
+
+    :param stream: An iterator of events from message_collector
+    :yield: All events
+    :return: A dictionary of lists of rows, keyed by record name
+    """
+    dataset = {}
     for event in stream:
-        if isinstance(event, CINEvent):
-            for record in event_to_records(event):
-                data.append([record.get(k, "") for k in __EXPORT_HEADERS])
-    return data
+        event_type = type(event)
+        for record in event_to_records(event):
+            dataset.setdefault(event_type.name(), []).append(record)
+        yield event
+    return dataset

@@ -7,6 +7,7 @@ from click.testing import CliRunner
 
 import liiatools
 from liiatools.__main__ import cli
+from liiatools.cin_census_pipeline.spec.samples import CIN_2022
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -32,7 +33,35 @@ def log_dir(build_dir):
 
 
 @pytest.mark.skipif(os.environ.get("SKIP_E2E"), reason="Skipping end-to-end tests")
-def test_end_to_end(liiatools_dir, build_dir, log_dir):
+def test_end_to_end(liiatools_dir, build_dir):
+    incoming_dir = build_dir / "incoming"
+    incoming_dir.mkdir(parents=True, exist_ok=True)
+    pipeline_dir = build_dir / "pipeline"
+    pipeline_dir.mkdir(parents=True, exist_ok=True)
+
+    shutil.copy(CIN_2022, incoming_dir / f"cin-2022.xml")
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        [
+            "cin-census",
+            "pipeline",
+            "-c",
+            "BAD",
+            "--input",
+            incoming_dir.as_posix(),
+            "--output",
+            pipeline_dir.as_posix(),
+        ],
+        catch_exceptions=False,
+    )
+
+    assert result.exit_code == 0
+
+
+@pytest.mark.skip("Old pipeline")
+def test_end_to_end_old(liiatools_dir, build_dir, log_dir):
     runner = CliRunner()
     result = runner.invoke(
         cli,
