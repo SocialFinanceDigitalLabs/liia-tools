@@ -6,7 +6,11 @@ from sfdata_stream_parser.checks import type_check
 from sfdata_stream_parser.filters.generic import pass_event, streamfilter
 
 from liiatools.common.spec.__data_schema import Column, Numeric
-from liiatools.common.stream_filters import _create_category_spec, _create_regex_spec, _create_numeric_spec
+from liiatools.common.stream_filters import (
+    _create_category_spec,
+    _create_regex_spec,
+    _create_numeric_spec,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,18 +42,14 @@ def add_column_spec(event, schema_path: Path):
         if config_type in ["upntype"]:
             column_spec.string = "regex"
             column_spec.cell_regex = _create_regex_spec(config_type, schema_path)
-        if (
-            config_type == "{http://www.w3.org/2001/XMLSchema}date"
-        ):
+        if config_type == "{http://www.w3.org/2001/XMLSchema}date":
             column_spec.date = "%Y-%m-%d"
-        if (
-            config_type == "{http://www.w3.org/2001/XMLSchema}dateTime"
-        ):
+        if config_type == "{http://www.w3.org/2001/XMLSchema}dateTime":
             column_spec.date = "%Y-%m-%dT%H:%M:%S"
         if config_type in [
-            "{http://www.w3.org/2001/XMLSchema}integer", 
-            "{http://www.w3.org/2001/XMLSchema}gYear"
-            ]:
+            "{http://www.w3.org/2001/XMLSchema}integer",
+            "{http://www.w3.org/2001/XMLSchema}gYear",
+        ]:
             column_spec.numeric = Numeric(type="integer")
         if config_type == "{http://www.w3.org/2001/XMLSchema}string":
             column_spec.string = "alphanumeric"

@@ -7,7 +7,6 @@ from sfdata_stream_parser.filters import generic
 from liiatools.common.data import FileLocator, ProcessResult, DataContainer
 from liiatools.common import stream_filters as stream_functions
 from liiatools.common.stream_parse import dom_parse
-from liiatools.common.stream_record import export_table
 
 from liiatools.csww_pipeline import stream_record
 
@@ -42,7 +41,7 @@ def task_cleanfile(
         # Create dataset
         error_holder, stream = stream_functions.collect_errors(stream)
         stream = stream_record.message_collector(stream)
-        dataset_holder, stream = export_table(stream)
+        dataset_holder, stream = stream_record.export_table(stream)
 
         # Consume stream so we know it's been processed
         generic.consume(stream)

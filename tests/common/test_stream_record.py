@@ -5,10 +5,7 @@ from sfdata_stream_parser.events import StartElement, EndElement, TextNode
 from liiatools.common.stream_record import (
     _reduce_dict,
     text_collector,
-    export_table,
 )
-
-from liiatools.csww_pipeline.stream_record import message_collector
 
 
 def test_reduce_dict():
@@ -73,19 +70,4 @@ class TestRecord(unittest.TestCase):
                 "SWENo": "AB123456789",
                 "Agency": "0",
             },
-        )
-
-    def test_export_table(self):
-        test_stream = self.generate_test_csww_file()
-        test_events = list(message_collector(test_stream))
-        dataset_holder, stream = export_table(test_events)
-
-        self.assertEqual(len(list(stream)), 3)
-
-        data = dataset_holder.value
-        self.assertEqual(len(data), 3)
-        self.assertEqual(data["Header"], [{"Version": "1"}])
-        self.assertEqual(data["LA_Level"], [{"NumberOfVacancies": "100"}])
-        self.assertEqual(
-            data["Worker"], [{"ID": "100", "SWENo": "AB123456789", "Agency": "0"}]
         )

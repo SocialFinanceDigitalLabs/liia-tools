@@ -7,6 +7,7 @@ from liiatools.csww_pipeline.stream_record import (
     LALevelEvent,
     HeaderEvent,
     message_collector,
+    export_table,
 )
 
 
@@ -55,4 +56,19 @@ class TestRecord(unittest.TestCase):
         self.assertIsInstance(test_events[2], CSWWEvent)
         self.assertEqual(
             test_events[2].record, {"ID": "100", "SWENo": "AB123456789", "Agency": "0"}
+        )
+
+    def test_export_table(self):
+        test_stream = self.generate_test_csww_file()
+        test_events = list(message_collector(test_stream))
+        dataset_holder, stream = export_table(test_events)
+
+        self.assertEqual(len(list(stream)), 3)
+
+        data = dataset_holder.value
+        self.assertEqual(len(data), 3)
+        self.assertEqual(data["Header"], [{"Version": "1"}])
+        self.assertEqual(data["LA_Level"], [{"NumberOfVacancies": "100"}])
+        self.assertEqual(
+            data["Worker"], [{"ID": "100", "SWENo": "AB123456789", "Agency": "0"}]
         )

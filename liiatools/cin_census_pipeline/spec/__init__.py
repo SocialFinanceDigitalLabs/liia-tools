@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+import yaml
 
 import xmlschema
 
@@ -21,5 +22,12 @@ def load_schema(year: int) -> xmlschema.XMLSchema:
     return xmlschema.XMLSchema(SCHEMA_DIR / f"CIN_schema_{year:04d}.xsd")
 
 
+@lru_cache
 def load_schema_path(year: int) -> Path:
     return Path(SCHEMA_DIR, f"CIN_schema_{year:04d}.xsd")
+
+
+@lru_cache
+def load_reports():
+    with open(SCHEMA_DIR / "reports.yml", "rt") as FILE:
+        return yaml.load(FILE, Loader=yaml.FullLoader)

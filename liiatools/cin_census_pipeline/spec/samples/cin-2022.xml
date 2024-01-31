@@ -39,7 +39,7 @@
                 <PrimaryNeedCode>N4</PrimaryNeedCode>
                 <CINclosureDate>1971-02-27</CINclosureDate>
                 <ReasonForClosure>RC1</ReasonForClosure>
-                <DateOfInitialCPC>1970-12-06</DateOfInitialCPC>
+                <DateOfInitialCPC>1970-02-06</DateOfInitialCPC>
                 <Assessments>
                     <AssessmentActualStartDate>1970-06-03</AssessmentActualStartDate>
                     <AssessmentInternalReviewDate>1970-06-22</AssessmentInternalReviewDate>
@@ -54,9 +54,9 @@
                     <CINPlanEndDate>1971-01-26</CINPlanEndDate>
                 </CINPlanDates>
                 <Section47>
-                    <S47ActualStartDate>1970-06-02</S47ActualStartDate>
+                    <S47ActualStartDate>1970-02-02</S47ActualStartDate>
                     <InitialCPCtarget>1970-06-23</InitialCPCtarget>
-                    <DateOfInitialCPC>1970-06-17</DateOfInitialCPC>
+                    <DateOfInitialCPC>1970-02-11</DateOfInitialCPC>
                     <ICPCnotRequired>false</ICPCnotRequired>
                 </Section47>
                 <ReferralNFA>false</ReferralNFA>

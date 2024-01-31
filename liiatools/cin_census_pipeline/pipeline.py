@@ -1,11 +1,11 @@
 import logging
-from fs import open_fs
 from fs.base import FS
 
 from liiatools.common import pipeline as pl
 from liiatools.common.archive import DataframeArchive
 from liiatools.common.constants import ProcessNames, SessionNames
 from liiatools.common.data import (
+    DataContainer,
     ErrorContainer,
     FileLocator,
     PipelineConfig,
@@ -18,8 +18,8 @@ from liiatools.cin_census_pipeline.spec import (
     load_schema,
     load_schema_path,
 )
-
 from liiatools.cin_census_pipeline.stream_pipeline import task_cleanfile
+from liiatools.cin_census_pipeline.reports import reports
 
 
 logger = logging.getLogger()
@@ -58,7 +58,7 @@ def process_file(
     schema = load_schema(year=year)
     schema_path = load_schema_path(year=year)
     metadata = dict(year=year, schema=schema, la_code=la_code)
-    
+
     # Normalise the data and export to the session 'cleaned' folder
     try:
         cleanfile_result = task_cleanfile(file_locator, schema, schema_path)
@@ -154,9 +154,16 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
         report_folder = export_folder.makedirs(report, recreate=True)
         report_data.data.export(report_folder, "cin_census_", "csv")
 
+    # Run report analysis
+    analysis_data = report_data.data["CIN"]
 
-process_session(
-    open_fs(r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CIN\pipeline\input"), 
-    open_fs(r"C:\Users\patrick.troy\OneDrive - Social Finance Ltd\Work\LIIA\LIIA tests\CIN\pipeline\output"), 
-    la_code="BAR"
+    expanded_assessment_factors = reports.expanded_assessment_factors(analysis_data)
+    referral_outcomes = reports.referral_outcomes(analysis_data)
+    s47_journeys = reports.s47_journeys(analysis_data)
+
+    analysis_data = DataContainer(
+        {"factors": expanded_assessment_factors, "referrals": referral_outcomes, "S47_journeys": s47_journeys}
     )
+
+    analysis_folder = export_folder.makedirs("REPORTS", recreate=True)
+    analysis_data.export(analysis_folder, "cin_census_", "csv")

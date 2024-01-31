@@ -12,7 +12,7 @@ class CINEvent(events.ParseEvent):
     @staticmethod
     def name():
         return "CIN"
-    
+
     pass
 
 
@@ -145,14 +145,6 @@ def _maybe_list(value):
     - If the input value is None, the function returns an empty list.
     - If the input value is already a list, it is returned as is.
     - For any other value, the function wraps it in a list and returns it.
-
-    Examples:
-    >>> _maybe_list(None)
-    []
-    >>> _maybe_list(42)
-    [42]
-    >>> _maybe_list([1, 2, 3])
-    [1, 2, 3]
     """
     if value is None:
         value = []
@@ -161,7 +153,7 @@ def _maybe_list(value):
     return value
 
 
-def cin_event(record, property, event_name=None):
+def cin_event(record, property, event_name=None, export_headers=__EXPORT_HEADERS):
     """
     Create an event record based on the given property from the original record.
 
@@ -169,36 +161,29 @@ def cin_event(record, property, event_name=None):
     `property`. If the property exists and is non-empty, it creates a new dictionary
     with keys "Date" and "Type" where "Date" is the value of the specified property
     and "Type" is the name of the event. The new dictionary is then filtered based
-    on the keys specified in the global variable `__EXPORT_HEADERS`.
+    on the keys specified in export_headers.
 
     Parameters:
     - record (dict): The original record containing various key-value pairs.
     - property (str): The key in the `record` dictionary to look for.
     - event_name (str, optional): The name of the event. Defaults to the value of `property` if not specified.
+    - export_headers (list, optional): A list of keys to include in the returned dictionary.
+    Defaults to `__EXPORT_HEADERS`.
 
     Returns:
-    - tuple: A single-element tuple containing the new filtered dictionary, or an empty tuple if `property` is not found or its value is empty.
-
-    Example:
-    >>> record = {'Name': 'John', 'DOB': '2000-01-01'}
-    >>> property = 'DOB'
-    >>> event_name = 'Date of Birth'
-    >>> cin_event(record, property, event_name)
-    ({'Date': '2000-01-01', 'Type': 'Date of Birth'},)
-
-    >>> cin_event(record, 'UnknownProperty')
-    ()
+    - tuple: A single-element tuple containing the new filtered dictionary, or an empty tuple if `property` is not
+    found or its value is empty.
 
     Note:
-    - Assumes that a global variable `__EXPORT_HEADERS` exists that specifies which keys to include in the returned dictionary.
-    - The reason this returns a tuple is that when called, it is used with 'yield from' which expects an iterable. An empty tuple results in no records being yielded.
+    - The reason this returns a tuple is that when called, it is used with 'yield from' which expects an iterable.
+    An empty tuple results in no records being yielded.
     """
     if event_name is None:
         event_name = property
     value = record.get(property)
     if value:
         new_record = {**record, "Date": value, "Type": event_name}
-        return {k: new_record.get(k) for k in __EXPORT_HEADERS},
+        return {k: new_record.get(k) for k in export_headers},
 
     return ()
 
@@ -216,13 +201,11 @@ def event_to_records(event: CINEvent) -> Iterator[dict]:
     - Iterator[dict]: An iterator that yields dictionaries representing individual event records.
 
     Behavior:
-    - The function first creates a 'child' dictionary by merging the "ChildIdentifiers" and "ChildCharacteristics" from the original event record.
-    - It then processes various sub-records within the event, including "CINdetails", "Assessments", "CINPlanDates", "Section47", and "ChildProtectionPlans".
+    - The function first creates a 'child' dictionary by merging the "ChildIdentifiers" and "ChildCharacteristics"
+    from the original event record.
+    - It then processes various sub-records within the event, including "CINdetails", "Assessments", "CINPlanDates",
+    "Section47", and "ChildProtectionPlans".
     - Each sub-record is further processed and emitted as an individual event record.
-
-    Examples:
-    >>> list(event_to_records(CINEvent(...)))
-    [{'field1': 'value1', 'field2': 'value2'}, ...]
     """
     record = event.record
     child = {
