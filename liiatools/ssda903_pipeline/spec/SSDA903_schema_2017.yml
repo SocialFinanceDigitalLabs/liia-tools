@@ -18,10 +18,10 @@ column_map:
          name: "False"
        - code: "1"
          name: "True"
-       dictionary: {"False" : "0", "True" : "1", False: "0", True : "1", "FALSE" : "0", "TRUE" : "1"}
        canbeblank: no
       NB_ADOPTR:
-       numeric: "integer"
+       numeric:
+         type: "integer"
        canbeblank: no
       SEX_ADOPTR:
        category:
@@ -183,7 +183,6 @@ column_map:
          name: "Male"
        - code: "2"
          name: "Female"
-       dictionary: {"Male" : "1", "Female" : "2"}
        canbeblank: no
       DOB:
        date: "%d/%m/%Y"
@@ -230,26 +229,6 @@ column_map:
          name: "Refused"
        - code: "NOBT"
          name: "Information not yet obtained"
-       dictionary: {"White British" : "WBRI",
-                    "White Irish" : "WIRI",
-                    "Any other White background" : "WOTH",
-                    "Traveller of Irish heritage" : "WIRT",
-                    "Gypsy/Roma" : "WROM",
-                    "White and Black Caribbean" : "MWBC",
-                    "White and Black African" : "MWBA",
-                    "White and Asian" : "MWAS",
-                    "Any other Mixed background" : "MOTH",
-                    "Indian" : "AIND",
-                    "Pakistani" : "APKN",
-                    "Bangladeshi" : "ABAN",
-                    "Any other Asian background" : "AOTH",
-                    "Caribbean" : "BCRB",
-                    "African" : "BAFR",
-                    "Any other Black background" : "BOTH",
-                    "Chinese" : "CHNE",
-                    "Any other ethnic group" : "OOTH",
-                    "Refused" : "REFU",
-                    "Information not yet obtained" : "NOBT"}
        canbeblank: no
       UPN:
        string: "alphanumeric"
@@ -288,7 +267,10 @@ column_map:
        date: "%d/%m/%Y"
        canbeblank: no
       SDQ_SCORE:
-       numeric: "integer"
+       numeric:
+         type: "integer"
+         min_value: 0
+         max_value: 40
        canbeblank: yes
       SDQ_REASON:
        category:
@@ -478,7 +460,6 @@ column_map:
          name: "Male"
        - code: "2"
          name: "Female"
-       dictionary: {"Male" : "1", "Female" : "2"}
        canbeblank: no
       DUC:
        date: "%d/%m/%Y"

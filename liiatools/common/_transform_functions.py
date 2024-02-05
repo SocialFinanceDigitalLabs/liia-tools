@@ -37,11 +37,19 @@ def add_year(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) ->
     return metadata["year"]
 
 
+def to_integer(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) -> str | int:
+    try:
+        return int(float(row[column_config.id]))
+    except ValueError:
+        return row[column_config.id]
+
+
 enrich_functions = {
     "add_la_suffix": add_la_suffix,
     "la_code": add_la_code,
     "la_name": add_la_name,
     "year": add_year,
+    "integer": to_integer,
 }
 
 

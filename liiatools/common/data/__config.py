@@ -9,7 +9,7 @@ class ColumnConfig(BaseModel):
     id: str
     type: str
     unique_key: bool = False
-    enrich: str = None
+    enrich: str | list = None
     degrade: str = None
     sort: int = None
     exclude: List[str] = []
