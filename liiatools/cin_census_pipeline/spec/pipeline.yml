@@ -6,6 +6,7 @@ table_list:
   - id: LAchildID
     type: string
     unique_key: true
+    enrich: [integer, add_la_suffix]
   - id: Date
     type: date
     unique_key: true

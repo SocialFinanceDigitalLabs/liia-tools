@@ -28,13 +28,23 @@ def _transform(
     for column_config in table_config.columns:
         transform_name = getattr(column_config, property)
         if transform_name:
-            assert (
-                transform_name in functions
-            ), f"Unknown transform for property '{property}': {transform_name}"
-            data[column_config.id] = data.apply(
-                lambda row: functions[transform_name](row, column_config, metadata),
-                axis=1,
-            )
+            if isinstance(transform_name, list):
+                for transform_name in transform_name:
+                    assert (
+                        transform_name in functions
+                    ), f"Unknown transform for property '{property}': {transform_name}"
+                    data[column_config.id] = data.apply(
+                        lambda row: functions[transform_name](row, column_config, metadata),
+                        axis=1,
+                    )
+            else:
+                assert (
+                    transform_name in functions
+                ), f"Unknown transform for property '{property}': {transform_name}"
+                data[column_config.id] = data.apply(
+                    lambda row: functions[transform_name](row, column_config, metadata),
+                    axis=1,
+                )
 
 
 def data_transforms(

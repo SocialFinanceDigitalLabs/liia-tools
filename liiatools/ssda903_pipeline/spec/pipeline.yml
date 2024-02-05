@@ -4,7 +4,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
@@ -37,7 +37,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DECOM
     type: date
     unique_key: true
@@ -81,7 +81,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: SEX
     type: category
   - id: DOB
@@ -117,7 +117,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
@@ -144,7 +144,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     unique_key: true
@@ -203,7 +203,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     unique_key: true
@@ -230,7 +230,7 @@ table_list:
   columns:
   - id: CHILD
     type: string
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
@@ -256,7 +256,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
@@ -281,7 +281,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
@@ -305,7 +305,7 @@ table_list:
   - id: CHILD
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
@@ -325,7 +325,7 @@ table_list:
   columns:
   - id: CHILD
     type: string
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: DOB
     type: date
     degrade: first_of_month
