@@ -191,7 +191,7 @@ def test_s47_journeys():
             "S47ActualStartDate",
             "CPPstartDate",
             "DateOfInitialCPC",
-            "YEAR",
+            "Year",
         ],
     )
 

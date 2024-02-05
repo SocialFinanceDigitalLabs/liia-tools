@@ -6,7 +6,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -32,7 +32,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -61,7 +61,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -99,7 +99,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -138,7 +138,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -181,7 +181,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -224,7 +224,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -273,7 +273,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -361,7 +361,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Gender
     type: category
   - id: Ethnicity
@@ -399,7 +399,7 @@ table_list:
   - id: Child Unique ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Family identifier
     type: string
   - id: Gender

@@ -6,7 +6,7 @@ table_list:
   - id: Child ID
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Date of birth
     type: date
     degrade: first_of_month
@@ -85,7 +85,7 @@ table_list:
   - id: Asset name
     type: string
     unique_key: true
-    enrich: add_la_suffix
+    enrich: [integer, add_la_suffix]
   - id: Ofsted URN
     type: string
   - id: Start date

@@ -52,6 +52,13 @@ def add_school_year(row: pd.Series, column_config: ColumnConfig, metadata: Metad
     return school_year
 
 
+def to_integer(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) -> str | int:
+    try:
+        return int(float(row[column_config.id]))
+    except ValueError:
+        return row[column_config.id]
+
+
 enrich_functions = {
     "add_la_suffix": add_la_suffix,
     "la_code": add_la_code,
@@ -59,6 +66,7 @@ enrich_functions = {
     "year": add_year,
     "quarter": add_quarter,
     "school_year": add_school_year,
+    "integer": to_integer,
 }
 
 
