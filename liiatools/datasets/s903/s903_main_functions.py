@@ -221,15 +221,15 @@ def episodes_fix(input, output):
     column_names = config["column_names"]
     table_name = common_process.match_load_file(s903_df, column_names)
     if table_name == "Episodes":
-        dates = config["dates"]
-        s903_df = common_process.convert_datetimes(s903_df, dates, table_name)
+        #dates = config["dates"]
+        #s903_df = common_process.convert_datetimes(s903_df, dates, table_name)
         s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        print (s903_df.dtypes)
         s903_df_next = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
-        
+        s903_df_next = episodes_process.add_latest_year_and_source_for_la(s903_df_next)
+        #s903_df_next = episodes_process.identify_not_latest_open_episode(s903_df_next)
+
         # Following code used to test outputs during development
         s903_df_next = s903_df_next.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        print (s903_df_next.dtypes) # Issue: np.where is converting types, e.g. year to 2017.0, dates to 1469491200000000000
         print (s903_df_next)
         s903_df_next.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
                             index=False)
