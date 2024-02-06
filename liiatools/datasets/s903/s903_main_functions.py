@@ -226,7 +226,8 @@ def episodes_fix(input, output):
         s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
         s903_df_next = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
         s903_df_next = episodes_process.add_latest_year_and_source_for_la(s903_df_next)
-        #s903_df_next = episodes_process.identify_not_latest_open_episode(s903_df_next)
+        s903_df_next = episodes_process.add_stage1_rule_identifier_columns(s903_df_next)
+        s903_df_next = episodes_process.identify_stage1_rule_to_apply(s903_df_next)
 
         # Following code used to test outputs during development
         s903_df_next = s903_df_next.sort_values(["CHILD", "DECOM"], ignore_index=True)
