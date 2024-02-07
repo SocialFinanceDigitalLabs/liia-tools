@@ -156,7 +156,9 @@ def add_table_name(event, schema: DataSchema):
             event, table_name=table_name, table_spec=schema.column_map[table_name]
         )
     else:
-        return event
+        return EventErrors.add_to_event(
+            event, type="UnidentifiedTable", message=f"Failed to identify table based on headers"
+        )
 
 
 @streamfilter(check=type_check(events.Cell), fail_function=pass_event)
