@@ -150,6 +150,12 @@ def add_table_name(event, schema: DataSchema):
     if not headers:
         table_name = None
     else:
+        if all(header == "" for header in headers):
+            return EventErrors.add_to_event(
+                event,
+                type="BlankHeaders",
+                message=f"Could not identify headers as first row is blank",
+            )
         table_name = schema.get_table_from_headers(event.headers)
 
     if table_name:
@@ -157,7 +163,11 @@ def add_table_name(event, schema: DataSchema):
             event, table_name=table_name, table_spec=schema.column_map[table_name]
         )
     else:
-        return event
+        return EventErrors.add_to_event(
+            event,
+            type="UnidentifiedTable",
+            message=f"Failed to identify table based on headers",
+        )
 
 
 @streamfilter(check=type_check(events.Cell), fail_function=pass_event)
