@@ -1,10 +1,7 @@
 import logging
-import xmlschema
 import tablib
-import xml.etree.ElementTree as ET
 from io import BytesIO, StringIO
-from typing import Iterable, Union, Any, Dict, List
-from pathlib import Path
+from typing import Iterable, Union, Any, Dict
 from tablib import import_book, import_set
 
 from sfdata_stream_parser import events, collectors
@@ -149,6 +146,12 @@ def add_table_name(event, schema: DataSchema):
     if not headers:
         table_name = None
     else:
+        if all(header == "" for header in headers):
+            return EventErrors.add_to_event(
+                event,
+                type="BlankHeaders",
+                message=f"Could not identify headers as first row is blank",
+            )
         table_name = schema.get_table_from_headers(event.headers)
 
     if table_name:
@@ -157,7 +160,9 @@ def add_table_name(event, schema: DataSchema):
         )
     else:
         return EventErrors.add_to_event(
-            event, type="UnidentifiedTable", message=f"Failed to identify table based on headers"
+            event,
+            type="UnidentifiedTable",
+            message=f"Failed to identify table based on headers",
         )
 
 

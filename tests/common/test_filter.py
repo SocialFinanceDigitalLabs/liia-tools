@@ -98,8 +98,8 @@ def test_add_table_name():
     assert get_table_name([""])["table_name"] is None
     assert list(get_table_name([""])["errors"]) == [
         {
-            "message": "Failed to identify table based on headers",
-            "type": "UnidentifiedTable",
+            "message": "Could not identify headers as first row is blank",
+            "type": "BlankHeaders",
         }
     ]
 
