@@ -73,37 +73,84 @@ def test_add_table_name():
         stream = [events.StartTable(headers=headers)]
         stream = stream_filters.add_table_name(stream, schema=schema)
         event = list(stream)[0]
-        return getattr(event, "table_name", None)
+        table_name = getattr(event, "table_name", None)
+        errors = getattr(event, "errors", None)
+        return {"table_name": table_name, "errors": errors}
 
     assert (
-        get_table_name(["CHILD", "SEX", "DOB", "ETHNIC", "UPN", "MOTHER", "MC_DOB"])
+        get_table_name(["CHILD", "SEX", "DOB", "ETHNIC", "UPN", "MOTHER", "MC_DOB"])[
+            "table_name"
+        ]
         == "Header"
     )
 
     for table_name, table_data in schema.table.items():
         headers = list(table_data.keys())
-        assert get_table_name(headers) == table_name
+        assert get_table_name(headers)["table_name"] == table_name
 
-    assert get_table_name(["incorrect", "header", "values"]) is None
+    assert get_table_name(["incorrect", "header", "values"])["table_name"] is None
+    assert list(get_table_name(["incorrect", "header", "values"])["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
-    assert get_table_name([""]) is None
+    assert get_table_name([""])["table_name"] is None
+    assert list(get_table_name([""])["errors"]) == [
+        {
+            "message": "Could not identify headers as first row is blank",
+            "type": "BlankHeaders",
+        }
+    ]
 
-    assert get_table_name([]) is None
+    assert get_table_name([])["table_name"] is None
+    assert list(get_table_name([])["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
-    assert get_table_name(None) is None
+    assert get_table_name(None)["table_name"] is None
+    assert list(get_table_name(None)["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
     schema = annex_a_schema()
 
     assert (
-        get_table_name(["Child Unique ID", "Gender", "Ethnicity", "Date of Birth",
-                        "Age of Child (Years)", "Date of Contact", "Contact Source"])
+        get_table_name(
+            [
+                "Child Unique ID",
+                "Gender",
+                "Ethnicity",
+                "Date of Birth",
+                "Age of Child (Years)",
+                "Date of Contact",
+                "Contact Source",
+            ]
+        )["table_name"]
         == "List 1"
     )
 
     assert (
-            get_table_name(["Child ID", "Gender", "Ethnicity", "Date Birth",
-                            "Age", "Age", "Date of Contact", "Contact Source"])
-            == "List 1"
+        get_table_name(
+            [
+                "Child ID",
+                "Gender",
+                "Ethnicity",
+                "Date Birth",
+                "Age",
+                "Age",
+                "Date of Contact",
+                "Contact Source",
+            ]
+        )["table_name"]
+        == "List 1"
     )
 
 
@@ -134,11 +181,18 @@ def test_match_config_to_cell():
 
     schema = annex_a_schema()
 
-    assert match_cell(table_name="List 1", header="Child Unique ID").string == "alphanumeric"
+    assert (
+        match_cell(table_name="List 1", header="Child Unique ID").string
+        == "alphanumeric"
+    )
 
-    assert match_cell(table_name="List 1", header="Child Unique ID").header_regex == ["/.*child.*id.*/i"]
+    assert match_cell(table_name="List 1", header="Child Unique ID").header_regex == [
+        "/.*child.*id.*/i"
+    ]
 
-    assert match_cell(table_name="List 1", header="Gender").category[0].code == "b) Female"
+    assert (
+        match_cell(table_name="List 1", header="Gender").category[0].code == "b) Female"
+    )
 
 
 def assert_errors(event, *types):
@@ -241,13 +295,9 @@ def test_clean_categories():
             {
                 "code": "b) Female",
                 "name": "F",
-                "cell_regex": ["/.*fem.*/i", "/b\).*/i"]
+                "cell_regex": ["/.*fem.*/i", "/b\).*/i"],
             },
-            {
-                "code": "a) Male",
-                "name": "M",
-                "cell_regex": ["/^mal.*/i", "/a\).*/i"]
-            }
+            {"code": "a) Male", "name": "M", "cell_regex": ["/^mal.*/i", "/a\).*/i"]},
         ],
     )
 
@@ -267,7 +317,7 @@ def test_clean_categories():
     assert_errors(cleaned_event, "ConversionError")
 
 
-def test_clean_integers():
+def test_clean_numeric():
     integer_spec = Column(numeric={"type": "integer"})
     event = events.Cell(cell=123, column_spec=integer_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
@@ -299,8 +349,31 @@ def test_clean_integers():
     assert cleaned_event.cell == ""
     assert_errors(cleaned_event, "ConversionError")
 
+    float_spec = Column(
+        numeric={"type": "float", "min_value": 0, "max_value": 1, "decimal_places": 2}
+    )
+    event = events.Cell(cell=0.123, column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == 0.12
+    assert_errors(cleaned_event)
 
-def test_conform_cell_types():
+    event = events.Cell(cell="0.2", column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == 0.2
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="string", column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+    event = events.Cell(cell=-1, column_spec=float_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+
+def test_clean_postcodes():
     pc_spec = Column(string="postcode")
     event = events.Cell(cell="G62 7PS", column_spec=pc_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
@@ -330,4 +403,48 @@ def test_conform_cell_types():
     event = events.Cell(cell=None, column_spec=pc_spec)
     cleaned_event = list(stream_filters.conform_cell_types(event))[0]
     assert cleaned_event.cell == ""
+    assert_errors(cleaned_event)
+
+
+def test_clean_regex():
+    regex_spec = Column(string="regex", cell_regex=r"[A-Za-z]{2}\d{10}")
+    event = events.Cell(cell="AB1234567890", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "AB1234567890"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="  AB1234567890  ", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "AB1234567890"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="AB1234567890abcd", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+    event = events.Cell(cell="AB123", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event, "ConversionError")
+
+    event = events.Cell(cell="", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell=None, column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == ""
+    assert_errors(cleaned_event)
+
+    regex_spec = Column(string="regex", cell_regex=r"[A-Za-z]\d{11}(\d|[A-Za-z])")
+    event = events.Cell(cell="A123456789012", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "A123456789012"
+    assert_errors(cleaned_event)
+
+    event = events.Cell(cell="A12345678901B", column_spec=regex_spec)
+    cleaned_event = list(stream_filters.conform_cell_types(event))[0]
+    assert cleaned_event.cell == "A12345678901B"
     assert_errors(cleaned_event)
