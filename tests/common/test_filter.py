@@ -72,24 +72,52 @@ def test_add_table_name():
         stream = [events.StartTable(headers=headers)]
         stream = stream_filters.add_table_name(stream, schema=schema)
         event = list(stream)[0]
-        return getattr(event, "table_name", None)
+        table_name = getattr(event, "table_name", None)
+        errors = getattr(event, "errors", None)
+        return {"table_name": table_name, "errors": errors}
 
     assert (
-        get_table_name(["CHILD", "SEX", "DOB", "ETHNIC", "UPN", "MOTHER", "MC_DOB"])
+        get_table_name(["CHILD", "SEX", "DOB", "ETHNIC", "UPN", "MOTHER", "MC_DOB"])[
+            "table_name"
+        ]
         == "Header"
     )
 
     for table_name, table_data in schema.table.items():
         headers = list(table_data.keys())
-        assert get_table_name(headers) == table_name
+        assert get_table_name(headers)["table_name"] == table_name
 
-    assert get_table_name(["incorrect", "header", "values"]) is None
+    assert get_table_name(["incorrect", "header", "values"])["table_name"] is None
+    assert list(get_table_name(["incorrect", "header", "values"])["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
-    assert get_table_name([""]) is None
+    assert get_table_name([""])["table_name"] is None
+    assert list(get_table_name([""])["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
-    assert get_table_name([]) is None
+    assert get_table_name([])["table_name"] is None
+    assert list(get_table_name([])["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
-    assert get_table_name(None) is None
+    assert get_table_name(None)["table_name"] is None
+    assert list(get_table_name(None)["errors"]) == [
+        {
+            "message": "Failed to identify table based on headers",
+            "type": "UnidentifiedTable",
+        }
+    ]
 
 
 def test_match_config_to_cell():
