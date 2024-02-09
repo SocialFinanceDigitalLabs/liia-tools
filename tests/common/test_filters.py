@@ -97,7 +97,7 @@ def test_add_table_name():
     ]
 
     assert get_table_name([""])["table_name"] is None
-    assert list(get_table_name(["incorrect", "header", "values"])["errors"]) == [
+    assert list(get_table_name([""])["errors"]) == [
         {
             "message": "Failed to identify table based on headers",
             "type": "UnidentifiedTable",
@@ -105,7 +105,7 @@ def test_add_table_name():
     ]
 
     assert get_table_name([])["table_name"] is None
-    assert list(get_table_name(["incorrect", "header", "values"])["errors"]) == [
+    assert list(get_table_name([])["errors"]) == [
         {
             "message": "Failed to identify table based on headers",
             "type": "UnidentifiedTable",
@@ -113,7 +113,7 @@ def test_add_table_name():
     ]
 
     assert get_table_name(None)["table_name"] is None
-    assert list(get_table_name(["incorrect", "header", "values"])["errors"]) == [
+    assert list(get_table_name(None)["errors"]) == [
         {
             "message": "Failed to identify table based on headers",
             "type": "UnidentifiedTable",
