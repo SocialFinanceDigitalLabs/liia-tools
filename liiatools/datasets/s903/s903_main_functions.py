@@ -220,19 +220,19 @@ def episodes_fix(input, output):
     s903_df = common_process.read_file(input)
     column_names = config["column_names"]
     table_name = common_process.match_load_file(s903_df, column_names)
+    
+    # Process stage 1 fixes for Episodes table
     if table_name == "Episodes":
-        #dates = config["dates"]
-        #s903_df = common_process.convert_datetimes(s903_df, dates, table_name)
         s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        s903_df_next = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
-        s903_df_next = episodes_process.add_latest_year_and_source_for_la(s903_df_next)
-        s903_df_next = episodes_process.add_stage1_rule_identifier_columns(s903_df_next)
-        s903_df_next = episodes_process.identify_stage1_rule_to_apply(s903_df_next)
-
+        s903_df_stage1 = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
+        s903_df_stage1 = episodes_process.format_datetime(s903_df_stage1, episodes_process.__DATES)
+        #print(s903_df_stage1[episodes_process.__DATES].dtypes) # Hooray! datetime64[ns]
+        s903_df_stage1 = episodes_process.add_latest_year_and_source_for_la(s903_df_stage1)
+        s903_df_stage1 = episodes_process.add_stage1_rule_identifier_columns(s903_df_stage1)
+        s903_df_stage1 = episodes_process.identify_stage1_rule_to_apply(s903_df_stage1)
         # Following code used to test outputs during development
-        s903_df_next = s903_df_next.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        print (s903_df_next)
-        s903_df_next.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
+        s903_df_stage1 = s903_df_stage1.sort_values(["CHILD", "DECOM"], ignore_index=True)
+        s903_df_stage1.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
                             index=False)
 
 

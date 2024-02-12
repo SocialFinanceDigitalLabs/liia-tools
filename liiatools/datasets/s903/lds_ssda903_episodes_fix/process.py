@@ -17,6 +17,15 @@ __COLUMNS = [
     "YEAR",
 ]
 
+__DATES = [
+    "DECOM",
+    "DEC",
+    "DECOM_previous",
+    "DEC_previous",
+    "DECOM_next",
+    "DEC_next",
+]
+
 
 def create_previous_and_next_episode(dataframe: pd.DataFrame, columns: list) -> pd.DataFrame:
     """
@@ -38,6 +47,21 @@ def create_previous_and_next_episode(dataframe: pd.DataFrame, columns: list) -> 
             dataframe[column].shift(-1),
             None,
         )
+    return dataframe
+
+
+def format_datetime(dataframe: pd.DataFrame, date_columns: list) -> pd.DataFrame:
+    """
+    Format date columns to datetime type
+
+    :param dataframe: Dataframe with SSDA903 Episodes data
+    :param columns: List of columns containing dates
+    :return: Dataframe with date columns showing as datetime data type
+    """
+    print("format_datetime()...")
+    
+    # dataframe["DECOM"].apply(pd.to_datetime, format='%Y-%m-%d', errors='raise')
+    dataframe[date_columns] = dataframe[date_columns].apply(pd.to_datetime, format="%Y-%m-%d", errors="raise")
     return dataframe
 
 
