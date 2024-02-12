@@ -7,6 +7,7 @@ from sfdata_stream_parser.filters import generic
 from liiatools.common.data import FileLocator, ProcessResult, DataContainer
 from liiatools.common import stream_filters as stream_functions
 from liiatools.common.stream_parse import dom_parse
+from liiatools.common.stream_pipeline import to_dataframe_xml
 
 from liiatools.cin_census_pipeline import stream_record
 
@@ -49,6 +50,9 @@ def task_cleanfile(
         dataset = dataset_holder.value
         errors = error_holder.value
 
-        dataset = DataContainer({k: pd.DataFrame(v) for k, v in dataset.items()})
+        # dataset = DataContainer({k: pd.DataFrame(v) for k, v in dataset.items()})
+        dataset = DataContainer(
+            {k: to_dataframe_xml(v, schema_path) for k, v in dataset.items()}
+        )
 
     return ProcessResult(data=dataset, errors=errors)
