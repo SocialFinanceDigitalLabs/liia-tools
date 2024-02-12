@@ -18,7 +18,9 @@ def test_add_column_spec():
     numeric_schema = Schema((0, 1), Name("onedecimalplace"))
     regex_schema = Schema((0, 1), Name("swetype"))
     date_schema = Schema((0, 1), Name("{http://www.w3.org/2001/XMLSchema}date"))
-    date_time_schema = Schema((0, 1), Name("{http://www.w3.org/2001/XMLSchema}dateTime"))
+    date_time_schema = Schema(
+        (0, 1), Name("{http://www.w3.org/2001/XMLSchema}dateTime")
+    )
     integer_schema = Schema((0, 1), Name("http://www.w3.org/2001/XMLSchema}integer"))
     string_schema = Schema((0, 1), Name("{http://www.w3.org/2001/XMLSchema}string"))
     alphanumeric_schema = Schema((1, 1), Name(None))

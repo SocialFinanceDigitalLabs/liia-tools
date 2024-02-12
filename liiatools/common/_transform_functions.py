@@ -41,7 +41,9 @@ def add_quarter(row: pd.Series, column_config: ColumnConfig, metadata: Metadata)
     return metadata["quarter"]
 
 
-def add_school_year(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) -> str:
+def add_school_year(
+    row: pd.Series, column_config: ColumnConfig, metadata: Metadata
+) -> str:
     date_value = row["PersonBirthDate"]
     if date_value.month >= 9:
         school_year = date_value.year

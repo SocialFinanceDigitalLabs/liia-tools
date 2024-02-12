@@ -183,7 +183,7 @@ def cin_event(record, property, event_name=None, export_headers=__EXPORT_HEADERS
     value = record.get(property)
     if value:
         new_record = {**record, "Date": value, "Type": event_name}
-        return {k: new_record.get(k) for k in export_headers},
+        return ({k: new_record.get(k) for k in export_headers},)
 
     return ()
 

@@ -36,7 +36,7 @@ def test_task_cleanfile_error():
     el = parent.find("DateTime")
     el.text = el.text.replace("2023-03-28T14:54:55Z", "not_date")
 
-    tree.write(SAMPLES_DIR / 'social_work_workforce_2022_error.xml')
+    tree.write(SAMPLES_DIR / "social_work_workforce_2022_error.xml")
 
     samples_fs = open_fs(SAMPLES_DIR.as_posix())
     locator = FileLocator(samples_fs, "social_work_workforce_2022_error.xml")

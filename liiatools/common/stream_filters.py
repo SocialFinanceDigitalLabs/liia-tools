@@ -501,7 +501,9 @@ def validate_elements(event):
     :return: Event if valid or event and error message if invalid
     """
     # Only validate root element and elements with no schema
-    if isinstance(event, events.StartElement) and (event.node.getparent() is None or event.schema is None):
+    if isinstance(event, events.StartElement) and (
+        event.node.getparent() is None or event.schema is None
+    ):
         try:
             _get_validation_error(event, event.schema, event.node)
             return event

@@ -13,7 +13,9 @@ def test_task_cleanfile():
     samples_fs = open_fs(SAMPLES_DIR.as_posix())
     locator = FileLocator(samples_fs, CIN_2022.name)
 
-    result = task_cleanfile(locator, schema=load_schema(2022), schema_path=load_schema_path(2022))
+    result = task_cleanfile(
+        locator, schema=load_schema(2022), schema_path=load_schema_path(2022)
+    )
 
     data = result.data
     errors = result.errors
@@ -33,7 +35,7 @@ def test_task_cleanfile_error():
     el = parent.find("DateTime")
     el.text = el.text.replace("2022-05-23T11:14:05", "not_date")
 
-    tree.write(SAMPLES_DIR / 'cin_2022_error.xml')
+    tree.write(SAMPLES_DIR / "cin_2022_error.xml")
 
     samples_fs = open_fs(SAMPLES_DIR.as_posix())
     locator = FileLocator(samples_fs, "cin_2022_error.xml")

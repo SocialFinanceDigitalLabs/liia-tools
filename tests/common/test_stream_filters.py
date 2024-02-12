@@ -4,7 +4,13 @@ from typing import Iterable
 from fs import open_fs
 
 
-from sfdata_stream_parser.events import StartElement, EndElement, TextNode, ParseEvent, StartContainer
+from sfdata_stream_parser.events import (
+    StartElement,
+    EndElement,
+    TextNode,
+    ParseEvent,
+    StartContainer,
+)
 
 from liiatools.common.data import FileLocator
 from liiatools.common.stream_filters import tablib_parse

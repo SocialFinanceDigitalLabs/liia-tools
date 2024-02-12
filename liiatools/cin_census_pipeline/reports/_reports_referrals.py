@@ -2,7 +2,10 @@ import numpy as np
 import pandas as pd
 
 from liiatools.cin_census_pipeline.spec import load_reports
-from liiatools.cin_census_pipeline.reports import _time_between_date_series, _filter_events
+from liiatools.cin_census_pipeline.reports import (
+    _time_between_date_series,
+    _filter_events,
+)
 
 
 def referral_outcomes(data: pd.DataFrame) -> pd.DataFrame:

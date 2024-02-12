@@ -199,9 +199,25 @@ def test_s47_journeys():
 
     assert list(df["icpc_to_cpp"]) == [13, pd.NA, 13]
     assert list(df["s47_to_cpp"]) == [71, 19, 71]
-    assert list(df["cin_census_close"]) == [date(2022, 3, 31), date(2022, 3, 31), date(2022, 3, 31)]
-    assert list(df["s47_max_date"]) == [date(2022, 1, 30), date(2022, 1, 30), date(2022, 1, 30)]
-    assert list(df["icpc_max_date"]) == [date(2022, 2, 14), date(2022, 2, 14), date(2022, 2, 14)]
-    assert list(df["Source"]) == ["S47 strategy discussion", "S47 strategy discussion", "ICPC"]
+    assert list(df["cin_census_close"]) == [
+        date(2022, 3, 31),
+        date(2022, 3, 31),
+        date(2022, 3, 31),
+    ]
+    assert list(df["s47_max_date"]) == [
+        date(2022, 1, 30),
+        date(2022, 1, 30),
+        date(2022, 1, 30),
+    ]
+    assert list(df["icpc_max_date"]) == [
+        date(2022, 2, 14),
+        date(2022, 2, 14),
+        date(2022, 2, 14),
+    ]
+    assert list(df["Source"]) == [
+        "S47 strategy discussion",
+        "S47 strategy discussion",
+        "ICPC",
+    ]
     assert list(df["Destination"]) == ["ICPC", "CPP Start", "CPP Start"]
     assert list(df["Age at S47"]) == [9, 9, 9]

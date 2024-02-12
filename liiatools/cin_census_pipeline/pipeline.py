@@ -162,7 +162,11 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     s47_journeys = reports.s47_journeys(analysis_data)
 
     analysis_data = DataContainer(
-        {"factors": expanded_assessment_factors, "referrals": referral_outcomes, "S47_journeys": s47_journeys}
+        {
+            "factors": expanded_assessment_factors,
+            "referrals": referral_outcomes,
+            "S47_journeys": s47_journeys,
+        }
     )
 
     analysis_folder = export_folder.makedirs("REPORTS", recreate=True)
