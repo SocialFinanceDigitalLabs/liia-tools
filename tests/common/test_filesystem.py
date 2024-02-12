@@ -30,7 +30,8 @@ def test_serialize():
     serialized = serialise(subfolder)
 
     assert serialized["type"] == "osfs"
-    assert serialized["path"] == Path("build").resolve().as_posix()
+    print(Path(serialized["path"]))
+    assert Path(serialized["path"]) == Path("build").resolve()
     assert serialized["subpath"] == "/test/subfolder"
 
 
@@ -43,7 +44,7 @@ def test_deserialize():
     deserialized = deserialise(serialized)
 
     assert deserialized._sub_dir == "/test/subfolder"
-    assert deserialized._wrap_fs._root_path == Path("build").resolve().as_posix()
+    assert Path(deserialized._wrap_fs._root_path) == Path("build").resolve()
 
 
 def test_pickle():
