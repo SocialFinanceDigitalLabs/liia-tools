@@ -230,6 +230,7 @@ def episodes_fix(input, output):
         s903_df_stage1 = episodes_process.add_latest_year_and_source_for_la(s903_df_stage1)
         s903_df_stage1 = episodes_process.add_stage1_rule_identifier_columns(s903_df_stage1)
         s903_df_stage1 = episodes_process.identify_stage1_rule_to_apply(s903_df_stage1)
+        print(s903_df_stage1)
         # Following code used to test outputs during development
         s903_df_stage1 = s903_df_stage1.sort_values(["CHILD", "DECOM"], ignore_index=True)
         s903_df_stage1.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",

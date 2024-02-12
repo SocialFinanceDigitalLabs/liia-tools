@@ -78,6 +78,43 @@ def add_latest_year_and_source_for_la(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
+def _is_next_episode_duplicate(row):
+    return (row.DEC.isnull() &
+            row.Has_next_episode &
+            ( (row.DECOM_next != row.DECOM) | (row.DECOM_next.isnull() & row.DECOM.isnull()) ) &
+            ( (row.RNE_next == row.RNE) | (row.RNE_next.isnull() &  row.RNE.isnull()) ) &
+            ( (row.LS_next == row.LS) | (row.LS_next.isnull() & row.LS.isnull()) ) &
+            ( (row.PLACE_next == row.PLACE) | (row.PLACE_next.isnull() | row.PLACE.isnull()) ) &
+            ( (row.PLACE_PROVIDER_next == row.PLACE_PROVIDER) | (row.PLACE_PROVIDER_next.isnull() | row.PLACE_PROVIDER.isnull()) ) &
+            ( (row.PL_POST_next == row.PL_POST) | (row.PL_POST_next.isnull() | row.PL_POST.isnull()) ) &
+            ( (row.URN_next == row.URN) | (row.URN_next.isnull() | row.URN.isnull()) )
+            )
+
+
+def _is_previous_episode_duplicate(row):
+    return (row.DEC.isnull() &
+            row.Has_previous_episode &
+            ( (row.DECOM_previous != row.DECOM) | (row.DECOM_previous.isnull() & row.DECOM.isnull()) ) &
+            ( (row.RNE_previous == row.RNE) | (row.RNE_previous.isnull() &  row.RNE.isnull()) ) &
+            ( (row.LS_previous == row.LS) | (row.LS_previous.isnull() & row.LS.isnull()) ) &
+            ( (row.PLACE_previous == row.PLACE) | (row.PLACE_previous.isnull() | row.PLACE.isnull()) ) &
+            ( (row.PLACE_PROVIDER_previous == row.PLACE_PROVIDER) | (row.PLACE_PROVIDER_previous.isnull() | row.PLACE_PROVIDER.isnull()) ) &
+            ( (row.PL_POST_previous == row.PL_POST) | (row.PL_POST_previous.isnull() | row.PL_POST.isnull()) ) &
+            ( (row.URN_previous == row.URN) | (row.URN_previous.isnull() | row.URN.isnull()) )
+            )
+
+
+def _is_previous_episode_submitted_later(row):
+    return (row.DEC.isnull() &
+            (row.Has_previous_episode) &
+            (row.YEAR_previous > row.YEAR)
+            )
+
+def _rule_to_apply(row):
+    if row["Has_open_episode_error"]:
+        return "Some rule tbd"
+
+
 def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Add columns to identify rows with open episodes that meet certain criteria
@@ -86,34 +123,13 @@ def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     :return: Dataframe with columns showing true if certain conditions are met
     """
     print("add_stage1_rule_identifier_columns...")
-    dataframe = dataframe.assign(Has_open_episode_error=lambda x: (x.DEC.isnull() ) & (x.YEAR != x.YEAR_latest) )
+    dataframe = dataframe.assign(Has_open_episode_error=lambda row: (row.DEC.isnull() ) & (row.YEAR != row.YEAR_latest) )
     dataframe["Has_next_episode"] = dataframe["DECOM_next"].notnull()
     dataframe["Has_previous_episode"] = dataframe["DECOM_previous"].notnull()
-    dataframe = dataframe.assign(Has_next_episode_with_RNE_equals_S=lambda x: (x.Has_next_episode) & (x.RNE_next == "S") )
-    dataframe = dataframe.assign(Next_episode_is_duplicate=lambda x: (x.DEC).isnull() &
-                                                                     (x.Has_next_episode) &
-                                                                     (x.DECOM_next != x.DECOM) &
-                                                                     (x.RNE_next == x.RNE) &
-                                                                     (x.LS_next == x.LS) &
-                                                                     (x.PLACE_next == x.PLACE) &
-                                                                     (x.PLACE_PROVIDER_next == x.PLACE_PROVIDER) &
-                                                                     (x.PL_POST_next == x.PL_POST) &
-                                                                     (x.URN_next == x.URN)
-                                                                    )
-    dataframe = dataframe.assign(Previous_episode_is_duplicate=lambda x: (x.DEC).isnull() &
-                                                                     (x.Has_previous_episode) &
-                                                                     (x.DECOM_previous != x.DECOM) &
-                                                                     (x.RNE_previous == x.RNE) &
-                                                                     (x.LS_previous == x.LS) &
-                                                                     (x.PLACE_previous == x.PLACE) &
-                                                                     (x.PLACE_PROVIDER_previous == x.PLACE_PROVIDER) &
-                                                                     (x.PL_POST_previous == x.PL_POST) &
-                                                                     (x.URN_previous == x.URN)
-                                                                    )
-    dataframe = dataframe.assign(Previous_episode_submitted_later=lambda x: (x.DEC).isnull() &
-                                                                     (x.Has_previous_episode) &
-                                                                     (x.YEAR_previous > x.YEAR)
-                                                                    )
+    dataframe = dataframe.assign(Has_next_episode_with_RNE_equals_S=lambda row: (row.Has_next_episode) & (row.RNE_next == "S") )
+    dataframe = dataframe.assign(Next_episode_is_duplicate=lambda row: _is_next_episode_duplicate(row))
+    dataframe = dataframe.assign(Previous_episode_is_duplicate=lambda row: _is_previous_episode_duplicate(row))
+    dataframe = dataframe.assign(Previous_episode_submitted_later=lambda row: _is_previous_episode_submitted_later(row))
     return dataframe
 
 
@@ -125,5 +141,6 @@ def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     :return: Dataframe with column showing stage 1 rule to be applied
     """
     print("identify_stage1_rule_to_apply...")
-    # To do based on criteria identified
+    #rule1_condition = (dataframe["Has_open_episode_error"])
+    dataframe["Rule_to_apply"] = dataframe.apply(_rule_to_apply, axis=1)
     return dataframe
