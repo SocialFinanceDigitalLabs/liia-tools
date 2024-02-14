@@ -174,6 +174,9 @@ def apply_stage1_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     :return: Dataframe with stage 1 rules applied
     """
     print("apply_stage1_rules...TODO")
-    episodes_to_delete = (dataframe["Rule_to_apply"] == 'RULE_3') | (dataframe["Rule_to_apply"] == 'RULE_3A')
+    episodes_to_delete = dataframe["Rule_to_apply"].isin( ['RULE_3', 'RULE_3A'])
     dataframe = dataframe.drop(dataframe[episodes_to_delete].index)
+
+    # write code here for rules 1, 1A, 2
+    
     return dataframe
