@@ -110,9 +110,17 @@ def _is_previous_episode_submitted_later(row):
             (row.YEAR_previous > row.YEAR)
             )
 
-def _rule_to_apply(row):
+def _stage1_rule_to_apply(row):
     if row["Has_open_episode_error"]:
-        return "Some rule tbd"
+        if row["Next_episode_is_duplicate"] | row["Previous_episode_is_duplicate"]:
+            return "RULE_3" # Duplicate
+        if row["Previous_episode_submitted_later"]:
+            return "RULE_3A" # Episode replaced in later submission
+        if row["Has_next_episode"] is False:
+            return "RULE_2" # Ceases LAC
+        if row["Has_next_episode_with_RNE_equals_S"]:
+            return "RULE_1A" # Ceases LAC, but re-enters care later
+        return "RULE_1" # Remains LAC, episode changes
 
 
 def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -127,20 +135,45 @@ def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe["Has_next_episode"] = dataframe["DECOM_next"].notnull()
     dataframe["Has_previous_episode"] = dataframe["DECOM_previous"].notnull()
     dataframe = dataframe.assign(Has_next_episode_with_RNE_equals_S=lambda row: (row.Has_next_episode) & (row.RNE_next == "S") )
-    dataframe = dataframe.assign(Next_episode_is_duplicate=lambda row: _is_next_episode_duplicate(row))
-    dataframe = dataframe.assign(Previous_episode_is_duplicate=lambda row: _is_previous_episode_duplicate(row))
-    dataframe = dataframe.assign(Previous_episode_submitted_later=lambda row: _is_previous_episode_submitted_later(row))
+    #dataframe = dataframe.assign(Next_episode_is_duplicate=lambda row: _is_next_episode_duplicate(row))
+    dataframe = dataframe.assign(Next_episode_is_duplicate=_is_next_episode_duplicate)
+    #dataframe = dataframe.assign(Previous_episode_is_duplicate=lambda row: _is_previous_episode_duplicate(row))
+    dataframe = dataframe.assign(Previous_episode_is_duplicate=_is_previous_episode_duplicate)
+    #dataframe = dataframe.assign(Previous_episode_submitted_later=lambda row: _is_previous_episode_submitted_later(row))
+    dataframe = dataframe.assign(Previous_episode_submitted_later=_is_previous_episode_submitted_later)
     return dataframe
 
 
 def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
-    Add column to identify which stage 1 rule should be applied
+    Add column to identify which stage 1 rule should be applied:
+    RULE_1 : Child remains LAC but episode changes
+    RULE_1A: Child ceases LAC but re-enters care later
+    RULE_2 : Child ceases LAC
+    RULE_3 : Episode is a duplicate - delete
+    RULE_3A: Episode replaced in later submission - delete
 
     :param dataframe: Dataframe with SSDA903 Episodes data
     :return: Dataframe with column showing stage 1 rule to be applied
     """
     print("identify_stage1_rule_to_apply...")
-    #rule1_condition = (dataframe["Has_open_episode_error"])
-    dataframe["Rule_to_apply"] = dataframe.apply(_rule_to_apply, axis=1)
+    dataframe["Rule_to_apply"] = dataframe.apply(_stage1_rule_to_apply, axis=1)
+    return dataframe
+
+
+def apply_stage1_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Apply stage 1 rules:
+    RULE_1 : Child remains LAC but episode changes
+    RULE_1A: Child ceases LAC but re-enters care later
+    RULE_2 : Child ceases LAC
+    RULE_3 : Episode is a duplicate - delete
+    RULE_3A: Episode replaced in later submission - delete
+
+    :param dataframe: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with stage 1 rules applied
+    """
+    print("apply_stage1_rules...TODO")
+    episodes_to_delete = (dataframe["Rule_to_apply"] == 'RULE_3') | (dataframe["Rule_to_apply"] == 'RULE_3A')
+    dataframe = dataframe.drop(dataframe[episodes_to_delete].index)
     return dataframe

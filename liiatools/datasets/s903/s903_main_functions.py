@@ -221,22 +221,30 @@ def episodes_fix(input, output):
     column_names = config["column_names"]
     table_name = common_process.match_load_file(s903_df, column_names)
     
-    # Process stage 1 fixes for Episodes table
+    # Process stage 1 rule fixes for Episodes table
     if table_name == "Episodes":
+        # Add columns to dataframe to identify which rules should be applied
         s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
         s903_df_stage1 = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
         s903_df_stage1 = episodes_process.format_datetime(s903_df_stage1, episodes_process.__DATES)
-        #print(s903_df_stage1[episodes_process.__DATES].dtypes) # Hooray! datetime64[ns]
         s903_df_stage1 = episodes_process.add_latest_year_and_source_for_la(s903_df_stage1)
         s903_df_stage1 = episodes_process.add_stage1_rule_identifier_columns(s903_df_stage1)
         s903_df_stage1 = episodes_process.identify_stage1_rule_to_apply(s903_df_stage1)
-        print(s903_df_stage1)
+
+        # Apply the stage 1 rules
+        s903_df_stage1_applied = episodes_process.apply_stage1_rules(s903_df_stage1)
+        
         # Following code used to test outputs during development
-        s903_df_stage1 = s903_df_stage1.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        s903_df_stage1.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
+        print("Dataframe with rules identified:")
+        print(s903_df_stage1[["CHILD", "YEAR", "DECOM", "DEC", "Has_open_episode_error", "Rule_to_apply"]])
+        print("Dataframe with stage 1 rules applied (Incomplete - more rules to apply):")
+        print(s903_df_stage1_applied[["CHILD", "YEAR", "DECOM", "DEC", "Has_open_episode_error", "Rule_to_apply"]])
+
+        s903_df_stage1_applied = s903_df_stage1_applied.sort_values(["CHILD", "DECOM"], ignore_index=True)
+        s903_df_stage1_applied.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
                             index=False)
 
-
+# Run episodes_fix() with our test file which contains examples of each rule (CHILD id indicates which rule)
 episodes_fix(
     r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_INPUT.csv",
     r"liiatools/datasets/s903/lds_ssda903_episodes_fix"
