@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime, timedelta
 
 __COLUMNS = [
     "DECOM",
@@ -26,6 +27,25 @@ __DATES = [
     "DEC_next",
 ]
 
+__COLUMNS_TO_KEEP = [
+    "CHILD",
+    "LA",
+    "DECOM",
+    "RNE",
+    "LS",
+    "CIN",
+    "PLACE",
+    "PLACE_PROVIDER",
+    "DEC",
+    "REC",
+    "REASON_PLACE_CHANGE",
+    "HOME_POST",
+    "PL_POST",
+    "URN",
+    "YEAR",
+    "YEAR_latest",
+    "Episode_source",
+]
 
 def create_previous_and_next_episode(dataframe: pd.DataFrame, columns: list) -> pd.DataFrame:
     """
@@ -161,6 +181,64 @@ def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
+def _update_dec(row):
+    """
+    Determine updated DEC value. Defaults to input DEC if no rule to apply
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Updated DEC date
+    """
+    end_of_year = datetime(row["YEAR"], 3, 31)
+    if row["Has_open_episode_error"]:
+        if row["Rule_to_apply"] == "RULE_1":
+            return row["DECOM_next"]
+        if row["Rule_to_apply"] == "RULE_1A":
+            day_before_next_decom = row["DECOM_next"] - timedelta(days = 1)
+            return min(end_of_year, day_before_next_decom) # get earliest date
+        if row["Rule_to_apply"] == "RULE_2":
+            return end_of_year
+    return row["DEC"]
+
+
+def _update_rec(row):
+    """
+    Determine updated REC value. Defaults to input REC if no rule to apply
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Updated REC value
+    """
+    episode_ends_liia_fix = "E99"
+    episode_continues = "X1"
+    if row["Has_open_episode_error"]:
+        if row["Rule_to_apply"] == "RULE_1":
+            return episode_continues
+        if row["Rule_to_apply"] in ("RULE_1A", "RULE_2"):
+            return episode_ends_liia_fix
+    return row["REC"]
+
+
+def _update_reason_place_change(row):
+    """
+    Determine updated REASON_PLACE_CHANGE value. Defaults to input value if no rule to apply
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Updated REASON_PLACE_CHANGE value
+    """
+    reason_liia_fix = "LIIAF"
+    if row["Has_open_episode_error"]:
+        if (row["Rule_to_apply"] == "RULE_1") & (row["RNE_next"] in ("P", "B", "T", "U")):
+            return reason_liia_fix
+    return row["REASON_PLACE_CHANGE"]
+
+
+def _update_episode_source(row):
+    """
+    Determine updated Episode_source value. Defaults to input value if no rule to apply
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Updated Episode_source value
+    """
+    if row["Has_open_episode_error"]:
+        return row["Rule_to_apply"]
+    return row["Episode_source"]
+
+
 def apply_stage1_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     Apply stage 1 rules:
@@ -173,10 +251,53 @@ def apply_stage1_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     :param dataframe: Dataframe with SSDA903 Episodes data
     :return: Dataframe with stage 1 rules applied
     """
-    print("apply_stage1_rules...TODO")
+    print("apply_stage1_rules")
+    # Apply rules 3, 3A to delete rows
     episodes_to_delete = dataframe["Rule_to_apply"].isin( ['RULE_3', 'RULE_3A'])
     dataframe = dataframe.drop(dataframe[episodes_to_delete].index)
 
-    # write code here for rules 1, 1A, 2
-    
+    # Apply rules 1, 1A, 2
+    dataframe["DEC"] = dataframe.apply(_update_dec, axis=1)
+    dataframe["REC"] = dataframe.apply(_update_rec, axis=1)
+    dataframe["REASON_PLACE_CHANGE"] = dataframe.apply(_update_reason_place_change, axis=1)
+    dataframe["Episode_source"] = dataframe.apply(_update_episode_source, axis=1)
+
+    return dataframe
+
+
+def add_stage2_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add columns to identify rows which overlap or underlap surrounding episodes
+
+    :param dataframe: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with columns showing true if certain conditions are met
+    """
+    print("add_stage2_rule_identifier_columns...TODO")
+
+    return dataframe
+
+
+def identify_stage2_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add column to identify which stage 2 rule should be applied:
+    RULE_4: Overlaps with next episode
+    RULE_5: End reason is "X1" - episode continues - but there is gap before next episode
+
+    :param dataframe: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with column showing stage 2 rule to be applied
+    """
+    print("identify_stage2_rule_to_apply...TODO")
+    return dataframe
+
+
+def apply_stage2_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Apply stage 2 rules:
+    RULE_4: Overlaps with next episode
+    RULE_5: End reason is "X1" - episode continues - but there is gap before next episode
+
+    :param dataframe: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with stage 2 rules applied
+    """
+    print("apply_stage2_rules...TODO")
     return dataframe

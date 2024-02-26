@@ -223,7 +223,7 @@ def episodes_fix(input, output):
     
     # Process stage 1 rule fixes for Episodes table
     if table_name == "Episodes":
-        # Add columns to dataframe to identify which rules should be applied
+        # Add columns to dataframe to identify which rules should be applied at stage 1
         s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
         s903_df_stage1 = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
         s903_df_stage1 = episodes_process.format_datetime(s903_df_stage1, episodes_process.__DATES)
@@ -233,15 +233,26 @@ def episodes_fix(input, output):
 
         # Apply the stage 1 rules
         s903_df_stage1_applied = episodes_process.apply_stage1_rules(s903_df_stage1)
-        
+
+        # Add columns to dataframe to identify which rules should be applied at stage 2 TODO
+        s903_df_stage2 = s903_df_stage1_applied[episodes_process.__COLUMNS_TO_KEEP]
+        s903_df_stage2 = episodes_process.create_previous_and_next_episode(s903_df_stage2, episodes_process.__COLUMNS)
+        s903_df_stage2 = episodes_process.format_datetime(s903_df_stage2, episodes_process.__DATES)
+        s903_df_stage2 = episodes_process.add_stage2_rule_identifier_columns(s903_df_stage2)
+        s903_df_stage2 = episodes_process.identify_stage2_rule_to_apply(s903_df_stage2)
+
+        # Apply the stage 2 rules TODO
+        s903_df_stage2_applied = episodes_process.apply_stage2_rules(s903_df_stage2)
+
         # Following code used to test outputs during development
         print("Dataframe with rules identified:")
-        print(s903_df_stage1[["CHILD", "YEAR", "DECOM", "DEC", "Has_open_episode_error", "Rule_to_apply"]])
-        print("Dataframe with stage 1 rules applied (Incomplete - more rules to apply):")
-        print(s903_df_stage1_applied[["CHILD", "YEAR", "DECOM", "DEC", "Has_open_episode_error", "Rule_to_apply"]])
-
-        s903_df_stage1_applied = s903_df_stage1_applied.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        s903_df_stage1_applied.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
+        print(s903_df_stage1[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Has_open_episode_error", "Rule_to_apply"]])
+        print("Dataframe with stage 1 rules applied:")
+        print(s903_df_stage1_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source", "Has_open_episode_error", "Rule_to_apply"]])
+        print("Dataframe with stage 2 rules applied...to be developed:")
+        print(s903_df_stage2_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source"]])
+        s903_df_stage2_applied = s903_df_stage2_applied.sort_values(["CHILD", "DECOM"], ignore_index=True)
+        s903_df_stage2_applied.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
                             index=False)
 
 # Run episodes_fix() with our test file which contains examples of each rule (CHILD id indicates which rule)
