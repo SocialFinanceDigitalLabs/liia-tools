@@ -22,7 +22,6 @@ def s903():
 @click.option(
     "--la-code",
     "-c",
-    required=True,
     type=click.Choice(authorities.codes, case_sensitive=False),
     help="Local authority code",
 )
@@ -39,7 +38,7 @@ def s903():
     type=click.Path(exists=True, file_okay=False, readable=True),
 )
 @click_log.simple_verbosity_option(log)
-def pipeline(input, la_code, output):
+def pipeline(input, output, la_code=None):
     """Runs the full pipeline on a file or folder"""
 
     # Source FS is the filesystem containing the input files

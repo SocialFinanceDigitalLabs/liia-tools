@@ -59,3 +59,21 @@ def check_year(filename):
             return year
 
     raise ValueError
+
+
+def check_la(filename):
+    """
+    Check a filename to see if it contains the three-digit code associated with an LA, if it does, return that code
+    Expected filename formats:
+        822_2023_header.csv
+        935_2023_episodes.csv
+
+    :param filename: Filename that contains an LA code
+    :return: An LA code within the string
+    :raises ValueError: If no LA is found
+    """
+    match = re.search(r"^\d{3}", filename)
+    if match:
+        return match.group(0)
+
+    raise ValueError

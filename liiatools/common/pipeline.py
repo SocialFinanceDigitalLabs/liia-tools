@@ -14,7 +14,7 @@ from fs.info import Info
 from fs.move import move_file, copy_file
 
 from liiatools.common.constants import ProcessNames, SessionNames
-from liiatools.common.checks import check_year
+from liiatools.common.checks import check_year, check_la
 
 from .data import FileLocator
 
@@ -115,6 +115,29 @@ def restore_session_folder(session_fs: FS) -> List[FileLocator]:
         )
 
     return file_locators
+
+
+def discover_la(file_locator: FileLocator) -> str:
+    """
+    Try to discover the LA for a file.
+
+    This function will try to find an LA code in the path, and if that fails,
+    it will try to find an LA code in the full filename.
+
+    If the LA is found, it will be added to the file metadata.
+    """
+    file_dir = dirname(file_locator.name)
+    file_name = basename(file_locator.name)
+
+    try:
+        return check_la(file_dir)
+    except ValueError:
+        pass
+
+    try:
+        return check_la(file_name)
+    except ValueError:
+        pass
 
 
 def discover_year(file_locator: FileLocator) -> int:

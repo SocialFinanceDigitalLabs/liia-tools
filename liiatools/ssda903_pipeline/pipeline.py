@@ -24,7 +24,7 @@ def process_file(
     session_folder: FS,
     pipeline_config: PipelineConfig,
     la_code: str,
-) -> ProcessResult:
+) -> (ProcessResult, str):
     errors = ErrorContainer()
     year = pl.discover_year(file_locator)
     if year is None:
@@ -32,6 +32,17 @@ def process_file(
             dict(
                 type="MissingYear",
                 message="Could not find a year in the filename or path",
+                filename=file_locator.name,
+            )
+        )
+        return ProcessResult(data=None, errors=errors)
+
+    la_code = la_code if la_code is not None else pl.discover_la(file_locator)
+    if la_code is None:
+        errors.append(
+            dict(
+                type="MissingLA",
+                message="Could not find a local authority in the filename or path",
                 filename=file_locator.name,
             )
         )

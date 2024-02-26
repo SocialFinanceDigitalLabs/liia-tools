@@ -32,3 +32,14 @@ data_codes:
     Waltham Forest: 'WAL'
     Wandsworth: 'WAN'
     Westminster: 'WES'
+    Bedford: "822"
+    Cambridgeshire County: "873"
+    Central Bedfordshire: "823"
+    Essex County: "881"
+    Hertfordshire County: "919"
+    Luton: "821"
+    Norfolk County: "926"
+    Peterborough: "874"
+    Southend-on-Sea: "882"
+    Suffolk County: "935"
+    Thurrock: "883"

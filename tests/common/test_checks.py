@@ -1,6 +1,9 @@
 import unittest
 
-from liiatools.common.checks import check_year
+from liiatools.common.checks import (
+    check_year,
+    check_la,
+)
 
 
 def test_check_year():
@@ -27,3 +30,18 @@ class TestCheckYear(unittest.TestCase):
     def test_check_year_2(self):
         with self.assertRaises(ValueError):
             check_year("1811.csv")
+
+
+def test_check_la():
+    assert check_la("822_2023_header.csv") == "822"
+    assert check_la("935_2023_episodes.csv") == "935"
+
+
+class TestCheckLA(unittest.TestCase):
+    def test_check_la(self):
+        with self.assertRaises(ValueError):
+            check_la("file_no_la.csv")
+
+    def test_check_la_2(self):
+        with self.assertRaises(ValueError):
+            check_la("SSDA903_2020_episodes.csv")
