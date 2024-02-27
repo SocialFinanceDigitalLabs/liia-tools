@@ -80,7 +80,6 @@ def format_datetime(dataframe: pd.DataFrame, date_columns: list) -> pd.DataFrame
     """
     print("format_datetime()...")
     
-    # dataframe["DECOM"].apply(pd.to_datetime, format='%Y-%m-%d', errors='raise')
     dataframe[date_columns] = dataframe[date_columns].apply(pd.to_datetime, format="%Y-%m-%d", errors="raise")
     return dataframe
 
@@ -92,9 +91,10 @@ def add_latest_year_and_source_for_la(dataframe: pd.DataFrame) -> pd.DataFrame:
     :param dataframe: Dataframe with SSDA903 Episodes data
     :return: Dataframe with column showing latest submission year for each LA and column showing episode source
     """
+    source_for_episode_row = "Original"
     print("add_latest_year_and_source_for_la()...")
     dataframe['YEAR_latest'] = dataframe.groupby('LA')['YEAR'].transform('max')
-    dataframe["Episode_source"] = "Original"
+    dataframe["Episode_source"] = source_for_episode_row
     return dataframe
 
 
@@ -155,11 +155,8 @@ def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe["Has_next_episode"] = dataframe["DECOM_next"].notnull()
     dataframe["Has_previous_episode"] = dataframe["DECOM_previous"].notnull()
     dataframe = dataframe.assign(Has_next_episode_with_RNE_equals_S=lambda row: (row.Has_next_episode) & (row.RNE_next == "S") )
-    #dataframe = dataframe.assign(Next_episode_is_duplicate=lambda row: _is_next_episode_duplicate(row))
     dataframe = dataframe.assign(Next_episode_is_duplicate=_is_next_episode_duplicate)
-    #dataframe = dataframe.assign(Previous_episode_is_duplicate=lambda row: _is_previous_episode_duplicate(row))
     dataframe = dataframe.assign(Previous_episode_is_duplicate=_is_previous_episode_duplicate)
-    #dataframe = dataframe.assign(Previous_episode_submitted_later=lambda row: _is_previous_episode_submitted_later(row))
     dataframe = dataframe.assign(Previous_episode_submitted_later=_is_previous_episode_submitted_later)
     return dataframe
 
@@ -181,7 +178,7 @@ def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def _update_dec(row):
+def _update_dec_stage1(row):
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
     :param row: Row from dataframe with SSDA903 Episodes data
@@ -199,7 +196,7 @@ def _update_dec(row):
     return row["DEC"]
 
 
-def _update_rec(row):
+def _update_rec_stage1(row):
     """
     Determine updated REC value. Defaults to input REC if no rule to apply
     :param row: Row from dataframe with SSDA903 Episodes data
@@ -215,7 +212,7 @@ def _update_rec(row):
     return row["REC"]
 
 
-def _update_reason_place_change(row):
+def _update_reason_place_change_stage1(row):
     """
     Determine updated REASON_PLACE_CHANGE value. Defaults to input value if no rule to apply
     :param row: Row from dataframe with SSDA903 Episodes data
@@ -228,7 +225,7 @@ def _update_reason_place_change(row):
     return row["REASON_PLACE_CHANGE"]
 
 
-def _update_episode_source(row):
+def _update_episode_source_stage1(row):
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
     :param row: Row from dataframe with SSDA903 Episodes data
@@ -257,12 +254,55 @@ def apply_stage1_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = dataframe.drop(dataframe[episodes_to_delete].index)
 
     # Apply rules 1, 1A, 2
-    dataframe["DEC"] = dataframe.apply(_update_dec, axis=1)
-    dataframe["REC"] = dataframe.apply(_update_rec, axis=1)
-    dataframe["REASON_PLACE_CHANGE"] = dataframe.apply(_update_reason_place_change, axis=1)
-    dataframe["Episode_source"] = dataframe.apply(_update_episode_source, axis=1)
+    dataframe["DEC"] = dataframe.apply(_update_dec_stage1, axis=1)
+    dataframe["REC"] = dataframe.apply(_update_rec_stage1, axis=1)
+    dataframe["REASON_PLACE_CHANGE"] = dataframe.apply(_update_reason_place_change_stage1, axis=1)
+    dataframe["Episode_source"] = dataframe.apply(_update_episode_source_stage1, axis=1)
 
     return dataframe
+
+
+def _overlaps_next_episode(row):
+    if row["Has_next_episode"]:
+        return (row.YEAR < row.YEAR_next) & (row.DEC > row.DECOM_next)
+    return False
+
+
+def _has_x1_gap_before_next_episode(row):
+    if row["Has_next_episode"]:
+        return (row.YEAR < row.YEAR_next) & (row.DEC < row.DECOM_next) & (row.REC == "X1")
+    return False
+
+
+def _stage2_rule_to_apply(row):
+    if row["Overlaps_next_episode"]:
+        return "RULE_4" # Overlaps next episode and next episode was submitted later
+    if row["Has_X1_gap_before_next_episode"]:
+        return "RULE_5" # Ends before next episode but has reason "X1" - continuous and next ep was submitted later
+
+
+def _update_dec_stage2(row):
+    """
+    Determine updated DEC value. Defaults to input DEC if no rule to apply
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Updated DEC date
+    """
+    if (row["Rule_to_apply"]=="RULE_4") | (row["Rule_to_apply"]=="RULE_5"):
+        return row["DECOM_next"]
+    return row["DEC"]
+
+
+def _update_episode_source_stage2(row):
+    """
+    Determine updated Episode_source value. Defaults to input value if no rule to apply
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Updated Episode_source value
+    """
+    if (row["Rule_to_apply"]=="RULE_4") | (row["Rule_to_apply"]=="RULE_5"):
+        if row["Episode_source"] == "Original":
+            return row["Rule_to_apply"]
+        return row["Episode_source"] & " | " & row["Rule_to_apply"]
+    return row["Episode_source"]
 
 
 def add_stage2_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -272,8 +312,10 @@ def add_stage2_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     :param dataframe: Dataframe with SSDA903 Episodes data
     :return: Dataframe with columns showing true if certain conditions are met
     """
-    print("add_stage2_rule_identifier_columns...TODO")
-
+    print("add_stage2_rule_identifier_columns")
+    dataframe["Has_next_episode"] = dataframe["DECOM_next"].notnull()
+    dataframe["Overlaps_next_episode"] = dataframe.apply(_overlaps_next_episode, axis=1)
+    dataframe["Has_X1_gap_before_next_episode"] = dataframe.apply(_has_x1_gap_before_next_episode, axis=1)
     return dataframe
 
 
@@ -286,7 +328,9 @@ def identify_stage2_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     :param dataframe: Dataframe with SSDA903 Episodes data
     :return: Dataframe with column showing stage 2 rule to be applied
     """
-    print("identify_stage2_rule_to_apply...TODO")
+    print("identify_stage2_rule_to_apply")
+    dataframe["Rule_to_apply"] = dataframe.apply(_stage2_rule_to_apply, axis=1)
+    dataframe["Episode_source"] = dataframe.apply(_update_episode_source_stage2, axis=1)
     return dataframe
 
 
@@ -299,5 +343,7 @@ def apply_stage2_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     :param dataframe: Dataframe with SSDA903 Episodes data
     :return: Dataframe with stage 2 rules applied
     """
-    print("apply_stage2_rules...TODO")
+    print("apply_stage2_rules")
+    # Apply rules 4, 5
+    dataframe["DEC"] = dataframe.apply(_update_dec_stage2, axis=1)
     return dataframe

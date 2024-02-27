@@ -241,19 +241,23 @@ def episodes_fix(input, output):
         s903_df_stage2 = episodes_process.add_stage2_rule_identifier_columns(s903_df_stage2)
         s903_df_stage2 = episodes_process.identify_stage2_rule_to_apply(s903_df_stage2)
 
-        # Apply the stage 2 rules TODO
+        # Apply the stage 2 rules
         s903_df_stage2_applied = episodes_process.apply_stage2_rules(s903_df_stage2)
+
+        s903_df_final = s903_df_stage2_applied[episodes_process.__COLUMNS_TO_KEEP]
 
         # Following code used to test outputs during development
         print("Dataframe with rules identified:")
         print(s903_df_stage1[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Has_open_episode_error", "Rule_to_apply"]])
         print("Dataframe with stage 1 rules applied:")
         print(s903_df_stage1_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source", "Has_open_episode_error", "Rule_to_apply"]])
-        print("Dataframe with stage 2 rules applied...to be developed:")
-        print(s903_df_stage2_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source"]])
-        s903_df_stage2_applied = s903_df_stage2_applied.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        s903_df_stage2_applied.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
+        print("Dataframe with stage 2 rules applied:")
+        print(s903_df_stage2_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source", "DECOM_next", "YEAR_next","Has_next_episode","Overlaps_next_episode","Has_X1_gap_before_next_episode", "Rule_to_apply"]])
+        s903_df_final = s903_df_final.sort_values(["CHILD", "DECOM"], ignore_index=True)
+        s903_df_final.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
                             index=False)
+        print("Final dataframe with all rules applied")
+        print(s903_df_final)
 
 # Run episodes_fix() with our test file which contains examples of each rule (CHILD id indicates which rule)
 episodes_fix(
