@@ -206,7 +206,7 @@ def sufficiency_output(input, output):
 
 
 def episodes_fix(input, output):
-    """"
+    """ "
     Applies fixes to la_agg SSDA903 Episodes files
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
     :param output: should specify the path to the output folder
@@ -220,15 +220,23 @@ def episodes_fix(input, output):
     s903_df = common_process.read_file(input)
     column_names = config["column_names"]
     table_name = common_process.match_load_file(s903_df, column_names)
-    
+
     # Process stage 1 rule fixes for Episodes table
     if table_name == "Episodes":
         # Add columns to dataframe to identify which rules should be applied at stage 1
         s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        s903_df_stage1 = episodes_process.create_previous_and_next_episode(s903_df, episodes_process.__COLUMNS)
-        s903_df_stage1 = episodes_process.format_datetime(s903_df_stage1, episodes_process.__DATES)
-        s903_df_stage1 = episodes_process.add_latest_year_and_source_for_la(s903_df_stage1)
-        s903_df_stage1 = episodes_process.add_stage1_rule_identifier_columns(s903_df_stage1)
+        s903_df_stage1 = episodes_process.create_previous_and_next_episode(
+            s903_df, episodes_process.__COLUMNS
+        )
+        s903_df_stage1 = episodes_process.format_datetime(
+            s903_df_stage1, episodes_process.__DATES
+        )
+        s903_df_stage1 = episodes_process.add_latest_year_and_source_for_la(
+            s903_df_stage1
+        )
+        s903_df_stage1 = episodes_process.add_stage1_rule_identifier_columns(
+            s903_df_stage1
+        )
         s903_df_stage1 = episodes_process.identify_stage1_rule_to_apply(s903_df_stage1)
 
         # Apply the stage 1 rules
@@ -236,33 +244,94 @@ def episodes_fix(input, output):
 
         # Add columns to dataframe to identify which rules should be applied at stage 2 TODO
         s903_df_stage2 = s903_df_stage1_applied[episodes_process.__COLUMNS_TO_KEEP]
-        s903_df_stage2 = episodes_process.create_previous_and_next_episode(s903_df_stage2, episodes_process.__COLUMNS)
-        s903_df_stage2 = episodes_process.format_datetime(s903_df_stage2, episodes_process.__DATES)
-        s903_df_stage2 = episodes_process.add_stage2_rule_identifier_columns(s903_df_stage2)
+        s903_df_stage2 = episodes_process.create_previous_and_next_episode(
+            s903_df_stage2, episodes_process.__COLUMNS
+        )
+        s903_df_stage2 = episodes_process.format_datetime(
+            s903_df_stage2, episodes_process.__DATES
+        )
+        s903_df_stage2 = episodes_process.add_stage2_rule_identifier_columns(
+            s903_df_stage2
+        )
         s903_df_stage2 = episodes_process.identify_stage2_rule_to_apply(s903_df_stage2)
 
         # Apply the stage 2 rules
         s903_df_stage2_applied = episodes_process.apply_stage2_rules(s903_df_stage2)
 
         s903_df_final = s903_df_stage2_applied[episodes_process.__COLUMNS_TO_KEEP]
-
-        # Following code used to test outputs during development
-        print("Dataframe with rules identified:")
-        print(s903_df_stage1[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Has_open_episode_error", "Rule_to_apply"]])
-        print("Dataframe with stage 1 rules applied:")
-        print(s903_df_stage1_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source", "Has_open_episode_error", "Rule_to_apply"]])
-        print("Dataframe with stage 2 rules applied:")
-        print(s903_df_stage2_applied[["CHILD", "YEAR", "DECOM", "DEC", "RNE", "REC", "REASON_PLACE_CHANGE", "Episode_source", "DECOM_next", "YEAR_next","Has_next_episode","Overlaps_next_episode","Has_X1_gap_before_next_episode", "Rule_to_apply"]])
         s903_df_final = s903_df_final.sort_values(["CHILD", "DECOM"], ignore_index=True)
-        s903_df_final.to_csv(r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
-                            index=False)
-        print("Final dataframe with all rules applied")
-        print(s903_df_final)
+        s903_df_final.to_csv(
+            r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_OUTPUT.csv",
+            index=False,
+        )
+
+        # Following code used to print dataframe outputs during development
+        print_df = False
+        if print_df:
+            print("Dataframe with stage 1 rules identified:")
+            print(
+                s903_df_stage1[
+                    [
+                        "CHILD",
+                        "YEAR",
+                        "DECOM",
+                        "DEC",
+                        "RNE",
+                        "REC",
+                        "REASON_PLACE_CHANGE",
+                        "Has_open_episode_error",
+                        "Rule_to_apply",
+                    ]
+                ]
+            )
+            print("Dataframe with stage 1 rules applied:")
+            print(
+                s903_df_stage1_applied[
+                    [
+                        "CHILD",
+                        "YEAR",
+                        "DECOM",
+                        "DEC",
+                        "RNE",
+                        "REC",
+                        "REASON_PLACE_CHANGE",
+                        "Episode_source",
+                        "Has_open_episode_error",
+                        "Rule_to_apply",
+                    ]
+                ]
+            )
+            print("Dataframe with stage 2 rules applied:")
+            print(
+                s903_df_stage2_applied[
+                    [
+                        "CHILD",
+                        "YEAR",
+                        "DECOM",
+                        "DEC",
+                        "RNE",
+                        "REC",
+                        "REASON_PLACE_CHANGE",
+                        "Episode_source",
+                        "DECOM_next",
+                        "YEAR_next",
+                        "Has_next_episode",
+                        "Overlaps_next_episode",
+                        "Has_X1_gap_before_next_episode",
+                        "Rule_to_apply",
+                    ]
+                ]
+            )
+
+            print("Final dataframe with all rules applied")
+            print(s903_df_final)
+
 
 # Run episodes_fix() with our test file which contains examples of each rule (CHILD id indicates which rule)
 episodes_fix(
     r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_INPUT.csv",
-    r"liiatools/datasets/s903/lds_ssda903_episodes_fix"
+    r"liiatools/datasets/s903/lds_ssda903_episodes_fix",
 )
 
 # poetry run python liiatools/datasets/s903/s903_main_functions.py
+# python -m black "/workspaces/liia-tools/liiatools/datasets/s903/s903_main_functions.py"
