@@ -23,6 +23,7 @@ from liiatools.common.converters import (
     to_postcode,
     to_regex,
     to_category,
+    to_time,
 )
 
 from .spec.__data_schema import Column, DataSchema, Numeric, Category
@@ -258,6 +259,8 @@ def conform_cell_types(event, preserve_value=False):
         converter = lambda x: str(x)
     elif column_spec.type == "regex":
         converter = lambda x: to_regex(x, column_spec.cell_regex)
+    elif column_spec.type == "time":
+        converter = lambda x: to_time(x, column_spec.time)
     else:
         return EventErrors.add_to_event(
             event, type="UnknownType", message=f"Unknown cell type {column_spec.type}"
