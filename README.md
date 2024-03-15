@@ -1,5 +1,8 @@
 # Children's Services' Data Tool
 
+![Unit Tests](https://github.com/SocialFinanceDigitalLabs/liia-tools/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/github/SocialFinanceDigitalLabs/liia-tools/graph/badge.svg?token=R1YSMXDX1B)](https://codecov.io/github/SocialFinanceDigitalLabs/liia-tools)
+
 This repository holds a set of tools and utilities for processing and cleaning Children's Services' data.
 
 Most of the utilities are centred around three core datasets:
