@@ -11,6 +11,7 @@ def serialise(fs: FS) -> dict:
     if isinstance(fs, SubFS):
         path = fs._sub_dir
         fs = fs._wrap_fs
+        return dict(type="subfs", path=fs, subpath=path)
 
     if isinstance(fs, OSFS):
         return dict(type="osfs", path=fs.root_path, subpath=path)

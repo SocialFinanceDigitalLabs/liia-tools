@@ -14,9 +14,9 @@ from liiatools_pipeline.assets.ssda903 import incoming_folder, pipeline_config, 
 
 @op(out={"session_folder": Out(FS), "incoming_files": Out(List[FileLocator])})
 def create_session_folder() -> Tuple[FS, List[FileLocator]]:
-    session_folder, incoming_files = pl.create_session_folder(
-        incoming_folder(), process_folder()
-    )
+    session_folder, session_id = pl.create_session_folder(process_folder())
+    incoming_files = pl.move_files_for_processing(incoming_folder(), session_folder)
+
     return session_folder, incoming_files
 
 
@@ -59,15 +59,15 @@ def process_files(
         # error_container.extend(cleanfile_result.errors)
 
         enrich_result = enrich_data(cleanfile_result.data, pipeline_config(), metadata)
-        enrich_result.export(
+        enrich_result.data.export(
             enriched_folder, file_locator.meta["uuid"] + "_", "parquet"
         )
 
-        degraded_result = degrade_data(enrich_result, pipeline_config(), metadata)
-        degraded_result.export(
+        degraded_result = degrade_data(enrich_result.data, pipeline_config(), metadata)
+        degraded_result.data.export(
             degraded_folder, file_locator.meta["uuid"] + "_", "parquet"
         )
-        archive.add(degraded_result)
+        archive.add(degraded_result.data)
 
 
 @op(
@@ -91,4 +91,4 @@ def create_reports(current_data: DataContainer):
     for report in ["PAN", "SUFFICIENCY"]:
         report_folder = export_folder.makedirs(report, recreate=True)
         report = prepare_export(current_data, pipeline_config())
-        report.export(report_folder, "ssda903_", "csv")
+        report.data.export(report_folder, "ssda903_", "csv")
