@@ -17,6 +17,3 @@ class SessionNames(StrEnum):
     """Enum for session folders."""
 
     INCOMING_FOLDER = "incoming"
-    CLEANED_FOLDER = "cleaned"
-    DEGRADED_FOLDER = "degraded"
-    ENRICHED_FOLDER = "enriched"

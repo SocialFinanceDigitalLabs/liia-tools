@@ -82,7 +82,7 @@ This is a Dagster code server library which is setup to be used as a code server
 ### Local Development
 1. Run `poetry install`
 2. Copy `.env.sample` to `.env` and fill in the variables there as needed
-3. Run the following command: `poetry run dagster dev -f .\liia\repository.py`
+3. Run the following command: `poetry run dagster dev -f .\liiatools_pipeline\repository.py`
 4. Once running, navigate to http://localhost:3000/
 5. Add the pre-commit hook by running `pre-commit install`. This will ensure your code is formatted before you commit something
    
