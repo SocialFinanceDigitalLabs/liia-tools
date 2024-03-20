@@ -43,8 +43,9 @@ def process_files(
 ):
     for file_locator in incoming_files:
         year = pl.discover_year(file_locator)
+        la_code = pl.discover_la(file_locator)
         schema = load_schema(year)
-        metadata = dict(year=year, schema=schema, la_code="BAD")
+        metadata = dict(year=year, schema=schema, la_code=la_code)
 
         cleanfile_result = task_cleanfile(file_locator, schema)
 
