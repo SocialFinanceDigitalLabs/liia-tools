@@ -39,6 +39,8 @@ backports-strenum = "^1.2.4"
 jupyterlab = {version = "^4.0.6", optional = true}
 dagster = "^1.6.11"
 dagster-webserver = "^1.6.11"
+dagster-docker = "^0.22.11"
+dagster-postgres = "^0.22.11"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0.1"
