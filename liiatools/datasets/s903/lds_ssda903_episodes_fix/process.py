@@ -111,17 +111,17 @@ def _is_next_episode_duplicate(row):
         & ((row.LS_next == row.LS) | (row.LS_next.isnull() & row.LS.isnull()))
         & (
             (row.PLACE_next == row.PLACE)
-            | (row.PLACE_next.isnull() | row.PLACE.isnull())
+            | (row.PLACE_next.isnull() & row.PLACE.isnull())
         )
         & (
             (row.PLACE_PROVIDER_next == row.PLACE_PROVIDER)
-            | (row.PLACE_PROVIDER_next.isnull() | row.PLACE_PROVIDER.isnull())
+            | (row.PLACE_PROVIDER_next.isnull() & row.PLACE_PROVIDER.isnull())
         )
         & (
             (row.PL_POST_next == row.PL_POST)
-            | (row.PL_POST_next.isnull() | row.PL_POST.isnull())
+            | (row.PL_POST_next.isnull() & row.PL_POST.isnull())
         )
-        & ((row.URN_next == row.URN) | (row.URN_next.isnull() | row.URN.isnull()))
+        & ((row.URN_next == row.URN) | (row.URN_next.isnull() & row.URN.isnull()))
     )
 
 
