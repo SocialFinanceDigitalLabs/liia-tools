@@ -99,7 +99,27 @@ def add_latest_year_and_source_for_la(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def _is_next_episode_duplicate(row):
+def _is_the_same(value_1, value_2) -> bool:
+    """
+    Compare two dataframe cell values and return true if they are both the same or if they are both null
+
+    :param value_1: Dataframe cell value
+    :param value_2: Dataframe cell value
+    :return: True if both values are the same or if they are both null, False otherwise
+    """
+    return (value_1 == value_2) | (value_1.isnull() & value_2.isnull())
+
+
+def _is_next_episode_duplicate(row: pd.Series) -> bool:
+    """
+    Determine if this episode and the next episode are duplicates
+    Criteria: this episode has no end date (DEC) and
+    has an episode with a later start date (DECOM_next)
+    and all other values are the same
+
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: True if both episodes are the same, False otherwise
+    """
     return (
         row.DEC.isnull()
         & row.Has_next_episode
@@ -107,25 +127,25 @@ def _is_next_episode_duplicate(row):
             (row.DECOM_next != row.DECOM)
             | (row.DECOM_next.isnull() & row.DECOM.isnull())
         )
-        & ((row.RNE_next == row.RNE) | (row.RNE_next.isnull() & row.RNE.isnull()))
-        & ((row.LS_next == row.LS) | (row.LS_next.isnull() & row.LS.isnull()))
-        & (
-            (row.PLACE_next == row.PLACE)
-            | (row.PLACE_next.isnull() & row.PLACE.isnull())
-        )
-        & (
-            (row.PLACE_PROVIDER_next == row.PLACE_PROVIDER)
-            | (row.PLACE_PROVIDER_next.isnull() & row.PLACE_PROVIDER.isnull())
-        )
-        & (
-            (row.PL_POST_next == row.PL_POST)
-            | (row.PL_POST_next.isnull() & row.PL_POST.isnull())
-        )
-        & ((row.URN_next == row.URN) | (row.URN_next.isnull() & row.URN.isnull()))
+        & _is_the_same(row.RNE_next, row.RNE)
+        & _is_the_same(row.LS_next, row.LS)
+        & _is_the_same(row.PLACE_next, row.PLACE)
+        & _is_the_same(row.PLACE_PROVIDER_next, row.PLACE_PROVIDER)
+        & _is_the_same(row.PL_POST_next, row.PL_POST)
+        & _is_the_same(row.URN_next, row.URN)
     )
 
 
-def _is_previous_episode_duplicate(row):
+def _is_previous_episode_duplicate(row: pd.Series) -> bool:
+    """
+    Determine if this episode and the previous episode are duplicates
+    Criteria: this episode has no end date (DEC) and
+    has an episode with an earlier start date (DECOM_previous)
+    and all other values are the same
+
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: True if both episodes are the same, False otherwise
+    """
     return (
         row.DEC.isnull()
         & row.Has_previous_episode
@@ -133,37 +153,34 @@ def _is_previous_episode_duplicate(row):
             (row.DECOM_previous != row.DECOM)
             | (row.DECOM_previous.isnull() & row.DECOM.isnull())
         )
-        & (
-            (row.RNE_previous == row.RNE)
-            | (row.RNE_previous.isnull() & row.RNE.isnull())
-        )
-        & ((row.LS_previous == row.LS) | (row.LS_previous.isnull() & row.LS.isnull()))
-        & (
-            (row.PLACE_previous == row.PLACE)
-            | (row.PLACE_previous.isnull() | row.PLACE.isnull())
-        )
-        & (
-            (row.PLACE_PROVIDER_previous == row.PLACE_PROVIDER)
-            | (row.PLACE_PROVIDER_previous.isnull() | row.PLACE_PROVIDER.isnull())
-        )
-        & (
-            (row.PL_POST_previous == row.PL_POST)
-            | (row.PL_POST_previous.isnull() | row.PL_POST.isnull())
-        )
-        & (
-            (row.URN_previous == row.URN)
-            | (row.URN_previous.isnull() | row.URN.isnull())
-        )
+        & _is_the_same(row.RNE_previous, row.RNE)
+        & _is_the_same(row.LS_previous, row.LS)
+        & _is_the_same(row.PLACE_previous, row.PLACE)
+        & _is_the_same(row.PLACE_PROVIDER_previous, row.PLACE_PROVIDER)
+        & _is_the_same(row.PL_POST_previous, row.PL_POST)
+        & _is_the_same(row.URN_previous, row.URN)
     )
 
 
-def _is_previous_episode_submitted_later(row):
+def _is_previous_episode_submitted_later(row: pd.Series) -> bool:
+    """
+    Determine if episode with earlier start date (DECOM) was submitted in later file YEAR
+    
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: True if previous episode was submitted in later file YEAR, False otherwise
+    """
     return (
         row.DEC.isnull() & (row.Has_previous_episode) & (row.YEAR_previous > row.YEAR)
     )
 
 
-def _stage1_rule_to_apply(row):
+def _stage1_rule_to_apply(row: pd.Series) -> pd.Series:
+    """
+    Determine which Stage 1 rule should be applied
+    
+    :param row: Row from dataframe with SSDA903 Episodes data
+    :return: Name of rule to be applied
+    """
     if row["Has_open_episode_error"]:
         if row["Next_episode_is_duplicate"] | row["Previous_episode_is_duplicate"]:
             return "RULE_3"  # Duplicate
@@ -219,9 +236,10 @@ def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def _update_dec_stage1(row):
+def _update_dec_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
+    
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated DEC date
     """
@@ -237,11 +255,12 @@ def _update_dec_stage1(row):
     return row["DEC"]
 
 
-def _update_rec_stage1(row):
+def _update_rec_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated REC value. Defaults to input REC if no rule to apply
+    
     :param row: Row from dataframe with SSDA903 Episodes data
-    :return: Updated REC value
+    :return: Updated REC value or the original value if no rule to apply
     """
     episode_ends_liia_fix = "E99"
     episode_continues = "X1"
@@ -253,11 +272,12 @@ def _update_rec_stage1(row):
     return row["REC"]
 
 
-def _update_reason_place_change_stage1(row):
+def _update_reason_place_change_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated REASON_PLACE_CHANGE value. Defaults to input value if no rule to apply
+    
     :param row: Row from dataframe with SSDA903 Episodes data
-    :return: Updated REASON_PLACE_CHANGE value
+    :return: Updated REASON_PLACE_CHANGE value or the original value if no rule to apply
     """
     reason_liia_fix = "LIIAF"
     if row["Has_open_episode_error"]:
@@ -268,11 +288,12 @@ def _update_reason_place_change_stage1(row):
     return row["REASON_PLACE_CHANGE"]
 
 
-def _update_episode_source_stage1(row):
+def _update_episode_source_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
+    
     :param row: Row from dataframe with SSDA903 Episodes data
-    :return: Updated Episode_source value
+    :return: Updated Episode_source value or the original value if no rule to apply
     """
     if row["Has_open_episode_error"]:
         return row["Rule_to_apply"]
@@ -306,13 +327,13 @@ def apply_stage1_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def _overlaps_next_episode(row):
+def _overlaps_next_episode(row: pd.Series) -> bool:
     if row["Has_next_episode"]:
         return (row.YEAR < row.YEAR_next) & (row.DEC > row.DECOM_next)
     return False
 
 
-def _has_x1_gap_before_next_episode(row):
+def _has_x1_gap_before_next_episode(row: pd.Series) -> bool:
     if row["Has_next_episode"]:
         return (
             (row.YEAR < row.YEAR_next) & (row.DEC < row.DECOM_next) & (row.REC == "X1")
@@ -327,9 +348,10 @@ def _stage2_rule_to_apply(row):
         return "RULE_5"  # Ends before next episode but has reason "X1" - continuous and next ep was submitted later
 
 
-def _update_dec_stage2(row):
+def _update_dec_stage2(row: pd.Series) -> pd.Series:
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
+    
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated DEC date
     """
@@ -338,9 +360,10 @@ def _update_dec_stage2(row):
     return row["DEC"]
 
 
-def _update_episode_source_stage2(row):
+def _update_episode_source_stage2(row: pd.Series) -> pd.Series:
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
+    
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated Episode_source value
     """
