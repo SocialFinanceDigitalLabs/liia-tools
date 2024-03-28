@@ -38,12 +38,10 @@ jobs:
 
     - name: Test with pytest
       run: |
-        poetry run pytest
+        poetry run coverage run -m pytest
 
     - name: Coverage report
-      # We run pytest again but excluding the end-to-end tests to generate the coverage report
       run: |
-        SKIP_E2E=True poetry run coverage run -m pytest
         poetry run coverage report
         poetry run coverage xml
 

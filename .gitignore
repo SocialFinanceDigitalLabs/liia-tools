@@ -130,14 +130,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-
-# VS Code
-.vscode
-.mailmap
-
-# Dagster
-.telemetry
-history
-schedules
-storage
