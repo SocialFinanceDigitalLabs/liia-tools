@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "liiatools-dagster"
+name = "liiatools"
 version = "0.2.0"
 description = "Children's Services Data Tools - Utilities for cleaning and normalising CS data by Social Finance"
 authors = [
@@ -10,15 +10,14 @@ authors = [
     "Matthew Pugh <matthew.pugh@socialfinance.org.uk>"
 ]
 license = "MIT"
-packages = [{include = "liiatools"}]
 
 [tool.poetry.dependencies]
-python = ">=3.9, <3.11"
+python = "^3.9"
 lxml = "^4.9.1"
 more-itertools = "^8.12.0"
-sfdata-stream-parser = "^0.6.0"
+sfdata-stream-parser = "0.4.1"
 xmlschema = "^1.10.0"
-click = "^8.1.7"
+click = "^8.1.2"
 PyYAML = "^6.0"
 tablib = {extras = ["cli", "xlsx"], version = "^3.2.0"}
 regex = "^2022.4.24"
@@ -28,32 +27,15 @@ pandas = "^1.4.2"
 openpyxl = "^3.0.9"
 xlrd = "^2.0.1"
 click-log = "^0.4.0"
+cchardet = "2.1.7"
 python-decouple = "^3.8"
-faust-cchardet = "^2.1.19"
-pydantic = "<2.0.0"
-pydantic-yaml = "^1.1.1"
-pyarrow = "^13.0.0"
-fs = "^2.4.16"
-fs-s3fs = "^1.1.1"
-backports-strenum = "^1.2.4"
-jupyterlab = {version = "^4.0.6", optional = true}
-dagster = "^1.6.11"
-dagster-webserver = "^1.6.11"
-dagster-docker = "^0.22.11"
-dagster-postgres = "^0.22.11"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 pytest = "^7.0.1"
 coverage = "^6.3.2"
 safety = "^1.10.3"
 black = "^22.1.0"
 flake8 = "^4.0.1"
-sphinx = "^7.2.5"
-sphinx-rtd-theme = "^1.3.0"
-
-[tool.poetry.extras]
-s3 = ["fs-s3fs"]
-jupyter = ["jupyterlab"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
