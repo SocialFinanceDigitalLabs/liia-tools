@@ -2,6 +2,7 @@ from dagster import repository
 from liiatools.common._fs_serializer import register
 
 from liiatools_pipeline.jobs.ssda903 import ssda903_incoming
+from liiatools_pipeline.sensors.location_sensor import location_sensor
 
 register()
 
@@ -16,6 +17,6 @@ def sync():
     """
     jobs = [ssda903_incoming]
     schedules = []
-    sensors = []
+    sensors = [location_sensor]
 
     return jobs + schedules + sensors

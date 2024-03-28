@@ -135,3 +135,9 @@ dmypy.json
 # VS Code
 .vscode
 .mailmap
+
+# Dagster
+.telemetry
+history
+schedules
+storage
