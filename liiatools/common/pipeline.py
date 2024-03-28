@@ -54,20 +54,20 @@ def _move_incoming_file(
     return file_locator
 
 
-def create_process_folders(destionation_fs: FS):
+def create_process_folders(destination_fs: FS):
     """
     Ensures that all the standard process folders are created
     """
     for folder in ProcessNames:
-        destionation_fs.makedirs(folder, recreate=True)
+        destination_fs.makedirs(folder, recreate=True)
 
 
-def create_session_folder(destionation_fs: FS) -> Tuple[FS, str]:
+def create_session_folder(destination_fs: FS) -> Tuple[FS, str]:
     """
     Create a new session folder in the output filesystem with the standard folders
     """
     session_id = _get_timestamp()
-    session_folder = destionation_fs.makedirs(
+    session_folder = destination_fs.makedirs(
         f"{ProcessNames.SESSIONS_FOLDER}/{session_id}"
     )
     for folder in SessionNames:
@@ -77,7 +77,7 @@ def create_session_folder(destionation_fs: FS) -> Tuple[FS, str]:
 
 def move_files_for_processing(
     source_fs: FS, session_fs: FS, continue_on_error: bool = False
-) -> Iterable[FileLocator]:
+) -> List[FileLocator]:
     """
     Moves all files from the source filesystem to the session folder. This is a generator function that yields a FileLocator for each file moved.
     """
@@ -85,11 +85,15 @@ def move_files_for_processing(
     destination_fs = session_fs.opendir(SessionNames.INCOMING_FOLDER)
     source_file_list = source_fs.walk.info(namespaces=["details"])
 
+    locator_list = []
+
     for file_path, file_info in source_file_list:
         if file_info.is_file:
             try:
-                yield _move_incoming_file(
-                    source_fs, destination_fs, file_path, file_info
+                locator_list.append(
+                    _move_incoming_file(
+                        source_fs, destination_fs, file_path, file_info
+                    )
                 )
             except Exception as e:
                 logger.error(f"Error moving file {file_path} to session folder")
@@ -97,6 +101,8 @@ def move_files_for_processing(
                     pass
                 else:
                     raise e
+
+    return locator_list
 
 
 def restore_session_folder(session_fs: FS) -> List[FileLocator]:

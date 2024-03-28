@@ -72,3 +72,28 @@ Or using poetry:
 All of the functions in liiatools are accessed through CLI commands. Refer to the help function for more info 
 
     python -m liiatools --help
+
+
+# liia-code-server
+This is a Dagster code server library which is setup to be used as a code server.
+
+## How to use:
+
+### Local Development
+1. Run `poetry install`
+2. Copy `.env.sample` to `.env` and fill in the variables there as needed
+3. Run the following command: `poetry run dagster dev -f .\liiatools_pipeline\repository.py`
+4. Once running, navigate to http://localhost:3000/
+5. Add the pre-commit hook by running `pre-commit install`. This will ensure your code is formatted before you commit something
+   
+### Preparation for Production or Staging
+How this will run in production is that the library will be brought into a docker container
+with configuration specified in the file `Dockerfile_user_code`.  Which code servers are used can
+be specified in the installation. 
+See [The SFDATA Platform's Workspace definition for details](https://github.com/SocialFinanceDigitalLabs/sfdata-platform/blob/main/dagster/workspace.yaml)
+
+The idea is each code server will have its own setup which will be a copy of what's here.
+
+Note: Multiple libraries, pipelines, etc can exist in a single code server. Different servers should
+be used if they have conflicting requirements (e.g. different python versions)
+

@@ -11,6 +11,7 @@ def serialise(fs: FS) -> dict:
     if isinstance(fs, SubFS):
         path = fs._sub_dir
         fs = fs._wrap_fs
+        return dict(type="subfs", path=fs, subpath=path)
 
     if isinstance(fs, OSFS):
         return dict(type="osfs", path=fs.root_path, subpath=path)
@@ -29,6 +30,8 @@ def serialise(fs: FS) -> dict:
 def deserialise(data: dict) -> FS:
     if data["type"] == "osfs":
         fs = OSFS(data["path"])
+    elif data["type"] == "subfs":
+        fs = SubFS(data["path"], data["subpath"])
     elif data["type"] == "s3":
         from fs_s3fs import S3FS
 
@@ -36,8 +39,6 @@ def deserialise(data: dict) -> FS:
     else:
         raise NotImplementedError(f"Cannot deserialize {data}")
 
-    if data["subpath"]:
-        fs = fs.opendir(data["subpath"])
     return fs
 
 
