@@ -9,10 +9,20 @@ from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 from liiatools.ssda903_pipeline.spec import load_schema
 from liiatools.ssda903_pipeline.stream_pipeline import task_cleanfile
 
-from liiatools_pipeline.assets.ssda903 import incoming_folder, pipeline_config, process_folder
+from liiatools_pipeline.assets.ssda903 import (
+    incoming_folder,
+    pipeline_config,
+    process_folder,
+)
 
 
-@op(out={"session_folder": Out(FS), "session_id": Out(str), "incoming_files": Out(List[FileLocator])})
+@op(
+    out={
+        "session_folder": Out(FS),
+        "session_id": Out(str),
+        "incoming_files": Out(List[FileLocator]),
+    }
+)
 def create_session_folder() -> Tuple[FS, str, List[FileLocator]]:
     session_folder, session_id = pl.create_session_folder(process_folder())
     incoming_files = pl.move_files_for_processing(incoming_folder(), session_folder)
