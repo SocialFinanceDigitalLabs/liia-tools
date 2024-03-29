@@ -31,4 +31,5 @@ EXPOSE 4000
 
 # CMD allows this to be overridden from run launchers or executors that want
 # to run other commands against your repository
+# CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-f", "/code/liiatools_pipeline/repository.py"]
 CMD ["dagster", "code-server", "start", "--host", "0.0.0.0", "--port", "4000",  "--python-file", "/code/liiatools_pipeline/repository.py"]
