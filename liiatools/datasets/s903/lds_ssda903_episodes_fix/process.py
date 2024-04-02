@@ -99,6 +99,33 @@ def add_latest_year_and_source_for_la(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
+def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add columns to identify rows with open episodes that meet certain criteria
+
+    :param dataframe: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with columns showing true if certain conditions are met
+    """
+    dataframe = dataframe.assign(
+        Has_open_episode_error=lambda row: (row.DEC.isnull())
+        & (row.YEAR != row.YEAR_latest)
+    )
+    dataframe["Has_next_episode"] = dataframe["DECOM_next"].notnull()
+    dataframe["Has_previous_episode"] = dataframe["DECOM_previous"].notnull()
+    dataframe = dataframe.assign(
+        Has_next_episode_with_RNE_equals_S=lambda row: (row.Has_next_episode)
+        & (row.RNE_next == "S")
+    )
+    dataframe = dataframe.assign(Next_episode_is_duplicate=_is_next_episode_duplicate)
+    dataframe = dataframe.assign(
+        Previous_episode_is_duplicate=_is_previous_episode_duplicate
+    )
+    dataframe = dataframe.assign(
+        Previous_episode_submitted_later=_is_previous_episode_submitted_later
+    )
+    return dataframe
+
+
 def _is_the_same(value_1, value_2) -> bool:
     """
     Compare two dataframe cell values and return true if they are both the same or if they are both null
@@ -165,7 +192,7 @@ def _is_previous_episode_duplicate(row: pd.Series) -> bool:
 def _is_previous_episode_submitted_later(row: pd.Series) -> bool:
     """
     Determine if episode with earlier start date (DECOM) was submitted in later file YEAR
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: True if previous episode was submitted in later file YEAR, False otherwise
     """
@@ -177,9 +204,9 @@ def _is_previous_episode_submitted_later(row: pd.Series) -> bool:
 def _stage1_rule_to_apply(row: pd.Series) -> pd.Series:
     """
     Determine which Stage 1 rule should be applied
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
-    :return: Name of rule to be applied
+    :return: Name of rule to be applied or None if not applicable
     """
     if row["Has_open_episode_error"]:
         if row["Next_episode_is_duplicate"] | row["Previous_episode_is_duplicate"]:
@@ -191,33 +218,6 @@ def _stage1_rule_to_apply(row: pd.Series) -> pd.Series:
         if row["Has_next_episode_with_RNE_equals_S"]:
             return "RULE_1A"  # Ceases LAC, but re-enters care later
         return "RULE_1"  # Remains LAC, episode changes
-
-
-def add_stage1_rule_identifier_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
-    """
-    Add columns to identify rows with open episodes that meet certain criteria
-
-    :param dataframe: Dataframe with SSDA903 Episodes data
-    :return: Dataframe with columns showing true if certain conditions are met
-    """
-    dataframe = dataframe.assign(
-        Has_open_episode_error=lambda row: (row.DEC.isnull())
-        & (row.YEAR != row.YEAR_latest)
-    )
-    dataframe["Has_next_episode"] = dataframe["DECOM_next"].notnull()
-    dataframe["Has_previous_episode"] = dataframe["DECOM_previous"].notnull()
-    dataframe = dataframe.assign(
-        Has_next_episode_with_RNE_equals_S=lambda row: (row.Has_next_episode)
-        & (row.RNE_next == "S")
-    )
-    dataframe = dataframe.assign(Next_episode_is_duplicate=_is_next_episode_duplicate)
-    dataframe = dataframe.assign(
-        Previous_episode_is_duplicate=_is_previous_episode_duplicate
-    )
-    dataframe = dataframe.assign(
-        Previous_episode_submitted_later=_is_previous_episode_submitted_later
-    )
-    return dataframe
 
 
 def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -239,7 +239,7 @@ def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
 def _update_dec_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated DEC date
     """
@@ -258,40 +258,37 @@ def _update_dec_stage1(row: pd.Series) -> pd.Series:
 def _update_rec_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated REC value. Defaults to input REC if no rule to apply
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated REC value or the original value if no rule to apply
     """
-    episode_ends_liia_fix = "E99"
-    episode_continues = "X1"
     if row["Has_open_episode_error"]:
         if row["Rule_to_apply"] == "RULE_1":
-            return episode_continues
+            return "X1"
         if row["Rule_to_apply"] in ("RULE_1A", "RULE_2"):
-            return episode_ends_liia_fix
+            return "E99"
     return row["REC"]
 
 
 def _update_reason_place_change_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated REASON_PLACE_CHANGE value. Defaults to input value if no rule to apply
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated REASON_PLACE_CHANGE value or the original value if no rule to apply
     """
-    reason_liia_fix = "LIIAF"
     if row["Has_open_episode_error"]:
         if (row["Rule_to_apply"] == "RULE_1") & (
             row["RNE_next"] in ("P", "B", "T", "U")
         ):
-            return reason_liia_fix
+            return "LIIAF"
     return row["REASON_PLACE_CHANGE"]
 
 
 def _update_episode_source_stage1(row: pd.Series) -> pd.Series:
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated Episode_source value or the original value if no rule to apply
     """
@@ -351,7 +348,7 @@ def _stage2_rule_to_apply(row):
 def _update_dec_stage2(row: pd.Series) -> pd.Series:
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated DEC date
     """
@@ -363,7 +360,7 @@ def _update_dec_stage2(row: pd.Series) -> pd.Series:
 def _update_episode_source_stage2(row: pd.Series) -> pd.Series:
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
-    
+
     :param row: Row from dataframe with SSDA903 Episodes data
     :return: Updated Episode_source value
     """

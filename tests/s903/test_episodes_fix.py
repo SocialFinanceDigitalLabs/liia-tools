@@ -82,6 +82,48 @@ def test_add_latest_year_and_source_for_la():
     ]
 
 
+def test_add_stage1_rule_identifier_columns():
+    data = pd.DataFrame(
+        {
+            "DEC": [None, None],
+            "YEAR": [2019, 2019],
+            "YEAR_latest": [2022, 2019],
+            "DECOM_next": ["2019-10-10", None],
+            "RNE_next": ["S", None],
+            # following required in Dataframe but not part of test
+            "YEAR_previous": [None, None],
+            "DECOM": [None, None],
+            "DECOM_previous": [None, None],
+            "RNE": [None, None],
+            "RNE_previous": [None, None],
+            "LS": [None, None],
+            "LS_next": [None, None],
+            "LS_previous": [None, None],
+            "PLACE": [None, None],
+            "PLACE_next": [None, None],
+            "PLACE_previous": [None, None],
+            "PLACE_PROVIDER": [None, None],
+            "PLACE_PROVIDER_next": [None, None],
+            "PLACE_PROVIDER_previous": [None, None],
+            "PL_POST": [None, None],
+            "PL_POST_next": [None, None],
+            "PL_POST_previous": [None, None],
+            "URN": [None, None],
+            "URN_next": [None, None],
+            "URN_previous": [None, None],
+        }
+    )
+    data_with_identifiers_added = add_stage1_rule_identifier_columns(data)
+    assert data_with_identifiers_added["Has_open_episode_error"].tolist() == [
+        True,
+        False,
+    ]
+    assert data_with_identifiers_added["Has_next_episode"].tolist() == [True, False]
+    assert data_with_identifiers_added[
+        "Has_next_episode_with_RNE_equals_S"
+    ].tolist() == [True, False]
+
+
 def test__is_the_same():
     data = pd.DataFrame(
         {
@@ -475,55 +517,228 @@ def test__is_previous_episode_duplicate():
 
 
 def test__is_previous_episode_submitted_later():
-    None
+    data = pd.DataFrame(
+        {
+            "DEC": ["2016-01-22", None, None, None],
+            "Has_previous_episode": [True, True, True, None],
+            "YEAR": [2018, 2018, 2018, 2018],
+            "YEAR_previous": [2018, 2019, 2017, None],
+        }
+    )
+    data["Test result"] = _is_previous_episode_submitted_later(data)
+    assert data["Test result"].tolist() == [
+        False,
+        True,
+        False,
+        False,
+    ]
 
 
 def test__stage1_rule_to_apply():
-    None
-
-
-def test_add_stage1_rule_identifier_columns():
-    None
-
-
-def test_identify_stage1_rule_to_apply():
-    None
+    data = pd.DataFrame(
+        {
+            "Has_open_episode_error": [False, True, True, True, True, True],
+            "Next_episode_is_duplicate": [None, True, False, False, False, False],
+            "Previous_episode_is_duplicate": [None, True, False, False, False, False],
+            "Previous_episode_submitted_later": [
+                None,
+                False,
+                True,
+                False,
+                False,
+                False,
+            ],
+            "Has_next_episode": [None, False, False, False, True, True],
+            "Has_next_episode_with_RNE_equals_S": [
+                None,
+                False,
+                False,
+                False,
+                True,
+                False,
+            ],
+        }
+    )
+    data["Rule_to_apply"] = data.apply(_stage1_rule_to_apply, axis=1)
+    assert data["Rule_to_apply"].tolist() == [
+        None,
+        "RULE_3",
+        "RULE_3A",
+        "RULE_2",
+        "RULE_1A",
+        "RULE_1",
+    ]
 
 
 def test__update_dec_stage1():
-    None
+    data = pd.DataFrame(
+        {
+            "DEC": [None, "2020-11-11", None, None, None, None],
+            "Has_open_episode_error": [False, False, True, True, True, True],
+            "Rule_to_apply": [None, None, "RULE_1", "RULE_1A", "RULE_1A", "RULE_2"],
+            "YEAR": [2022, 2022, 2022, 2022, 2022, 2022],
+            "DECOM_next": [
+                "2021-05-05",
+                "2021-08-29",
+                "2022-01-01",
+                "2022-02-02",
+                "2022-05-20",
+                None,
+            ],
+        }
+    )
+    data[["DEC", "DECOM_next"]] = data[["DEC", "DECOM_next"]].apply(
+        pd.to_datetime, format="%Y-%m-%d"
+    )
+    data["DEC"] = data.apply(_update_dec_stage1, axis=1)
+    assert data["DEC"].astype(str).tolist() == [
+        "NaT",
+        "2020-11-11",
+        "2022-01-01",
+        "2022-02-01",
+        "2022-03-31",
+        "2022-03-31",
+    ]
 
 
 def test__update_rec_stage1():
-    None
+    data = pd.DataFrame(
+        {
+            "REC": [None, "E41", None, None, None],
+            "Has_open_episode_error": [False, False, True, True, True],
+            "Rule_to_apply": [None, None, "RULE_1", "RULE_1A", "RULE_2"],
+        }
+    )
+    data["updated_REC"] = data.apply(_update_rec_stage1, axis=1)
+    assert data["updated_REC"].tolist() == [
+        None,
+        "E41",
+        "X1",
+        "E99",
+        "E99",
+    ]
 
 
 def test__update_reason_place_change_stage1():
-    None
+    data = pd.DataFrame(
+        {
+            "REASON_PLACE_CHANGE": [
+                "CAREPL",
+                "CAREPL",
+                "CAREPL",
+                "CAREPL",
+                "CAREPL",
+                "CAREPL",
+                "OTHER",
+            ],
+            "RNE_next": ["P", "P", "P", "B", "T", "U", "S"],
+            "Has_open_episode_error": [False, False, True, True, True, True, True],
+            "Rule_to_apply": [
+                None,
+                None,
+                "RULE_1",
+                "RULE_1",
+                "RULE_1",
+                "RULE_1",
+                "RULE_2",
+            ],
+        }
+    )
+    data["REASON_PLACE_CHANGE"] = data.apply(_update_reason_place_change_stage1, axis=1)
+    assert data["REASON_PLACE_CHANGE"].tolist() == [
+        "CAREPL",
+        "CAREPL",
+        "LIIAF",
+        "LIIAF",
+        "LIIAF",
+        "LIIAF",
+        "OTHER",
+    ]
 
 
 def test__update_episode_source_stage1():
-    None
-
-
-def test_apply_stage1_rules():
-    None
+    data = pd.DataFrame(
+        {
+            "Episode_source": ["Original", "Original"],
+            "Has_open_episode_error": [False, True],
+            "Rule_to_apply": [None, "RULE_1"],
+        }
+    )
+    data["Episode_source"] = data.apply(_update_episode_source_stage1, axis=1)
+    assert data["Episode_source"].tolist() == [
+        "Original",
+        "RULE_1",
+    ]
 
 
 def test_overlaps_next_episode():
-    None
+    data = pd.DataFrame(
+        {
+            "Has_next_episode": [False, True, True, True],
+            "YEAR": [2020, 2020, 2020, 2020],
+            "YEAR_next": [None, 2021, 2021, 2019],
+            "DEC": ["2021-01-31", "2021-01-31", "2021-01-31", "2021-01-31"],
+            "DECOM_next": [None, "2022-02-02", "2021-01-01", "2021-01-01"],
+        }
+    )
+    data["test_result"] = data.apply(_overlaps_next_episode, axis=1)
+    assert data["test_result"].tolist() == [
+        False,
+        False,
+        True,
+        False,
+    ]
 
 
 def test__has_x1_gap_before_next_episode():
-    None
+    data = pd.DataFrame(
+        {
+            "Has_next_episode": [False, True, True, True],
+            "YEAR": [2020, 2020, 2020, 2020],
+            "YEAR_next": [None, 2021, 2021, 2019],
+            "DEC": ["2021-01-31", "2021-01-31", "2021-01-31", "2021-01-31"],
+            "DECOM_next": [None, "2021-01-31", "2021-03-01", "2021-03-01"],
+            "REC": ["E43", "X1", "X1", "X1"],
+        }
+    )
+    data["test_result"] = data.apply(_has_x1_gap_before_next_episode, axis=1)
+    assert data["test_result"].tolist() == [
+        False,
+        False,
+        True,
+        False,
+    ]
 
 
 def test__stage2_rule_to_apply():
-    None
+    data = pd.DataFrame(
+        {
+            "Overlaps_next_episode": [False, True, False],
+            "Has_X1_gap_before_next_episode": [False, False, True],
+        }
+    )
+    data["test_result"] = data.apply(_stage2_rule_to_apply, axis=1)
+    assert data["test_result"].tolist() == [
+        None,
+        "RULE_4",
+        "RULE_5",
+    ]
 
 
 def test__update_dec_stage2():
-    None
+    data = pd.DataFrame(
+        {
+            "DEC": ["2021-01-01", "2021-01-01", "2021-01-01"],
+            "DECOM_next": ["2022-11-11", "2022-11-11", "2022-11-11"],
+            "Rule_to_apply": [None, "RULE_4", "RULE_5"],
+        }
+    )
+    data["test_result"] = data.apply(_update_dec_stage2, axis=1)
+    assert data["test_result"].tolist() == [
+        "2021-01-01",
+        "2022-11-11",
+        "2022-11-11",
+    ]
 
 
 def test__update_episode_source_stage2():
