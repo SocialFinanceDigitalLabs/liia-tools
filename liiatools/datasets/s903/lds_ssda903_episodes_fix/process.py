@@ -367,7 +367,7 @@ def _update_episode_source_stage2(row: pd.Series) -> pd.Series:
     if (row["Rule_to_apply"] == "RULE_4") | (row["Rule_to_apply"] == "RULE_5"):
         if row["Episode_source"] == "Original":
             return row["Rule_to_apply"]
-        return row["Episode_source"] & " | " & row["Rule_to_apply"]
+        return row["Episode_source"] + " | " + row["Rule_to_apply"]
     return row["Episode_source"]
 
 

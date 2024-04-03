@@ -742,19 +742,18 @@ def test__update_dec_stage2():
 
 
 def test__update_episode_source_stage2():
-    None
-
-
-def test_add_stage2_rule_identifier_columns():
-    None
-
-
-def test_identify_stage2_rule_to_apply():
-    None
-
-
-def test_apply_stage2_rules():
-    None
+    data = pd.DataFrame(
+        {
+            "Episode_source": ["Original", "Original", "RULE_1"],
+            "Rule_to_apply": [None, "RULE_4", "RULE_5"],
+        }
+    )
+    data["test_result"] = data.apply(_update_episode_source_stage2, axis=1)
+    assert data["test_result"].tolist() == [
+        "Original",
+        "RULE_4",
+        "RULE_1 | RULE_5",
+    ]
 
 
 # python -m black "/workspaces/liia-tools/tests/s903/"
