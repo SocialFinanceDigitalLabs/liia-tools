@@ -199,6 +199,7 @@ table_list:
 - id: OC3
   retain:
   - PAN
+  - SUFFICIENCY
   columns:
   - id: CHILD
     type: string
