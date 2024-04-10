@@ -4476,14 +4476,14 @@ typing = ["mypy (>=1.4)", "rich", "twisted"]
 
 [[package]]
 name = "sufficiency-data-transform"
-version = "0.1.2"
+version = "0.1.3"
 description = "temp repo for liia sufficiency data transform"
 category = "main"
 optional = false
 python-versions = "<3.11,>=3.10"
 files = [
-    {file = "sufficiency_data_transform-0.1.2-py3-none-any.whl", hash = "sha256:fed6ce9f5d0f818590c0e99c7042f81ad70e276f579a54e89c341997bfbe141b"},
-    {file = "sufficiency_data_transform-0.1.2.tar.gz", hash = "sha256:9d07d31d5e34f7d954300ca530efd786c053e92de75a52e177804a4f41dc3851"},
+    {file = "sufficiency_data_transform-0.1.3-py3-none-any.whl", hash = "sha256:b6079d1d73084e523c85270d6803cfb57f7fcd036c4f61a6f63c559b326509f5"},
+    {file = "sufficiency_data_transform-0.1.3.tar.gz", hash = "sha256:cc5001c080e1bc082816446a1caa4a5f6c950bc4d0dd14d0237c3f561dcd140c"},
 ]
 
 [package.dependencies]
@@ -5261,4 +5261,4 @@ s3 = ["fs-s3fs"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10, <3.11"
-content-hash = "9c62072cc0d2d5b9452bdfaca879a8da90e1688d33f587ac9b90969883845eb8"
+content-hash = "febd86f6588a1c86c74deead538cd4ad93a9ee86b2f9eba4afc72ec383fcb3cf"
