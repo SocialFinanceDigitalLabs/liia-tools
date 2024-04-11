@@ -10,6 +10,7 @@ from sufficiency_data_transform.all_dim_and_fact import (
 
 from dagster import op
 
+
 @op
 def ons_area():
     create_dimONSArea()

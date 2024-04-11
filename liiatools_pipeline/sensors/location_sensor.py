@@ -47,7 +47,7 @@ def generate_run_key(folder_location, files):
 
 @sensor(
     job=ssda903_incoming,
-    minimum_interval_seconds=300,
+    minimum_interval_seconds=60,
     description="Monitors Specified Location for 903 Files",
     default_status=DefaultSensorStatus.RUNNING,
 )
