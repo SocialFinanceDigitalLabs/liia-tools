@@ -20,10 +20,12 @@ def ons_area():
 
 @op
 def looked_after_child():
+    create_dimONSArea()
     create_dimLookedAfterChild()
 
 @op
 def ofsted_provider():
+    create_dimONSArea()
     create_dimOfstedProvider()
 
 @op
@@ -32,8 +34,15 @@ def postcode():
 
 @op
 def episode():
+    create_dim_tables()
+    create_dimONSArea()
+    create_dimLookedAfterChild()
+    create_dimPostcode()
+    create_dimOfstedProvider()
     create_factEpisode()
 
 @op
 def ofsted_inspection():
+    create_dim_tables()
+    create_dimOfstedProvider()
     create_factOfstedInspection()
