@@ -13,6 +13,7 @@ def external_data_folder():
 def ons_data_location():
     return env_config("ONS_DATA_URL", cast=str)
 
+
 @asset
 def ofsted_data_location():
     return env_config("OFSTED_DATA_URL", cast=str)
