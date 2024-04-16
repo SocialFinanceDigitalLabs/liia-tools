@@ -5,7 +5,8 @@ from liiatools_pipeline.jobs.ssda903 import ssda903_incoming
 from liiatools_pipeline.jobs.external_dataset import external_incoming
 from liiatools_pipeline.jobs.sufficiency_903 import ssda903_sufficiency
 from liiatools_pipeline.sensors.location_sensor import location_sensor
-#from liiatools_pipeline.sensors.sufficiency_sensor import sufficiency_sensor
+
+# from liiatools_pipeline.sensors.sufficiency_sensor import sufficiency_sensor
 
 register()
 
@@ -24,4 +25,5 @@ def sync():
 
     return jobs + schedules + sensors
 
-#sufficiency_sensor
+
+# sufficiency_sensor
