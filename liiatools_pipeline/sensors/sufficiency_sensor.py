@@ -1,28 +1,17 @@
-from dagster import (
-    RunRequest,
-    run_status_sensor,
-    sensor,
-    DagsterRunStatus,
-    RunConfig,
-    DefaultSensorStatus,
-)
-
+from dagster import RunRequest, RunsFilter, DagsterRunStatus, sensor
 from liiatools_pipeline.jobs.ssda903 import ssda903_incoming
 from liiatools_pipeline.jobs.sufficiency_903 import ssda903_sufficiency
 
-"""
-@run_status_sensor(
-    run_status=DagsterRunStatus.SUCCESS,
-    description="Adds in ONS and census data once 903 pipeline completes",
-    request_job=ssda903_incoming,
-)
-@sensor(
-    job=ssda903_sufficiency,
-    minimum_interval_seconds=300,
-    default_status=DefaultSensorStatus.RUNNING,
-)
+
+@sensor(job=ssda903_sufficiency)
 def sufficiency_sensor(context):
-    yield RunRequest(
-        run_key=None,
-        run_config=RunConfig(),
-    )"""
+    run_records = context.instance.get_run_records(
+        filters=RunsFilter(
+            job_name=ssda903_incoming.name,
+            statuses=[DagsterRunStatus.SUCCESS],
+        ),
+        order_by="update_timestamp",
+        ascending=False,
+    )
+    for run_record in run_records:
+        yield RunRequest(run_key=run_record.dagster_run.run_id)
