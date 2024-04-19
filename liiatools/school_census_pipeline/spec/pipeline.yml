@@ -204,7 +204,7 @@ Autumn:
       type: category
       exclude:
       - PAN
-  - id: learnerfamoffroll 
+  - id: learnerfamoffroll
     columns:
     - id: learnerfamoffrolltableid
       type: string
@@ -254,6 +254,8 @@ Autumn:
       type: string
     - id: qn
       type: string
+    - id: qan
+      type: string
     - id: traineeship
       type: category
     - id: learningstartdate
@@ -263,6 +265,8 @@ Autumn:
     - id: learningactualenddate
       type: date
     - id: scc
+      type: string
+    - id: disccode
       type: string
     - id: coreaim
       type: category
@@ -515,6 +519,8 @@ Autumn:
       type: numeric
     - id: gender
       type: category
+    - id: sex
+      type: category
     - id: boarder
       type: category
       exclude:
@@ -533,11 +539,19 @@ Autumn:
       type: category
       exclude:
       - PAN
+    - id: mathsgcsepriorattainmentyeargroup
+      type: category
+      exclude:
+      - PAN
     - id: englishgcsehighestpriorattainment
       type: category
       exclude:
       - PAN
     - id: englishgcsepriorattainmentyear11
+      type: category
+      exclude:
+      - PAN
+    - id: englishgcsepriorattainmentyeargroup
       type: category
       exclude:
       - PAN
@@ -710,6 +724,8 @@ Autumn:
       type: numeric
     - id: gender
       type: category
+    - id: sex
+      type: category
     - id: yssa
       type: category
       exclude:
@@ -734,6 +750,10 @@ Autumn:
       type: category
       exclude:
       - PAN
+    - id: adoptedfromcare
+      type: category
+      exclude:
+      - PAN  
     - id: senprovision
       type: category
     - id: ncyearactual
@@ -746,11 +766,19 @@ Autumn:
       type: category
       exclude:
       - PAN
+    - id: mathsgcsepriorattainmentyeargroup
+      type: category
+      exclude:
+      - PAN
     - id: englishgcsehighestpriorattainment
       type: category
       exclude:
       - PAN
     - id: englishgcsepriorattainmentyear11
+      type: category
+      exclude:
+      - PAN
+    - id: englishgcsepriorattainmentyeargroup
       type: category
       exclude:
       - PAN
@@ -1419,7 +1447,7 @@ Spring:
       type: string
     - id: fundingbasis
       type: category
-  - id: learnerfamoffroll  
+  - id: learnerfamoffroll 
     columns:
     - id: learnerfamoffrolltableid
       type: string
@@ -1437,7 +1465,7 @@ Spring:
       type: category
     - id: learnerfamcode
       type: category
-  - id: learnerfamonroll 
+  - id: learnerfamonroll
     columns:
     - id: learnerfamonrolltableid
       type: string
@@ -1610,6 +1638,8 @@ Spring:
       type: numeric
     - id: gender
       type: category
+    - id: sex
+      type: category
     - id: ethnicity
       type: category
     - id: language
@@ -1729,6 +1759,8 @@ Spring:
       - PAN
     - id: gender
       type: category
+    - id: sex
+      type: category
     - id: ethnicity
       type: category
     - id: yssa
@@ -1816,6 +1848,26 @@ Spring:
       exclude:
       - PAN
     - id: maxfemaleage
+      type: numeric
+      exclude:
+      - PAN
+    - id: lodged
+      type: numeric
+      exclude:
+      - PAN
+    - id: withdrawn
+      type: numeric
+      exclude:
+      - PAN
+    - id: heard
+      type: numeric
+      exclude:
+      - PAN
+    - id: upheld
+      type: numeric
+      exclude:
+      - PAN
+    - id: rejected
       type: numeric
       exclude:
       - PAN
@@ -2663,6 +2715,8 @@ Summer:
       type: numeric
     - id: gender
       type: category
+    - id: sex
+      type: category
     - id: boarder
       type: category
       exclude:
@@ -2681,11 +2735,19 @@ Summer:
       type: category
       exclude:
       - PAN
+    - id: mathsgcsepriorattainmentyeargroup
+      type: category
+      exclude:
+      - PAN
     - id: englishgcsehighestpriorattainment
       type: category
       exclude:
       - PAN
     - id: englishgcsepriorattainmentyear11
+      type: category
+      exclude:
+      - PAN
+    - id: englishgcsepriorattainmentyeargroup
       type: category
       exclude:
       - PAN
@@ -2836,6 +2898,10 @@ Summer:
       type: numeric
       exclude:
       - PAN
+    - id: eligibilitycode
+      type: numeric
+      exclude:
+      - PAN
     - id: summerhalfterm2sessionsauthorised
       type: numeric
     - id: summerhalfterm2sessionsunauthorised
@@ -2857,6 +2923,8 @@ Summer:
     - id: termlysessionscoronavirus
       type: numeric
     - id: gender
+      type: category
+    - id: sex
       type: category
     - id: yssa
       type: category
@@ -2894,11 +2962,19 @@ Summer:
       type: category
       exclude:
       - PAN
+    - id: mathsgcsepriorattainmentyeargroup
+      type: category
+      exclude:
+      - PAN
     - id: englishgcsehighestpriorattainment
       type: category
       exclude:
       - PAN
     - id: englishgcsepriorattainmentyear11
+      type: category
+      exclude:
+      - PAN
+    - id: englishgcsepriorattainmentyeargroup
       type: category
       exclude:
       - PAN
