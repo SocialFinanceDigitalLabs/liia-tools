@@ -972,7 +972,6 @@ Autumn:
             - code: "G"
             - code: "R"
             - code: "C"
-            - code: "O"
             canbeblank: yes
         senprovision:
             *sen-provision
@@ -2070,6 +2069,8 @@ Spring:
             *int-blank
         termlysessionsexceptional:
             *int-blank
+        termlysessionscoronavirus:
+            *int-blank
         uniquelearnernumber:
             *int-blank
         gender:
@@ -2236,6 +2237,8 @@ Spring:
             *int-blank
         termlysessionsexceptional:
             *int-blank
+        termlysessionscoronavirus:
+            *int-blank
         fundedhours:
             *two-decimal-places
         extendedhours:
@@ -2274,15 +2277,6 @@ Spring:
             *service-child
         plaa:
             *plaa
-        youngcarer:
-            category:
-            - code: "P"
-              name: "Identified as a young carer by parent or guardian"
-            - code: "S"
-              name: "Identified as a young carer by school"
-            - code: "N"
-              name: "Not declared (default value)"
-            canbeblank: yes
         eyppr:
             category:
             - code: "Y"
@@ -2429,14 +2423,6 @@ Spring:
             - code: "OTH"
             - code: "WBP"
             canbeblank: yes
-        companynumber:
-            &company-number
-            string: "regex"
-            cell_regex:
-              - ([A-Za-z]{2}|\d{2})\d{6}
-            canbeblank: yes
-        applacementpostcode:
-            *postcode-blank
         placementreason:
             &placement-reason
             category:
@@ -2480,10 +2466,6 @@ Spring:
             *int-blank
         apsettingtype:
             *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
         placementreason:
             *placement-reason
         senprovisionentry:
@@ -2833,6 +2815,8 @@ Summer:
             *int-blank
         termlysessionsexceptional:
             *int-blank
+        termlysessionscoronavirus:
+            *int-blank
         uniquelearnernumber:
             *int-blank
         moveonrollflag:
@@ -2884,6 +2868,8 @@ Summer:
         termlysessionseducational:
             *int-blank
         termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
             *int-blank
         senunitindicator:
             *true-false
@@ -2981,10 +2967,6 @@ Summer:
             *int-blank
         apsettingtype:
             *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
         placementreason:
             *placement-reason
         senprovisionentry:
@@ -3016,10 +2998,6 @@ Summer:
             *int-blank
         apsettingtype:
             *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
         placementreason:
             *placement-reason
         senprovisionentry:

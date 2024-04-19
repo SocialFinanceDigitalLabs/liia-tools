@@ -65,58 +65,6 @@ Autumn:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            &ap-reason
-            category:
-            - code: "ASP"
-            - code: "EHC"
-            - code: "MHN"
-            - code: "NEW"
-            - code: "OTH"
-            - code: "PEX"
-            - code: "PHN"
-            - code: "RHE"
-            canbeblank: yes
-        senprovisionentry:
-            &sen-provision
-            category:
-            - code: "N"
-            - code: "E"
-            - code: "K"
-            - code: "S"
-            - code: "A"
-            - code: "P"
-            canbeblank: yes
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     fsmperiodsonroll:
         fsmperiodsonrolltableid:
             *alphanumeric-not-blank
@@ -142,51 +90,6 @@ Autumn:
             - code: "SCT"
             - code: "WLS"
             canbeblank: yes
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            &int-blank
-            numeric:
-              type: "integer"
-            canbeblank: yes
-        learnerfamtype:
-            &learner-fam-type
-            category:
-            - code: "NLM"
-            canbeblank: yes
-        learnerfamcode:
-            &learner-fam-code
-            category:
-            - code: "01"
-            - code: "21"
-            - code: "22"
-            canbeblank: yes
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learningaimsoffroll:
         learningaimsoffrolltableid:
             *alphanumeric-not-blank
@@ -219,7 +122,10 @@ Autumn:
         coreaim:
             *true-false
         partnerukprn:
-            *int-blank
+            &int-blank
+            numeric:
+              type: "integer"
+            canbeblank: yes
         learningaimstatus:
             &aim-status
             category:
@@ -273,38 +179,6 @@ Autumn:
             *aim-withdrawal-reason
         learningaimstatus:
             *aim-status
-    programmeaimsoffroll:
-        programmeaimsoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        programmeaimsoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        qn:
-            *alphanumeric-blank
-        programmestartdate:
-            *date
-        programmeplannedenddate:
-            *date
-        programmeactualenddate:
-            *date
-        traineeship:
-            *true-false
-        programmeaimstatus:
-            *aim-status
-        programmeaimwithdrawalreason:
-            *aim-withdrawal-reason
-        progtype:
-            &prog-type
-            category:
-            - code: "30"
-            - code: "31"
-            - code: "01"
-            canbeblank: yes
     programmeaimsonroll:
         programmeaimsonrolltableid:
             *alphanumeric-not-blank
@@ -331,7 +205,11 @@ Autumn:
         traineeship:
             *true-false
         progtype:
-            *prog-type
+            category:
+            - code: "30"
+            - code: "31"
+            - code: "01"
+            canbeblank: yes
     pupilnolongeronroll:
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
@@ -792,7 +670,7 @@ Autumn:
             - code: "1"
             - code: "NR"
             canbeblank: yes
-        mathsgcsepriorattainmentyear11:
+        mathsgcsepriorattainmentyeargroup:
             &attainment-year-11
             category:
             - code: "1"
@@ -801,7 +679,7 @@ Autumn:
             canbeblank: yes
         englishgcsehighestpriorattainment:
             *highest-attainment
-        englishgcsepriorattainmentyear11:
+        englishgcsepriorattainmentyeargroup:
             *attainment-year-11
         mathsgcsefundingexemption:
             &funding-exemption
@@ -972,19 +850,25 @@ Autumn:
             - code: "G"
             - code: "R"
             - code: "C"
-            - code: "O"
             canbeblank: yes
         senprovision:
-            *sen-provision
+            &sen-provision
+            category:
+            - code: "N"
+            - code: "E"
+            - code: "K"
+            - code: "A"
+            - code: "P"
+            canbeblank: yes
         ncyearactual:
             *year-group-category
         mathsgcsehighestpriorattainment:
             *highest-attainment
-        mathsgcsepriorattainmentyear11:
+        mathsgcsepriorattainmentyeargroup:
             *attainment-year-11
         englishgcsehighestpriorattainment:
             *highest-attainment
-        englishgcsepriorattainmentyear11:
+        englishgcsepriorattainmentyeargroup:
             *attainment-year-11
         mathsgcsefundingexemption:
             *funding-exemption
@@ -1731,40 +1615,6 @@ Spring:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank     
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     childcare:
         childcaretableid:
             *alphanumeric-not-blank
@@ -1878,7 +1728,6 @@ Spring:
             - code: "PL"
             - code: "PS"
             - code: "RE"
-            - code: "RS"
             - code: "SC"
             - code: "TE"
             - code: "TV"
@@ -1930,40 +1779,6 @@ Spring:
             - code: "HSD"
             - code: "LAA"
             canbeblank: yes
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learnersupportoffroll:
         learnersupportoffrolltableid:
             *alphanumeric-not-blank
@@ -2069,6 +1884,8 @@ Spring:
         termlysessionseducational:
             *int-blank
         termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
             *int-blank
         uniquelearnernumber:
             *int-blank
@@ -2236,6 +2053,8 @@ Spring:
             *int-blank
         termlysessionsexceptional:
             *int-blank
+        termlysessionscoronavirus:
+            *int-blank
         fundedhours:
             *two-decimal-places
         extendedhours:
@@ -2274,15 +2093,6 @@ Spring:
             *service-child
         plaa:
             *plaa
-        youngcarer:
-            category:
-            - code: "P"
-              name: "Identified as a young carer by parent or guardian"
-            - code: "S"
-              name: "Identified as a young carer by school"
-            - code: "N"
-              name: "Not declared (default value)"
-            canbeblank: yes
         eyppr:
             category:
             - code: "Y"
@@ -2400,98 +2210,6 @@ Spring:
             - code: "B"
             - code: "H"
             canbeblank: yes
-    schoolarrangedapdetailoffroll:
-        schoolarrangedapdetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            &ap-setting
-            category:
-            - code: "NFE"
-            - code: "OOT"
-            - code: "OTH"
-            - code: "WBP"
-            canbeblank: yes
-        companynumber:
-            &company-number
-            string: "regex"
-            cell_regex:
-              - ([A-Za-z]{2}|\d{2})\d{6}
-            canbeblank: yes
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            &placement-reason
-            category:
-            - code: "BHS"
-            - code: "SUS"
-            - code: "EXR"
-            - code: "MHN"
-            - code: "OTH"
-            - code: "PHN"
-            canbeblank: yes
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            &attendance-pattern
-            category:
-            - code: "FT"
-            - code: "PT"
-            canbeblank: yes
-    schoolarrangedapdetailonroll:
-        schoolarrangedapdetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
     schoolcensus:
         schoolcensustableid:
             *alphanumeric-not-blank
@@ -2681,40 +2399,6 @@ Summer:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank     
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     fsmperiod:
         fsmperiodtableid:
             *alphanumeric-not-blank
@@ -2732,40 +2416,6 @@ Summer:
             *date
         ukcountry:
             *uk-country
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learnersupportoffroll:
         learnersupportoffrolltableid:
             *alphanumeric-not-blank
@@ -2833,6 +2483,8 @@ Summer:
             *int-blank
         termlysessionsexceptional:
             *int-blank
+        termlysessionscoronavirus:
+            *int-blank
         uniquelearnernumber:
             *int-blank
         moveonrollflag:
@@ -2884,6 +2536,8 @@ Summer:
         termlysessionseducational:
             *int-blank
         termlysessionsexceptional:
+            *int-blank
+        termlysessionscoronavirus:
             *int-blank
         senunitindicator:
             *true-false
@@ -2958,76 +2612,6 @@ Summer:
             *intake
         governance:
             *governance
-    schoolarrangedapdetailoffroll:
-        schoolarrangedapdetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
-    schoolarrangedapdetailonroll:
-        schoolarrangedapdetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
     schoolcensus:
         schoolcensustableid:
             *alphanumeric-not-blank

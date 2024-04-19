@@ -65,58 +65,6 @@ Autumn:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            &ap-reason
-            category:
-            - code: "ASP"
-            - code: "EHC"
-            - code: "MHN"
-            - code: "NEW"
-            - code: "OTH"
-            - code: "PEX"
-            - code: "PHN"
-            - code: "RHE"
-            canbeblank: yes
-        senprovisionentry:
-            &sen-provision
-            category:
-            - code: "N"
-            - code: "E"
-            - code: "K"
-            - code: "S"
-            - code: "A"
-            - code: "P"
-            canbeblank: yes
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     fsmperiodsonroll:
         fsmperiodsonrolltableid:
             *alphanumeric-not-blank
@@ -142,51 +90,6 @@ Autumn:
             - code: "SCT"
             - code: "WLS"
             canbeblank: yes
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            &int-blank
-            numeric:
-              type: "integer"
-            canbeblank: yes
-        learnerfamtype:
-            &learner-fam-type
-            category:
-            - code: "NLM"
-            canbeblank: yes
-        learnerfamcode:
-            &learner-fam-code
-            category:
-            - code: "01"
-            - code: "21"
-            - code: "22"
-            canbeblank: yes
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learningaimsoffroll:
         learningaimsoffrolltableid:
             *alphanumeric-not-blank
@@ -219,7 +122,10 @@ Autumn:
         coreaim:
             *true-false
         partnerukprn:
-            *int-blank
+            &int-blank
+            numeric:
+              type: "integer"
+            canbeblank: yes
         learningaimstatus:
             &aim-status
             category:
@@ -249,8 +155,6 @@ Autumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
-        programmeaimsonrolltableid:
-            *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
         qn:
@@ -273,65 +177,634 @@ Autumn:
             *aim-withdrawal-reason
         learningaimstatus:
             *aim-status
-    programmeaimsoffroll:
-        programmeaimsoffrolltableid:
+    levels:
+        levelstableid:
             *alphanumeric-not-blank
         NativeId:
             *alphanumeric-not-blank
-        programmeaimsoffrollorderseqcolumn:
+        levelsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        cbdslevel:
+            &cbds-level
+            category:
+            - code: "Pupil"
+            - code: "School"
+            canbeblank: no
+    nationalitiesoffroll:
+        nationalitiesoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        nationalitiesoffrollorderseqcolumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        qn:
-            *alphanumeric-blank
-        programmestartdate:
-            *date
-        programmeplannedenddate:
-            *date
-        programmeactualenddate:
-            *date
-        traineeship:
-            *true-false
-        programmeaimstatus:
-            *aim-status
-        programmeaimwithdrawalreason:
-            *aim-withdrawal-reason
-        progtype:
-            &prog-type
+        nationality:
+            &nationality
             category:
-            - code: "30"
-            - code: "31"
-            - code: "01"
-            canbeblank: yes
-    programmeaimsonroll:
-        programmeaimsonrolltableid:
+            - code: "AFG"
+              name: "Afghanistan"
+            - code: "ALA"
+              name: "Aland Islands"
+            - code: "ALB"
+              name: "Albania"
+            - code: "DZA"
+              name: "Algeria"
+            - code: "ASM"
+              name: "American Samoa"
+            - code: "AND"
+              name: "Andorra"
+            - code: "AGO"
+              name: "Angola"
+            - code: "AIA"
+              name: "Anguilla"
+            - code: "ATA"
+              name: "Antarctica"
+            - code: "ATG"
+              name: "Antigua and Barbuda"
+            - code: "ARG"
+              name: "Argentina"
+            - code: "ARM"
+              name: "Armenia"
+            - code: "ABW"
+              name: "Aruba"
+            - code: "AUS"
+              name: "Australia"
+            - code: "AUT"
+              name: "Austria"
+            - code: "AZE"
+              name: "Azerbaijan"
+            - code: "BHS"
+              name: "Bahamas"
+            - code: "BHR"
+              name: "Bahrain"
+            - code: "BGD"
+              name: "Bangladesh"
+            - code: "BRB"
+              name: "Barbados"
+            - code: "BLR"
+              name: "Belarus"
+            - code: "BEL"
+              name: "Belgium"
+            - code: "BLZ"
+              name: "Belize"
+            - code: "BEN"
+              name: "Benin"
+            - code: "BMU"
+              name: "Bermuda"
+            - code: "BTN"
+              name: "Bhutan "
+            - code: "BOL"
+              name: "Bolivia"
+            - code: "BES"
+              name: "Bonaire, Sint Eustatius and Saba"
+            - code: "BIH"
+              name: "Bosnia and Herzegovina"
+            - code: "BWA"
+              name: "Botswana"
+            - code: "BVT"
+              name: "Bouvet Island"
+            - code: "BRA"
+              name: "Brazil"
+            - code: "ATB"
+              name: "British Antarctic Territory"
+            - code: "IOT"
+              name: "British Indian Ocean Territory"
+            - code: "BRN"
+              name: "Brunei"
+            - code: "BGR"
+              name: "Bulgaria"
+            - code: "BFA"
+              name: "Burkina Faso"
+            - code: "BUR"
+              name: "Myanmar (Burma)"
+            - code: "BDI"
+              name: "Burundi"
+            - code: "BYS"
+              name: "Byelorussian SSR"
+            - code: "KHM"
+              name: "Cambodia"
+            - code: "CMR"
+              name: "Cameroon"
+            - code: "CAN"
+              name: "Canada"
+            - code: "CTE"
+              name: "Canton and Enderbury Islands"
+            - code: "CPV"
+              name: "Cape Verde"
+            - code: "CYM"
+              name: "Cayman Islands"
+            - code: "CAF"
+              name: "Central African Republic"
+            - code: "TCD"
+              name: "Chad"
+            - code: "CHL"
+              name: "Chile"
+            - code: "CHN"
+              name: "China"
+            - code: "CXR"
+              name: "Christmas Island"
+            - code: "CCK"
+              name: "Cocos (Keeling) Islands"
+            - code: "COL"
+              name: "Colombia"
+            - code: "COM"
+              name: "Comoros"
+            - code: "COG"
+              name: "Congo"
+            - code: "COD"
+              name: "Congo, Democratic Republic"
+            - code: "COK"
+              name: "Cook Islands"
+            - code: "CRI"
+              name: "Costa Rica"
+            - code: "HRV"
+              name: "Croatia"
+            - code: "CUB"
+              name: "Cuba "
+            - code: "CUW"
+              name: "CuraÃ§ao"
+            - code: "CYP"
+              name: "Cyprus"
+            - code: "CZE"
+              name: "Czech Republic"
+            - code: "CSK"
+              name: "Czechoslovakia"
+            - code: "DHY"
+              name: "Dahomey"
+            - code: "YMD"
+              name: "Democratic Yemen"
+            - code: "DNK"
+              name: "Denmark"
+            - code: "DJI"
+              name: "Djibouti"
+            - code: "DMA"
+              name: "Dominica"
+            - code: "DOM"
+              name: "Dominican Republic"
+            - code: "ATN"
+              name: "Dronning Maud Land"
+            - code: "TMP"
+              name: "East Timor"
+            - code: "ECU"
+              name: "Ecuador"
+            - code: "EGY"
+              name: "Egypt"
+            - code: "SLV"
+              name: "El Salvador"
+            - code: "GNQ"
+              name: "Equatorial Guinea"
+            - code: "ERI"
+              name: "Eritrea"
+            - code: "EST"
+              name: "Estonia"
+            - code: "SWZ"
+              name: "Eswatini"
+            - code: "ETH"
+              name: "Ethiopia"
+            - code: "ETH"
+              name: "Ethiopia"
+            - code: "FLK"
+              name: "Falkland Islands"
+            - code: "FRO"
+              name: "Faroe Islands"
+            - code: "DEU"
+              name: "Federal Republic of Germany"
+            - code: "FJI"
+              name: "Fiji"
+            - code: "FIN"
+              name: "Finland"
+            - code: "FIN"
+              name: "Finland"
+            - code: "FRA"
+              name: "France"
+            - code: "GUF"
+              name: "French Guiana"
+            - code: "PYF"
+              name: "French Polynesia"
+            - code: "ATF"
+              name: "French Southern Territories"
+            - code: "AFI"
+              name: "French Territory of Afars and Issas"
+            - code: "GAB"
+              name: "Gabon"
+            - code: "GMB"
+              name: "Gambia, The"
+            - code: "GEO"
+              name: "Georgia"
+            - code: "DDR"
+              name: "German Democratic Republic"
+            - code: "DEU"
+              name: "Germany"
+            - code: "GHA"
+              name: "Ghana"
+            - code: "GIB"
+              name: "Gibraltar"
+            - code: "GEL"
+              name: "Gilbert and Ellice Islands"
+            - code: "GEL"
+              name: "Gilbert Islands"
+            - code: "GRC"
+              name: "Greece"
+            - code: "GRL"
+              name: "Greenland"
+            - code: "GRD"
+              name: "Grenada"
+            - code: "GLP"
+              name: "Guadeloupe"
+            - code: "GUM"
+              name: "Guam"
+            - code: "GTM"
+              name: "Guatemala"
+            - code: "GGY"
+              name: "Guernsey"
+            - code: "GIN"
+              name: "Guinea"
+            - code: "GNB"
+              name: "Guinea-Bissau"
+            - code: "GUY"
+              name: "Guyana"
+            - code: "HTI"
+              name: "Haiti"
+            - code: "HMD"
+              name: "Heard Island and McDonald Islands"
+            - code: "VAT"
+              name: "Holy See"
+            - code: "HND"
+              name: "Honduras"
+            - code: "HKG"
+              name: "Hong Kong"
+            - code: "HUN"
+              name: "Hungary"
+            - code: "ISL"
+              name: "Iceland"
+            - code: "IND"
+              name: "India"
+            - code: "IDN"
+              name: "Indonesia"
+            - code: "IRN"
+              name: "Iran "
+            - code: "IRQ"
+              name: "Iraq "
+            - code: "IRL"
+              name: "Ireland"
+            - code: "IMN"
+              name: "Isle of Man"
+            - code: "ISR"
+              name: "Israel"
+            - code: "ITA"
+              name: "Italy"
+            - code: "CIV"
+              name: "Ivory Coast"
+            - code: "JAM"
+              name: "Jamaica"
+            - code: "JPN"
+              name: "Japan"
+            - code: "JEY"
+              name: "Jersey"
+            - code: "JTN"
+              name: "Johnston Atoll"
+            - code: "JOR"
+              name: "Jordan"
+            - code: "KHM"
+              name: "Kampuchea"
+            - code: "KAZ"
+              name: "Kazakhstan"
+            - code: "KEN"
+              name: "Kenya"
+            - code: "KIR"
+              name: "Kiribati"
+            - code: "PRK"
+              name: "Korea, North "
+            - code: "KOR"
+              name: "Korea, South"
+            - code: "QOK"
+              name: "Kosovo"
+            - code: "KWT"
+              name: "Kuwait"
+            - code: "KGZ"
+              name: "Kyrgyzstan"
+            - code: "LAO"
+              name: "Laos"
+            - code: "LVA"
+              name: "Latvia"
+            - code: "LBN"
+              name: "Lebanon"
+            - code: "LSO"
+              name: "Lesotho"
+            - code: "LBR"
+              name: "Liberia"
+            - code: "LBY"
+              name: "Libya"
+            - code: "LIE"
+              name: "Liechtenstein"
+            - code: "LTU"
+              name: "Lithuania"
+            - code: "LUX"
+              name: "Luxembourg"
+            - code: "MAC"
+              name: "Macao"
+            - code: "MDG"
+              name: "Madagascar"
+            - code: "MWI"
+              name: "Malawi"
+            - code: "MYS"
+              name: "Malaysia"
+            - code: "MDV"
+              name: "Maldives"
+            - code: "MLI"
+              name: "Mali"
+            - code: "MLT"
+              name: "Malta"
+            - code: "MHL"
+              name: "Marshall Islands"
+            - code: "MTQ"
+              name: "Martinique"
+            - code: "MRT"
+              name: "Mauritania"
+            - code: "MUS"
+              name: "Mauritius"
+            - code: "MYT"
+              name: "Mayotte"
+            - code: "MEX"
+              name: "Mexico"
+            - code: "FSM"
+              name: "Micronesia"
+            - code: "MID"
+              name: "Midway Islands"
+            - code: "MDA"
+              name: "Moldova"
+            - code: "MCO"
+              name: "Monaco"
+            - code: "MNG"
+              name: "Mongolia"
+            - code: "MNE"
+              name: "Montenegro"
+            - code: "MSR"
+              name: "Montserrat"
+            - code: "MAR"
+              name: "Morocco"
+            - code: "MOZ"
+              name: "Mozambique"
+            - code: "MMR"
+              name: "Myanmar"
+            - code: "NAM"
+              name: "Namibia"
+            - code: "NRU"
+              name: "Nauru"
+            - code: "NPL"
+              name: "Nepal"
+            - code: "NLD"
+              name: "Netherlands"
+            - code: "ANT"
+              name: "Netherlands Antilles"
+            - code: "NCL"
+              name: "New Caledonia"
+            - code: "NHB"
+              name: "New Hebrides"
+            - code: "NZL"
+              name: "New Zealand"
+            - code: "NIC"
+              name: "Nicaragua"
+            - code: "NER"
+              name: "Niger"
+            - code: "NGA"
+              name: "Nigeria"
+            - code: "NIU"
+              name: "Niue"
+            - code: "NFK"
+              name: "Norfolk Island"
+            - code: "MKD"
+              name: "North Macedonia"
+            - code: "MNP"
+              name: "Northern Mariana Islands"
+            - code: "NOR"
+              name: "Norway"
+            - code: "OMN"
+              name: "Oman"
+            - code: "PAK"
+              name: "Pakistan"
+            - code: "PLW"
+              name: "Palau"
+            - code: "PSE"
+              name: "Palestine"
+            - code: "PAN"
+              name: "Panama"
+            - code: "PCZ"
+              name: "Panama Canal Zone"
+            - code: "PNG"
+              name: "Papua New Guinea"
+            - code: "PRY"
+              name: "Paraguay"
+            - code: "PER"
+              name: "Peru"
+            - code: "PHL"
+              name: "Philippines"
+            - code: "PCN"
+              name: "Pitcairn"
+            - code: "POL"
+              name: "Poland"
+            - code: "PRT"
+              name: "Portugal"
+            - code: "PRI"
+              name: "Puerto Rico"
+            - code: "QAT"
+              name: "Qatar"
+            - code: "REU"
+              name: "Reunion"
+            - code: "ROU"
+              name: "Romania"
+            - code: "RUS"
+              name: "Russia"
+            - code: "RWA"
+              name: "Rwanda"
+            - code: "BLM"
+              name: "Saint BarthÃ©lemy"
+            - code: "KNA"
+              name: "Saint Kitts and Nevis"
+            - code: "KNA"
+              name: "Saint Kitts-Nevis-Anguilla"
+            - code: "LCA"
+              name: "Saint Lucia"
+            - code: "MAF"
+              name: "Saint Martin (French Part)"
+            - code: "SPM"
+              name: "Saint Pierre and Miquelon"
+            - code: "VCT"
+              name: "Saint Vincent and the Grenadines"
+            - code: "WSM"
+              name: "Samoa"
+            - code: "SMR"
+              name: "San Marino"
+            - code: "STP"
+              name: "Sao Tome and Principe"
+            - code: "SAU"
+              name: "Saudi Arabia"
+            - code: "SEN"
+              name: "Senegal"
+            - code: "SRB"
+              name: "Serbia"
+            - code: "SCG"
+              name: "Serbia and Montenegro"
+            - code: "SYC"
+              name: "Seychelles"
+            - code: "SLE"
+              name: "Sierra Leone"
+            - code: "SKM"
+              name: "Sikkim"
+            - code: "SGP"
+              name: "Singapore"
+            - code: "SXM"
+              name: "Sint Maarten (Dutch Part)"
+            - code: "SVK"
+              name: "Slovakia"
+            - code: "SVN"
+              name: "Slovenia"
+            - code: "SLB"
+              name: "Solomon Islands"
+            - code: "SOM"
+              name: "Somalia"
+            - code: "ZAF"
+              name: "South Africa"
+            - code: "SGS"
+              name: "South Georgia"
+            - code: "SSD"
+              name: "South Sudan"
+            - code: "VDR"
+              name: "South Vietnam"
+            - code: "RHO"
+              name: "Southern Rhodesia"
+            - code: "ESP"
+              name: "Spain"
+            - code: "ESH"
+              name: "Spanish Sahara"
+            - code: "LKA"
+              name: "Sri Lanka"
+            - code: "SHN"
+              name: "St Helena, Ascension and Tristan da Cunha"
+            - code: "SDN"
+              name: "Sudan"
+            - code: "SUR"
+              name: "Suriname"
+            - code: "SJM"
+              name: "Svalbard and Jan Mayen"
+            - code: "SWE"
+              name: "Sweden"
+            - code: "CHE"
+              name: "Switzerland"
+            - code: "SYR"
+              name: "Syria"
+            - code: "TWN"
+              name: "Taiwan"
+            - code: "TJK"
+              name: "Tajikistan"
+            - code: "TZA"
+              name: "Tanzania"
+            - code: "THA"
+              name: "Thailand"
+            - code: "TLS"
+              name: "Timor-Leste"
+            - code: "TGO"
+              name: "Togo"
+            - code: "TKL"
+              name: "Tokelau"
+            - code: "TON"
+              name: "Tonga"
+            - code: "TTO"
+              name: "Trinidad and Tobago"
+            - code: "PCI"
+              name: "Trust Territory of the Pacific Islands"
+            - code: "TUN"
+              name: "Tunisia"
+            - code: "TUR"
+              name: "Turkey"
+            - code: "TKM"
+              name: "Turkmenistan"
+            - code: "TCA"
+              name: "Turks and Caicos Islands"
+            - code: "TUV"
+              name: "Tuvalu"
+            - code: "UGA"
+              name: "Uganda"
+            - code: "UKR"
+              name: "Ukraine"
+            - code: "UKR"
+              name: "Ukrainian SSR"
+            - code: "SUN"
+              name: "Union of Soviet Socialist Republics"
+            - code: "ARE"
+              name: "United Arab Emirates"
+            - code: "GBR"
+              name: "United Kingdom"
+            - code: "USA"
+              name: "United States "
+            - code: "UMI"
+              name: "United States Minor Outlying Islands"
+            - code: "PUS"
+              name: "United States Miscellaneous Pacific Islands"
+            - code: "HVO"
+              name: "Upper Volta"
+            - code: "URY"
+              name: "Uruguay"
+            - code: "UZB"
+              name: "Uzbekistan"
+            - code: "VUT"
+              name: "Vanuatu"
+            - code: "VAT"
+              name: "Vatican City State"
+            - code: "VEN"
+              name: "Venezuela"
+            - code: "VNM"
+              name: "Vietnam"
+            - code: "VGB"
+              name: "Virgin Islands,  British"
+            - code: "VIR"
+              name: "Virgin Islands,  U.S."
+            - code: "WAK"
+              name: "Wake Island"
+            - code: "WLF"
+              name: "Wallis and Futuna"
+            - code: "ESH"
+              name: "Western Sahara"
+            - code: "YEM"
+              name: "Yemen"
+            - code: "YEM"
+              name: "Yemen"
+            - code: "YUG"
+              name: "Yugoslavia"
+            - code: "ZAR"
+              name: "Zaire"
+            - code: "ZMB"
+              name: "Zambia"
+            - code: "ZWE"
+              name: "Zimbabwe"
+            - code: "REF"
+              name: "Refused"
+            - code: "NYO"
+              name: "Not Yet Obtained"
+            - code: "STA"
+              name: "Stateless"
+            - code: "NKO"
+              name: "Not Known"
+    nationalitiesonroll:
+        nationalitiesonrolltableid:
             *alphanumeric-not-blank
         NativeId:
             *alphanumeric-not-blank
-        programmeaimsonrollorderseqcolumn:
+        nationalitiesonrollorderseqcolumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        qn:
-            *alphanumeric-blank
-        learningstartdate:
-            *date
-        learningplannedenddate:
-            *date
-        learningactualenddate:
-            *date
-        learningaimstatus:
-            *aim-status
-        learningwithdrawalreason:
-            *aim-withdrawal-reason
-        traineeship:
-            *true-false
-        progtype:
-            *prog-type
+        nationality:
+            *nationality
     pupilnolongeronroll:
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
@@ -371,12 +844,6 @@ Autumn:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
-        termlysessionscoronavirus:
-            *int-blank
         annualsessionspossible:
             *int-blank
         annualsessionsauthorised:
@@ -395,15 +862,7 @@ Autumn:
             *int-blank
         qualhrs:
             *int-blank
-        qualhrspreviousyear:
-            *int-blank
-        nonqualhrspreviousyear:
-            *int-blank
         nonqualhrs:
-            *int-blank
-        tlevelqualhrs:
-            *int-blank
-        tlevelnonqualhrs:
             *int-blank
         gender:
             &gender
@@ -792,7 +1251,7 @@ Autumn:
             - code: "1"
             - code: "NR"
             canbeblank: yes
-        mathsgcsepriorattainmentyear11:
+        mathsgcsepriorattainmentyeargroup:
             &attainment-year-11
             category:
             - code: "1"
@@ -801,7 +1260,7 @@ Autumn:
             canbeblank: yes
         englishgcsehighestpriorattainment:
             *highest-attainment
-        englishgcsepriorattainmentyear11:
+        englishgcsepriorattainmentyeargroup:
             *attainment-year-11
         mathsgcsefundingexemption:
             &funding-exemption
@@ -813,10 +1272,8 @@ Autumn:
             - code: "N"
         englishgcsefundingexemption:
             *funding-exemption
-        mathsgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
-        englishgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
+        countryofbirth:
+            *nationality
     pupilonroll:
         pupilonrolltableid:
             *alphanumeric-not-blank
@@ -866,27 +1323,13 @@ Autumn:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
-        termlysessionscoronavirus:
-            *int-blank
         qualhrs:
-            *int-blank
-        qualhrspreviousyear:
-            *int-blank
-        nonqualhrspreviousyear:
             *int-blank
         senunitindicator:
             *true-false
         resourcedprovisionindicator:
             *true-false
         nonqualhrs:
-            *int-blank
-        tlevelqualhrs:
-            *int-blank
-        tlevelnonqualhrs:
             *int-blank
         ftemp:
             *true-false
@@ -933,18 +1376,6 @@ Autumn:
             - code: "SNR"
               name: "Sought, no reply"
             canbeblank: yes
-        servicechild:
-            &service-child
-            category:
-            - code: "Y"
-              name: "Yes"
-            - code: "N"
-              name: "No"
-            - code: "U"
-              name: "Unknown"
-            - code: "R"
-              name: "Refused"
-            canbeblank: yes
         language:
             *language
         classtype:
@@ -972,28 +1403,33 @@ Autumn:
             - code: "G"
             - code: "R"
             - code: "C"
-            - code: "O"
             canbeblank: yes
         senprovision:
-            *sen-provision
+            &sen-provision
+            category:
+            - code: "N"
+            - code: "E"
+            - code: "K"
+            - code: "S"
+            - code: "A"
+            - code: "P"
+            canbeblank: yes
         ncyearactual:
             *year-group-category
         mathsgcsehighestpriorattainment:
             *highest-attainment
-        mathsgcsepriorattainmentyear11:
+        mathsgcsepriorattainmentyeargroup:
             *attainment-year-11
         englishgcsehighestpriorattainment:
             *highest-attainment
-        englishgcsepriorattainmentyear11:
+        englishgcsepriorattainmentyeargroup:
             *attainment-year-11
         mathsgcsefundingexemption:
             *funding-exemption
         englishgcsefundingexemption:
             *funding-exemption
-        mathsgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
-        englishgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
+        countryofbirth:
+            *nationality
     school:
         schooltableid:
             *alphanumeric-not-blank
@@ -1461,7 +1897,7 @@ Autumn:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             &attendance-reason
@@ -1503,7 +1939,7 @@ Autumn:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -1526,6 +1962,7 @@ Autumn:
             &exclusion-category
             category:
             - code: "PERM"
+            - code: "LNCH"
             - code: "SUSP"
             canbeblank: yes
         reason:
@@ -1546,44 +1983,9 @@ Autumn:
             - code: "TH"
             - code: "DB"
             - code: "MT"
-            - code: "PH"
             canbeblank: yes
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            &review-result
-            category:
-            - code: "A"
-              name: "Exclusion upheld by initial governor review (confirmed)"
-            - code: "B"
-              name: "Exclusion upheld by governing body after independent review panel recommended governing board to reconsider reinstatement"
-            - code: "C"
-              name: "Exclusion upheld by governing body after independent review panel directed governing board to reconsider reinstatement"
-            - code: "D"
-              name: "Exclusion upheld by independent review panel (confirmed)"
-            - code: "E"
-              name: "Pupil accepted reinstatement after initial governor review"
-            - code: "F"
-              name: "Pupil accepted offer of reinstatement after independent review panel recommended governing board to reconsider reinstatement"
-            - code: "G"
-              name: "Pupil accepted offer of reinstatement after independent review panel directed governing board to reconsider reinstatement"
-            - code: "H"
-              name: "Pupil declined reinstatement after initial governor review"
-            - code: "J"
-              name: "Pupil declined offer of reinstatement after independent review panel recommended governing board to reconsider reinstatement"
-            - code: "K"
-              name: "Pupil declined offer of reinstatement after independent review panel directed governing board to reconsider reinstatement"
-        reinstatementdate:
-            *date
-        senexpert:
-            &sen-expert
-            category:
-            - code: "Y"
-              name: "Yes"
-            - code: "N"
-              name: "No"
     termlyexclusionsonroll:
         termlyexclusionsonrolltableid:
             *alphanumeric-not-blank
@@ -1605,14 +2007,6 @@ Autumn:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlysessiondetailsoffroll:
         termlysessiondetailsoffrolltableid:
             *alphanumeric-not-blank
@@ -1624,7 +2018,7 @@ Autumn:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -1639,57 +2033,10 @@ Autumn:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
-    workplaceentityoffroll:
-        workplaceentityoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        workplaceentityoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        learningaimsoffrolltableid:
-            *alphanumeric-not-blank
-        wpstartdate:
-            *date
-        wpenddate:
-            *date
-        wphours:
-            *int-blank
-        wpmode:
-            &wp-mode
-            category:
-            - code: "1"
-              name: "internal"
-            - code: "2"
-              name: "external"
-        wpemployerid:
-            *int-blank
-    workplaceentityonroll:
-        workplaceentityonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        workplaceentityonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        learningaimsonrolltableid:
-            *alphanumeric-not-blank
-        wpstartdate:
-            *date
-        wpenddate:
-            *date
-        wphours:
-            *int-blank
-        wpmode:
-            *wp-mode
-        wpemployerid:
-            *int-blank
 Spring:
   column_map:
     addresses:
@@ -1731,40 +2078,6 @@ Spring:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank     
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     childcare:
         childcaretableid:
             *alphanumeric-not-blank
@@ -1878,7 +2191,6 @@ Spring:
             - code: "PL"
             - code: "PS"
             - code: "RE"
-            - code: "RS"
             - code: "SC"
             - code: "TE"
             - code: "TV"
@@ -1912,7 +2224,6 @@ Spring:
             *date
         ukcountry:
             *uk-country
-    
     fundingbasisitems:
         fundingbasisitemstableid:
             *alphanumeric-not-blank
@@ -1930,40 +2241,6 @@ Spring:
             - code: "HSD"
             - code: "LAA"
             canbeblank: yes
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learnersupportoffroll:
         learnersupportoffrolltableid:
             *alphanumeric-not-blank
@@ -2001,6 +2278,45 @@ Spring:
             *alphanumeric-not-blank
         supportcode:
             *support-code
+    levels:
+        levelstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        levelsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        cbdslevel:
+            *cbds-level
+    nationalitiesoffroll:
+        nationalitiesoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        nationalitiesoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        nationality:
+            *nationality
+    nationalitiesonroll:
+        nationalitiesonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        nationalitiesonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        nationality:
+            *nationality
     provisions:
         provisionstableid:
             *alphanumeric-not-blank
@@ -2065,10 +2381,6 @@ Spring:
         termlysessionsauthorised:
             *int-blank
         termlysessionsunauthorised:
-            *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
             *int-blank
         uniquelearnernumber:
             *int-blank
@@ -2181,6 +2493,8 @@ Spring:
             canbeblank: yes
         language:
             *language
+        countryofbirth:
+            *nationality
         boarder:
             *boarder
     pupilonroll:
@@ -2232,10 +2546,6 @@ Spring:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
         fundedhours:
             *two-decimal-places
         extendedhours:
@@ -2271,18 +2581,19 @@ Spring:
         senprovision:
             *sen-provision
         servicechild:
-            *service-child
+            &service-child
+            category:
+            - code: "Y"
+              name: "Yes"
+            - code: "N"
+              name: "No"
+            - code: "U"
+              name: "Unknown"
+            - code: "R"
+              name: "Refused"
+            canbeblank: yes
         plaa:
             *plaa
-        youngcarer:
-            category:
-            - code: "P"
-              name: "Identified as a young carer by parent or guardian"
-            - code: "S"
-              name: "Identified as a young carer by school"
-            - code: "N"
-              name: "Not declared (default value)"
-            canbeblank: yes
         eyppr:
             category:
             - code: "Y"
@@ -2297,6 +2608,23 @@ Spring:
             - code: "RB"
             - code: "RU"
             canbeblank: yes
+        proficiencyinenglish:
+            category:
+            - code: "A"
+              name: "New to English"
+            - code: "B"
+              name: "Early Acquisition"
+            - code: "C"
+              name: "Developing competence"
+            - code: "D"
+              name: "Competent"
+            - code: "E"
+              name: "Fluent"
+            - code: "N"
+              name: "Not yet assessed"
+            canbeblank: yes
+        countryofbirth:
+            *nationality
     school:
         schooltableid:
             *alphanumeric-not-blank
@@ -2400,98 +2728,6 @@ Spring:
             - code: "B"
             - code: "H"
             canbeblank: yes
-    schoolarrangedapdetailoffroll:
-        schoolarrangedapdetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            &ap-setting
-            category:
-            - code: "NFE"
-            - code: "OOT"
-            - code: "OTH"
-            - code: "WBP"
-            canbeblank: yes
-        companynumber:
-            &company-number
-            string: "regex"
-            cell_regex:
-              - ([A-Za-z]{2}|\d{2})\d{6}
-            canbeblank: yes
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            &placement-reason
-            category:
-            - code: "BHS"
-            - code: "SUS"
-            - code: "EXR"
-            - code: "MHN"
-            - code: "OTH"
-            - code: "PHN"
-            canbeblank: yes
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            &attendance-pattern
-            category:
-            - code: "FT"
-            - code: "PT"
-            canbeblank: yes
-    schoolarrangedapdetailonroll:
-        schoolarrangedapdetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
     schoolcensus:
         schoolcensustableid:
             *alphanumeric-not-blank
@@ -2561,22 +2797,10 @@ Spring:
             *int-blank
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlyexclusionsonroll:
         termlyexclusionsonrolltableid:
             *alphanumeric-not-blank
@@ -2594,22 +2818,10 @@ Spring:
             *int-blank
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlysessiondetailsoffroll:
         termlysessiondetailsoffrolltableid:
             *alphanumeric-not-blank
@@ -2621,7 +2833,7 @@ Spring:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -2636,7 +2848,7 @@ Spring:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -2681,40 +2893,6 @@ Summer:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank     
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     fsmperiod:
         fsmperiodtableid:
             *alphanumeric-not-blank
@@ -2732,40 +2910,6 @@ Summer:
             *date
         ukcountry:
             *uk-country
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learnersupportoffroll:
         learnersupportoffrolltableid:
             *alphanumeric-not-blank
@@ -2792,6 +2936,45 @@ Summer:
             *alphanumeric-not-blank
         supportcode:
             *support-code
+    levels:
+        levelstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        levelsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        cbdslevel:
+            *cbds-level
+    nationalitiesoffroll:
+        nationalitiesoffrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        nationalitiesoffrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilnolongeronrolltableid:
+            *alphanumeric-not-blank
+        nationality:
+            *nationality
+    nationalitiesonroll:
+        nationalitiesonrolltableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        nationalitiesonrollorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        nationality:
+            *nationality
     pupilnolongeronroll:
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
@@ -2829,10 +3012,6 @@ Summer:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
         uniquelearnernumber:
             *int-blank
         moveonrollflag:
@@ -2843,6 +3022,8 @@ Summer:
             *language
         boarder:
             *boarder
+        countryofbirth:
+            *nationality
     pupilonroll:
         pupilonrolltableid:
             *alphanumeric-not-blank
@@ -2881,10 +3062,6 @@ Summer:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
         senunitindicator:
             *true-false
         resourcedprovisionindicator:
@@ -2919,8 +3096,6 @@ Summer:
             *enrol-status
         classtype:
             *class-type
-        servicechild:
-            *service-child
         boarder:
             *boarder
         ncyearactual:
@@ -2929,6 +3104,8 @@ Summer:
             *sen-provision
         plaa:
             *plaa
+        countryofbirth:
+            *nationality
     school:
         schooltableid:
             *alphanumeric-not-blank
@@ -2958,76 +3135,6 @@ Summer:
             *intake
         governance:
             *governance
-    schoolarrangedapdetailoffroll:
-        schoolarrangedapdetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
-    schoolarrangedapdetailonroll:
-        schoolarrangedapdetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
     schoolcensus:
         schoolcensustableid:
             *alphanumeric-not-blank
@@ -3082,22 +3189,10 @@ Summer:
             *int-blank
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlyexclusionsonroll:
         termlyexclusionsonrolltableid:
             *alphanumeric-not-blank
@@ -3115,22 +3210,10 @@ Summer:
             *int-blank
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlysessiondetailsoffroll:
         termlysessiondetailsoffrolltableid:
             *alphanumeric-not-blank
@@ -3142,7 +3225,7 @@ Summer:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -3157,7 +3240,7 @@ Summer:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason

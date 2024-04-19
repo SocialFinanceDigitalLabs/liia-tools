@@ -405,8 +405,8 @@ Autumn:
             *int-blank
         tlevelnonqualhrs:
             *int-blank
-        gender:
-            &gender
+        sex:
+            &sex
             category:
             - code: "M"
               name: "Male"
@@ -919,8 +919,8 @@ Autumn:
             *int-blank
         dafindicator:
             *true-false
-        gender:
-            *gender
+        sex:
+            *sex
         yssa:
             &yssa
             category:
@@ -1925,6 +1925,7 @@ Spring:
         pupilonrolltableid:
             *alphanumeric-not-blank
         fundingbasis:
+            &funding-basis
             category:
             - code: "ECO"
             - code: "HSD"
@@ -2072,8 +2073,8 @@ Spring:
             *int-blank
         uniquelearnernumber:
             *int-blank
-        gender:
-            *gender
+        sex:
+            *sex
         ethnicity:
             &ethnicity
             category:
@@ -2252,8 +2253,8 @@ Spring:
             *true-false
         unitcontacttime:
             *int-blank
-        gender:
-            *gender
+        sex:
+            *sex
         ethnicity:
             *ethnicity
         yssa:
@@ -2284,6 +2285,7 @@ Spring:
               name: "Not declared (default value)"
             canbeblank: yes
         eyppr:
+            &eyppr
             category:
             - code: "Y"
               name: "Yes"
@@ -2732,6 +2734,19 @@ Summer:
             *date
         ukcountry:
             *uk-country
+    fundingbasisitems:
+        fundingbasisitemstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        fundingbasisitemsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        pupilonrolltableid:
+            *alphanumeric-not-blank
+        fundingbasis:
+            *funding-basis
     learnerfamoffroll:
         learnerfamoffrolltableid:
             *alphanumeric-not-blank
@@ -2837,8 +2852,8 @@ Summer:
             *int-blank
         moveonrollflag:
             *alphanumeric-blank # couldn't find
-        gender:
-            *gender
+        sex:
+            *sex
         language:
             *language
         boarder:
@@ -2903,14 +2918,14 @@ Summer:
             *true-false
         extendedhours:
             *float
-        thirtyhourcode:
+        eligibilitycode:
             *int-blank
         dafindicator:
             *true-false
         schoollunchtaken:
             *true-false
-        gender:
-            *gender
+        sex:
+            *sex
         yssa:
             *yssa
         language:
@@ -2929,6 +2944,8 @@ Summer:
             *sen-provision
         plaa:
             *plaa
+        eyppr:
+            *eyppr
     school:
         schooltableid:
             *alphanumeric-not-blank

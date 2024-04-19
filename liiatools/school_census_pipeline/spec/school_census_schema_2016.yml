@@ -13,13 +13,6 @@ Autumn:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        uniquepropertyreferencenumber:
-            &uprn
-            numeric:
-              type: "integer"
-              min_value: 1
-              max_value: 999999999999
-            canbeblank: yes
         postcode:
             &postcode-blank
             string: "postcode"
@@ -35,8 +28,6 @@ Autumn:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        uniquepropertyreferencenumber:
-            *uprn
         postcode:
             *postcode-blank
         saon:
@@ -65,58 +56,66 @@ Autumn:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
+    annualsessiondetailsoffroll:
+        annualsessiondetailsoffrolltableid:
             *alphanumeric-not-blank
         NativeId:
             *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
+        annualsessiondetailsoffrollorderseqcolumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            &ap-reason
-            category:
-            - code: "ASP"
-            - code: "EHC"
-            - code: "MHN"
-            - code: "NEW"
-            - code: "OTH"
-            - code: "PEX"
-            - code: "PHN"
-            - code: "RHE"
+        absencesessions:
+            &int-blank
+            numeric:
+              type: "integer"
             canbeblank: yes
-        senprovisionentry:
-            &sen-provision
+        attendancereason:
+            &attendance-reason
             category:
-            - code: "N"
+            - code: "/"
+            - code: "\\" # 2 backslashses as Python reads this as 1
+            - code: "B"
+            - code: "C"
+            - code: "D"
             - code: "E"
-            - code: "K"
-            - code: "S"
-            - code: "A"
+            - code: "G"
+            - code: "H"
+            - code: "I"
+            - code: "J"
+            - code: "L"
+            - code: "M"
+            - code: "N"
+            - code: "O"
             - code: "P"
+            - code: "R"
+            - code: "S"
+            - code: "T"
+            - code: "U"
+            - code: "V"
+            - code: "W"
+            - code: "X"
+            - code: "Y"
+            - code: "Z"
+            - code: "#"
             canbeblank: yes
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
+    annualsessiondetailsonroll:
+        annualsessiondetailsonrolltableid:
             *alphanumeric-not-blank
         NativeId:
             *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
+        annualsessiondetailsonrollorderseqcolumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
+        absencesessions:
+            *int-blank
+        attendancereason:
+            *attendance-reason
     fsmperiodsonroll:
         fsmperiodsonrolltableid:
             *alphanumeric-not-blank
@@ -142,51 +141,6 @@ Autumn:
             - code: "SCT"
             - code: "WLS"
             canbeblank: yes
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            &int-blank
-            numeric:
-              type: "integer"
-            canbeblank: yes
-        learnerfamtype:
-            &learner-fam-type
-            category:
-            - code: "NLM"
-            canbeblank: yes
-        learnerfamcode:
-            &learner-fam-code
-            category:
-            - code: "01"
-            - code: "21"
-            - code: "22"
-            canbeblank: yes
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learningaimsoffroll:
         learningaimsoffrolltableid:
             *alphanumeric-not-blank
@@ -198,9 +152,17 @@ Autumn:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        qn:
+        qan:
             *alphanumeric-blank
-        traineeship:
+        learningstartdate:
+            *date
+        learningplannedenddate:
+            *date
+        learningactualenddate:
+            *date
+        disccode:
+            *alphanumeric-blank
+        coreaim:
             &true-false
             category:
             - code: "0"
@@ -208,16 +170,6 @@ Autumn:
             - code: "1"
               name: "True"
             canbeblank: yes
-        learningstartdate:
-            *date
-        learningplannedenddate:
-            *date
-        learningactualenddate:
-            *date
-        scc:
-            *alphanumeric-blank
-        coreaim:
-            *true-false
         partnerukprn:
             *int-blank
         learningaimstatus:
@@ -249,8 +201,6 @@ Autumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
-        programmeaimsonrolltableid:
-            *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
         qn:
@@ -259,79 +209,35 @@ Autumn:
             *true-false
         partnerukprn:
             *int-blank
-        traineeship:
-            *true-false
         learningstartdate:
             *date
         learningplannedenddate:
             *date
         learningactualenddate:
             *date
-        scc:
+        disccode:
             *alphanumeric-blank
         learningaimwithdrawalreason:
             *aim-withdrawal-reason
         learningaimstatus:
             *aim-status
-    programmeaimsoffroll:
-        programmeaimsoffrolltableid:
+    levels:
+        levelstableid:
             *alphanumeric-not-blank
         NativeId:
             *alphanumeric-not-blank
-        programmeaimsoffrollorderseqcolumn:
+        levelsorderseqcolumn:
             *alphanumeric-not-blank
         sourceid:
             *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
+        schoolcensustableid:
             *alphanumeric-not-blank
-        qn:
-            *alphanumeric-blank
-        programmestartdate:
-            *date
-        programmeplannedenddate:
-            *date
-        programmeactualenddate:
-            *date
-        traineeship:
-            *true-false
-        programmeaimstatus:
-            *aim-status
-        programmeaimwithdrawalreason:
-            *aim-withdrawal-reason
-        progtype:
-            &prog-type
+        cbdslevel:
+            &cbds-level
             category:
-            - code: "30"
-            - code: "31"
-            - code: "01"
-            canbeblank: yes
-    programmeaimsonroll:
-        programmeaimsonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        programmeaimsonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        qn:
-            *alphanumeric-blank
-        learningstartdate:
-            *date
-        learningplannedenddate:
-            *date
-        learningactualenddate:
-            *date
-        learningaimstatus:
-            *aim-status
-        learningwithdrawalreason:
-            *aim-withdrawal-reason
-        traineeship:
-            *true-false
-        progtype:
-            *prog-type
+            - code: "Pupil"
+            - code: "School"
+            canbeblank: no
     pupilnolongeronroll:
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
@@ -371,12 +277,6 @@ Autumn:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
-        termlysessionscoronavirus:
-            *int-blank
         annualsessionspossible:
             *int-blank
         annualsessionsauthorised:
@@ -395,15 +295,7 @@ Autumn:
             *int-blank
         qualhrs:
             *int-blank
-        qualhrspreviousyear:
-            *int-blank
-        nonqualhrspreviousyear:
-            *int-blank
         nonqualhrs:
-            *int-blank
-        tlevelqualhrs:
-            *int-blank
-        tlevelnonqualhrs:
             *int-blank
         gender:
             &gender
@@ -747,8 +639,6 @@ Autumn:
         ncyearleaving:
             &year-group-category
             category:
-            - code: "E1"
-            - code: "E2"
             - code: "N1"
             - code: "N2"
             - code: "R"
@@ -792,7 +682,7 @@ Autumn:
             - code: "1"
             - code: "NR"
             canbeblank: yes
-        mathsgcsepriorattainmentyear11:
+        mathsgcsepriorattainmentyeargroup:
             &attainment-year-11
             category:
             - code: "1"
@@ -801,7 +691,7 @@ Autumn:
             canbeblank: yes
         englishgcsehighestpriorattainment:
             *highest-attainment
-        englishgcsepriorattainmentyear11:
+        englishgcsepriorattainmentyeargroup:
             *attainment-year-11
         mathsgcsefundingexemption:
             &funding-exemption
@@ -813,10 +703,6 @@ Autumn:
             - code: "N"
         englishgcsefundingexemption:
             *funding-exemption
-        mathsgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
-        englishgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
     pupilonroll:
         pupilonrolltableid:
             *alphanumeric-not-blank
@@ -847,10 +733,9 @@ Autumn:
         dob:
             *date
         hoursatsetting:
-            &two-decimal-places
+            &float
             numeric:
               type: "float"
-              decimal_places: 2
             canbeblank: yes
         schoollunchtaken:
             *true-false
@@ -866,27 +751,9 @@ Autumn:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
-        termlysessionscoronavirus:
-            *int-blank
         qualhrs:
             *int-blank
-        qualhrspreviousyear:
-            *int-blank
-        nonqualhrspreviousyear:
-            *int-blank
-        senunitindicator:
-            *true-false
-        resourcedprovisionindicator:
-            *true-false
         nonqualhrs:
-            *int-blank
-        tlevelqualhrs:
-            *int-blank
-        tlevelnonqualhrs:
             *int-blank
         ftemp:
             *true-false
@@ -899,26 +766,17 @@ Autumn:
         annualsessionspossible:
             *int-blank
         fundedhours:
-            *two-decimal-places
+            *float
         missingaddress:
             *alphanumeric-blank # couldn't find
         duplicatenotfunded:
             *alphanumeric-blank # couldn't find
-        extendedhours:
-            &float
-            numeric:
-              type: "float"
-            canbeblank: yes
-        thirtyhourcode:
-            *int-blank
         summerhalfterm2sessionspossible:
             *int-blank
         summerhalfterm2sessionsauthorised:
             *int-blank
         summerhalfterm2sessionsunauthorised:
             *int-blank
-        dafindicator:
-            *true-false
         gender:
             *gender
         yssa:
@@ -932,18 +790,6 @@ Autumn:
               name: "Unsought"
             - code: "SNR"
               name: "Sought, no reply"
-            canbeblank: yes
-        servicechild:
-            &service-child
-            category:
-            - code: "Y"
-              name: "Yes"
-            - code: "N"
-              name: "No"
-            - code: "U"
-              name: "Unknown"
-            - code: "R"
-              name: "Refused"
             canbeblank: yes
         language:
             *language
@@ -964,7 +810,7 @@ Autumn:
             canbeblank: yes
         boarder:
             *boarder
-        plaa:
+        adoptedfromcare:
             &plaa
             category:
             - code: "N"
@@ -972,28 +818,31 @@ Autumn:
             - code: "G"
             - code: "R"
             - code: "C"
-            - code: "O"
             canbeblank: yes
         senprovision:
-            *sen-provision
+            &sen-provision
+            category:
+            - code: "N"
+            - code: "E"
+            - code: "K"
+            - code: "S"
+            - code: "A"
+            - code: "P"
+            canbeblank: yes
         ncyearactual:
             *year-group-category
         mathsgcsehighestpriorattainment:
             *highest-attainment
-        mathsgcsepriorattainmentyear11:
+        mathsgcsepriorattainmentyeargroup:
             *attainment-year-11
         englishgcsehighestpriorattainment:
             *highest-attainment
-        englishgcsepriorattainmentyear11:
+        englishgcsepriorattainmentyeargroup:
             *attainment-year-11
         mathsgcsefundingexemption:
             *funding-exemption
         englishgcsefundingexemption:
             *funding-exemption
-        mathsgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
-        englishgcsehighestpriorattainmentpreviousyear:
-            *highest-attainment
     school:
         schooltableid:
             *alphanumeric-not-blank
@@ -1034,6 +883,7 @@ Autumn:
             - code: "AT"
             - code: "EY"
             - code: "PR"
+            - code: "NO"
             canbeblank: yes
         type:
             &type
@@ -1154,8 +1004,6 @@ Autumn:
             *alphanumeric-not-blank
         softwarecode:
             *alphanumeric-not-blank
-        urn:
-            *int-blank
         datetime:
             *date
         release:
@@ -1461,37 +1309,10 @@ Autumn:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
-            &attendance-reason
-            category:
-            - code: "/"
-            - code: "\\" # 2 backslashses as Python reads this as 1
-            - code: "B"
-            - code: "C"
-            - code: "D"
-            - code: "E"
-            - code: "G"
-            - code: "H"
-            - code: "I"
-            - code: "J"
-            - code: "L"
-            - code: "M"
-            - code: "N"
-            - code: "O"
-            - code: "P"
-            - code: "R"
-            - code: "S"
-            - code: "T"
-            - code: "U"
-            - code: "V"
-            - code: "W"
-            - code: "X"
-            - code: "Y"
-            - code: "Z"
-            - code: "#"
-            canbeblank: yes
+            *attendance-reason
     summerhalfterm2sessiondetailsonroll:
         summerhalfterm2sessiondetailsonrolltableid:
             *alphanumeric-not-blank
@@ -1503,7 +1324,7 @@ Autumn:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -1522,10 +1343,13 @@ Autumn:
             *date
         sessions:
             *int-blank
+        incare:
+            *true-false
         category:
             &exclusion-category
             category:
             - code: "PERM"
+            - code: "LNCH"
             - code: "SUSP"
             canbeblank: yes
         reason:
@@ -1546,44 +1370,9 @@ Autumn:
             - code: "TH"
             - code: "DB"
             - code: "MT"
-            - code: "PH"
             canbeblank: yes
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            &review-result
-            category:
-            - code: "A"
-              name: "Exclusion upheld by initial governor review (confirmed)"
-            - code: "B"
-              name: "Exclusion upheld by governing body after independent review panel recommended governing board to reconsider reinstatement"
-            - code: "C"
-              name: "Exclusion upheld by governing body after independent review panel directed governing board to reconsider reinstatement"
-            - code: "D"
-              name: "Exclusion upheld by independent review panel (confirmed)"
-            - code: "E"
-              name: "Pupil accepted reinstatement after initial governor review"
-            - code: "F"
-              name: "Pupil accepted offer of reinstatement after independent review panel recommended governing board to reconsider reinstatement"
-            - code: "G"
-              name: "Pupil accepted offer of reinstatement after independent review panel directed governing board to reconsider reinstatement"
-            - code: "H"
-              name: "Pupil declined reinstatement after initial governor review"
-            - code: "J"
-              name: "Pupil declined offer of reinstatement after independent review panel recommended governing board to reconsider reinstatement"
-            - code: "K"
-              name: "Pupil declined offer of reinstatement after independent review panel directed governing board to reconsider reinstatement"
-        reinstatementdate:
-            *date
-        senexpert:
-            &sen-expert
-            category:
-            - code: "Y"
-              name: "Yes"
-            - code: "N"
-              name: "No"
     termlyexclusionsonroll:
         termlyexclusionsonrolltableid:
             *alphanumeric-not-blank
@@ -1599,20 +1388,14 @@ Autumn:
             *date
         sessions:
             *int-blank
+        incare:
+            *true-false
         category:
             *exclusion-category
         reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlysessiondetailsoffroll:
         termlysessiondetailsoffrolltableid:
             *alphanumeric-not-blank
@@ -1624,7 +1407,7 @@ Autumn:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -1639,57 +1422,10 @@ Autumn:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
-    workplaceentityoffroll:
-        workplaceentityoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        workplaceentityoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        learningaimsoffrolltableid:
-            *alphanumeric-not-blank
-        wpstartdate:
-            *date
-        wpenddate:
-            *date
-        wphours:
-            *int-blank
-        wpmode:
-            &wp-mode
-            category:
-            - code: "1"
-              name: "internal"
-            - code: "2"
-              name: "external"
-        wpemployerid:
-            *int-blank
-    workplaceentityonroll:
-        workplaceentityonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        workplaceentityonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        learningaimsonrolltableid:
-            *alphanumeric-not-blank
-        wpstartdate:
-            *date
-        wpenddate:
-            *date
-        wphours:
-            *int-blank
-        wpmode:
-            *wp-mode
-        wpemployerid:
-            *int-blank
 Spring:
   column_map:
     addresses:
@@ -1703,8 +1439,6 @@ Spring:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        uniquepropertyreferencenumber:
-            *uprn
         postcode:
             *postcode-blank
         saon:
@@ -1731,40 +1465,6 @@ Spring:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank     
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     childcare:
         childcaretableid:
             *alphanumeric-not-blank
@@ -1878,7 +1578,6 @@ Spring:
             - code: "PL"
             - code: "PS"
             - code: "RE"
-            - code: "RS"
             - code: "SC"
             - code: "TE"
             - code: "TV"
@@ -1912,58 +1611,6 @@ Spring:
             *date
         ukcountry:
             *uk-country
-    
-    fundingbasisitems:
-        fundingbasisitemstableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        fundingbasisitemsorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        fundingbasis:
-            category:
-            - code: "ECO"
-            - code: "HSD"
-            - code: "LAA"
-            canbeblank: yes
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learnersupportoffroll:
         learnersupportoffrolltableid:
             *alphanumeric-not-blank
@@ -2001,6 +1648,19 @@ Spring:
             *alphanumeric-not-blank
         supportcode:
             *support-code
+    levels:
+        levelstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        levelsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        cbdslevel:
+            *cbds-level
     provisions:
         provisionstableid:
             *alphanumeric-not-blank
@@ -2065,10 +1725,6 @@ Spring:
         termlysessionsauthorised:
             *int-blank
         termlysessionsunauthorised:
-            *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
             *int-blank
         uniquelearnernumber:
             *int-blank
@@ -2225,25 +1881,15 @@ Spring:
         missingaddress:
             *alphanumeric-blank # couldn't find
         hoursatsetting:
-            *two-decimal-places
+            *float
         termlysessionspossible:
             *int-blank
         termlysessionsauthorised:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
         fundedhours:
-            *two-decimal-places
-        extendedhours:
             *float
-        thirtyhourcode:
-            *int-blank
-        dafindicator:
-            *true-false
         duplicatenotfunded:
             *alphanumeric-blank # couldn't find
         moveoffrollflag:
@@ -2271,18 +1917,19 @@ Spring:
         senprovision:
             *sen-provision
         servicechild:
-            *service-child
-        plaa:
-            *plaa
-        youngcarer:
+            &service-child
             category:
-            - code: "P"
-              name: "Identified as a young carer by parent or guardian"
-            - code: "S"
-              name: "Identified as a young carer by school"
+            - code: "Y"
+              name: "Yes"
             - code: "N"
-              name: "Not declared (default value)"
+              name: "No"
+            - code: "U"
+              name: "Unknown"
+            - code: "R"
+              name: "Refused"
             canbeblank: yes
+        adoptedfromcare:
+            *plaa
         eyppr:
             category:
             - code: "Y"
@@ -2334,15 +1981,41 @@ Spring:
             canbeblank: yes
         maxfemaleage:
             *int-blank
-        primarylodged:
+        postcode:
+            *postcode-blank
+        saon:
+            *alphanumeric-blank
+        paon:
+            *alphanumeric-blank
+        street:
+            *alphanumeric-blank
+        locality:
+            *alphanumeric-blank
+        town:
+            *alphanumeric-blank
+        administrativearea:
+            *alphanumeric-blank
+        posttown:
+            *alphanumeric-blank
+        addressline1:
+            *alphanumeric-blank
+        addressline2:
+            *alphanumeric-blank
+        addressline3:
+            *alphanumeric-blank
+        addressline4:
+            *alphanumeric-blank
+        addressline5:
+            *alphanumeric-blank
+        lodged:
             *int-blank
-        primarywithdrawn:
+        withdrawn:
             *int-blank
-        primaryheard:
+        heard:
             *int-blank
-        primaryupheld:
+        upheld:
             *int-blank
-        primaryrejected:
+        rejected:
             *int-blank
         infantslodged:
             *int-blank
@@ -2353,16 +2026,6 @@ Spring:
         infantsupheld:
             *int-blank
         infantsrejected:
-            *int-blank
-        secondarylodged:
-            *int-blank
-        secondarywithdrawn:
-            *int-blank
-        secondaryheard:
-            *int-blank
-        secondaryupheld:
-            *int-blank
-        secondaryrejected:
             *int-blank
         parttimenotin:
             *int-blank
@@ -2400,98 +2063,6 @@ Spring:
             - code: "B"
             - code: "H"
             canbeblank: yes
-    schoolarrangedapdetailoffroll:
-        schoolarrangedapdetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            &ap-setting
-            category:
-            - code: "NFE"
-            - code: "OOT"
-            - code: "OTH"
-            - code: "WBP"
-            canbeblank: yes
-        companynumber:
-            &company-number
-            string: "regex"
-            cell_regex:
-              - ([A-Za-z]{2}|\d{2})\d{6}
-            canbeblank: yes
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            &placement-reason
-            category:
-            - code: "BHS"
-            - code: "SUS"
-            - code: "EXR"
-            - code: "MHN"
-            - code: "OTH"
-            - code: "PHN"
-            canbeblank: yes
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            &attendance-pattern
-            category:
-            - code: "FT"
-            - code: "PT"
-            canbeblank: yes
-    schoolarrangedapdetailonroll:
-        schoolarrangedapdetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
     schoolcensus:
         schoolcensustableid:
             *alphanumeric-not-blank
@@ -2517,8 +2088,6 @@ Spring:
             *alphanumeric-not-blank
         softwarecode:
             *alphanumeric-not-blank
-        urn:
-            *int-blank
         release:
             *alphanumeric-blank
         serialno:
@@ -2559,24 +2128,14 @@ Spring:
             *date
         sessions:
             *int-blank
+        incare:
+            *true-false
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlyexclusionsonroll:
         termlyexclusionsonrolltableid:
             *alphanumeric-not-blank
@@ -2592,24 +2151,14 @@ Spring:
             *date
         sessions:
             *int-blank
+        incare:
+            *true-false
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlysessiondetailsoffroll:
         termlysessiondetailsoffrolltableid:
             *alphanumeric-not-blank
@@ -2621,7 +2170,7 @@ Spring:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -2636,7 +2185,7 @@ Spring:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -2653,8 +2202,6 @@ Summer:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        uniquepropertyreferencenumber:
-            *uprn
         postcode:
             *postcode-blank
         saon:
@@ -2681,40 +2228,6 @@ Summer:
             *alphanumeric-blank
         addressline5:
             *alphanumeric-blank     
-    approvisiondetailoffroll:
-        approvisiondetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
-    approvisiondetailonroll:
-        approvisiondetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        approvisiondetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        prevurn:
-            *alphanumeric-blank
-        apreason:
-            *ap-reason
-        senprovisionentry:
-            *sen-provision
     fsmperiod:
         fsmperiodtableid:
             *alphanumeric-not-blank
@@ -2732,40 +2245,6 @@ Summer:
             *date
         ukcountry:
             *uk-country
-    learnerfamoffroll:
-        learnerfamoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
-    learnerfamonroll:
-        learnerfamonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        learnerfamonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        learnerfamhours:
-            *int-blank
-        learnerfamtype:
-            *learner-fam-type
-        learnerfamcode:
-            *learner-fam-code
     learnersupportoffroll:
         learnersupportoffrolltableid:
             *alphanumeric-not-blank
@@ -2792,6 +2271,19 @@ Summer:
             *alphanumeric-not-blank
         supportcode:
             *support-code
+    levels:
+        levelstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        levelsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        schoolcensustableid:
+            *alphanumeric-not-blank
+        cbdslevel:
+            *cbds-level
     pupilnolongeronroll:
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
@@ -2828,10 +2320,6 @@ Summer:
         termlysessionsauthorised:
             *int-blank
         termlysessionsunauthorised:
-            *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
             *int-blank
         uniquelearnernumber:
             *int-blank
@@ -2881,31 +2369,17 @@ Summer:
             *int-blank
         termlysessionsunauthorised:
             *int-blank
-        termlysessionseducational:
-            *int-blank
-        termlysessionsexceptional:
-            *int-blank
-        senunitindicator:
-            *true-false
-        resourcedprovisionindicator:
-            *true-false
         uniquelearnernumber:
             *alphanumeric-blank
         hoursatsetting:
-            *two-decimal-places
+            *float
         moveoffrollflag:
             *alphanumeric-blank # couldn't find
         missingaddress:
             *alphanumeric-blank # couldn't find
         fundedhours:
-            *two-decimal-places     
+            *float     
         topupfunding:
-            *true-false
-        extendedhours:
-            *float
-        thirtyhourcode:
-            *int-blank
-        dafindicator:
             *true-false
         schoollunchtaken:
             *true-false
@@ -2919,15 +2393,13 @@ Summer:
             *enrol-status
         classtype:
             *class-type
-        servicechild:
-            *service-child
         boarder:
             *boarder
         ncyearactual:
             *year-group-category
         senprovision:
             *sen-provision
-        plaa:
+        adoptedfromcare:
             *plaa
     school:
         schooltableid:
@@ -2958,76 +2430,6 @@ Summer:
             *intake
         governance:
             *governance
-    schoolarrangedapdetailoffroll:
-        schoolarrangedapdetailoffrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailoffrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilnolongeronrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
-    schoolarrangedapdetailonroll:
-        schoolarrangedapdetailonrolltableid:
-            *alphanumeric-not-blank
-        NativeId:
-            *alphanumeric-not-blank
-        schoolarrangedapdetailonrollorderseqcolumn:
-            *alphanumeric-not-blank
-        sourceid:
-            *alphanumeric-not-blank
-        pupilonrolltableid:
-            *alphanumeric-not-blank
-        urn:
-            *int-blank
-        ukprn:
-            *int-blank
-        entrydate:
-            *date
-        leavingdate:
-            *date
-        apsessionsperweek:
-            *int-blank
-        apsettingtype:
-            *ap-setting
-        companynumber:
-            *company-number
-        applacementpostcode:
-            *postcode-blank
-        placementreason:
-            *placement-reason
-        senprovisionentry:
-            *sen-provision
-        senprovisionleaving:
-            *sen-provision
-        apattendancepattern:
-            *attendance-pattern
     schoolcensus:
         schoolcensustableid:
             *alphanumeric-not-blank
@@ -3053,8 +2455,6 @@ Summer:
             *alphanumeric-not-blank
         softwarecode:
             *alphanumeric-not-blank
-        urn:
-            *int-blank
         release:
             *alphanumeric-blank
         serialno:
@@ -3080,24 +2480,14 @@ Summer:
             *date
         sessions:
             *int-blank
+        incare:
+            *true-false
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlyexclusionsonroll:
         termlyexclusionsonrolltableid:
             *alphanumeric-not-blank
@@ -3113,24 +2503,14 @@ Summer:
             *date
         sessions:
             *int-blank
+        incare:
+            *true-false
         category:
             *exclusion-category
-        reason1:
-            *exclusion-reason
-        reason2:
-            *exclusion-reason
-        reason3:
+        reason:
             *exclusion-reason
         senprovision:
             *sen-provision
-        reviewdate:
-            *date
-        reviewresult:
-            *review-result
-        reinstatementdate:
-            *date
-        senexpert:
-            *sen-expert
     termlysessiondetailsoffroll:
         termlysessiondetailsoffrolltableid:
             *alphanumeric-not-blank
@@ -3142,7 +2522,7 @@ Summer:
             *alphanumeric-not-blank
         pupilnolongeronrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason
@@ -3157,7 +2537,7 @@ Summer:
             *alphanumeric-not-blank
         pupilonrolltableid:
             *alphanumeric-not-blank
-        sessions:
+        absencesessions:
             *int-blank
         attendancereason:
             *attendance-reason

@@ -13,4 +13,4 @@ def test_schema():
     assert schema.name == "CIN_schema_2017.xsd"
 
     with pytest.raises(URLError):
-        load_schema(2016)
+        load_schema(2015)

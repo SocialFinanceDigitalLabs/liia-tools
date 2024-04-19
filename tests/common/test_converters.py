@@ -186,6 +186,10 @@ def test_to_regex():
         to_regex("AB12345", pattern)
         to_regex("xxxxOz2054309383", pattern)
 
+    pattern = r"[A-Za-z]\d{11}(\d|[A-Za-z])"
+    assert to_regex("A123456789012", pattern) == "A123456789012"
+    assert to_regex("A12345678901B", pattern) == "A12345678901B"
+
 
 def test_to_time():
     assert (
