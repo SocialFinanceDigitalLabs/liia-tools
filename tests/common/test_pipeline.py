@@ -33,7 +33,7 @@ def test_move_files_for_processing():
     files = list(session_fs.walk.files())
     assert len(files) == 4
 
-    file_info = {f.name: f for f in file_locators}
+    file_info = {f.meta["path"]: f for f in file_locators}
 
     file1_uid = file_info["/2019/file1.txt"].meta["uuid"]
 
