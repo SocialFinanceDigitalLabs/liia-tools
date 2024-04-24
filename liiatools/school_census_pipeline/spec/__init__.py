@@ -2,6 +2,7 @@ import logging
 import re
 from functools import lru_cache
 from pathlib import Path
+from enum import Enum
 
 import yaml
 from pydantic_yaml import parse_yaml_file_as
@@ -16,14 +17,20 @@ logger = logging.getLogger(__name__)
 SCHEMA_DIR = Path(__file__).parent
 
 
+class Term(Enum):
+    AUTUMN = "Autumn"
+    SPRING = "Spring"
+    SUMMER = "Summer"
+
+
 @lru_cache
-def load_pipeline_config():
-    with open(SCHEMA_DIR / "pipeline.yml", "rt") as FILE:
+def load_pipeline_config(term: Term):
+    with open(SCHEMA_DIR / f"pipeline_{term}.yml", "rt") as FILE:
         return parse_yaml_file_as(PipelineConfig, FILE)
 
 
 @lru_cache
-def load_schema(year: int, term: str) -> DataSchema:
+def load_schema(year: int, term: Term) -> DataSchema:
     pattern = re.compile(r"school_census_schema_(\d{4})(\.diff)?\.yml")
 
     # Build index of all schema files

@@ -1,0 +1,1263 @@
+table_list:
+- id: addresses
+  retain:
+  - PAN
+  columns:
+  - id: addressestableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: addressesorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: uniquepropertyreferencenumber
+    type: numeric
+    exclude:
+    - PAN
+  - id: postcode
+    type: postcode
+    degrade: short_postcode
+  - id: saon
+    type: string
+    exclude:
+    - PAN
+  - id: paon
+    type: string
+    exclude:
+    - PAN
+  - id: street
+    type: string
+    exclude:
+    - PAN
+  - id: locality
+    type: string
+    exclude:
+    - PAN
+  - id: town
+    type: string
+    exclude:
+    - PAN
+  - id: administrativearea
+    type: string
+    exclude:
+    - PAN
+  - id: posttown
+    type: string
+    exclude:
+    - PAN
+  - id: addressline1
+    type: string
+    exclude:
+    - PAN
+  - id: addressline2
+    type: string
+    exclude:
+    - PAN
+  - id: addressline3
+    type: string
+    exclude:
+    - PAN
+  - id: addressline4
+    type: string
+    exclude:
+    - PAN
+  - id: addressline5
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: approvisiondetailoffroll
+  columns:
+  - id: approvisiondetailoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: approvisiondetailoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: prevurn
+    type: string
+  - id: apreason
+    type: category
+  - id: senprovisionentry
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: approvisiondetailonroll
+  columns:
+  - id: approvisiondetailonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: approvisiondetailonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: prevurn
+    type: string
+  - id: apreason
+    type: category
+  - id: senprovisionentry
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: childcare
+  columns:
+  - id: childcaretableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: childcareorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: schooltableid
+    type: string
+  - id: openingtime
+    type: time
+  - id: closingtime
+    type: time
+  - id: noofchildcareplaces
+    type: numeric
+  - id: childcarewksopen
+    type: numeric
+  - id: onsite
+    type: category
+  - id: childcaresignposting
+    type: category
+  - id: typeofchildcare
+    type: category
+  - id: childcareprovider
+    type: category
+  - id: otherschools
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: classes
+  columns:
+  - id: classestableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: classesorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: schooltableid
+    type: string
+  - id: classname
+    type: string
+  - id: teachers
+    type: numeric
+  - id: nonteachers
+    type: numeric
+  - id: homepupils
+    type: numeric
+  - id: guestpupils
+    type: numeric
+  - id: ppateachers
+    type: numeric
+  - id: exceptiona
+    type: numeric
+  - id: exceptionb
+    type: numeric
+  - id: exceptionc
+    type: numeric
+  - id: exceptiond
+    type: numeric
+  - id: exceptione
+    type: numeric
+  - id: exceptionf
+    type: numeric
+  - id: exceptiong
+    type: numeric
+  - id: exceptionh
+    type: numeric
+  - id: yeargroup
+    type: numeric
+  - id: category
+    type: string
+  - id: classactivity
+    type: category
+  - id: keystage
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: fsmperiod
+  retain:
+  - PAN
+  columns:
+  - id: fsmperiodtableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: fsmperiodorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: fsmstartdate
+    type: date
+  - id: fsmenddate
+    type: date
+  - id: ukcountry
+    type: category
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: fundingbasisitems
+  retain:
+  - PAN
+  columns:
+  - id: fundingbasisitemstableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: fundingbasisitemsorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: fundingbasis
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: learnerfamoffroll
+  columns:
+  - id: learnerfamoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: learnerfamoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: learnerfamhours
+    type: numeric
+  - id: learnerfamtype
+    type: category
+  - id: learnerfamcode
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: learnerfamonroll
+  columns:
+  - id: learnerfamonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: learnerfamonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: learnerfamhours
+    type: numeric
+  - id: learnerfamtype
+    type: category
+  - id: learnerfamcode
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: learnersupportoffroll
+  columns:
+  - id: learnersupportoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: learnersupportoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: supportcode
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: learnersupportonroll
+  columns:
+  - id: learnersupportonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: learnersupportonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: supportcode
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: levels
+  columns:
+  - id: levelstableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: levelsorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: schoolcensustableid
+    type: string
+  - id: cbdslevel
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: nationalitiesoffroll
+  columns:
+  - id: nationalitiesoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: nationalitiesoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: nationality
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: nationalitiesonroll
+  columns:
+  - id: nationalitiesonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: nationalitiesonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: nationality
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: provisions
+  columns:
+  - id: provisionstableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: provisionsorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: schooltableid
+    type: string
+  - id: specialschooltype
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: pupilnolongeronroll
+  retain:
+  - PAN
+  columns:
+  - id: pupilnolongeronrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: pupilnolongeronrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: schoolcensustableid
+    type: string
+    exclude:
+    - PAN
+  - id: upn
+    type: string
+  - id: formerupn
+    type: string
+  - id: surname
+    type: string
+  - id: forename
+    type: string
+  - id: middlenames
+    type: string
+    exclude:
+    - PAN
+  - id: formersurname
+    type: string
+    exclude:
+    - PAN
+  - id: dob
+    type: date
+    degrade: first_of_month
+  - id: entrydate
+    type: date
+    exclude:
+    - PAN
+  - id: leavingdate
+    type: date
+    exclude:
+    - PAN
+  - id: parttime
+    type: category
+  - id: termlysessionspossible
+    type: numeric
+  - id: moveonrollflag
+    type: string
+  - id: termlysessionseducational
+    type: numeric
+  - id: termlysessionsexceptional
+    type: numeric
+  - id: termlysessionscoronavirus
+    type: numeric
+  - id: termlysessionsauthorised
+    type: numeric
+  - id: termlysessionsunauthorised
+    type: numeric
+  - id: uniquelearnernumber
+    type: numeric
+  - id: gender
+    type: category
+  - id: sex
+    type: category
+  - id: ethnicity
+    type: category
+  - id: language
+    type: category
+  - id: boarder
+    type: category
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: pupilonroll
+  retain:
+  - PAN
+  columns:
+  - id: pupilonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: schoolcensustableid
+    type: string
+    exclude:
+    - PAN
+  - id: upn
+    type: string
+  - id: formerupn
+    type: string
+  - id: surname
+    type: string
+  - id: forename
+    type: string
+  - id: uniquelearnernumber
+    type: string
+  - id: middlenames
+    type: string
+    exclude:
+    - PAN
+  - id: preferredsurname
+    type: string
+    exclude:
+    - PAN
+  - id: formersurname
+    type: string
+    exclude:
+    - PAN
+  - id: dob
+    type: date
+    degrade: first_of_month
+  - id: entrydate
+    type: date
+    exclude:
+    - PAN
+  - id: schoollunchtaken
+    type: category
+    exclude:
+    - PAN
+  - id: parttime
+    type: category
+  - id: senunitindicator
+    type: category
+    exclude:
+    - PAN
+  - id: resourcedprovisionindicator
+    type: category
+    exclude:
+    - PAN
+  - id: missingaddress
+    type: string
+    exclude:
+    - PAN
+  - id: hoursatsetting
+    type: numeric
+    exclude:
+    - PAN
+  - id: termlysessionspossible
+    type: numeric
+  - id: termlysessionsauthorised
+    type: numeric
+  - id: termlysessionsunauthorised
+    type: numeric
+  - id: fundedhours
+    type: numeric
+  - id: termlysessionseducational
+    type: numeric
+  - id: termlysessionsexceptional
+    type: numeric
+  - id: termlysessionscoronavirus
+    type: numeric
+  - id: extendedhours
+    type: numeric
+  - id: thirtyhourcode
+    type: numeric
+    exclude:
+    - PAN
+  - id: dafindicator
+    type: category
+    exclude:
+    - PAN
+  - id: duplicatenotfunded
+    type: string
+    exclude:
+    - PAN
+  - id: moveoffrollflag
+    type: string
+  - id: topupfunding
+    type: category
+  - id: unitcontacttime
+    type: numeric
+    exclude:
+    - PAN
+  - id: gender
+    type: category
+  - id: sex
+    type: category
+  - id: ethnicity
+    type: category
+  - id: yssa
+    type: category
+    exclude:
+    - PAN
+  - id: language
+    type: category
+  - id: enrolstatus
+    type: category
+  - id: classtype
+    type: category
+    exclude:
+    - PAN
+  - id: boarder
+    type: category
+    exclude:
+    - PAN
+  - id: ncyearactual
+    type: category
+  - id: senprovision
+    type: category
+  - id: servicechild
+    type: category
+    exclude:
+    - PAN
+  - id: plaa
+    type: category
+    exclude:
+    - PAN
+  - id: eyppr
+    type: category
+    exclude:
+    - PAN
+  - id: eyppbf
+    type: category
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: school
+  retain:
+  - PAN
+  columns:
+  - id: schooltableid
+    type: string
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: schoolorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+  - id: schoolcensustableid
+    type: string
+  - id: schoolname
+    type: string
+  - id: email
+    type: string
+    exclude:
+    - PAN
+  - id: phoneno
+    type: numeric
+    exclude:
+    - PAN
+  - id: maxdaypupils
+    type: numeric
+    exclude:
+    - PAN
+  - id: maxboarders
+    type: numeric
+    exclude:
+    - PAN
+  - id: minmaleage
+    type: numeric
+    exclude:
+    - PAN
+  - id: maxmaleage
+    type: numeric
+    exclude:
+    - PAN
+  - id: minfemaleage
+    type: numeric
+    exclude:
+    - PAN
+  - id: maxfemaleage
+    type: numeric
+    exclude:
+    - PAN
+  - id: lodged
+    type: numeric
+    exclude:
+    - PAN
+  - id: withdrawn
+    type: numeric
+    exclude:
+    - PAN
+  - id: heard
+    type: numeric
+    exclude:
+    - PAN
+  - id: upheld
+    type: numeric
+    exclude:
+    - PAN
+  - id: rejected
+    type: numeric
+    exclude:
+    - PAN
+  - id: primarylodged
+    type: numeric
+    exclude:
+    - PAN
+  - id: primarywithdrawn
+    type: numeric
+    exclude:
+    - PAN
+  - id: primaryheard
+    type: numeric
+    exclude:
+    - PAN
+  - id: primaryupheld
+    type: numeric
+    exclude:
+    - PAN
+  - id: primaryrejected
+    type: numeric
+    exclude:
+    - PAN
+  - id: infantslodged
+    type: numeric
+    exclude:
+    - PAN
+  - id: infantswithdrawn
+    type: numeric
+    exclude:
+    - PAN
+  - id: infantsheard
+    type: numeric
+    exclude:
+    - PAN
+  - id: infantsupheld
+    type: numeric
+    exclude:
+    - PAN
+  - id: infantsrejected
+    type: numeric
+    exclude:
+    - PAN
+  - id: secondarylodged
+    type: numeric
+    exclude:
+    - PAN
+  - id: secondarywithdrawn
+    type: numeric
+    exclude:
+    - PAN
+  - id: secondaryheard
+    type: numeric
+    exclude:
+    - PAN
+  - id: secondaryupheld
+    type: numeric
+    exclude:
+    - PAN
+  - id: secondaryrejected
+    type: numeric
+    exclude:
+    - PAN
+  - id: parttimenotin
+    type: numeric
+    exclude:
+    - PAN
+  - id: privatestudy
+    type: numeric
+    exclude:
+    - PAN
+  - id: pupilsatotherschool
+    type: numeric
+    exclude:
+    - PAN
+  - id: workexperience
+    type: numeric
+    exclude:
+    - PAN
+  - id: fecollege
+    type: numeric
+    exclude:
+    - PAN
+  - id: freemealstaken
+    type: numeric
+    exclude:
+    - PAN
+  - id: childmothers
+    type: category
+    exclude:
+    - PAN
+  - id: teenmotherplaces
+    type: numeric
+    exclude:
+    - PAN
+  - id: childcareplaces
+    type: category
+    exclude:
+    - PAN
+  - id: phase
+    type: category
+    exclude:
+    - PAN
+  - id: type
+    type: category
+    exclude:
+    - PAN
+  - id: highestncyeargroup
+    type: category
+    exclude:
+    - PAN
+  - id: lowestncyeargroup
+    type: category
+    exclude:
+    - PAN
+  - id: intake
+    type: category
+    exclude:
+    - PAN
+  - id: governance
+    type: category
+    exclude:
+    - PAN
+  - id: accommodation
+    type: category
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: schoolarrangedapdetailoffroll
+  columns:
+  - id: schoolarrangedapdetailoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: schoolarrangedapdetailoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: urn
+    type: numeric
+  - id: ukprn
+    type: numeric
+  - id: entrydate
+    type: date
+  - id: leavingdate
+    type: date
+  - id: apsessionsperweek
+    type: numeric
+  - id: apsettingtype
+    type: category
+  - id: placementreason
+    type: category
+  - id: senprovisionentry
+    type: category
+  - id: senprovisionleaving
+    type: category
+  - id: apattendancepattern
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: schoolarrangedapdetailonroll
+  columns:
+  - id: schoolarrangedapdetailonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: schoolarrangedapdetailonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: urn
+    type: numeric
+  - id: ukprn
+    type: numeric
+  - id: entrydate
+    type: date
+  - id: leavingdate
+    type: date
+  - id: apsessionsperweek
+    type: numeric
+  - id: apsettingtype
+    type: category
+  - id: placementreason
+    type: category
+  - id: senprovisionentry
+    type: category
+  - id: senprovisionleaving
+    type: category
+  - id: apattendancepattern
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: schoolcensus
+  retain:
+  - PAN
+  columns:
+  - id: schoolcensustableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: schoolcensusorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: term
+    type: category
+  - id: collection
+    type: category
+  - id: name
+    type: category
+  - id: year
+    type: numeric
+  - id: referencedate
+    type: date
+    exclude:
+    - PAN
+  - id: sourcelevel
+    type: category
+    exclude:
+    - PAN
+  - id: estab
+    type: string
+    exclude:
+    - PAN
+  - id: softwarecode
+    type: string
+    exclude:
+    - PAN
+  - id: urn
+    type: numeric
+  - id: release
+    type: string
+    exclude:
+    - PAN
+  - id: serialno
+    type: numeric
+    exclude:
+    - PAN
+  - id: xversion
+    type: string
+    exclude:
+    - PAN
+  - id: datetime
+    type: date
+    exclude:
+    - PAN
+  - id: lea
+    type: category
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: senneeds
+  retain:
+  - PAN
+  columns:
+  - id: senneedstableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: senneedsorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: sentyperank
+    type: numeric
+  - id: sentype
+    type: string
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: termlyexclusionsoffroll
+  retain:
+  - PAN
+  columns:
+  - id: termlyexclusionsoffrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: termlyexclusionsoffrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: startdate
+    type: date
+  - id: sessions
+    type: numeric
+  - id: reason2
+    type: category
+  - id: reason3
+    type: category
+  - id: category
+    type: category
+  - id: reason1
+    type: category
+  - id: senprovision
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: termlyexclusionsonroll
+  retain:
+  - PAN
+  columns:
+  - id: termlyexclusionsonrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: termlyexclusionsonrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: startdate
+    type: date
+  - id: sessions
+    type: numeric
+  - id: reason2
+    type: category
+  - id: reason3
+    type: category
+  - id: category
+    type: category
+  - id: reason1
+    type: category
+  - id: senprovision
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: termlysessiondetailsoffroll
+  retain:
+  - PAN
+  columns:
+  - id: termlysessiondetailsoffrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: termlysessiondetailsoffrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: sessions
+    type: numeric
+  - id: attendancereason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+- id: termlysessiondetailsonroll
+  retain:
+  - PAN
+  columns:
+  - id: termlysessiondetailsonrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: termlysessiondetailsonrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: sessions
+    type: numeric
+  - id: attendancereason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0

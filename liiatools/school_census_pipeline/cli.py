@@ -30,7 +30,7 @@ def school_census():
     "--term",
     "-t",
     required=True,
-    type=click.Choice(["Autumn, Spring, Summer"], case_sensitive=True),
+    type=click.Choice(["Autumn", "Spring", "Summer"], case_sensitive=True),
     help="Local authority code",
 )
 @click.option(

@@ -13,7 +13,7 @@ from liiatools.common.data import (
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
-from .spec import load_pipeline_config, load_schema
+from .spec import load_pipeline_config, load_schema, Term
 from .stream_pipeline import task_cleanfile
 
 logger = logging.getLogger()
@@ -24,7 +24,7 @@ def process_file(
     session_folder: FS,
     pipeline_config: PipelineConfig,
     la_code: str,
-    term: str,
+    term: Term,
 ) -> ProcessResult:
     errors = ErrorContainer()
     year = pl.discover_year(file_locator)
@@ -85,9 +85,9 @@ def process_file(
     return ProcessResult(data=degraded_result.data, errors=errors)
 
 
-def process_session(source_fs: FS, output_fs: FS, la_code: str, term: str):
+def process_session(source_fs: FS, output_fs: FS, la_code: str, term: Term):
     # Before we start - load configuration for this dataset
-    pipeline_config = load_pipeline_config()
+    pipeline_config = load_pipeline_config(term)
 
     # Ensure all processing folders exist
     pl.create_process_folders(output_fs)
