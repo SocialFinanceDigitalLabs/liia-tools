@@ -215,8 +215,9 @@ class DataframeArchive:
                 if sort_keys:
                     df = df.sort_values(by=sort_keys, ascending=True)
                 df = df.drop_duplicates(
-                    subset=[c.id for c in table_spec.columns if c.unique_key] if
-                    [c.id for c in table_spec.columns if c.unique_key] else None,
+                    subset=[c.id for c in table_spec.columns if c.unique_key]
+                    if [c.id for c in table_spec.columns if c.unique_key]
+                    else None,
                     keep="last",
                 )
                 data[table_spec.id] = df

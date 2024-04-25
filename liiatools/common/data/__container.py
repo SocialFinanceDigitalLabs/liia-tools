@@ -65,10 +65,7 @@ class DataContainer(Dict[str, pd.DataFrame]):
         format = "wt" if isinstance(data, str) else "wb"
         with fs.open(path, format) as f:
             if isinstance(data, str):
-                data = (data
-                        .replace("<NA>", "")
-                        .replace("nan", "")
-                        )
+                data = data.replace("<NA>", "").replace("nan", "")
             f.write(data)
 
 

@@ -192,12 +192,6 @@ def test_to_regex():
 
 
 def test_to_time():
-    assert (
-        to_time(datetime.datetime(2020, 3, 19, 17, 0, 0))
-        == datetime.time(17, 0, 0)
-    )
-    assert (
-            to_time(datetime.time(17, 0, 0))
-            == datetime.time(17, 0, 0)
-    )
+    assert to_time(datetime.datetime(2020, 3, 19, 17, 0, 0)) == datetime.time(17, 0, 0)
+    assert to_time(datetime.time(17, 0, 0)) == datetime.time(17, 0, 0)
     assert to_time("2017-Jan-01 08:00:00") == datetime.time(8, 0, 0)

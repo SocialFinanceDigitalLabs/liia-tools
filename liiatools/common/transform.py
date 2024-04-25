@@ -34,7 +34,9 @@ def _transform(
                         transform_name in functions
                     ), f"Unknown transform for property '{property}': {transform_name}"
                     data[column_config.id] = data.apply(
-                        lambda row: functions[transform_name](row, column_config, metadata),
+                        lambda row: functions[transform_name](
+                            row, column_config, metadata
+                        ),
                         axis=1,
                     )
             else:
