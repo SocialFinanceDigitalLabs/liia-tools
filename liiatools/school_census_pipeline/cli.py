@@ -27,13 +27,6 @@ def school_census():
     help="Local authority code",
 )
 @click.option(
-    "--term",
-    "-t",
-    required=True,
-    type=click.Choice(["Autumn", "Spring", "Summer"], case_sensitive=True),
-    help="Local authority code",
-)
-@click.option(
     "--output",
     "-o",
     required=True,
@@ -46,7 +39,7 @@ def school_census():
     type=click.Path(exists=True, file_okay=False, readable=True),
 )
 @click_log.simple_verbosity_option(log)
-def pipeline(input, la_code, output, term):
+def pipeline(input, la_code, output):
     """Runs the full pipeline on a file or folder"""
 
     # Source FS is the filesystem containing the input files
@@ -55,4 +48,4 @@ def pipeline(input, la_code, output, term):
     # Get the output filesystem
     output_fs = open_fs(output)
 
-    process_session(source_fs, output_fs, la_code, term)
+    process_session(source_fs, output_fs, la_code)

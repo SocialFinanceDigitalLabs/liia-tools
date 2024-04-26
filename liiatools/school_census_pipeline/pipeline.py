@@ -13,7 +13,7 @@ from liiatools.common.data import (
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
-from .spec import load_pipeline_config, load_schema, Term
+from .spec import load_pipeline_config, load_schema
 from .stream_pipeline import task_cleanfile
 
 logger = logging.getLogger()
@@ -24,7 +24,6 @@ def process_file(
     session_folder: FS,
     pipeline_config: PipelineConfig,
     la_code: str,
-    term: Term,
 ) -> ProcessResult:
     errors = ErrorContainer()
     year = pl.discover_year(file_locator)
@@ -38,12 +37,23 @@ def process_file(
         )
         return ProcessResult(data=None, errors=errors)
 
+    term = pl.discover_term(file_locator)
+    if term is None:
+        errors.append(
+            dict(
+                type="MissingTerm",
+                message="Could not find a term in the filename or path",
+                filename=file_locator.name,
+            )
+        )
+        return ProcessResult(data=None, errors=errors)
+
     # We save these files based on the session UUID - so UUID must exist
     uuid = file_locator.meta["uuid"]
 
     # Load schema and set on processing metadata
     schema = load_schema(year, term)
-    metadata = dict(year=year, schema=schema, la_code=la_code)
+    metadata = dict(year=year, schema=schema, la_code=la_code, term=term)
 
     # Normalise the data and export to the session 'cleaned' folder
     try:
@@ -85,9 +95,9 @@ def process_file(
     return ProcessResult(data=degraded_result.data, errors=errors)
 
 
-def process_session(source_fs: FS, output_fs: FS, la_code: str, term: Term):
+def process_session(source_fs: FS, output_fs: FS, la_code: str):
     # Before we start - load configuration for this dataset
-    pipeline_config = load_pipeline_config(term)
+    pipeline_config = load_pipeline_config()
 
     # Ensure all processing folders exist
     pl.create_process_folders(output_fs)
@@ -100,7 +110,7 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, term: Term):
 
     # Process each incoming file
     processed_files = [
-        process_file(locator, session_folder, pipeline_config, la_code, term)
+        process_file(locator, session_folder, pipeline_config, la_code)
         for locator in locator_list
     ]
 

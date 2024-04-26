@@ -1,4 +1,5 @@
 import re
+from enum import Enum
 
 
 def check_year(filename):
@@ -57,5 +58,32 @@ def check_year(filename):
         if int(fy_match.group(2)[-2:]) == int(fy_match.group(2)[-4:-2]) + 1:
             year = "20" + fy_match.group(2)[-2:]
             return year
+
+    raise ValueError
+
+
+class Term(Enum):
+    OCTOBER = "Autumn"
+    JANUARY = "Spring"
+    MAY = "Summer"
+
+
+def check_term(filename):
+    """
+    Check a filename to see if it contains the term information: Autumn/Spring/Summer, if it does, return that term
+    Expected filename formats:
+        October_2023_addressesonroll.csv
+        January_2023_addressesoffroll.csv
+    :param filename: Filename that contains a term
+    :return: A tern within the string
+    :raises ValueError: If no term is found
+    """
+    match = re.search(
+        f"{Term.OCTOBER.name}|{Term.JANUARY.name}|{Term.MAY.name}",
+        filename,
+        re.IGNORECASE,
+    )
+    if match:
+        return Term[match.group(0).upper()].value
 
     raise ValueError

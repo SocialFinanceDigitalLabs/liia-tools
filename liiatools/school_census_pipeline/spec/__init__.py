@@ -2,11 +2,11 @@ import logging
 import re
 from functools import lru_cache
 from pathlib import Path
-from enum import Enum
 
 import yaml
 from pydantic_yaml import parse_yaml_file_as
 
+from liiatools.common.pipeline import Term
 from liiatools.common.data import PipelineConfig
 from liiatools.common.spec.__data_schema import DataSchema
 
@@ -17,15 +17,9 @@ logger = logging.getLogger(__name__)
 SCHEMA_DIR = Path(__file__).parent
 
 
-class Term(Enum):
-    AUTUMN = "Autumn"
-    SPRING = "Spring"
-    SUMMER = "Summer"
-
-
 @lru_cache
-def load_pipeline_config(term: Term):
-    with open(SCHEMA_DIR / f"pipeline_{term}.yml", "rt") as FILE:
+def load_pipeline_config():
+    with open(SCHEMA_DIR / "pipeline.yml", "rt") as FILE:
         return parse_yaml_file_as(PipelineConfig, FILE)
 
 

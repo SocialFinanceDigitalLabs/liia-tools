@@ -63,6 +63,10 @@ def to_integer(
         return row[column_config.id]
 
 
+def add_term(row: pd.Series, column_config: ColumnConfig, metadata: Metadata) -> str:
+    return metadata["term"]
+
+
 enrich_functions = {
     "add_la_suffix": add_la_suffix,
     "la_code": add_la_code,
@@ -71,6 +75,7 @@ enrich_functions = {
     "quarter": add_quarter,
     "school_year": add_school_year,
     "integer": to_integer,
+    "term": add_term,
 }
 
 

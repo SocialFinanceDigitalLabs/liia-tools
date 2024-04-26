@@ -14,7 +14,7 @@ from fs.info import Info
 from fs.move import move_file, copy_file
 
 from liiatools.common.constants import ProcessNames, SessionNames
-from liiatools.common.checks import check_year
+from liiatools.common.checks import check_year, check_term, Term
 
 from .data import FileLocator
 
@@ -139,6 +139,27 @@ def discover_year(file_locator: FileLocator) -> int:
 
     try:
         return _check_year(file_name)
+    except ValueError:
+        pass
+
+
+def discover_term(file_locator: FileLocator) -> Term:
+    """
+    Try to discover the term for a file.
+    This function will try to find the term in the path, and if that fails,
+    it will try to find a term in the full filename.
+    If the term is found, it will be added to the file metadata.
+    """
+    file_dir = dirname(file_locator.name)
+    file_name = basename(file_locator.name)
+
+    try:
+        return check_term(file_dir)
+    except ValueError:
+        pass
+
+    try:
+        return check_term(file_name)
     except ValueError:
         pass
 

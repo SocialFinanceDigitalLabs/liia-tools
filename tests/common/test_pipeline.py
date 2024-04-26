@@ -7,8 +7,11 @@ from liiatools.common.pipeline import (
     discover_year,
     move_files_for_processing,
     restore_session_folder,
+    discover_term,
+    Term,
 )
 from liiatools.annex_a_pipeline.spec.samples import DIR as DIR_AA
+from liiatools.school_census_pipeline.spec.samples import DIR as DIR_SC
 
 
 def test_create_session_folder():
@@ -101,3 +104,39 @@ def test_discover_year_dir_and_file_year():
         samples_fs, "Annex_A.xlsx", original_path="/2021/Annex_A-2022-23.xlsx"
     )
     assert discover_year(locator) == 2021
+
+
+def test_discover_term_no_term():
+    samples_fs = open_fs(DIR_SC.as_posix())
+    locator = FileLocator(
+        samples_fs, "addressesonroll.csv", original_path="/addressesonroll.csv"
+    )
+    assert discover_term(locator) is None
+
+
+def test_discover_term_dir_term():
+    samples_fs = open_fs(DIR_SC.as_posix())
+    locator = FileLocator(
+        samples_fs,
+        "addressesonroll.csv",
+        original_path="/October_15/addressesonroll.csv",
+    )
+    assert discover_term(locator) == Term.OCTOBER.value
+
+
+def test_discover_term_file_term():
+    samples_fs = open_fs(DIR_SC.as_posix())
+    locator = FileLocator(
+        samples_fs, "addressesonroll.csv", original_path="/October_addressesonroll.csv"
+    )
+    assert discover_term(locator) == Term.OCTOBER.value
+
+
+def test_discover_term_dir_and_file_term():
+    samples_fs = open_fs(DIR_SC.as_posix())
+    locator = FileLocator(
+        samples_fs,
+        "addressesonroll.csv",
+        original_path="/October_15/January_addressesonroll.csv",
+    )
+    assert discover_term(locator) == Term.OCTOBER.value

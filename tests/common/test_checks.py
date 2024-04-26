@@ -1,6 +1,6 @@
 import unittest
 
-from liiatools.common.checks import check_year
+from liiatools.common.checks import check_year, check_term, Term
 
 
 def test_check_year():
@@ -27,3 +27,19 @@ class TestCheckYear(unittest.TestCase):
     def test_check_year_2(self):
         with self.assertRaises(ValueError):
             check_year("1811.csv")
+
+
+def test_check_term():
+    assert check_term(r"October_15/2015_16/addresses.csv") == Term.OCTOBER.value
+    assert check_term(r"january_16/2015_16/addresses.csv") == Term.JANUARY.value
+    assert check_term(r"MAY_16/2015_16/addresses.csv") == Term.MAY.value
+
+
+class TestCheckTerm(unittest.TestCase):
+    def test_check_term(self):
+        with self.assertRaises(ValueError):
+            check_term(r"Oct_15/2015_16/addresses.csv")
+
+    def test_check_term_2(self):
+        with self.assertRaises(ValueError):
+            check_term(r"/2015_16/addresses.csv")

@@ -83,6 +83,187 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: addressesoffroll
+  retain:
+  - PAN
+  columns:
+  - id: addressesoffrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: addressesoffrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: uniquepropertyreferencenumber
+    type: numeric
+    exclude:
+    - PAN
+  - id: postcode
+    type: postcode
+    degrade: short_postcode
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: addressesonroll
+  retain:
+  - PAN
+  columns:
+  - id: addressesonrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: addressesonrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: uniquepropertyreferencenumber
+    type: numeric
+    exclude:
+    - PAN
+  - id: postcode
+    type: postcode
+    degrade: short_postcode
+  - id: saon
+    type: string
+    exclude:
+    - PAN
+  - id: paon
+    type: string
+    exclude:
+    - PAN
+  - id: street
+    type: string
+    exclude:
+    - PAN
+  - id: locality
+    type: string
+    exclude:
+    - PAN
+  - id: town
+    type: string
+    exclude:
+    - PAN
+  - id: administrativearea
+    type: string
+    exclude:
+    - PAN
+  - id: posttown
+    type: string
+    exclude:
+    - PAN
+  - id: addressline1
+    type: string
+    exclude:
+    - PAN
+  - id: addressline2
+    type: string
+    exclude:
+    - PAN
+  - id: addressline3
+    type: string
+    exclude:
+    - PAN
+  - id: addressline4
+    type: string
+    exclude:
+    - PAN
+  - id: addressline5
+    type: string
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: annualsessiondetailsoffroll
+  columns:
+  - id: annualsessiondetailsoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: annualsessiondetailsoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: absencesessions
+    type: numeric
+  - id: attendancereason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: annualsessiondetailsonroll
+  columns:
+  - id: annualsessiondetailsonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: annualsessiondetailsonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: absencesessions
+    type: numeric
+  - id: attendancereason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: approvisiondetailoffroll
   columns:
   - id: approvisiondetailoffrolltableid
@@ -108,6 +289,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: approvisiondetailonroll
   columns:
   - id: approvisiondetailonrolltableid
@@ -133,6 +317,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: childcare
   columns:
   - id: childcaretableid
@@ -170,6 +357,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: classes
   columns:
   - id: classestableid
@@ -225,6 +415,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: fsmperiod
   retain:
   - PAN
@@ -262,6 +455,49 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: fsmperiodsonroll
+  retain:
+  - PAN
+  columns:
+  - id: fsmperiodsonrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: fsmperiodsonrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: fsmstartdate
+    type: date
+  - id: fsmenddate
+    type: date
+  - id: ukcountry
+    type: category
+    exclude:
+    - PAN
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: fundingbasisitems
   retain:
   - PAN
@@ -293,6 +529,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: learnerfamoffroll
   columns:
   - id: learnerfamoffrolltableid
@@ -318,6 +557,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: learnerfamonroll
   columns:
   - id: learnerfamonrolltableid
@@ -343,6 +585,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: learnersupportoffroll
   columns:
   - id: learnersupportoffrolltableid
@@ -364,6 +609,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: learnersupportonroll
   columns:
   - id: learnersupportonrolltableid
@@ -385,6 +633,101 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: learningaimsoffroll
+  columns:
+  - id: learningaimsoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: learningaimsoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: programmeaimsoffrolltableid
+    type: string
+  - id: qn
+    type: string
+  - id: qan
+    type: string
+  - id: traineeship
+    type: category
+  - id: learningstartdate
+    type: date
+  - id: learningplannedenddate
+    type: date
+  - id: learningactualenddate
+    type: date
+  - id: scc
+    type: string
+  - id: disccode
+    type: string
+  - id: coreaim
+    type: category
+  - id: partnerukprn
+    type: numeric
+  - id: progtype
+    type: category
+  - id: learningaimstatus
+    type: category
+  - id: learningaimwithdrawalreason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: learningaimsonroll
+  columns:
+  - id: learningaimsonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: learningaimsonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: programmeaimsonrolltableid
+    type: string
+  - id: qn
+    type: string
+  - id: coreaim
+    type: category
+  - id: partnerukprn
+    type: numeric
+  - id: traineeship
+    type: category
+  - id: learningstartdate
+    type: date
+  - id: learningplannedenddate
+    type: date
+  - id: learningactualenddate
+    type: date
+  - id: scc
+    type: string
+  - id: learningaimwithdrawalreason
+    type: category
+  - id: progtype
+    type: category
+  - id: learningaimstatus
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: levels
   columns:
   - id: levelstableid
@@ -406,6 +749,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: nationalitiesoffroll
   columns:
   - id: nationalitiesoffrolltableid
@@ -427,6 +773,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: nationalitiesonroll
   columns:
   - id: nationalitiesonrolltableid
@@ -448,6 +797,85 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: programmeaimsoffroll
+  columns:
+  - id: programmeaimsoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: programmeaimsoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: qn
+    type: string
+  - id: programmestartdate
+    type: date
+  - id: programmeplannedenddate
+    type: date
+  - id: programmeactualenddate
+    type: date
+  - id: traineeship
+    type: category
+  - id: programmeaimstatus
+    type: category
+  - id: programmeaimwithdrawalreason
+    type: category
+  - id: progtype
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: programmeaimsonroll
+  columns:
+  - id: programmeaimsonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: programmeaimsonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: pupilonrolltableid
+    type: string
+  - id: qn
+    type: string
+  - id: programmestartdate
+    type: date
+  - id: programmeplannedenddate
+    type: date
+  - id: programmeactualenddate
+    type: date
+  - id: traineeship
+    type: category
+  - id: programmeaimstatus
+    type: category
+  - id: programmeaimwithdrawalreason
+    type: category
+  - id: progtype
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: provisions
   columns:
   - id: provisionstableid
@@ -469,14 +897,15 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: pupilnolongeronroll
   retain:
   - PAN
   columns:
   - id: pupilnolongeronrolltableid
     type: string
-    exclude:
-    - PAN
   - id: NativeId
     type: string
     exclude:
@@ -505,6 +934,8 @@ table_list:
     type: string
     exclude:
     - PAN
+  - id: uniquelearnernumber
+    type: string
   - id: formersurname
     type: string
     exclude:
@@ -524,19 +955,57 @@ table_list:
     type: category
   - id: termlysessionspossible
     type: numeric
+  - id: termlysessionsauthorised
+    type: numeric
+  - id: termlysessionsunauthorised
+    type: numeric
   - id: moveonrollflag
     type: string
+  - id: missingaddress
+    type: string
+    exclude:
+    - PAN
+  - id: summerhalfterm2sessionsauthorised
+    type: numeric
+  - id: summerhalfterm2sessionspossible
+    type: numeric
+  - id: summerhalfterm2sessionsunauthorised
+    type: numeric
+  - id: qualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: qualhrspreviousyear
+    type: numeric
+    exclude:
+    - PAN
+  - id: nonqualhrspreviousyear
+    type: numeric
+    exclude:
+    - PAN
+  - id: tlevelqualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: tlevelnonqualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: nonqualhrs
+    type: numeric
+    exclude:
+    - PAN
   - id: termlysessionseducational
     type: numeric
   - id: termlysessionsexceptional
     type: numeric
   - id: termlysessionscoronavirus
     type: numeric
-  - id: termlysessionsauthorised
+  - id: summerhalfterm2sessionseducational
     type: numeric
-  - id: termlysessionsunauthorised
+  - id: summerhalfterm2sessionsexceptional
     type: numeric
-  - id: uniquelearnernumber
+  - id: summerhalfterm2sessionscoronavirus
     type: numeric
   - id: gender
     type: category
@@ -544,9 +1013,53 @@ table_list:
     type: category
   - id: ethnicity
     type: category
+  - id: boarder
+    type: category
+    exclude:
+    - PAN
   - id: language
     type: category
-  - id: boarder
+  - id: ncyearleaving
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsehighestpriorattainment
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsepriorattainmentyear11
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsepriorattainmentyeargroup
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsehighestpriorattainment
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsepriorattainmentyear11
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsepriorattainmentyeargroup
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsefundingexemption
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsefundingexemption
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsehighestpriorattainmentpreviousyear
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsehighestpriorattainmentpreviousyear
     type: category
     exclude:
     - PAN
@@ -557,6 +1070,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: pupilonroll
   retain:
   - PAN
@@ -579,15 +1095,9 @@ table_list:
     type: string
     exclude:
     - PAN
-  - id: upn
-    type: string
-  - id: formerupn
-    type: string
   - id: surname
     type: string
   - id: forename
-    type: string
-  - id: uniquelearnernumber
     type: string
   - id: middlenames
     type: string
@@ -597,6 +1107,12 @@ table_list:
     type: string
     exclude:
     - PAN
+  - id: upn
+    type: string
+  - id: formerupn
+    type: string
+  - id: uniquelearnernumber
+    type: string
   - id: formersurname
     type: string
     exclude:
@@ -604,8 +1120,8 @@ table_list:
   - id: dob
     type: date
     degrade: first_of_month
-  - id: entrydate
-    type: date
+  - id: hoursatsetting
+    type: numeric
     exclude:
     - PAN
   - id: schoollunchtaken
@@ -614,19 +1130,15 @@ table_list:
     - PAN
   - id: parttime
     type: category
-  - id: senunitindicator
+  - id: entrydate
+    type: date
+    exclude:
+    - PAN
+  - id: topupfunding
     type: category
     exclude:
     - PAN
-  - id: resourcedprovisionindicator
-    type: category
-    exclude:
-    - PAN
-  - id: missingaddress
-    type: string
-    exclude:
-    - PAN
-  - id: hoursatsetting
+  - id: unitcontacttime
     type: numeric
     exclude:
     - PAN
@@ -636,7 +1148,83 @@ table_list:
     type: numeric
   - id: termlysessionsunauthorised
     type: numeric
+  - id: senunitindicator
+    type: category
+    exclude:
+    - PAN
+  - id: resourcedprovisionindicator
+    type: category
+    exclude:
+    - PAN
+  - id: nonqualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: ftemp
+    type: category
+    exclude:
+    - PAN
+  - id: qualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: qualhrspreviousyear
+    type: numeric
+    exclude:
+    - PAN
+  - id: nonqualhrspreviousyear
+    type: numeric
+    exclude:
+    - PAN
+  - id: tlevelqualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: tlevelnonqualhrs
+    type: numeric
+    exclude:
+    - PAN
+  - id: moveoffrollflag
+    type: string
   - id: fundedhours
+    type: numeric
+    exclude:
+    - PAN
+  - id: missingaddress
+    type: string
+    exclude:
+    - PAN
+  - id: duplicatenotfunded
+    type: string
+    exclude:
+    - PAN
+  - id: summerhalfterm2sessionspossible
+    type: numeric
+  - id: extendedhours
+    type: numeric
+    exclude:
+    - PAN
+  - id: thirtyhourcode
+    type: numeric
+    exclude:
+    - PAN
+  - id: eligibilitycode
+    type: numeric
+    exclude:
+    - PAN
+  - id: summerhalfterm2sessionsauthorised
+    type: numeric
+  - id: summerhalfterm2sessionsunauthorised
+    type: numeric
+  - id: dafindicator
+    type: category
+    exclude:
+    - PAN
+  - id: summerhalfterm2sessionseducational
+    type: numeric
+  - id: summerhalfterm2sessionsexceptional
+    type: numeric
+  - id: summerhalfterm2sessionscoronavirus
     type: numeric
   - id: termlysessionseducational
     type: numeric
@@ -644,28 +1232,6 @@ table_list:
     type: numeric
   - id: termlysessionscoronavirus
     type: numeric
-  - id: extendedhours
-    type: numeric
-  - id: thirtyhourcode
-    type: numeric
-    exclude:
-    - PAN
-  - id: dafindicator
-    type: category
-    exclude:
-    - PAN
-  - id: duplicatenotfunded
-    type: string
-    exclude:
-    - PAN
-  - id: moveoffrollflag
-    type: string
-  - id: topupfunding
-    type: category
-  - id: unitcontacttime
-    type: numeric
-    exclude:
-    - PAN
   - id: gender
     type: category
   - id: sex
@@ -676,27 +1242,71 @@ table_list:
     type: category
     exclude:
     - PAN
-  - id: language
+  - id: servicechild
     type: category
-  - id: enrolstatus
+    exclude:
+    - PAN
+  - id: language
     type: category
   - id: classtype
     type: category
     exclude:
     - PAN
+  - id: enrolstatus
+    type: category
   - id: boarder
     type: category
     exclude:
     - PAN
-  - id: ncyearactual
-    type: category
-  - id: senprovision
-    type: category
-  - id: servicechild
+  - id: plaa
     type: category
     exclude:
     - PAN
-  - id: plaa
+  - id: adoptedfromcare
+    type: category
+    exclude:
+    - PAN
+  - id: senprovision
+    type: category
+  - id: ncyearactual
+    type: category
+  - id: mathsgcsehighestpriorattainment
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsepriorattainmentyear11
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsepriorattainmentyeargroup
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsehighestpriorattainment
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsepriorattainmentyear11
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsepriorattainmentyeargroup
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsefundingexemption
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsefundingexemption
+    type: category
+    exclude:
+    - PAN
+  - id: mathsgcsehighestpriorattainmentpreviousyear
+    type: category
+    exclude:
+    - PAN
+  - id: englishgcsehighestpriorattainmentpreviousyear
     type: category
     exclude:
     - PAN
@@ -715,6 +1325,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: school
   retain:
   - PAN
@@ -918,6 +1531,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: schoolarrangedapdetailoffroll
   columns:
   - id: schoolarrangedapdetailoffrolltableid
@@ -957,6 +1573,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: schoolarrangedapdetailonroll
   columns:
   - id: schoolarrangedapdetailonrolltableid
@@ -996,6 +1615,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: schoolcensus
   retain:
   - PAN
@@ -1016,16 +1638,20 @@ table_list:
     type: string
     exclude:
     - PAN
-  - id: term
+  - id: name
     type: category
   - id: collection
     type: category
-  - id: name
+  - id: term
     type: category
   - id: year
     type: numeric
   - id: referencedate
     type: date
+    exclude:
+    - PAN
+  - id: serialno
+    type: numeric
     exclude:
     - PAN
   - id: sourcelevel
@@ -1042,20 +1668,16 @@ table_list:
     - PAN
   - id: urn
     type: numeric
+  - id: datetime
+    type: date
+    exclude:
+    - PAN
   - id: release
     type: string
     exclude:
     - PAN
-  - id: serialno
-    type: numeric
-    exclude:
-    - PAN
   - id: xversion
     type: string
-    exclude:
-    - PAN
-  - id: datetime
-    type: date
     exclude:
     - PAN
   - id: lea
@@ -1069,6 +1691,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: senneeds
   retain:
   - PAN
@@ -1102,6 +1727,81 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: summerhalfterm2sessiondetailsoffroll
+  retain:
+  - PAN
+  columns:
+  - id: summerhalfterm2sessiondetailsoffrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: summerhalfterm2sessiondetailsoffrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilnolongeronrolltableid
+    type: string
+  - id: sessions
+    type: numeric
+  - id: attendancereason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: summerhalfterm2sessiondetailsonroll
+  retain:
+  - PAN
+  columns:
+  - id: summerhalfterm2sessiondetailsonrolltableid
+    type: string
+    exclude:
+    - PAN
+  - id: NativeId
+    type: string
+    exclude:
+    - PAN
+  - id: summerhalfterm2sessiondetailsonrollorderseqcolumn
+    type: string
+    exclude:
+    - PAN
+  - id: sourceid
+    type: string
+    exclude:
+    - PAN
+  - id: pupilonrolltableid
+    type: string
+  - id: sessions
+    type: numeric
+  - id: attendancereason
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: termlyexclusionsoffroll
   retain:
   - PAN
@@ -1128,6 +1828,8 @@ table_list:
     type: date
   - id: sessions
     type: numeric
+  - id: reason
+    type: category
   - id: reason2
     type: category
   - id: reason3
@@ -1145,6 +1847,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: termlyexclusionsonroll
   retain:
   - PAN
@@ -1171,13 +1876,15 @@ table_list:
     type: date
   - id: sessions
     type: numeric
+  - id: reason
+    type: category
+  - id: reason1
+    type: category
   - id: reason2
     type: category
   - id: reason3
     type: category
   - id: category
-    type: category
-  - id: reason1
     type: category
   - id: senprovision
     type: category
@@ -1188,6 +1895,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
 - id: termlysessiondetailsoffroll
   retain:
   - PAN
@@ -1221,13 +1931,9 @@ table_list:
     type: integer
     enrich: year
     sort: 0
-  - id: LA
+  - id: Term
     type: string
-    enrich: la_name
-  - id: Year
-    type: integer
-    enrich: year
-    sort: 0
+    enrich: term
 - id: termlysessiondetailsonroll
   retain:
   - PAN
@@ -1261,3 +1967,70 @@ table_list:
     type: integer
     enrich: year
     sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: workplaceentityoffroll
+  columns:
+  - id: workplaceentityoffrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: workplaceentityoffrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: learningaimsoffrolltableid
+    type: string
+  - id: wpstartdate
+    type: date
+  - id: wpenddate
+    type: date
+  - id: wphours
+    type: numeric
+  - id: wpemployerid
+    type: numeric
+  - id: wpmode
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
+- id: workplaceentityonroll
+  columns:
+  - id: workplaceentityonrolltableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: workplaceentityonrollorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: learningaimsonrolltableid
+    type: string
+  - id: wpstartdate
+    type: date
+  - id: wpenddate
+    type: date
+  - id: wphours
+    type: numeric
+  - id: wpemployerid
+    type: numeric
+  - id: wpmode
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: integer
+    enrich: year
+    sort: 0
+  - id: Term
+    type: string
+    enrich: term
