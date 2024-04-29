@@ -37,7 +37,7 @@ def _move_incoming_file(
     file_locator = FileLocator(
         dest_fs,
         file_uuid,
-        original_path=file_path,
+        original_path=source_fs.desc(file_path),
         metadata={
             "path": file_path,
             "name": file_info.name,
