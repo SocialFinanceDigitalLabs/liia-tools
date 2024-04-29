@@ -63,8 +63,8 @@ def check_year(filename):
 
 
 class Term(Enum):
-    OCTOBER = "Autumn"
-    JANUARY = "Spring"
+    OCT = "Autumn"
+    JAN = "Spring"
     MAY = "Summer"
 
 
@@ -79,7 +79,7 @@ def check_term(filename):
     :raises ValueError: If no term is found
     """
     match = re.search(
-        f"{Term.OCTOBER.name}|{Term.JANUARY.name}|{Term.MAY.name}",
+        f"{Term.OCT.name}|{Term.JAN.name}|{Term.MAY.name}",
         filename,
         re.IGNORECASE,
     )

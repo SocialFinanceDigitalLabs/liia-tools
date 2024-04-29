@@ -121,7 +121,7 @@ def test_discover_term_dir_term():
         "addressesonroll.csv",
         original_path="/October_15/addressesonroll.csv",
     )
-    assert discover_term(locator) == Term.OCTOBER.value
+    assert discover_term(locator) == Term.OCT.value
 
 
 def test_discover_term_file_term():
@@ -129,7 +129,7 @@ def test_discover_term_file_term():
     locator = FileLocator(
         samples_fs, "addressesonroll.csv", original_path="/October_addressesonroll.csv"
     )
-    assert discover_term(locator) == Term.OCTOBER.value
+    assert discover_term(locator) == Term.OCT.value
 
 
 def test_discover_term_dir_and_file_term():
@@ -139,4 +139,4 @@ def test_discover_term_dir_and_file_term():
         "addressesonroll.csv",
         original_path="/October_15/January_addressesonroll.csv",
     )
-    assert discover_term(locator) == Term.OCTOBER.value
+    assert discover_term(locator) == Term.OCT.value

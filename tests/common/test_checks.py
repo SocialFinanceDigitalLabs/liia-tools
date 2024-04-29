@@ -30,15 +30,15 @@ class TestCheckYear(unittest.TestCase):
 
 
 def test_check_term():
-    assert check_term(r"October_15/2015_16/addresses.csv") == Term.OCTOBER.value
-    assert check_term(r"january_16/2015_16/addresses.csv") == Term.JANUARY.value
+    assert check_term(r"Oct_15/2015_16/addresses.csv") == Term.OCT.value
+    assert check_term(r"jan_16/2015_16/addresses.csv") == Term.JAN.value
     assert check_term(r"MAY_16/2015_16/addresses.csv") == Term.MAY.value
 
 
 class TestCheckTerm(unittest.TestCase):
     def test_check_term(self):
         with self.assertRaises(ValueError):
-            check_term(r"Oct_15/2015_16/addresses.csv")
+            check_term(r"Nov_15/2015_16/addresses.csv")
 
     def test_check_term_2(self):
         with self.assertRaises(ValueError):
