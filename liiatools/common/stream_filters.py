@@ -281,7 +281,6 @@ def conform_cell_types(event, preserve_value=False):
             event,
             type="ConversionError",
             message=f"Could not convert to {column_spec.type}",
-            exception=str(e),
         )
 
 
