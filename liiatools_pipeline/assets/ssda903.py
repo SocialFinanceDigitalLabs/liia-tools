@@ -17,5 +17,5 @@ def process_folder():
 
 @asset
 def incoming_folder():
-    incoming_folder = env_config("INCOMING_LOCATION", cast=str)
-    return open_fs(incoming_folder)
+    input_location = env_config("INPUT_LOCATION", cast=str)
+    return open_fs(input_location)

@@ -4,6 +4,7 @@ from dagster import In, Nothing, Out, op
 from fs.base import FS
 from liiatools.common import pipeline as pl
 from liiatools.common.archive import DataframeArchive
+from liiatools.common.constants import SessionNames
 from liiatools.common.data import DataContainer, FileLocator, ErrorContainer
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 from liiatools.ssda903_pipeline.spec import load_schema
@@ -23,9 +24,9 @@ def create_session_folder() -> Tuple[FS, str, List[FileLocator]]:
 @op(
     out={"archive": Out(DataframeArchive)},
 )
-def open_archive() -> DataframeArchive:
+def open_archive(session_id) -> DataframeArchive:
     archive_folder = process_folder().makedirs("archive", recreate=True)
-    archive = DataframeArchive(archive_folder, pipeline_config())
+    archive = DataframeArchive(archive_folder, pipeline_config(), session_id)
     return archive
 
 
@@ -87,25 +88,20 @@ def process_files(
             )
             continue
 
-        processing_folder = session_folder.makedirs("processing", recreate=True)
-        cleaned_folder = processing_folder.makedirs("cleaned", recreate=True)
-        degraded_folder = processing_folder.makedirs("degraded", recreate=True)
-        enriched_folder = processing_folder.makedirs("enriched", recreate=True)
-
         cleanfile_result.data.export(
-            cleaned_folder, file_locator.meta["uuid"] + "_", "parquet"
+            session_folder.opendir(SessionNames.CLEANED_FOLDER), file_locator.meta["uuid"] + "_", "parquet"
         )
         error_report.extend(cleanfile_result.errors)
 
         enrich_result = enrich_data(cleanfile_result.data, pipeline_config(), metadata)
         enrich_result.data.export(
-            enriched_folder, file_locator.meta["uuid"] + "_", "parquet"
+            session_folder.opendir(SessionNames.ENRICHED_FOLDER), file_locator.meta["uuid"] + "_", "parquet"
         )
         error_report.extend(enrich_result.errors)
 
         degraded_result = degrade_data(enrich_result.data, pipeline_config(), metadata)
         degraded_result.data.export(
-            degraded_folder, file_locator.meta["uuid"] + "_", "parquet"
+            session_folder.opendir(SessionNames.DEGRADED_FOLDER), file_locator.meta["uuid"] + "_", "parquet"
         )
         error_report.extend(degraded_result.errors)
         archive.add(degraded_result.data)
@@ -123,6 +119,7 @@ def process_files(
     out={"current_data": Out(DataContainer)},
 )
 def create_current_view(archive: DataframeArchive):
+    archive.rollup()
     current_folder = process_folder().makedirs("current", recreate=True)
     current_data = archive.current()
 

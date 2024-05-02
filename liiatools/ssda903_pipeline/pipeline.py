@@ -13,8 +13,8 @@ from liiatools.common.data import (
 )
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
-from .spec import load_pipeline_config, load_schema
-from .stream_pipeline import task_cleanfile
+from liiatools.ssda903_pipeline.spec import load_pipeline_config, load_schema
+from liiatools.ssda903_pipeline.stream_pipeline import task_cleanfile
 
 logger = logging.getLogger()
 
@@ -116,11 +116,14 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
 
     # Add processed files to archive
     archive = DataframeArchive(
-        output_fs.opendir(ProcessNames.ARCHIVE_FOLDER), pipeline_config
+        output_fs.opendir(ProcessNames.ARCHIVE_FOLDER), pipeline_config, session_id
     )
     for result in processed_files:
         if result.data:
             archive.add(result.data)
+
+    # Rollup the archive to only process files from current session
+    archive.rollup()
 
     # Write the error summary
     error_summary = ErrorContainer(

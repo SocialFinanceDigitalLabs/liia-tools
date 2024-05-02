@@ -1,6 +1,9 @@
 import pickle
 import uuid
 from pathlib import Path
+import os
+import shutil
+import unittest
 
 import pytest
 from fs import open_fs
@@ -11,78 +14,84 @@ from liiatools.common.data import FileLocator
 register()
 
 
-def test_filesystem():
-    myfs = open_fs("build")
+class Test(unittest.TestCase):
+    def setUp(self):
+        os.makedirs("build", exist_ok=True)
 
-    test_folder = myfs.makedirs("test", recreate=True)
-    subfolder = test_folder.makedirs("subfolder", recreate=True)
+    def tearDown(self):
+        shutil.rmtree("build")
 
-    assert subfolder._sub_dir == "/test/subfolder"
-    assert subfolder._wrap_fs == myfs
+    def test_filesystem(self):
+        myfs = open_fs("build")
 
+        test_folder = myfs.makedirs("test", recreate=True)
+        subfolder = test_folder.makedirs("subfolder", recreate=True)
 
-def test_serialize():
-    myfs = open_fs("build")
+        assert subfolder._sub_dir == "/test/subfolder"
+        assert subfolder._wrap_fs == myfs
 
-    test_folder = myfs.makedirs("test", recreate=True)
-    subfolder = test_folder.makedirs("subfolder", recreate=True)
+    def test_serialize(self):
+        myfs = open_fs("build")
 
-    serialized = serialise(subfolder)
+        test_folder = myfs.makedirs("test", recreate=True)
+        subfolder = test_folder.makedirs("subfolder", recreate=True)
 
-    assert serialized["type"] == "osfs"
-    print(Path(serialized["path"]))
-    assert Path(serialized["path"]) == Path("build").resolve()
-    assert serialized["subpath"] == "/test/subfolder"
+        serialized = serialise(subfolder)
 
+        assert serialized["type"] == "subfs"
+        assert Path(serialized["path"].desc("/")) == Path("build").resolve()
+        assert serialized["subpath"] == "/test/subfolder"
 
-def test_deserialize():
-    serialized = dict(
-        type="osfs",
-        path=Path("build").resolve().as_posix(),
-        subpath="/test/subfolder",
-    )
-    deserialized = deserialise(serialized)
+    def test_deserialize(self):
+        myfs = open_fs("build")
 
-    assert deserialized._sub_dir == "/test/subfolder"
-    assert Path(deserialized._wrap_fs._root_path) == Path("build").resolve()
+        test_folder = myfs.makedirs("test", recreate=True)
+        subfolder = test_folder.makedirs("subfolder", recreate=True)
 
+        serialized = dict(
+            type="subfs",
+            path=subfolder._wrap_fs,
+            subpath=subfolder._sub_dir,
+        )
+        deserialized = deserialise(serialized)
 
-def test_pickle():
-    myfs = open_fs("build")
+        assert deserialized._sub_dir == "/test/subfolder"
+        assert Path(deserialized._wrap_fs._root_path) == Path("build").resolve()
 
-    test_folder = myfs.makedirs("test", recreate=True)
-    subfolder = test_folder.makedirs("subfolder", recreate=True)
+    def test_pickle(self):
+        myfs = open_fs("build")
 
-    locator = FileLocator(subfolder, "test.txt")
+        test_folder = myfs.makedirs("test", recreate=True)
+        subfolder = test_folder.makedirs("subfolder", recreate=True)
 
-    pickled = pickle.dumps(locator)
-    unpickled = pickle.loads(pickled)
+        locator = FileLocator(subfolder, "test.txt")
 
-    unique_string = uuid.uuid4().hex
-    subfolder.writetext("test.txt", unique_string)
+        pickled = pickle.dumps(locator)
+        unpickled = pickle.loads(pickled)
 
-    with unpickled.open("rt") as FILE:
-        assert FILE.read() == unique_string
+        unique_string = uuid.uuid4().hex
+        subfolder.writetext("test.txt", unique_string)
 
+        with unpickled.open("rt") as FILE:
+            assert FILE.read() == unique_string
 
-def test_fs_pickle():
-    myfs = open_fs("build")
-    test_folder = myfs.makedirs("test", recreate=True)
-    subfolder = test_folder.makedirs("subfolder", recreate=True)
+    def test_fs_pickle(self):
+        myfs = open_fs("build")
+        test_folder = myfs.makedirs("test", recreate=True)
+        subfolder = test_folder.makedirs("subfolder", recreate=True)
 
-    pickled = pickle.dumps(subfolder)
-    unpickled = pickle.loads(pickled)
+        pickled = pickle.dumps(subfolder)
+        unpickled = pickle.loads(pickled)
 
-    assert unpickled
+        assert unpickled
 
+    def test_s3_pickle(self):
+        pytest.importorskip("fs_s3fs")
 
-def test_s3_pickle():
-    pytest.importorskip("fs_s3fs")
+        myfs = open_fs("s3://mybucket")
 
-    myfs = open_fs("s3://mybucket")
+        pickled = pickle.dumps(myfs)
+        unpickled = pickle.loads(pickled)
 
-    pickled = pickle.dumps(myfs)
-    unpickled = pickle.loads(pickled)
-
-    assert unpickled
-    assert type(unpickled).__name__ == "S3FS"
+        assert unpickled
+        assert type(unpickled).__name__ == "S3FS"

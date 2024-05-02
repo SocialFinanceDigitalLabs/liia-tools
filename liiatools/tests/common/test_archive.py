@@ -37,7 +37,7 @@ def fs():
 
 @pytest.fixture
 def archive(fs, cfg: PipelineConfig) -> DataframeArchive:
-    archive = DataframeArchive(fs, cfg)
+    archive = DataframeArchive(fs, cfg, "20240430T092230.112993")
     return archive
 
 

@@ -27,7 +27,7 @@ def _normalise_table(df: pd.DataFrame, table_spec: TableConfig) -> pd.DataFrame:
     return df
 
 
-def _create_unique_folder(fs: FS, suffix: str = "") -> Tuple[FS, str]:
+def _create_unique_folder(fs: FS, session_id: str, suffix: str = "") -> Tuple[FS, str]:
     timestamp = datetime.utcnow().strftime("%Y%m%dT%H%M%S")
     existing_snapshots = fs.listdir(".")
     snap_index = 0
@@ -40,7 +40,7 @@ def _create_unique_folder(fs: FS, suffix: str = "") -> Tuple[FS, str]:
         if timestamp in max_snapshot:
             snap_index = int(max_snapshot[16:20]) + 1
 
-    filename = f"{timestamp}-{snap_index:04}{suffix}"
+    filename = f"{timestamp}-{snap_index:04}-{session_id}{suffix}"
     return fs.makedir(filename), filename
 
 
@@ -63,16 +63,17 @@ class DataframeArchive:
     to ensure that the dataframes are deduplicated in the right order.
     """
 
-    def __init__(self, fs: FS, config: PipelineConfig):
+    def __init__(self, fs: FS, config: PipelineConfig, session_id: str):
         self.fs = fs
         self.config = config
+        self.session_id = session_id
 
     def add(self, data: DataContainer) -> str:
         """
         Add a new snapshot to the archive.
         """
 
-        snap_dir, snap_name = _create_unique_folder(self.fs)
+        snap_dir, snap_name = _create_unique_folder(self.fs, self.session_id)
 
         logger.debug(
             "Adding snapshot of tables %s to archive %s", list(data.keys()), snap_name
@@ -116,7 +117,7 @@ class DataframeArchive:
         if len(rollups) == 0:
             return folders
         else:
-            return [s for s in folders if s >= rollups[-1]]
+            return [f for f in folders if self.session_id in f]
 
     def delete_snapshot(self, *snap_ids: str, allow_rollups: bool = False):
         """
@@ -149,7 +150,7 @@ class DataframeArchive:
 
         combined = self.combine_snapshots(snap_ids)
 
-        snap_dir, snap_name = _create_unique_folder(self.fs, _rollup_suffix)
+        snap_dir, snap_name = _create_unique_folder(self.fs, self.session_id, suffix=_rollup_suffix)
 
         snap_dir.writetext("snapshots.txt", "\n".join(snap_ids))
 
