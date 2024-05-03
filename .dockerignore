@@ -1,0 +1,16 @@
+docs
+.git
+.github
+sample_files
+sample_output
+.LICENSE
+README.md
+development-best-practices.md
+.pre-commit-config.yaml
+.gitpod.yml
+.env.sample
+.coveragerc
+.idea
+.gitpod.Dockerfile
+.mailmap
+.env
