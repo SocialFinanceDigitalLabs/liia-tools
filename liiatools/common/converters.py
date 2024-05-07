@@ -193,7 +193,7 @@ def to_time(value, timeformat="%Y-%b-%d %H:%M:%S"):
     Confirm any strings that should be times to time
 
     :param value: A value to convert to a time
-    :param timeformat: A format for the time to be read correctly, default to %Y-%a-%d %H:%M:%S
+    :param timeformat: A format for the time to be read correctly, default to %Y-%b-%d %H:%M:%S
     :return: The specified time, converted to a time
     """
     try:

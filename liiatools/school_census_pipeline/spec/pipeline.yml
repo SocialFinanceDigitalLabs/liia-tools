@@ -1310,6 +1310,10 @@ table_list:
     type: category
     exclude:
     - PAN
+  - id: eyppe
+    type: category
+    exclude:
+      - PAN
   - id: eyppr
     type: category
     exclude:

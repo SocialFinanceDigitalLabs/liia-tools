@@ -78,7 +78,7 @@ Autumn:
             *alphanumeric-not-blank
         fsmstartdate:
             &date
-            date: "%Y-%m-%d"
+            date: "%Y-%b-%d %H:%M:%S"
             canbeblank: yes
         fsmenddate:
             *date

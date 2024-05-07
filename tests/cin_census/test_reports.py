@@ -25,10 +25,10 @@ def test_assessment_factors():
 
     df = expanded_assessment_factors(df)
 
-    assert list(df.A.values) == [1, 0, 0, 1, 1]
-    assert list(df.B.values) == [1, 0, 0, 0, 0]
-    assert list(df.C.values) == [1, 0, 0, 0, 0]
-    assert list(df.D.values) == [0, 0, 0, 0, 1]
+    assert df.A.to_list() == [1, 0, 0, 1, 1]
+    assert df.B.to_list() == [1, 0, 0, 0, 0]
+    assert df.C.to_list() == [1, 0, 0, 0, 0]
+    assert df.D.to_list() == [0, 0, 0, 0, 1]
 
 
 def test_time_between_date_series():
