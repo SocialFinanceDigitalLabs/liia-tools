@@ -23,6 +23,11 @@ def to_dataframe(data: List[Dict], table_config: Dict[str, Column]) -> pd.DataFr
                 df[column_name] = pd.to_numeric(df[column_name], errors="raise").astype(
                     "Int64"
                 )
+            if column_spec.numeric.type == "float":
+                # set type to float
+                df[column_name] = pd.to_numeric(df[column_name], errors="raise").astype(
+                    "float"
+                )
     return df
 
 
