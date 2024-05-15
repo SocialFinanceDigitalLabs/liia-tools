@@ -1,0 +1,924 @@
+Autumn:
+  column_map.addressesoffroll.uniquepropertyreferencenumber:
+    type: add
+    description: Adds new column for addressesoffroll
+    value:
+      &uprn
+      numeric:
+        type: "integer"
+        min_value: 1
+        max_value: 999999999999
+      canbeblank: yes
+  column_map.addressesonroll.uniquepropertyreferencenumber:
+    type: add
+    description: Adds new column for addressesonroll
+    value:
+      *uprn
+  column_map.learningaimsoffroll.disccode:
+    type: rename
+    description: Rename column in learningaimsoffroll
+    value:
+      scc
+  column_map.learningaimsonroll.disccode:
+    type: rename
+    description: Rename column in learningaimsonroll
+    value:
+      scc
+  column_map.learningaimsoffroll.qan:
+    type: rename
+    description: Rename column in learningaimsoffroll
+    value:
+      qn
+  column_map.learningaimsonroll.qan:
+    type: rename
+    description: Rename column in learningaimsonroll
+    value:
+      qn
+  column_map.learningaimsoffroll.traineeship:
+    type: add
+    description: Adds new column for learningaimsoffroll
+    value:
+      &true-false
+      category:
+      - code: "0"
+        name: "False"
+      - code: "1"
+        name: "True"
+      canbeblank: yes
+  column_map.learningaimsonroll.traineeship:
+    type: add
+    description: Adds new column for learningaimsonroll
+    value:
+      *true-false
+  column_map.nationalitiesoffroll:
+    type: add
+    description: Adds new table for the 2017 return
+    value:
+      nationalitiesoffrolltableid:
+        &alphanumeric-not-blank
+        string: "alphanumeric"
+        canbeblank: no
+      NativeId:
+        *alphanumeric-not-blank
+      nationalitiesoffrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilnolongeronrolltableid:
+        *alphanumeric-not-blank
+      nationality:
+        &nationality
+        category:
+        - code: "AFG"
+          name: "Afghanistan"
+        - code: "ALA"
+          name: "Aland Islands"
+        - code: "ALB"
+          name: "Albania"
+        - code: "DZA"
+          name: "Algeria"
+        - code: "ASM"
+          name: "American Samoa"
+        - code: "AND"
+          name: "Andorra"
+        - code: "AGO"
+          name: "Angola"
+        - code: "AIA"
+          name: "Anguilla"
+        - code: "ATA"
+          name: "Antarctica"
+        - code: "ATG"
+          name: "Antigua and Barbuda"
+        - code: "ARG"
+          name: "Argentina"
+        - code: "ARM"
+          name: "Armenia"
+        - code: "ABW"
+          name: "Aruba"
+        - code: "AUS"
+          name: "Australia"
+        - code: "AUT"
+          name: "Austria"
+        - code: "AZE"
+          name: "Azerbaijan"
+        - code: "BHS"
+          name: "Bahamas"
+        - code: "BHR"
+          name: "Bahrain"
+        - code: "BGD"
+          name: "Bangladesh"
+        - code: "BRB"
+          name: "Barbados"
+        - code: "BLR"
+          name: "Belarus"
+        - code: "BEL"
+          name: "Belgium"
+        - code: "BLZ"
+          name: "Belize"
+        - code: "BEN"
+          name: "Benin"
+        - code: "BMU"
+          name: "Bermuda"
+        - code: "BTN"
+          name: "Bhutan "
+        - code: "BOL"
+          name: "Bolivia"
+        - code: "BES"
+          name: "Bonaire, Sint Eustatius and Saba"
+        - code: "BIH"
+          name: "Bosnia and Herzegovina"
+        - code: "BWA"
+          name: "Botswana"
+        - code: "BVT"
+          name: "Bouvet Island"
+        - code: "BRA"
+          name: "Brazil"
+        - code: "ATB"
+          name: "British Antarctic Territory"
+        - code: "IOT"
+          name: "British Indian Ocean Territory"
+        - code: "BRN"
+          name: "Brunei"
+        - code: "BGR"
+          name: "Bulgaria"
+        - code: "BFA"
+          name: "Burkina Faso"
+        - code: "BUR"
+          name: "Myanmar (Burma)"
+        - code: "BDI"
+          name: "Burundi"
+        - code: "BYS"
+          name: "Byelorussian SSR"
+        - code: "KHM"
+          name: "Cambodia"
+        - code: "CMR"
+          name: "Cameroon"
+        - code: "CAN"
+          name: "Canada"
+        - code: "CTE"
+          name: "Canton and Enderbury Islands"
+        - code: "CPV"
+          name: "Cape Verde"
+        - code: "CYM"
+          name: "Cayman Islands"
+        - code: "CAF"
+          name: "Central African Republic"
+        - code: "TCD"
+          name: "Chad"
+        - code: "CHL"
+          name: "Chile"
+        - code: "CHN"
+          name: "China"
+        - code: "CXR"
+          name: "Christmas Island"
+        - code: "CCK"
+          name: "Cocos (Keeling) Islands"
+        - code: "COL"
+          name: "Colombia"
+        - code: "COM"
+          name: "Comoros"
+        - code: "COG"
+          name: "Congo"
+        - code: "COD"
+          name: "Congo, Democratic Republic"
+        - code: "COK"
+          name: "Cook Islands"
+        - code: "CRI"
+          name: "Costa Rica"
+        - code: "HRV"
+          name: "Croatia"
+        - code: "CUB"
+          name: "Cuba "
+        - code: "CUW"
+          name: "CuraÃ§ao"
+        - code: "CYP"
+          name: "Cyprus"
+        - code: "CZE"
+          name: "Czech Republic"
+        - code: "CSK"
+          name: "Czechoslovakia"
+        - code: "DHY"
+          name: "Dahomey"
+        - code: "YMD"
+          name: "Democratic Yemen"
+        - code: "DNK"
+          name: "Denmark"
+        - code: "DJI"
+          name: "Djibouti"
+        - code: "DMA"
+          name: "Dominica"
+        - code: "DOM"
+          name: "Dominican Republic"
+        - code: "ATN"
+          name: "Dronning Maud Land"
+        - code: "TMP"
+          name: "East Timor"
+        - code: "ECU"
+          name: "Ecuador"
+        - code: "EGY"
+          name: "Egypt"
+        - code: "SLV"
+          name: "El Salvador"
+        - code: "GNQ"
+          name: "Equatorial Guinea"
+        - code: "ERI"
+          name: "Eritrea"
+        - code: "EST"
+          name: "Estonia"
+        - code: "SWZ"
+          name: "Eswatini"
+        - code: "ETH"
+          name: "Ethiopia"
+        - code: "ETH"
+          name: "Ethiopia"
+        - code: "FLK"
+          name: "Falkland Islands"
+        - code: "FRO"
+          name: "Faroe Islands"
+        - code: "DEU"
+          name: "Federal Republic of Germany"
+        - code: "FJI"
+          name: "Fiji"
+        - code: "FIN"
+          name: "Finland"
+        - code: "FIN"
+          name: "Finland"
+        - code: "FRA"
+          name: "France"
+        - code: "GUF"
+          name: "French Guiana"
+        - code: "PYF"
+          name: "French Polynesia"
+        - code: "ATF"
+          name: "French Southern Territories"
+        - code: "AFI"
+          name: "French Territory of Afars and Issas"
+        - code: "GAB"
+          name: "Gabon"
+        - code: "GMB"
+          name: "Gambia, The"
+        - code: "GEO"
+          name: "Georgia"
+        - code: "DDR"
+          name: "German Democratic Republic"
+        - code: "DEU"
+          name: "Germany"
+        - code: "GHA"
+          name: "Ghana"
+        - code: "GIB"
+          name: "Gibraltar"
+        - code: "GEL"
+          name: "Gilbert and Ellice Islands"
+        - code: "GEL"
+          name: "Gilbert Islands"
+        - code: "GRC"
+          name: "Greece"
+        - code: "GRL"
+          name: "Greenland"
+        - code: "GRD"
+          name: "Grenada"
+        - code: "GLP"
+          name: "Guadeloupe"
+        - code: "GUM"
+          name: "Guam"
+        - code: "GTM"
+          name: "Guatemala"
+        - code: "GGY"
+          name: "Guernsey"
+        - code: "GIN"
+          name: "Guinea"
+        - code: "GNB"
+          name: "Guinea-Bissau"
+        - code: "GUY"
+          name: "Guyana"
+        - code: "HTI"
+          name: "Haiti"
+        - code: "HMD"
+          name: "Heard Island and McDonald Islands"
+        - code: "VAT"
+          name: "Holy See"
+        - code: "HND"
+          name: "Honduras"
+        - code: "HKG"
+          name: "Hong Kong"
+        - code: "HUN"
+          name: "Hungary"
+        - code: "ISL"
+          name: "Iceland"
+        - code: "IND"
+          name: "India"
+        - code: "IDN"
+          name: "Indonesia"
+        - code: "IRN"
+          name: "Iran "
+        - code: "IRQ"
+          name: "Iraq "
+        - code: "IRL"
+          name: "Ireland"
+        - code: "IMN"
+          name: "Isle of Man"
+        - code: "ISR"
+          name: "Israel"
+        - code: "ITA"
+          name: "Italy"
+        - code: "CIV"
+          name: "Ivory Coast"
+        - code: "JAM"
+          name: "Jamaica"
+        - code: "JPN"
+          name: "Japan"
+        - code: "JEY"
+          name: "Jersey"
+        - code: "JTN"
+          name: "Johnston Atoll"
+        - code: "JOR"
+          name: "Jordan"
+        - code: "KHM"
+          name: "Kampuchea"
+        - code: "KAZ"
+          name: "Kazakhstan"
+        - code: "KEN"
+          name: "Kenya"
+        - code: "KIR"
+          name: "Kiribati"
+        - code: "PRK"
+          name: "Korea, North "
+        - code: "KOR"
+          name: "Korea, South"
+        - code: "QOK"
+          name: "Kosovo"
+        - code: "KWT"
+          name: "Kuwait"
+        - code: "KGZ"
+          name: "Kyrgyzstan"
+        - code: "LAO"
+          name: "Laos"
+        - code: "LVA"
+          name: "Latvia"
+        - code: "LBN"
+          name: "Lebanon"
+        - code: "LSO"
+          name: "Lesotho"
+        - code: "LBR"
+          name: "Liberia"
+        - code: "LBY"
+          name: "Libya"
+        - code: "LIE"
+          name: "Liechtenstein"
+        - code: "LTU"
+          name: "Lithuania"
+        - code: "LUX"
+          name: "Luxembourg"
+        - code: "MAC"
+          name: "Macao"
+        - code: "MDG"
+          name: "Madagascar"
+        - code: "MWI"
+          name: "Malawi"
+        - code: "MYS"
+          name: "Malaysia"
+        - code: "MDV"
+          name: "Maldives"
+        - code: "MLI"
+          name: "Mali"
+        - code: "MLT"
+          name: "Malta"
+        - code: "MHL"
+          name: "Marshall Islands"
+        - code: "MTQ"
+          name: "Martinique"
+        - code: "MRT"
+          name: "Mauritania"
+        - code: "MUS"
+          name: "Mauritius"
+        - code: "MYT"
+          name: "Mayotte"
+        - code: "MEX"
+          name: "Mexico"
+        - code: "FSM"
+          name: "Micronesia"
+        - code: "MID"
+          name: "Midway Islands"
+        - code: "MDA"
+          name: "Moldova"
+        - code: "MCO"
+          name: "Monaco"
+        - code: "MNG"
+          name: "Mongolia"
+        - code: "MNE"
+          name: "Montenegro"
+        - code: "MSR"
+          name: "Montserrat"
+        - code: "MAR"
+          name: "Morocco"
+        - code: "MOZ"
+          name: "Mozambique"
+        - code: "MMR"
+          name: "Myanmar"
+        - code: "NAM"
+          name: "Namibia"
+        - code: "NRU"
+          name: "Nauru"
+        - code: "NPL"
+          name: "Nepal"
+        - code: "NLD"
+          name: "Netherlands"
+        - code: "ANT"
+          name: "Netherlands Antilles"
+        - code: "NCL"
+          name: "New Caledonia"
+        - code: "NHB"
+          name: "New Hebrides"
+        - code: "NZL"
+          name: "New Zealand"
+        - code: "NIC"
+          name: "Nicaragua"
+        - code: "NER"
+          name: "Niger"
+        - code: "NGA"
+          name: "Nigeria"
+        - code: "NIU"
+          name: "Niue"
+        - code: "NFK"
+          name: "Norfolk Island"
+        - code: "MKD"
+          name: "North Macedonia"
+        - code: "MNP"
+          name: "Northern Mariana Islands"
+        - code: "NOR"
+          name: "Norway"
+        - code: "OMN"
+          name: "Oman"
+        - code: "PAK"
+          name: "Pakistan"
+        - code: "PLW"
+          name: "Palau"
+        - code: "PSE"
+          name: "Palestine"
+        - code: "PAN"
+          name: "Panama"
+        - code: "PCZ"
+          name: "Panama Canal Zone"
+        - code: "PNG"
+          name: "Papua New Guinea"
+        - code: "PRY"
+          name: "Paraguay"
+        - code: "PER"
+          name: "Peru"
+        - code: "PHL"
+          name: "Philippines"
+        - code: "PCN"
+          name: "Pitcairn"
+        - code: "POL"
+          name: "Poland"
+        - code: "PRT"
+          name: "Portugal"
+        - code: "PRI"
+          name: "Puerto Rico"
+        - code: "QAT"
+          name: "Qatar"
+        - code: "REU"
+          name: "Reunion"
+        - code: "ROU"
+          name: "Romania"
+        - code: "RUS"
+          name: "Russia"
+        - code: "RWA"
+          name: "Rwanda"
+        - code: "BLM"
+          name: "Saint BarthÃ©lemy"
+        - code: "KNA"
+          name: "Saint Kitts and Nevis"
+        - code: "KNA"
+          name: "Saint Kitts-Nevis-Anguilla"
+        - code: "LCA"
+          name: "Saint Lucia"
+        - code: "MAF"
+          name: "Saint Martin (French Part)"
+        - code: "SPM"
+          name: "Saint Pierre and Miquelon"
+        - code: "VCT"
+          name: "Saint Vincent and the Grenadines"
+        - code: "WSM"
+          name: "Samoa"
+        - code: "SMR"
+          name: "San Marino"
+        - code: "STP"
+          name: "Sao Tome and Principe"
+        - code: "SAU"
+          name: "Saudi Arabia"
+        - code: "SEN"
+          name: "Senegal"
+        - code: "SRB"
+          name: "Serbia"
+        - code: "SCG"
+          name: "Serbia and Montenegro"
+        - code: "SYC"
+          name: "Seychelles"
+        - code: "SLE"
+          name: "Sierra Leone"
+        - code: "SKM"
+          name: "Sikkim"
+        - code: "SGP"
+          name: "Singapore"
+        - code: "SXM"
+          name: "Sint Maarten (Dutch Part)"
+        - code: "SVK"
+          name: "Slovakia"
+        - code: "SVN"
+          name: "Slovenia"
+        - code: "SLB"
+          name: "Solomon Islands"
+        - code: "SOM"
+          name: "Somalia"
+        - code: "ZAF"
+          name: "South Africa"
+        - code: "SGS"
+          name: "South Georgia"
+        - code: "SSD"
+          name: "South Sudan"
+        - code: "VDR"
+          name: "South Vietnam"
+        - code: "RHO"
+          name: "Southern Rhodesia"
+        - code: "ESP"
+          name: "Spain"
+        - code: "ESH"
+          name: "Spanish Sahara"
+        - code: "LKA"
+          name: "Sri Lanka"
+        - code: "SHN"
+          name: "St Helena, Ascension and Tristan da Cunha"
+        - code: "SDN"
+          name: "Sudan"
+        - code: "SUR"
+          name: "Suriname"
+        - code: "SJM"
+          name: "Svalbard and Jan Mayen"
+        - code: "SWE"
+          name: "Sweden"
+        - code: "CHE"
+          name: "Switzerland"
+        - code: "SYR"
+          name: "Syria"
+        - code: "TWN"
+          name: "Taiwan"
+        - code: "TJK"
+          name: "Tajikistan"
+        - code: "TZA"
+          name: "Tanzania"
+        - code: "THA"
+          name: "Thailand"
+        - code: "TLS"
+          name: "Timor-Leste"
+        - code: "TGO"
+          name: "Togo"
+        - code: "TKL"
+          name: "Tokelau"
+        - code: "TON"
+          name: "Tonga"
+        - code: "TTO"
+          name: "Trinidad and Tobago"
+        - code: "PCI"
+          name: "Trust Territory of the Pacific Islands"
+        - code: "TUN"
+          name: "Tunisia"
+        - code: "TUR"
+          name: "Turkey"
+        - code: "TKM"
+          name: "Turkmenistan"
+        - code: "TCA"
+          name: "Turks and Caicos Islands"
+        - code: "TUV"
+          name: "Tuvalu"
+        - code: "UGA"
+          name: "Uganda"
+        - code: "UKR"
+          name: "Ukraine"
+        - code: "UKR"
+          name: "Ukrainian SSR"
+        - code: "SUN"
+          name: "Union of Soviet Socialist Republics"
+        - code: "ARE"
+          name: "United Arab Emirates"
+        - code: "GBR"
+          name: "United Kingdom"
+        - code: "USA"
+          name: "United States "
+        - code: "UMI"
+          name: "United States Minor Outlying Islands"
+        - code: "PUS"
+          name: "United States Miscellaneous Pacific Islands"
+        - code: "HVO"
+          name: "Upper Volta"
+        - code: "URY"
+          name: "Uruguay"
+        - code: "UZB"
+          name: "Uzbekistan"
+        - code: "VUT"
+          name: "Vanuatu"
+        - code: "VAT"
+          name: "Vatican City State"
+        - code: "VEN"
+          name: "Venezuela"
+        - code: "VNM"
+          name: "Vietnam"
+        - code: "VGB"
+          name: "Virgin Islands,  British"
+        - code: "VIR"
+          name: "Virgin Islands,  U.S."
+        - code: "WAK"
+          name: "Wake Island"
+        - code: "WLF"
+          name: "Wallis and Futuna"
+        - code: "ESH"
+          name: "Western Sahara"
+        - code: "YEM"
+          name: "Yemen"
+        - code: "YEM"
+          name: "Yemen"
+        - code: "YUG"
+          name: "Yugoslavia"
+        - code: "ZAR"
+          name: "Zaire"
+        - code: "ZMB"
+          name: "Zambia"
+        - code: "ZWE"
+          name: "Zimbabwe"
+        - code: "REF"
+          name: "Refused"
+        - code: "NYO"
+          name: "Not Yet Obtained"
+        - code: "STA"
+          name: "Stateless"
+        - code: "NKO"
+          name: "Not Known"
+        canbeblank: yes
+  column_map.nationalitiesonroll:
+    type: add
+    description: Adds new table for the 2017 return
+    value:
+      nationalitiesonrolltableid:
+        *alphanumeric-not-blank
+      NativeId:
+        *alphanumeric-not-blank
+      nationalitiesonrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilonrolltableid:
+        *alphanumeric-not-blank
+      nationality:
+        *nationality
+  column_map.pupilnolongeronroll.countryofbirth:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      countryofbirth:
+        *nationality
+  column_map.pupilnolongeronroll.ncyearleaving:
+    type: modify
+    description: Update ncyearleaving codes for 2017 schema
+    value:
+      category:
+      - code: "E1"
+      - code: "E2"
+      - code: "N1"
+      - code: "N2"
+      - code: "R"
+      - code: "1"
+      - code: "2"
+      - code: "3"
+      - code: "4"
+      - code: "5"
+      - code: "6"
+      - code: "7"
+      - code: "8"
+      - code: "9"
+      - code: "10"
+      - code: "11"
+      - code: "12"
+      - code: "13"
+      - code: "14"
+      - code: "M"
+      - code: "X"
+      canbeblank: yes
+  column_map.pupilonroll.adoptedfromcare:
+    type: rename
+    description: Rename column in pupilonroll
+    value:
+      plaa
+  column_map.pupilonroll.countryofbirth:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      countryofbirth:
+        *nationality
+  column_map.pupilonroll.proficiencyinenglish:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      &proficiency-in-english
+      category:
+      - code: "A"
+        name: "New to English"
+      - code: "B"
+        name: "Early Acquisition"
+      - code: "C"
+        name: "Developing competence"
+      - code: "D"
+        name: "Competent"
+      - code: "E"
+        name: "Fluent"
+      - code: "N"
+        name: "Not yet assessed"
+      canbeblank: yes
+  column_map.termlyexclusionsoffroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - incare
+  column_map.termlyexclusionsonroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - incare
+
+Spring:
+  column_map.addresses.uniquepropertyreferencenumber:
+    type: add
+    description: Adds new column for addressesoffroll
+    value:
+      *uprn
+  column_map.nationalitiesoffroll:
+    type: add
+    description: Adds new table for the 2017 return
+    value:
+      nationalitiesoffrolltableid:
+        *alphanumeric-not-blank
+      NativeId:
+        *alphanumeric-not-blank
+      nationalitiesoffrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilnolongeronrolltableid:
+        *alphanumeric-not-blank
+      nationality:
+        *nationality
+  column_map.nationalitiesonroll:
+    type: add
+    description: Adds new table for the 2017 return
+    value:
+      nationalitiesonrolltableid:
+        *alphanumeric-not-blank
+      NativeId:
+        *alphanumeric-not-blank
+      nationalitiesonrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilonrolltableid:
+        *alphanumeric-not-blank
+      nationality:
+        *nationality
+  column_map.pupilnolongeronroll.countryofbirth:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      countryofbirth:
+        *nationality
+  column_map.pupilonroll.adoptedfromcare:
+    type: rename
+    description: Rename column in pupilonroll
+    value:
+      plaa
+  column_map.pupilonroll.countryofbirth:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      countryofbirth:
+        *nationality
+  column_map.pupilonroll.proficiencyinenglish:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *proficiency-in-english
+  column_map.school:
+    type: remove
+    description: Remove columns from school
+    value:
+      - addressline1
+      - addressline2
+      - addressline3
+      - addressline4
+      - addressline5
+      - administrativearea
+      - locality
+      - paon
+      - postcode
+      - posttown
+      - saon
+      - street
+      - town
+  column_map.school.adoptedfromcare.heard:
+    type: rename
+    description: Rename column in school
+    value:
+      secondaryheard
+  column_map.school.adoptedfromcare.lodged:
+    type: rename
+    description: Rename column in school
+    value:
+      secondarylodged
+  column_map.school.adoptedfromcare.rejected:
+    type: rename
+    description: Rename column in school
+    value:
+      secondaryrejected
+  column_map.school.adoptedfromcare.upheld:
+    type: rename
+    description: Rename column in school
+    value:
+      secondaryupheld
+  column_map.school.adoptedfromcare.withdrawn:
+    type: rename
+    description: Rename column in school
+    value:
+      secondarywithdrawn
+  column_map.termlyexclusionsoffroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - incare
+  column_map.termlyexclusionsonroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - incare
+
+Summer:
+  column_map.addresses.uniquepropertyreferencenumber:
+    type: add
+    description: Adds new column for addressesoffroll
+    value:
+      *uprn
+  column_map.nationalitiesoffroll:
+    type: add
+    description: Adds new table for the 2017 return
+    value:
+      nationalitiesoffrolltableid:
+        *alphanumeric-not-blank
+      NativeId:
+        *alphanumeric-not-blank
+      nationalitiesoffrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilnolongeronrolltableid:
+        *alphanumeric-not-blank
+      nationality:
+        *nationality
+  column_map.nationalitiesonroll:
+    type: add
+    description: Adds new table for the 2017 return
+    value:
+      nationalitiesonrolltableid:
+        *alphanumeric-not-blank
+      NativeId:
+        *alphanumeric-not-blank
+      nationalitiesonrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilonrolltableid:
+        *alphanumeric-not-blank
+      nationality:
+        *nationality
+  column_map.pupilnolongeronroll.countryofbirth:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      countryofbirth:
+        *nationality
+  column_map.pupilonroll.adoptedfromcare:
+    type: rename
+    description: Rename column in pupilonroll
+    value:
+      plaa
+  column_map.pupilonroll.countryofbirth:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      countryofbirth:
+        *nationality
+  column_map.termlyexclusionsoffroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - incare
+  column_map.termlyexclusionsonroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - incare

@@ -1,4 +1,4 @@
 from pathlib import Path
 
 DIR = Path(__file__).parent
-SCHOOL_CENSUS = Path(DIR, "addressessonroll.csv")
+SCHOOL_CENSUS = Path(DIR, "addressesonroll.csv")

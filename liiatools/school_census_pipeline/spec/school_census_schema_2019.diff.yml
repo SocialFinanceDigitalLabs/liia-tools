@@ -1,0 +1,114 @@
+Autumn:
+  column_map:
+    type: remove
+    description: Remove files from 2018
+    value:
+      - levels
+      - nationalitiesoffroll
+      - nationalitiesonroll
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove column from pupilnolongeronroll
+    value:
+      - countryofbirth
+  column_map.pupilonroll:
+    type: remove
+    description: Remove column from pupilonroll
+    value:
+      - countryofbirth
+  column_map.pupilonroll.servicechild:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      &service-child
+      category:
+      - code: "Y"
+        name: "Yes"
+      - code: "N"
+        name: "No"
+      - code: "U"
+        name: "Unknown"
+      - code: "R"
+        name: "Refused"
+      canbeblank: yes
+
+Spring:
+  column_map:
+    type: remove
+    description: Remove files from 2018
+    value:
+      - levels
+      - nationalitiesoffroll
+      - nationalitiesonroll
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove column from pupilnolongeronroll
+    value:
+      - countryofbirth
+  column_map.pupilonroll:
+    type: remove
+    description: Remove column from pupilonroll
+    value:
+      - countryofbirth
+      - proficiencyinenglish
+  column_map.pupilonroll.eyppbf:
+    type: modify
+    description: Update codes for 2019 schema
+    value:
+      category:
+      - code: "RE"
+      - code: "RO"
+      - code: "RB"
+      - code: "RU"
+      canbeblank: yes
+  column_map.pupilonroll.eyppe:
+    type: rename
+    description: Rename column in pupilonroll
+    value:
+      eyppr
+
+Summer:
+  column_map:
+    type: remove
+    description: Remove files from 2018
+    value:
+      - levels
+      - nationalitiesoffroll
+      - nationalitiesonroll
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove column from pupilnolongeronroll
+    value:
+      - countryofbirth
+  column_map.pupilonroll:
+    type: remove
+    description: Remove column from pupilonroll
+    value:
+      - countryofbirth
+  column_map.pupilonroll.senprovision:
+    type: modify
+    description: Update codes for 2019 schema
+    value:
+      &sen-provision-update
+      category:
+      - code: "N"
+      - code: "E"
+      - code: "K"
+      - code: "A"
+      - code: "P"
+      canbeblank: yes
+  column_map.pupilonroll.servicechild:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *service-child
+  column_map.termlyexclusionsoffroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision-update
+  column_map.termlyexclusionsonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision-update

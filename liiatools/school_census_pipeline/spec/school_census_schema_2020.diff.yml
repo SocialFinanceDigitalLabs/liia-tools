@@ -1,0 +1,271 @@
+Autumn:
+  column_map.pupilnolongeronroll.englishgcsehighestpriorattainmentpreviousyear:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      &highest-attainment
+      category:
+      - code: "A*"
+      - code: "A"
+      - code: "B"
+      - code: "C"
+      - code: "D"
+      - code: "E"
+      - code: "F"
+      - code: "G"
+      - code: "U"
+      - code: "9"
+      - code: "8"
+      - code: "7"
+      - code: "6"
+      - code: "5"
+      - code: "4"
+      - code: "3"
+      - code: "2"
+      - code: "1"
+      - code: "NR"
+      canbeblank: yes
+  column_map.pupilnolongeronroll.mathsgcsehighestpriorattainmentpreviousyear:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      *highest-attainment
+  column_map.pupilnolongeronroll.nonqualhrspreviousyear:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      &int-blank
+      numeric:
+        type: "integer"
+      canbeblank: yes
+  column_map.pupilnolongeronroll.qualhrspreviousyear:
+    type: add
+    description: Adds new column for pupilnolongeronroll
+    value:
+      *int-blank
+  column_map.pupilonroll.englishgcsehighestpriorattainmentpreviousyear:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *highest-attainment
+  column_map.pupilonroll.mathsgcsehighestpriorattainmentpreviousyear:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *highest-attainment
+  column_map.pupilonroll.nonqualhrspreviousyear:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *int-blank
+  column_map.pupilonroll.qualhrspreviousyear:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *int-blank
+  column_map.pupilonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      &sen-provision
+      category:
+      - code: "N"
+      - code: "E"
+      - code: "K"
+      - code: "A"
+      - code: "P"
+      canbeblank: yes
+  column_map.termlyexclusionsoffroll.reinstatementdate:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      &date
+      date: "%Y-%b-%d %H:%M:%S"
+      canbeblank: yes
+  column_map.termlyexclusionsoffroll.reviewdate:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *date
+  column_map.termlyexclusionsoffroll.reviewresult:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      &review-result
+      category:
+      - code: "A"
+        name: "Exclusion upheld by initial governor review (confirmed)"
+      - code: "B"
+        name: "Exclusion upheld by governing body after independent review panel recommended governing board to reconsider reinstatement"
+      - code: "C"
+        name: "Exclusion upheld by governing body after independent review panel directed governing board to reconsider reinstatement"
+      - code: "D"
+        name: "Exclusion upheld by independent review panel (confirmed)"
+      - code: "E"
+        name: "Pupil accepted reinstatement after initial governor review"
+      - code: "F"
+        name: "Pupil accepted offer of reinstatement after independent review panel recommended governing board to reconsider reinstatement"
+      - code: "G"
+        name: "Pupil accepted offer of reinstatement after independent review panel directed governing board to reconsider reinstatement"
+      - code: "H"
+        name: "Pupil declined reinstatement after initial governor review"
+      - code: "J"
+        name: "Pupil declined offer of reinstatement after independent review panel recommended governing board to reconsider reinstatement"
+      - code: "K"
+        name: "Pupil declined offer of reinstatement after independent review panel directed governing board to reconsider reinstatement"
+      canbeblank: yes
+  column_map.termlyexclusionsoffroll.senexpert:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      &sen-expert
+      category:
+      - code: "Y"
+        name: "Yes"
+      - code: "N"
+        name: "No"
+      canbeblank: yes
+  column_map.termlyexclusionsoffroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+  column_map.termlyexclusionsonroll.reinstatementdate:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *date
+  column_map.termlyexclusionsonroll.reviewdate:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *date
+  column_map.termlyexclusionsonroll.reviewresult:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *review-result
+  column_map.termlyexclusionsonroll.senexpert:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *sen-expert
+  column_map.termlyexclusionsonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+
+Spring:
+  column_map.pupilonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+  column_map.termlyexclusionsoffroll.reinstatementdate:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *date
+  column_map.termlyexclusionsoffroll.reviewdate:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *date
+  column_map.termlyexclusionsoffroll.reviewresult:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *review-result
+  column_map.termlyexclusionsoffroll.senexpert:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *sen-expert
+  column_map.termlyexclusionsoffroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+  column_map.termlyexclusionsonroll.reinstatementdate:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *date
+  column_map.termlyexclusionsonroll.reviewdate:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *date
+  column_map.termlyexclusionsonroll.reviewresult:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *review-result
+  column_map.termlyexclusionsonroll.senexpert:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *sen-expert
+  column_map.termlyexclusionsonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+
+Summer:
+  column_map.pupilonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+  column_map.termlyexclusionsoffroll.reinstatementdate:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *date
+  column_map.termlyexclusionsoffroll.reviewdate:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *date
+  column_map.termlyexclusionsoffroll.reviewresult:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *review-result
+  column_map.termlyexclusionsoffroll.senexpert:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *sen-expert
+  column_map.termlyexclusionsoffroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+  column_map.termlyexclusionsonroll.reinstatementdate:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *date
+  column_map.termlyexclusionsonroll.reviewdate:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *date
+  column_map.termlyexclusionsonroll.reviewresult:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *review-result
+  column_map.termlyexclusionsonroll.senexpert:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *sen-expert
+  column_map.termlyexclusionsonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision

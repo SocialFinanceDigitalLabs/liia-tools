@@ -1,0 +1,164 @@
+Autumn:
+  column_map:
+    type: remove
+    description: Remove files from 2017
+    value:
+      - annualsessiondetailsoffroll
+      - annualsessiondetailsonroll
+  column_map.pupilonroll.dafindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      &true-false
+      category:
+      - code: "0"
+        name: "False"
+      - code: "1"
+        name: "True"
+      canbeblank: yes
+  column_map.pupilonroll.extendedhours:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      &float
+      numeric:
+        type: "float"
+      canbeblank: yes
+  column_map.pupilonroll.fundedhours:
+    type: modify
+    description: Updated decimal places for 2018 schema
+    value:
+      &two-decimal-places
+      numeric:
+        type: "float"
+        decimal_places: 2
+      canbeblank: yes
+  column_map.pupilonroll.hoursatsetting:
+    type: modify
+    description: Updated decimal places for 2018 schema
+    value:
+      *two-decimal-places
+  column_map.pupilonroll:
+    type: remove
+    description: Remove column from pupilonroll
+    value:
+      - proficiencyinenglish
+  column_map.pupilonroll.resourcedprovisionindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *true-false
+  column_map.pupilonroll.senunitindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *true-false
+  column_map.pupilonroll.thirtyhourcode:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      &int-blank
+      numeric:
+        type: "integer"
+      canbeblank: yes
+  column_map.schoolcensus.urn:
+    type: add
+    description: Adds new column for schoolcensus
+    value:
+      *int-blank
+
+Spring:
+  column_map.fundingbasisitems:
+    type: add
+    description: Adds new table for 2018 return
+    value:
+      fundingbasisitemstableid:
+        &alphanumeric-not-blank
+        string: "alphanumeric"
+        canbeblank: no
+      NativeId:
+        *alphanumeric-not-blank
+      fundingbasisitemsorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilonrolltableid:
+        *alphanumeric-not-blank
+      fundingbasis:
+        category:
+          - code: "ECO"
+          - code: "HSD"
+          - code: "LAA"
+        canbeblank: yes
+  column_map.pupilonroll.dafindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *true-false
+  column_map.pupilonroll.extendedhours:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *float
+  column_map.pupilonroll.fundedhours:
+    type: modify
+    description: Updated decimal places for 2018 schema
+    value:
+      *two-decimal-places
+  column_map.pupilonroll.hoursatsetting:
+    type: modify
+    description: Updated decimal places for 2018 schema
+    value:
+      *two-decimal-places
+  column_map.pupilonroll.thirtyhourcode:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *int-blank
+  column_map.schoolcensus.urn:
+    type: add
+    description: Adds new column for schoolcensus
+    value:
+      *int-blank
+
+Summer:
+  column_map.pupilonroll.dafindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *true-false
+  column_map.pupilonroll.extendedhours:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *float
+  column_map.pupilonroll.fundedhours:
+    type: modify
+    description: Updated decimal places for 2018 schema
+    value:
+      *two-decimal-places
+  column_map.pupilonroll.hoursatsetting:
+    type: modify
+    description: Updated decimal places for 2018 schema
+    value:
+      *two-decimal-places
+  column_map.pupilonroll.resourcedprovisionindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *true-false
+  column_map.pupilonroll.senunitindicator:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *true-false
+  column_map.pupilonroll.thirtyhourcode:
+    type: add
+    description: Adds new column for pupilonroll
+    value:
+      *int-blank
+  column_map.schoolcensus.urn:
+    type: add
+    description: Adds new column for schoolcensus
+    value:
+      *int-blank

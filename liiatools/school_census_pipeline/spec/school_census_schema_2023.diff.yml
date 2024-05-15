@@ -1,0 +1,106 @@
+Autumn:
+  column_map.pupilonroll.plaa:
+    type: modify
+    description: Update codes for 2022 schema
+    value:
+      &plaa
+      category:
+      - code: "N"
+      - code: "A"
+      - code: "G"
+      - code: "R"
+      - code: "C"
+      - code: "O"
+      canbeblank: yes
+
+Spring:
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove column from pupilnolongeronroll
+    value:
+      - termlysessionscoronavirus
+  column_map.pupilonroll:
+    type: remove
+    description: Remove column from pupilonroll
+    value:
+      - termlysessionscoronavirus
+  column_map.pupilonroll.plaa:
+    type: modify
+    description: Update codes for 2022 schema
+    value:
+      *plaa
+  column_map.pupilnolongeronroll.youngcarer:
+    type: add
+    description: Adds new table for 2022 return
+    value:
+      category:
+      - code: "P"
+        name: "Identified as a young carer by parent or guardian"
+      - code: "S"
+        name: "Identified as a young carer by school"
+      - code: "N"
+        name: "Not declared (default value)"
+      canbeblank: yes
+  column_map.schoolarrangedapdetailoffroll.applacementpostcode:
+    type: add
+    description: Adds new column for schoolarrangedapdetailoffroll
+    value:
+      &postcode-blank
+      string: "postcode"
+      canbeblank: yes
+  column_map.schoolarrangedapdetailoffroll.companynumber:
+    type: add
+    description: Adds new column for schoolarrangedapdetailoffroll
+    value:
+      &company-number
+      string: "regex"
+      cell_regex:
+        - ([A-Za-z]{2}|\d{2})\d{6}
+      canbeblank: yes
+  column_map.schoolarrangedapdetailonroll.applacementpostcode:
+    type: add
+    description: Adds new column for schoolarrangedapdetailonroll
+    value:
+      *postcode-blank
+  column_map.schoolarrangedapdetailonroll.companynumber:
+    type: add
+    description: Adds new column for schoolarrangedapdetailonroll
+    value:
+      *company-number
+
+Summer:
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove column from pupilnolongeronroll
+    value:
+      - termlysessionscoronavirus
+  column_map.pupilonroll:
+    type: remove
+    description: Remove column from pupilonroll
+    value:
+      - termlysessionscoronavirus
+  column_map.pupilonroll.plaa:
+    type: modify
+    description: Update codes for 2022 schema
+    value:
+      *plaa
+  column_map.schoolarrangedapdetailoffroll.applacementpostcode:
+    type: add
+    description: Adds new column for schoolarrangedapdetailoffroll
+    value:
+      *postcode-blank
+  column_map.schoolarrangedapdetailoffroll.companynumber:
+    type: add
+    description: Adds new column for schoolarrangedapdetailoffroll
+    value:
+      *company-number
+  column_map.schoolarrangedapdetailonroll.applacementpostcode:
+    type: add
+    description: Adds new column for schoolarrangedapdetailonroll
+    value:
+      *postcode-blank
+  column_map.schoolarrangedapdetailonroll.companynumber:
+    type: add
+    description: Adds new column for schoolarrangedapdetailonroll
+    value:
+      *company-number
