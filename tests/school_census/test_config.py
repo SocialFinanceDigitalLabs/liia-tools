@@ -43,5 +43,5 @@ def test_table_added():
         "approvisiondetailonroll",
         "learnerfamoffroll",
         "learnerfamonroll",
-        "programmeaimsoffroll"
+        "programmeaimsoffroll",
     }

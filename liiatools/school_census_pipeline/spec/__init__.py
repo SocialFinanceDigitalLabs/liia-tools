@@ -67,7 +67,12 @@ def load_schema(year: int, term: Term) -> DataSchema:
 
         for key, diff_obj in diff.items():
             diff_type = diff_obj["type"]
-            assert diff_type in ("add", "modify", "rename", "remove"), f"Unknown diff type {diff_type}"
+            assert diff_type in (
+                "add",
+                "modify",
+                "rename",
+                "remove",
+            ), f"Unknown diff type {diff_type}"
             path = key.split(".")
             parent = term_schema
 

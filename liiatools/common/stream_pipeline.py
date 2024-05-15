@@ -13,7 +13,9 @@ def to_dataframe(data: List[Dict], table_config: Dict[str, Column]) -> pd.DataFr
             df[column_name] = pd.to_datetime(df[column_name], errors="raise").dt.date
         elif column_spec.type == "time":
             # Set type on time columns
-            df[column_name] = pd.to_datetime(df[column_name], format="%H:%M:%S", errors="coerce").dt.time
+            df[column_name] = pd.to_datetime(
+                df[column_name], format="%H:%M:%S", errors="coerce"
+            ).dt.time
         elif column_spec.type == "category":
             # set type to categorical
             df[column_name] = df[column_name].astype("category")
