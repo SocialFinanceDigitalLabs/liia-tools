@@ -1573,7 +1573,7 @@ Spring:
             - code: "TV"
             canbeblank: yes
         yeargroup:
-            *int-blank
+            *year-group-category
         category:
             *alphanumeric-blank # couldn't find
         keystage:
