@@ -1,4 +1,41 @@
 Autumn:
+  column_map.annualsessiondetailsoffroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      &attendance-reason
+      category:
+      - code: "/"
+      - code: "\\" # 2 backslashses as Python reads this as 1
+      - code: "B"
+      - code: "C"
+      - code: "D"
+      - code: "E"
+      - code: "G"
+      - code: "H"
+      - code: "I"
+      - code: "J"
+      - code: "L"
+      - code: "M"
+      - code: "N"
+      - code: "O"
+      - code: "P"
+      - code: "R"
+      - code: "S"
+      - code: "T"
+      - code: "U"
+      - code: "V"
+      - code: "W"
+      - code: "X"
+      - code: "Y"
+      - code: "Z"
+      - code: "#"
+      canbeblank: yes
+  column_map.annualsessiondetailsonroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
   column_map.learningaimsonroll.programmeaimsonrolltableid:
     type: add
     description: Adds new column for learningaimsonroll
@@ -120,11 +157,31 @@ Autumn:
     description: Rename column in summerhalfterm2sessiondetailsoffroll
     value:
       sessions
+  column_map.summerhalfterm2sessiondetailsoffroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
   column_map.summerhalfterm2sessiondetailsonroll.absencesessions:
     type: rename
     description: Rename column in summerhalfterm2sessiondetailsonroll
     value:
       sessions
+  column_map.summerhalfterm2sessiondetailsonroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
+  column_map.termlysessiondetailsoffroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
+  column_map.termlysessiondetailsonroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
   column_map.termlyexclusionsoffroll.category:
     type: modify
     description: Update codes for 2021 schema
@@ -319,11 +376,21 @@ Spring:
     description: Rename column in termlysessiondetailsoffroll
     value:
       sessions
+  column_map.termlysessiondetailsoffroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
   column_map.termlysessiondetailsonroll.absencesessions:
     type: rename
     description: Rename column in termlysessiondetailsonroll
     value:
       sessions
+  column_map.termlysessiondetailsonroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
 
 Summer:
   column_map.pupilnolongeronroll.termlysessionscoronavirus:
@@ -411,8 +478,18 @@ Summer:
     description: Rename column in termlysessiondetailsoffroll
     value:
       sessions
+  column_map.termlysessiondetailsoffroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason
   column_map.termlysessiondetailsonroll.absencesessions:
     type: rename
     description: Rename column in termlysessiondetailsonroll
     value:
       sessions
+  column_map.termlysessiondetailsonroll.attendancereason:
+    type: modify
+    description: Update codes for 2021 schema
+    value:
+      *attendance-reason

@@ -75,27 +75,18 @@ Autumn:
         attendancereason:
             &attendance-reason
             category:
-            - code: "/"
-            - code: "\\" # 2 backslashses as Python reads this as 1
-            - code: "B"
             - code: "C"
-            - code: "D"
             - code: "E"
             - code: "G"
             - code: "H"
             - code: "I"
-            - code: "J"
-            - code: "L"
             - code: "M"
             - code: "N"
             - code: "O"
-            - code: "P"
             - code: "R"
             - code: "S"
             - code: "T"
             - code: "U"
-            - code: "V"
-            - code: "W"
             - code: "X"
             - code: "Y"
             - code: "Z"
@@ -639,6 +630,8 @@ Autumn:
         ncyearleaving:
             &year-group-category
             category:
+            - code: "E1"
+            - code: "E2"
             - code: "N1"
             - code: "N2"
             - code: "R"
