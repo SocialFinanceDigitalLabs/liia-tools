@@ -9,20 +9,15 @@ from liiatools.datasets.s903.lds_ssda903_episodes_fix.process import (
     _is_previous_episode_submitted_later,
     _stage1_rule_to_apply,
     add_stage1_rule_identifier_columns,
-    identify_stage1_rule_to_apply,
     _update_dec_stage1,
     _update_rec_stage1,
     _update_reason_place_change_stage1,
     _update_episode_source_stage1,
-    apply_stage1_rules,
     _overlaps_next_episode,
     _has_x1_gap_before_next_episode,
     _stage2_rule_to_apply,
     _update_dec_stage2,
     _update_episode_source_stage2,
-    add_stage2_rule_identifier_columns,
-    identify_stage2_rule_to_apply,
-    apply_stage2_rules,
 )
 
 
@@ -122,6 +117,9 @@ def test_add_stage1_rule_identifier_columns():
     assert data_with_identifiers_added[
         "Has_next_episode_with_RNE_equals_S"
     ].tolist() == [True, False]
+    assert data_with_identifiers_added["Next_episode_is_duplicate"].tolist() == [False, False]
+    assert data_with_identifiers_added["Previous_episode_is_duplicate"].tolist() == [False, False]
+    assert data_with_identifiers_added["Previous_episode_submitted_later"].tolist() == [False, False]
 
 
 def test__is_the_same():

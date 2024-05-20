@@ -1,6 +1,6 @@
+from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 
 __COLUMNS = [
     "DECOM",
@@ -77,7 +77,7 @@ def format_datetime(dataframe: pd.DataFrame, date_columns: list) -> pd.DataFrame
     Format date columns to datetime type
 
     :param dataframe: Dataframe with SSDA903 Episodes data
-    :param columns: List of columns containing dates
+    :param date_columns: List of columns containing dates
     :return: Dataframe with date columns showing as datetime data type
     """
     dataframe[date_columns] = dataframe[date_columns].apply(
@@ -201,7 +201,7 @@ def _is_previous_episode_submitted_later(row: pd.Series) -> bool:
     )
 
 
-def _stage1_rule_to_apply(row: pd.Series) -> pd.Series:
+def _stage1_rule_to_apply(row: pd.Series) -> str:
     """
     Determine which Stage 1 rule should be applied
 
@@ -236,7 +236,7 @@ def identify_stage1_rule_to_apply(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def _update_dec_stage1(row: pd.Series) -> pd.Series:
+def _update_dec_stage1(row: pd.Series) -> datetime:
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
 
@@ -255,7 +255,7 @@ def _update_dec_stage1(row: pd.Series) -> pd.Series:
     return row["DEC"]
 
 
-def _update_rec_stage1(row: pd.Series) -> pd.Series:
+def _update_rec_stage1(row: pd.Series) -> str:
     """
     Determine updated REC value. Defaults to input REC if no rule to apply
 
@@ -270,7 +270,7 @@ def _update_rec_stage1(row: pd.Series) -> pd.Series:
     return row["REC"]
 
 
-def _update_reason_place_change_stage1(row: pd.Series) -> pd.Series:
+def _update_reason_place_change_stage1(row: pd.Series) -> str:
     """
     Determine updated REASON_PLACE_CHANGE value. Defaults to input value if no rule to apply
 
@@ -285,7 +285,7 @@ def _update_reason_place_change_stage1(row: pd.Series) -> pd.Series:
     return row["REASON_PLACE_CHANGE"]
 
 
-def _update_episode_source_stage1(row: pd.Series) -> pd.Series:
+def _update_episode_source_stage1(row: pd.Series) -> str:
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
 
@@ -338,14 +338,14 @@ def _has_x1_gap_before_next_episode(row: pd.Series) -> bool:
     return False
 
 
-def _stage2_rule_to_apply(row):
+def _stage2_rule_to_apply(row: pd.Series) -> str:
     if row["Overlaps_next_episode"]:
         return "RULE_4"  # Overlaps next episode and next episode was submitted later
     if row["Has_X1_gap_before_next_episode"]:
         return "RULE_5"  # Ends before next episode but has reason "X1" - continuous and next ep was submitted later
 
 
-def _update_dec_stage2(row: pd.Series) -> pd.Series:
+def _update_dec_stage2(row: pd.Series) -> datetime:
     """
     Determine updated DEC value. Defaults to input DEC if no rule to apply
 
@@ -357,7 +357,7 @@ def _update_dec_stage2(row: pd.Series) -> pd.Series:
     return row["DEC"]
 
 
-def _update_episode_source_stage2(row: pd.Series) -> pd.Series:
+def _update_episode_source_stage2(row: pd.Series) -> str:
     """
     Determine updated Episode_source value. Defaults to input value if no rule to apply
 
@@ -412,3 +412,44 @@ def apply_stage2_rules(dataframe: pd.DataFrame) -> pd.DataFrame:
     # Apply rules 4, 5
     dataframe["DEC"] = dataframe.apply(_update_dec_stage2, axis=1)
     return dataframe
+
+
+def stage_1(s903_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Accept an s903 episodes dataframe and apply the stage 1 rules
+
+    :param s903_df: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with stage 1 rules identified and applied
+    """
+    # Add columns to dataframe to identify which rules should be applied at stage 1
+    s903_df = s903_df.sort_values(["CHILD", "DECOM"], ignore_index=True)
+    s903_df_stage1 = create_previous_and_next_episode(s903_df, __COLUMNS)
+    s903_df_stage1 = format_datetime(s903_df_stage1, __DATES)
+    s903_df_stage1 = add_latest_year_and_source_for_la(s903_df_stage1)
+    s903_df_stage1 = add_stage1_rule_identifier_columns(s903_df_stage1)
+    s903_df_stage1 = identify_stage1_rule_to_apply(s903_df_stage1)
+
+    # Apply the stage 1 rules
+    s903_df_stage1_applied = apply_stage1_rules(s903_df_stage1)
+    return s903_df_stage1_applied
+
+
+def stage_2(s903_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Accept an s903 episodes dataframe and apply the stage 2 rules
+
+    :param s903_df: Dataframe with SSDA903 Episodes data
+    :return: Dataframe with stage 2 rules identified and applied
+    """
+    s903_df_stage2 = s903_df[__COLUMNS_TO_KEEP]
+    s903_df_stage2 = create_previous_and_next_episode(s903_df_stage2, __COLUMNS)
+    s903_df_stage2 = format_datetime(s903_df_stage2, __DATES)
+    s903_df_stage2 = add_stage2_rule_identifier_columns(s903_df_stage2)
+    s903_df_stage2 = identify_stage2_rule_to_apply(s903_df_stage2)
+
+    # Apply the stage 2 rules
+    s903_df_stage2_applied = apply_stage2_rules(s903_df_stage2)
+
+    s903_df_final = s903_df_stage2_applied[__COLUMNS_TO_KEEP]
+    s903_df_final = s903_df_final.sort_values(["CHILD", "DECOM"], ignore_index=True)
+    return s903_df_final
