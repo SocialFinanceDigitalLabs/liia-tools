@@ -66,7 +66,6 @@ def load_schema(year: int, term: Term) -> DataSchema:
             raise ValueError(f"Error parsing diff file {fn}") from e
 
         for key, diff_obj in diff.items():
-            print(f"{year}, {term}, {diff_obj}")
             diff_type = diff_obj["type"]
             assert diff_type in (
                 "add",
