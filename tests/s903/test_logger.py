@@ -8,105 +8,87 @@ from liiatools.datasets.s903.lds_ssda903_clean import logger
 from sfdata_stream_parser import events
 
 
-def test_create_formatting_error_count():
+def test_create_formatting_error_list():
     stream = (
         events.StartTable(table_name="AD1"),
-        events.Cell(header="some_header", error="1"),
-        events.Cell(header="some_header", error="1"),
-        events.Cell(header="some_header", error="0"),
+        events.Cell(header="some_header", formatting_error="1"),
+        events.Cell(header="some_header", formatting_error="1"),
+        events.Cell(header="some_header", formatting_error="0"),
         events.EndTable(),
     )
-    events_with_formatting_error_count = list(
-        logger.create_formatting_error_count(stream)
+    events_with_formatting_error_list = list(
+        logger.create_formatting_error_list(stream)
     )
-    for event in events_with_formatting_error_count:
+    for event in events_with_formatting_error_list:
         if isinstance(event, logger.ErrorTable):
-            assert event.formatting_error_count == [
+            assert event.formatting_error_list == [
                 "some_header",
                 "some_header",
             ]
 
     stream = (
         events.StartTable(table_name="AD1"),
-        events.Cell(header="some_header", error="1"),
-        events.Cell(header="some_other_header", error="1"),
+        events.Cell(header="some_header", formatting_error="1"),
+        events.Cell(header="some_other_header", formatting_error="1"),
         events.Cell(header="some_header"),
         events.EndTable(),
     )
-    events_with_formatting_error_count = list(
-        logger.create_formatting_error_count(stream)
+    events_with_formatting_error_list = list(
+        logger.create_formatting_error_list(stream)
     )
-    for event in events_with_formatting_error_count:
+    for event in events_with_formatting_error_list:
         if isinstance(event, logger.ErrorTable):
-            assert event.formatting_error_count == [
+            assert event.formatting_error_list == [
                 "some_header",
                 "some_other_header",
             ]
 
     stream = (
         events.StartTable(table_name="AD1"),
-        events.Cell(header="some_header", error="1"),
-        events.Cell(header="some_header_2", error=None),
-        events.Cell(header="some_header_3", error=""),
+        events.Cell(header="some_header", formatting_error="1"),
+        events.Cell(header="some_header_2", formatting_error=None),
+        events.Cell(header="some_header_3", formatting_error=""),
         events.Cell(),
         events.EndTable(),
     )
-    events_with_formatting_error_count = list(
-        logger.create_formatting_error_count(stream)
+    events_with_formatting_error_list = list(
+        logger.create_formatting_error_list(stream)
     )
-    for event in events_with_formatting_error_count:
+    for event in events_with_formatting_error_list:
         if isinstance(event, logger.ErrorTable):
-            assert event.formatting_error_count == ["some_header"]
+            assert event.formatting_error_list == ["some_header"]
 
 
-def test_blank_error_check():
-    stream = logger.blank_error_check(
+def test_create_extra_column_error():
+    stream = logger.create_extra_column_error(
         [
-            events.Cell(config_dict={"canbeblank": False}, cell="", error="0"),
-            events.Cell(config_dict={"canbeblank": False}, cell=None, error="0"),
-            events.Cell(config_dict={"canbeblank": False}, cell="", error="1"),
-            events.Cell(config_dict={"canbeblank": False}, cell="string", error="0"),
-            events.Cell(config_dict={"canbeblank": True}, cell="", error="0"),
+            events.StartTable(
+                expected_columns=["column_1", "column_2"],
+                headers=["column_1", "column_2"],
+            )
         ]
     )
-    stream = list(stream)
-    assert stream[0].blank_error == "1"
-    assert stream[1].blank_error == "1"
-    assert "blank_error" not in stream[2].as_dict()
-    assert "blank_error" not in stream[3].as_dict()
-    assert "blank_error" not in stream[4].as_dict()
+    event_without_extra_column_error = list(stream)
+    assert "extra_column_error" not in event_without_extra_column_error[0].as_dict()
 
-
-def test_create_blank_error_count():
-    stream = (
-        events.StartTable(),
-        events.Cell(header="some_header", blank_error="1"),
-        events.Cell(header="some_header_2", blank_error=None),
-        events.Cell(header="some_header_3", blank_error=""),
-        events.Cell(),
-        logger.ErrorTable(),
-        events.EndTable(),
+    stream = logger.create_extra_column_error(
+        [
+            events.StartTable(
+                filename="test_file.csv",
+                table_name="test_table",
+                expected_columns=["column_1", "column_2"],
+                headers=["column_1", "column_2", "column_3"],
+            )
+        ]
     )
-    events_with_blank_error_count = list(logger.create_blank_error_count(stream))
-    for event in events_with_blank_error_count:
-        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.blank_error_count == ["some_header"]
-
-    stream = (
-        events.StartTable(),
-        events.Cell(header="some_header", blank_error="1"),
-        events.Cell(header="some_header_2", blank_error="1"),
-        events.Cell(header="some_header_3", blank_error=""),
-        events.Cell(),
-        logger.ErrorTable(),
+    event_with_extra_column_error = list(stream)
+    assert (
+        event_with_extra_column_error[0].extra_column_error
+        == "Additional columns were found in file titled "
+        "'test_file.csv' than those expected from schema "
+        "for filetype = test_table, so these columns have "
+        "been removed: ['column_3']"
     )
-    events_with_blank_error_count = list(logger.create_blank_error_count(stream))
-    for event in events_with_blank_error_count:
-        if isinstance(event, logger.ErrorTable) and event.as_dict() != {}:
-            assert event.blank_error_count == [
-                "some_header",
-                "some_header_2",
-            ]
 
 
 @patch("builtins.open", create=True)
@@ -118,8 +100,9 @@ def test_save_errors_la(mock_save):
         [
             logger.ErrorTable(
                 filename="test_file",
-                formatting_error_count=["CHILD", "CHILD", "AGE"],
-                blank_error_count=["POSTCODE", "POSTCODE", "DATE"],
+                formatting_error_list=["CHILD", "CHILD", "AGE"],
+                blank_error_list=["POSTCODE", "POSTCODE", "DATE"],
+                below_zero_error_list=["AGE"],
                 table_name="List 1",
                 extra_column_error=["list", "of", "headers"],
             ),

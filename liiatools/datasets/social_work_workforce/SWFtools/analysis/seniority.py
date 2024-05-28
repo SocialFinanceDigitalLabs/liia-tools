@@ -6,9 +6,18 @@ from liiatools.datasets.social_work_workforce.SWFtools.dataprocessing.converter 
     SENIORITY_CODE_DICT,
 )
 import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
+import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
 
 
 def seniority():
+    """
+    Assign a seniority code to each worker in the input CSV file based on
+    the role start date, agency worker status and org role.
+
+    Also add two columns indicating whether they are new and whether they left in the census year.
+
+    :return: CSV file with columns SeniorityCode, NewOrNot and LeftOrNot added.
+    """
     # ===== Read file ===== #
     file = "merged_modified.csv"
     path = work_path.flatfile_folder
@@ -109,65 +118,88 @@ def seniority():
 
 
 def seniority_forecast_04():
+    """
+    Calculate the seniority forecast for six LEAs from 2020 to 2025.
+
+    Reads two Excel files. The seniority forecast is calculated by multiplying the FTESum from the first file
+    by the population growth rate for each year and LEA from the second file
+
+    :return: Excel file with the name seniority_forecast_04_clean.xlsx
+    """
+
     # ===== Read file ===== #
     file = "FTESum_2020.xlsx"
     requestPath = work_path.request
     pathFile = os.path.join(requestPath, file)
-    dfSen = pd.read_excel(pathFile)
+    try:
+        dfSen = pd.read_excel(pathFile)
+    except FileNotFoundError as e:
+        AppLogs.log(f"FileNotFoundError: {e.filename}", console_output=True)
+        return
 
-    # ===== Rename column ===== #
-    dfSen.rename(columns={"FTESum": "2020"}, inplace=True)
+    if dfSen.empty:
+        AppLogs.log(
+            "seniority_forecast_04 error: No data in FTESum_2020.xlsx",
+            console_output=True,
+        )
+    else:
+        # ===== Rename column ===== #
+        dfSen.rename(columns={"FTESum": "2020"}, inplace=True)
 
-    # ===== Read file ===== #
-    file = "population_growth_table.xlsx"
-    requestPath = work_path.request
-    pathFile = os.path.join(requestPath, file)
-    p_df = pd.read_excel(pathFile)
+        # ===== Read file ===== #
+        file = "population_growth_table.xlsx"
+        requestPath = work_path.request
+        pathFile = os.path.join(requestPath, file)
+        p_df = pd.read_excel(pathFile)
 
-    countYearBefore = 2019
-    countYearNext = 2020
-    for count in range(5):
-        countYearBefore = countYearBefore + 1
-        countYearNext = countYearNext + 1
-        # Havering
-        dfSen.loc[dfSen["LEAName"] == "Havering", str(countYearNext)] = (
-            dfSen[str(countYearBefore)] / p_df.loc[0, str(countYearBefore)]
-        ) * p_df.loc[0, str(countYearNext)]
-        # Barking and Dagenham
-        dfSen.loc[dfSen["LEAName"] == "Barking and Dagenham", str(countYearNext)] = (
-            dfSen[str(countYearBefore)] / p_df.loc[1, str(countYearBefore)]
-        ) * p_df.loc[1, str(countYearNext)]
-        # Redbridge
-        dfSen.loc[dfSen["LEAName"] == "Redbridge", str(countYearNext)] = (
-            dfSen[str(countYearBefore)] / p_df.loc[2, str(countYearBefore)]
-        ) * p_df.loc[2, str(countYearNext)]
-        # Newham
-        dfSen.loc[dfSen["LEAName"] == "Newham", str(countYearNext)] = (
-            dfSen[str(countYearBefore)] / p_df.loc[3, str(countYearBefore)]
-        ) * p_df.loc[3, str(countYearNext)]
-        # Tower Hamlets
-        dfSen.loc[dfSen["LEAName"] == "Tower Hamlets", str(countYearNext)] = (
-            dfSen[str(countYearBefore)] / p_df.loc[4, str(countYearBefore)]
-        ) * p_df.loc[4, str(countYearNext)]
-        # Waltham Forest
-        dfSen.loc[dfSen["LEAName"] == "Waltham Forest", str(countYearNext)] = (
-            dfSen[str(countYearBefore)] / p_df.loc[5, str(countYearBefore)]
-        ) * p_df.loc[5, str(countYearNext)]
+        countYearBefore = 2019
+        countYearNext = 2020
+        for count in range(5):
+            countYearBefore = countYearBefore + 1
+            countYearNext = countYearNext + 1
+            # Havering
+            dfSen.loc[dfSen["LEAName"] == "Havering", str(countYearNext)] = (
+                dfSen[str(countYearBefore)] / p_df.loc[0, str(countYearBefore)]
+            ) * p_df.loc[0, str(countYearNext)]
+            # Barking and Dagenham
+            dfSen.loc[
+                dfSen["LEAName"] == "Barking and Dagenham", str(countYearNext)
+            ] = (
+                dfSen[str(countYearBefore)] / p_df.loc[1, str(countYearBefore)]
+            ) * p_df.loc[
+                1, str(countYearNext)
+            ]
+            # Redbridge
+            dfSen.loc[dfSen["LEAName"] == "Redbridge", str(countYearNext)] = (
+                dfSen[str(countYearBefore)] / p_df.loc[2, str(countYearBefore)]
+            ) * p_df.loc[2, str(countYearNext)]
+            # Newham
+            dfSen.loc[dfSen["LEAName"] == "Newham", str(countYearNext)] = (
+                dfSen[str(countYearBefore)] / p_df.loc[3, str(countYearBefore)]
+            ) * p_df.loc[3, str(countYearNext)]
+            # Tower Hamlets
+            dfSen.loc[dfSen["LEAName"] == "Tower Hamlets", str(countYearNext)] = (
+                dfSen[str(countYearBefore)] / p_df.loc[4, str(countYearBefore)]
+            ) * p_df.loc[4, str(countYearNext)]
+            # Waltham Forest
+            dfSen.loc[dfSen["LEAName"] == "Waltham Forest", str(countYearNext)] = (
+                dfSen[str(countYearBefore)] / p_df.loc[5, str(countYearBefore)]
+            ) * p_df.loc[5, str(countYearNext)]
 
-    dfSen["2020"] = dfSen["2020"].round(3)
-    dfSen["2021"] = dfSen["2021"].round(3)
-    dfSen["2022"] = dfSen["2022"].round(3)
-    dfSen["2023"] = dfSen["2023"].round(3)
-    dfSen["2024"] = dfSen["2024"].round(3)
-    dfSen["2025"] = dfSen["2025"].round(3)
+        dfSen["2020"] = dfSen["2020"].round(3)
+        dfSen["2021"] = dfSen["2021"].round(3)
+        dfSen["2022"] = dfSen["2022"].round(3)
+        dfSen["2023"] = dfSen["2023"].round(3)
+        dfSen["2024"] = dfSen["2024"].round(3)
+        dfSen["2025"] = dfSen["2025"].round(3)
 
-    dfSen = dfSen.drop(["YearCensus"], axis=1)
+        dfSen = dfSen.drop(["YearCensus"], axis=1)
 
-    # ===== Save and export file ===== #
-    fileOutN = "seniority_forecast_04_clean.xlsx"
-    requestPath = work_path.request
-    fileOut = os.path.join(requestPath, fileOutN)
-    dfSen.to_excel(fileOut, index=False, merge_cells=False)
+        # ===== Save and export file ===== #
+        fileOutN = "seniority_forecast_04_clean.xlsx"
+        requestPath = work_path.request
+        fileOut = os.path.join(requestPath, fileOutN)
+        dfSen.to_excel(fileOut, index=False, merge_cells=False)
 
 
 def seniority_forecast_5c():
@@ -236,6 +268,12 @@ def seniority_forecast_5c():
 
 
 def progressed():
+    """
+    Determine whether an employee has progressed in their seniority code from the previous year
+
+    :return: The input csv file with column called Progress added
+    """
+
     # ===== Read file ===== #
     file = "Seniority.csv"
     requestPath = work_path.request

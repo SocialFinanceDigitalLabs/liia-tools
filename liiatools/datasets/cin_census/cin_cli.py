@@ -8,9 +8,8 @@ from datetime import datetime
 
 # Dependencies for cleanfile()
 from sfdata_stream_parser.stream import events
-from liiatools.csdatatools.util.xml import dom_parse
+from liiatools.datasets.cin_census.lds_cin_clean.parse import dom_parse
 from liiatools.datasets.cin_census.lds_cin_clean.schema import Schema
-from liiatools.csdatatools.datasets.cincensus import filters
 
 from liiatools.datasets.cin_census.lds_cin_clean import (
     file_creator,
@@ -19,6 +18,7 @@ from liiatools.datasets.cin_census.lds_cin_clean import (
     validator,
     cin_record,
     converter,
+    filters,
 )
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions.common import (
@@ -28,7 +28,7 @@ from liiatools.datasets.shared_functions.common import (
     check_year,
     check_year_within_range,
     save_year_error,
-    save_incorrect_year_error
+    save_incorrect_year_error,
 )
 
 # Dependencies for la_agg()
@@ -118,8 +118,13 @@ def cleanfile(input, la_code, la_log_dir, output):
     years_to_go_back = 6
     year_start_month = 6
     reference_date = datetime.now()
-    if check_year_within_range(input_year, years_to_go_back, year_start_month, reference_date) is False:
-        save_incorrect_year_error(input, la_log_dir)
+    if (
+        check_year_within_range(
+            input_year, years_to_go_back, year_start_month, reference_date
+        )
+        is False
+    ):
+        save_incorrect_year_error(input, la_log_dir, retention_period=years_to_go_back)
         return
 
     # Configure stream

@@ -5,9 +5,14 @@
 import os
 import pandas as pd
 import liiatools.datasets.social_work_workforce.SWFtools.util.work_path as work_path
+import liiatools.datasets.social_work_workforce.SWFtools.util.AppLogs as AppLogs
 
 
 def growth_tables():
+    """
+    Create two Excel files with tables of growth rates and population growth for six LEAs
+    """
+
     growth_rate_df = {
         "LEAName": [
             "Havering",
@@ -34,7 +39,7 @@ def growth_tables():
     fileOut = os.path.join(requestPath, fileOutN)
     growth_rate_table.to_excel(fileOut, index=False)
 
-    print("Auxiliary table: ", fileOutN, " Created")
+    AppLogs.log(f"Auxiliary table: {fileOutN} created", console_output=True)
 
     """
       Population growth table: 2020 to 2026
@@ -66,4 +71,4 @@ def growth_tables():
     fileOut = os.path.join(requestPath, fileOutN)
     population_growth_table.to_excel(fileOut, index=False)
 
-    print("Auxiliary table: ", fileOutN, " Created")
+    AppLogs.log(f"Auxiliary table: {fileOutN} created", console_output=True)
