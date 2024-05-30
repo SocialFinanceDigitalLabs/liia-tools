@@ -117,9 +117,18 @@ def test_add_stage1_rule_identifier_columns():
     assert data_with_identifiers_added[
         "Has_next_episode_with_RNE_equals_S"
     ].tolist() == [True, False]
-    assert data_with_identifiers_added["Next_episode_is_duplicate"].tolist() == [False, False]
-    assert data_with_identifiers_added["Previous_episode_is_duplicate"].tolist() == [False, False]
-    assert data_with_identifiers_added["Previous_episode_submitted_later"].tolist() == [False, False]
+    assert data_with_identifiers_added["Next_episode_is_duplicate"].tolist() == [
+        False,
+        False,
+    ]
+    assert data_with_identifiers_added["Previous_episode_is_duplicate"].tolist() == [
+        False,
+        False,
+    ]
+    assert data_with_identifiers_added["Previous_episode_submitted_later"].tolist() == [
+        False,
+        False,
+    ]
 
 
 def test__is_the_same():
@@ -138,472 +147,290 @@ def test__is_the_same():
     ]
 
 
-# def test__is_next_episode_duplicate():
-#     data = pd.DataFrame(
-#         {
-#             "DEC": [
-#                 None,
-#                 None,
-#                 None,
-#                 None,
-#                 None,
-#                 None,
-#                 None,
-#                 None,
-#                 None,
-#                 "2016-08-31",
-#                 None,
-#             ],
-#             "Has_next_episode": [
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 True,
-#                 False,
-#             ],
-#             "DECOM": [
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#                 "2016-08-22",
-#             ],
-#             "DECOM_next": [
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 "2016-11-22",
-#                 None,
-#             ],
-#             "RNE": ["P", "P", "P", "P", "P", "P", "P", None, "P", "P", "P"],
-#             "RNE_next": ["P", "DIFF", "P", "P", "P", "P", "P", None, None, "P", None],
-#             "LS": ["C2", "C2", "C2", "C2", "C2", "C2", "C2", None, "C2", "C2", "C2"],
-#             "LS_next": [
-#                 "C2",
-#                 "C2",
-#                 "DIFF",
-#                 "C2",
-#                 "C2",
-#                 "C2",
-#                 "C2",
-#                 None,
-#                 None,
-#                 "C2",
-#                 None,
-#             ],
-#             "PLACE": ["U1", "U1", "U1", "U1", "U1", "U1", "U1", None, "U1", "U1", "U1"],
-#             "PLACE_next": [
-#                 "U1",
-#                 "U1",
-#                 "U1",
-#                 "DIFF",
-#                 "U1",
-#                 "U1",
-#                 "U1",
-#                 None,
-#                 None,
-#                 "U1",
-#                 None,
-#             ],
-#             "PLACE_PROVIDER": [
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 None,
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#             ],
-#             "PLACE_PROVIDER_next": [
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 "PR1",
-#                 "DIFF",
-#                 "PR1",
-#                 "PR1",
-#                 None,
-#                 None,
-#                 "PR1",
-#                 None,
-#             ],
-#             "PL_POST": [
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 None,
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#             ],
-#             "PL_POST_next": [
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "ABC1",
-#                 "DIFF",
-#                 "ABC1",
-#                 None,
-#                 None,
-#                 "ABC1",
-#                 None,
-#             ],
-#             "URN": [
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 None,
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#             ],
-#             "URN_next": [
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "SC1234",
-#                 "DIFF",
-#                 None,
-#                 None,
-#                 "SC1234",
-#                 None,
-#             ],
-#         }
-#     )
-
-#     data["Test result"] = _is_next_episode_duplicate(data)
-#     assert data["Test result"].tolist() == [
-#         True,
-#         False,
-#         False,
-#         False,
-#         False,
-#         False,
-#         False,
-#         True,
-#         False,
-#         False,
-#         False,
-#     ]
-
 def test__is_next_episode_duplicate_true():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [True,]
+    assert data["Test result"].tolist() == [True]
 
 
 def test__is_next_episode_duplicate_rne_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": [ "DIFF",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["DIFF"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_ls_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["DIFF",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["DIFF"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_place_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["DIFF",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["DIFF"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_provider_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["DIFF",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["DIFF"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_pl_post_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["DIFF",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["DIFF"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_urn_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["DIFF",],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["DIFF"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_all_none():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": [ None,],
-            "RNE_next": [ None,],
-            "LS": [ None,],
-            "LS_next": [None,],
-            "PLACE": [None,],
-            "PLACE_next": [None,],
-            "PLACE_PROVIDER": [None,],
-            "PLACE_PROVIDER_next": [None,],
-            "PL_POST": [None,],
-            "PL_POST_next": [None,],
-            "URN": [None,],
-            "URN_next": [None,],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": [None],
+            "RNE_next": [None],
+            "LS": [None],
+            "LS_next": [None],
+            "PLACE": [None],
+            "PLACE_next": [None],
+            "PLACE_PROVIDER": [None],
+            "PLACE_PROVIDER_next": [None],
+            "PL_POST": [None],
+            "PL_POST_next": [None],
+            "URN": [None],
+            "URN_next": [None],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [True,]
+    assert data["Test result"].tolist() == [True]
 
 
 def test__is_next_episode_duplicate_next_none():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": [ None,],
-            "LS": ["C2",],
-            "LS_next": [None,],
-            "PLACE": ["U1",],
-            "PLACE_next": [None,],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": [None,],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": [None,],
-            "URN": ["SC1234",],
-            "URN_next": [None,],
+            "DEC": [None],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": [None],
+            "LS": ["C2"],
+            "LS_next": [None],
+            "PLACE": ["U1"],
+            "PLACE_next": [None],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": [None],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": [None],
+            "URN": ["SC1234"],
+            "URN_next": [None],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_episode_closed():
     data = pd.DataFrame(
         {
-            "DEC": ["2016-08-31",],
-            "Has_next_episode": [True,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": ["2016-11-22",],
-            "RNE": ["P",],
-            "RNE_next": ["P",],
-            "LS": ["C2",],
-            "LS_next": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_next": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_next": ["SC1234",],
+            "DEC": ["2016-08-31"],
+            "Has_next_episode": [True],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": ["2016-11-22"],
+            "RNE": ["P"],
+            "RNE_next": ["P"],
+            "LS": ["C2"],
+            "LS_next": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_next": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_next": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_next_episode_duplicate_no_next_ep():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_next_episode": [False,],
-            "DECOM": ["2016-08-22",],
-            "DECOM_next": [None,],
-            "RNE": ["P",],
-            "RNE_next": [ None,],
-            "LS": ["C2",],
-            "LS_next": [None,],
-            "PLACE": ["U1",],
-            "PLACE_next": [None,],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_next": [None,],
-            "PL_POST": ["ABC1",],
-            "PL_POST_next": [None,],
-            "URN": ["SC1234",],
-            "URN_next": [None,],
+            "DEC": [None],
+            "Has_next_episode": [False],
+            "DECOM": ["2016-08-22"],
+            "DECOM_next": [None],
+            "RNE": ["P"],
+            "RNE_next": [None],
+            "LS": ["C2"],
+            "LS_next": [None],
+            "PLACE": ["U1"],
+            "PLACE_next": [None],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_next": [None],
+            "PL_POST": ["ABC1"],
+            "PL_POST_next": [None],
+            "URN": ["SC1234"],
+            "URN_next": [None],
         }
     )
 
     data["Test result"] = _is_next_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
-
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_true():
@@ -635,261 +462,261 @@ def test__is_previous_episode_duplicate_true():
 def test__is_previous_episode_duplicate_rne_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
+            "DEC": [None],
+            "Has_previous_episode": [True],
             "DECOM": ["2018-01-01"],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": ["P",],
-            "RNE_previous": ["DIFF",],
-            "LS": ["C2",],
-            "LS_previous": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_previous": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_previous": ["SC1234",],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["DIFF"],
+            "LS": ["C2"],
+            "LS_previous": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_previous": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_ls_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
+            "DEC": [None],
+            "Has_previous_episode": [True],
             "DECOM": ["2018-01-01"],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": ["P",],
-            "RNE_previous": ["P",],
-            "LS": ["C2",],
-            "LS_previous": ["DIFF",],
-            "PLACE": ["U1",],
-            "PLACE_previous": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_previous": ["SC1234",],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["P"],
+            "LS": ["C2"],
+            "LS_previous": ["DIFF"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_previous": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_place_differ():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": ["P",],
-            "RNE_previous": ["P",],
-            "LS": ["C2",],
-            "LS_previous": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_previous": ["DIFF",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_previous": ["SC1234",],
+            "DEC": [None],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["P"],
+            "LS": ["C2"],
+            "LS_previous": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["DIFF"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_previous": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_provider_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": ["P",],
-            "RNE_previous": ["P",],
-            "LS": ["C2",],
-            "LS_previous": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_previous": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["DIFF",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_previous": ["SC1234",],
+            "DEC": [None],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["P"],
+            "LS": ["C2"],
+            "LS_previous": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["DIFF"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_previous": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_pl_post_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": ["P",],
-            "RNE_previous": ["P",],
-            "LS": ["C2",],
-            "LS_previous": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_previous": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["DIFF",],
-            "URN": ["SC1234",],
-            "URN_previous": ["SC1234",],
+            "DEC": [None],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["P"],
+            "LS": ["C2"],
+            "LS_previous": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["DIFF"],
+            "URN": ["SC1234"],
+            "URN_previous": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_urn_diff():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": ["P",],
-            "RNE_previous": ["P",],
-            "LS": ["C2",],
-            "LS_previous": ["C2",],
-            "PLACE": ["U1",],
-            "PLACE_previous": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_previous": ["DIFF",],
+            "DEC": [None],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["P"],
+            "LS": ["C2"],
+            "LS_previous": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_previous": ["DIFF"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_all_none():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": [ None,],
-            "RNE_previous": [None,],
-            "LS": [ None,],
-            "LS_previous": [None,],
-            "PLACE": [ None,],
-            "PLACE_previous": [None,],
-            "PLACE_PROVIDER": [None,],
-            "PLACE_PROVIDER_previous": [None,],
-            "PL_POST": [None,],
-            "PL_POST_previous": [None,],
-            "URN": [None,],
-            "URN_previous": [None,],
+            "DEC": [None],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": [None],
+            "RNE_previous": [None],
+            "LS": [None],
+            "LS_previous": [None],
+            "PLACE": [None],
+            "PLACE_previous": [None],
+            "PLACE_PROVIDER": [None],
+            "PLACE_PROVIDER_previous": [None],
+            "PL_POST": [None],
+            "PL_POST_previous": [None],
+            "URN": [None],
+            "URN_previous": [None],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [True,]
+    assert data["Test result"].tolist() == [True]
 
 
 def test__is_previous_episode_duplicate_prev_none():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": [ "P",],
-            "RNE_previous": [None,],
-            "LS": [ "C2",],
-            "LS_previous": [None,],
-            "PLACE": [ "U1",],
-            "PLACE_previous": [None,],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": [None,],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": [None,],
-            "URN": ["SC1234",],
-            "URN_previous": [None,],
+            "DEC": [None],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": [None],
+            "LS": ["C2"],
+            "LS_previous": [None],
+            "PLACE": ["U1"],
+            "PLACE_previous": [None],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": [None],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": [None],
+            "URN": ["SC1234"],
+            "URN_previous": [None],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_episode_closed():
     data = pd.DataFrame(
         {
-            "DEC": ["2016-08-31",],
-            "Has_previous_episode": [True,],
-            "DECOM": ["2018-01-01",],
-            "DECOM_previous": ["2016-01-22",],
-            "RNE": [ "P",],
-            "RNE_previous": ["P",],
-            "LS": [ "C2",],
-            "LS_previous": ["C2",],
-            "PLACE": [ "U1",],
-            "PLACE_previous": ["U1",],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": ["PR1",],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": ["ABC1",],
-            "URN": ["SC1234",],
-            "URN_previous": ["SC1234",],
+            "DEC": ["2016-08-31"],
+            "Has_previous_episode": [True],
+            "DECOM": ["2018-01-01"],
+            "DECOM_previous": ["2016-01-22"],
+            "RNE": ["P"],
+            "RNE_previous": ["P"],
+            "LS": ["C2"],
+            "LS_previous": ["C2"],
+            "PLACE": ["U1"],
+            "PLACE_previous": ["U1"],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": ["PR1"],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": ["ABC1"],
+            "URN": ["SC1234"],
+            "URN_previous": ["SC1234"],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_duplicate_no_prev_ep():
     data = pd.DataFrame(
         {
-            "DEC": [None,],
-            "Has_previous_episode": [False,],
-            "DECOM": [None,],
-            "DECOM_previous": [None,],
-            "RNE": [ "P",],
-            "RNE_previous": [None,],
-            "LS": [ "C2",],
-            "LS_previous": [None,],
-            "PLACE": [ "U1",],
-            "PLACE_previous": [None,],
-            "PLACE_PROVIDER": ["PR1",],
-            "PLACE_PROVIDER_previous": [None,],
-            "PL_POST": ["ABC1",],
-            "PL_POST_previous": [None,],
-            "URN": ["SC1234",],
-            "URN_previous": [None,],
+            "DEC": [None],
+            "Has_previous_episode": [False],
+            "DECOM": [None],
+            "DECOM_previous": [None],
+            "RNE": ["P"],
+            "RNE_previous": [None],
+            "LS": ["C2"],
+            "LS_previous": [None],
+            "PLACE": ["U1"],
+            "PLACE_previous": [None],
+            "PLACE_PROVIDER": ["PR1"],
+            "PLACE_PROVIDER_previous": [None],
+            "PL_POST": ["ABC1"],
+            "PL_POST_previous": [None],
+            "URN": ["SC1234"],
+            "URN_previous": [None],
         }
     )
 
     data["Test result"] = _is_previous_episode_duplicate(data)
-    assert data["Test result"].tolist() == [False,]
+    assert data["Test result"].tolist() == [False]
 
 
 def test__is_previous_episode_submitted_later():
@@ -1130,7 +957,3 @@ def test__update_episode_source_stage2():
         "RULE_4",
         "RULE_1 | RULE_5",
     ]
-
-
-# python -m black "/workspaces/liia-tools/tests/s903/"
-# poetry run coverage run -m pytest
