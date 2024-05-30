@@ -19,19 +19,9 @@ Autumn:
     description: Rename column in learningaimsoffroll
     value:
       scc
-  column_map.learningaimsonroll.disccode:
-    type: rename
-    description: Rename column in learningaimsonroll
-    value:
-      scc
   column_map.learningaimsoffroll.qan:
     type: rename
     description: Rename column in learningaimsoffroll
-    value:
-      qn
-  column_map.learningaimsonroll.qan:
-    type: rename
-    description: Rename column in learningaimsonroll
     value:
       qn
   column_map.learningaimsoffroll.traineeship:
@@ -45,6 +35,16 @@ Autumn:
       - code: "1"
         name: "True"
       canbeblank: yes
+  column_map.learningaimsonroll.disccode:
+    type: rename
+    description: Rename column in learningaimsonroll
+    value:
+      scc
+  column_map.learningaimsonroll.qan:
+    type: rename
+    description: Rename column in learningaimsonroll
+    value:
+      qn
   column_map.learningaimsonroll.traineeship:
     type: add
     description: Adds new column for learningaimsonroll
@@ -674,8 +674,7 @@ Autumn:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
-      countryofbirth:
-        *nationality
+      *nationality
   column_map.pupilnolongeronroll.ncyearleaving:
     type: modify
     description: Update ncyearleaving codes for 2017 schema
@@ -712,8 +711,7 @@ Autumn:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
-      countryofbirth:
-        *nationality
+      *nationality
   column_map.pupilonroll.proficiencyinenglish:
     type: add
     description: Adds new column for pupilonroll
@@ -786,8 +784,7 @@ Spring:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
-      countryofbirth:
-        *nationality
+      *nationality
   column_map.pupilonroll.adoptedfromcare:
     type: rename
     description: Rename column in pupilonroll
@@ -797,8 +794,7 @@ Spring:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
-      countryofbirth:
-        *nationality
+      *nationality
   column_map.pupilonroll.proficiencyinenglish:
     type: add
     description: Adds new column for pupilonroll
@@ -899,8 +895,7 @@ Summer:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
-      countryofbirth:
-        *nationality
+      *nationality
   column_map.pupilonroll.adoptedfromcare:
     type: rename
     description: Rename column in pupilonroll
@@ -910,8 +905,7 @@ Summer:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
-      countryofbirth:
-        *nationality
+      *nationality
   column_map.termlyexclusionsoffroll:
     type: remove
     description: Remove column from termlyexclusionsoffroll
