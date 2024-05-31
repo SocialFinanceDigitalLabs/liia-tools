@@ -231,13 +231,3 @@ def episodes_fix(input, output):
             output_path,
             index=False,
         )
-
-
-# Run episodes_fix() with our test file which contains examples of each rule (CHILD id indicates which rule)
-episodes_fix(
-    r"liiatools/datasets/s903/lds_ssda903_episodes_fix/SSDA903_episodes_for_testing_fixes_INPUT.csv",
-    r"liiatools/datasets/s903/lds_ssda903_episodes_fix/",
-)
-
-# poetry run python liiatools/datasets/s903/s903_main_functions.py
-# python -m black "/workspaces/liia-tools/liiatools/datasets/s903/s903_main_functions.py"
