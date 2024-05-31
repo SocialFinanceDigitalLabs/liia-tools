@@ -25,6 +25,8 @@ column_names:
         - URN
         - LA
         - YEAR
+        - YEAR_latest
+        - Episode_source
     Reviews:
         - CHILD
         - DOB

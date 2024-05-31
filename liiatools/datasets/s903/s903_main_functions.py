@@ -207,7 +207,7 @@ def sufficiency_output(input, output):
 
 
 def episodes_fix(input, output):
-    """ "
+    """
     Applies fixes to la_agg SSDA903 Episodes files
     :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
     :param output: should specify the path to the output folder
