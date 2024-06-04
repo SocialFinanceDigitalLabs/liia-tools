@@ -6,6 +6,7 @@ from liiatools.cin_census_pipeline.cli import cin_census
 from liiatools.csww_pipeline.cli import csww
 from liiatools.ssda903_pipeline.cli import s903
 from liiatools.s251_pipeline.cli import s251
+from liiatools.reformat_csv import reformat_csv
 
 
 @click.group()
@@ -19,6 +20,7 @@ cli.add_command(s903)
 cli.add_command(csww)
 cli.add_command(s251)
 cli.add_command(school_census)
+cli.add_command(reformat_csv)
 
 if __name__ == "__main__":
     cli()
