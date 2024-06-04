@@ -28,5 +28,5 @@ def process(input):
         for file in files:
             file_loc = f"{root}\\{file}"
             if file_loc.endswith(".csv"):
-                df = pd.read_csv(file_loc)
+                df = pd.read_csv(file_loc, sep=",", header=0)
                 df.to_csv(file_loc, index=False)
