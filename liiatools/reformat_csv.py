@@ -35,6 +35,7 @@ def process(input):
                     pass
                 except pd.errors.ParserError:
                     with open(file_loc, "r") as f:
+                        print(f"{file_loc} has extra commas")
                         data = f.read().splitlines()
                         headers_len = len(data[0].split(","))
                         row_no = 0
@@ -52,6 +53,6 @@ def process(input):
                                     raise Exception(f"Non blank extra columns in {file_loc} on row: {row_no}")
 
             if new_data:
-                with open(file_loc[:-4] + "_test.csv", "w", newline="") as f:
+                with open(file_loc, "w", newline="") as f:
                     csvwriter = csv.writer(f, delimiter=',')
                     csvwriter.writerows(new_data)
