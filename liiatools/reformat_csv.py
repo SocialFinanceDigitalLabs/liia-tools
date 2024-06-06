@@ -56,3 +56,20 @@ def process(input):
                 with open(file_loc, "w", newline="") as f:
                     csvwriter = csv.writer(f, delimiter=',')
                     csvwriter.writerows(new_data)
+
+
+@reformat_csv.command()
+@click.option(
+    "--input",
+    "-i",
+    type=click.Path(exists=True, file_okay=False, readable=True),
+)
+@click_log.simple_verbosity_option(log)
+def get_headers(input):
+    for root, dirs, files in os.walk(input):
+        for file in files:
+            file_loc = f"{root}\\{file}"
+            if file_loc.endswith(".csv"):
+                data = pd.read_csv(file_loc)
+                headers = data.columns.tolist()
+                print(file_loc, headers)
