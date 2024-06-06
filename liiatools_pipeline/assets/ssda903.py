@@ -19,3 +19,9 @@ def process_folder():
 def incoming_folder():
     input_location = env_config("INPUT_LOCATION", cast=str)
     return open_fs(input_location)
+
+
+@asset
+def la_code():
+    input_la_code = env_config("LA_CODE", cast=str)
+    return None if input_la_code == "None" else input_la_code

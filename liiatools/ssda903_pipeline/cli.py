@@ -6,7 +6,13 @@ from fs import open_fs
 
 from liiatools.common.reference import authorities
 
-from .pipeline import process_session
+from .pipeline import (
+    create_session_folder,
+    open_archive,
+    process_files,
+    create_current_view,
+    create_reports
+)
 
 log = logging.getLogger()
 click_log.basic_config(log)
@@ -18,33 +24,41 @@ def s903():
     pass
 
 
-@s903.command()
 @click.option(
-    "--la-code",
-    "-c",
-    type=click.Choice(authorities.codes, case_sensitive=False),
-    help="Local authority code",
+    "--input-location",
+    "-i",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, readable=True),
+    help="Input folder",
 )
 @click.option(
-    "--output",
+    "--output-location",
     "-o",
     required=True,
     type=click.Path(file_okay=False, writable=True),
     help="Output folder",
 )
+@s903.command()
 @click.option(
-    "--input",
-    "-i",
-    type=click.Path(exists=True, file_okay=False, readable=True),
+    "--input-la-code",
+    "-c",
+    required=False,
+    type=click.Choice(authorities.codes, case_sensitive=False),
+    help="Local authority code",
 )
 @click_log.simple_verbosity_option(log)
-def pipeline(input, output, la_code=None):
+def pipeline(input_location, output_location, input_la_code=None):
     """Runs the full pipeline on a file or folder"""
+    incoming_folder = open_fs(input_location)
+    process_folder = open_fs(output_location)
 
-    # Source FS is the filesystem containing the input files
-    source_fs = open_fs(input)
+    session_folder, session_id, incoming_files = create_session_folder(process_folder, incoming_folder)
+    archive = open_archive(session_id, process_folder)
 
-    # Get the output filesystem
-    output_fs = open_fs(output)
+    process_files(
+        session_folder, incoming_files, archive, session_id, input_la_code
+    )
 
-    process_session(source_fs, output_fs, la_code)
+    current_folder = create_current_view(archive, process_folder)
+
+    create_reports(current_folder, process_folder)

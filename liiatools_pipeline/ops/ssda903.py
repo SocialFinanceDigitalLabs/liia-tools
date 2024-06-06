@@ -4,8 +4,10 @@ from dagster import In, Nothing, Out, op
 from fs.base import FS
 from liiatools.common import pipeline as pl
 from liiatools.common.archive import DataframeArchive
+from liiatools.common.aggregate import DataframeAggregator
 from liiatools.common.constants import SessionNames
-from liiatools.common.data import DataContainer, FileLocator, ErrorContainer
+from liiatools.common.data import FileLocator, ErrorContainer
+from liiatools.common.reference import authorities
 from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 from liiatools.ssda903_pipeline.spec import load_schema
 from liiatools.ssda903_pipeline.stream_pipeline import task_cleanfile
@@ -14,6 +16,7 @@ from liiatools_pipeline.assets.ssda903 import (
     incoming_folder,
     pipeline_config,
     process_folder,
+    la_code as input_la_code,
 )
 
 
@@ -40,7 +43,6 @@ def open_archive(session_id) -> DataframeArchive:
     return archive
 
 
-# TODO: Add optional la_code argument
 @op(
     ins={
         "session_folder": In(FS),
@@ -70,7 +72,7 @@ def process_files(
             )
             continue
 
-        la_code = pl.discover_la(file_locator)
+        la_code = input_la_code() if input_la_code() is not None else pl.discover_la(file_locator)
         if la_code is None:
             error_report.append(
                 dict(
@@ -114,7 +116,7 @@ def process_files(
             session_folder.opendir(SessionNames.DEGRADED_FOLDER), file_locator.meta["uuid"] + "_", "parquet"
         )
         error_report.extend(degraded_result.errors)
-        archive.add(degraded_result.data)
+        archive.add(degraded_result.data, la_code)
 
         error_report.set_property("filename", file_locator.name)
         error_report.set_property("uuid", uuid)
@@ -126,24 +128,28 @@ def process_files(
 
 @op(
     ins={"archive": In(DataframeArchive), "start": In(Nothing)},
-    out={"current_data": Out(DataContainer)},
+    out={"current_folder": Out(FS)}
 )
 def create_current_view(archive: DataframeArchive):
     archive.rollup()
     current_folder = process_folder().makedirs("current", recreate=True)
-    current_data = archive.current()
+    for la_code in authorities.codes:
+        current_data = archive.current(la_code)
 
-    # Write archive
-    current_data.export(current_folder, "ssda903_", "csv")
+        if current_data:
+            la_folder = current_folder.makedirs(la_code, recreate=True)
+            current_data.export(la_folder, "ssda903_", "csv")
 
-    return current_data
+    return current_folder
 
 
-@op(ins={"current_data": In(DataContainer)})
-def create_reports(current_data: DataContainer):
+@op(ins={"current_folder": In(FS)})
+def create_reports(current_folder: FS):
     export_folder = process_folder().makedirs("export", recreate=True)
+    aggregate = DataframeAggregator(current_folder, pipeline_config())
+    aggregate_data = aggregate.current()
 
     for report in ["PAN", "SUFFICIENCY"]:
         report_folder = export_folder.makedirs(report, recreate=True)
-        report = prepare_export(current_data, pipeline_config())
+        report = prepare_export(aggregate_data, pipeline_config())
         report.data.export(report_folder, "ssda903_", "csv")

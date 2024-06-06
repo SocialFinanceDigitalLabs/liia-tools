@@ -12,6 +12,6 @@ def ssda903_incoming():
         session_folder, incoming_files, archive, session_id
     )
 
-    current_data = ssda903.create_current_view(archive, start=processed)
+    current_folder = ssda903.create_current_view(archive, start=processed)
 
-    ssda903.create_reports(current_data)
+    ssda903.create_reports(current_folder)

@@ -36,8 +36,8 @@ def test_end_to_end(build_dir):
         year_dir = incoming_dir / str(year)
         year_dir.mkdir(parents=True, exist_ok=True)
 
-        shutil.copy(EPISODES_2020, year_dir / f"SSDA903_{year}_episodes.csv")
-        shutil.copy(HEADER_2020, year_dir / f"SSDA903_{year}_header.csv")
+        shutil.copy(EPISODES_2020, year_dir / f"BAR_SSDA903_{year}_episodes.csv")
+        shutil.copy(HEADER_2020, year_dir / f"BAR_SSDA903_{year}_header.csv")
 
     runner = CliRunner()
     result = runner.invoke(
@@ -45,17 +45,17 @@ def test_end_to_end(build_dir):
         [
             "s903",
             "pipeline",
-            "-c",
-            "BAD",
-            "--input",
+            "--input-location",
             incoming_dir.as_posix(),
-            "--output",
+            "--output-location",
             pipeline_dir.as_posix(),
         ],
         catch_exceptions=False,
     )
 
     assert result.exit_code == 0
+
+    shutil.rmtree(build_dir.parents[1])
 
 
 @pytest.mark.skip("Old pipeline")
