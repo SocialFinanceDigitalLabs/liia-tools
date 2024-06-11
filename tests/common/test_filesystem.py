@@ -30,7 +30,6 @@ def test_serialize():
     serialized = serialise(subfolder)
 
     assert serialized["type"] == "osfs"
-    print(Path(serialized["path"]))
     assert Path(serialized["path"]) == Path("build").resolve()
     assert serialized["subpath"] == "/test/subfolder"
 

@@ -25,7 +25,6 @@ def process_file(
     pipeline_config: PipelineConfig,
     la_code: str,
 ) -> ProcessResult:
-    print(f"{file_locator=}")
     errors = ErrorContainer()
     year = pl.discover_year(file_locator)
     if year is None:

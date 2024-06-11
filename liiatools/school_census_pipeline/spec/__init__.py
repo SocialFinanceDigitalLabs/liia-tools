@@ -25,7 +25,6 @@ def load_pipeline_config():
 
 @lru_cache
 def load_schema(year: int, term: Term) -> DataSchema:
-    print(f"{year=}, {term=}")
     pattern = re.compile(r"school_census_schema_(\d{4})(\.diff)?\.yml")
 
     # Build index of all schema files

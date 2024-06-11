@@ -1,41 +1,4 @@
 Autumn:
-  column_map.annualsessiondetailsoffroll.attendancereason:
-    type: modify
-    description: Update codes for 2021 schema
-    value:
-      &attendance-reason
-      category:
-      - code: "/"
-      - code: "\\" # 2 backslashses as Python reads this as 1
-      - code: "B"
-      - code: "C"
-      - code: "D"
-      - code: "E"
-      - code: "G"
-      - code: "H"
-      - code: "I"
-      - code: "J"
-      - code: "L"
-      - code: "M"
-      - code: "N"
-      - code: "O"
-      - code: "P"
-      - code: "R"
-      - code: "S"
-      - code: "T"
-      - code: "U"
-      - code: "V"
-      - code: "W"
-      - code: "X"
-      - code: "Y"
-      - code: "Z"
-      - code: "#"
-      canbeblank: yes
-  column_map.annualsessiondetailsonroll.attendancereason:
-    type: modify
-    description: Update codes for 2021 schema
-    value:
-      *attendance-reason
   column_map.learningaimsonroll.programmeaimsonrolltableid:
     type: add
     description: Adds new column for learningaimsonroll
@@ -161,7 +124,34 @@ Autumn:
     type: modify
     description: Update codes for 2021 schema
     value:
-      *attendance-reason
+      &attendance-reason
+      category:
+      - code: "/"
+      - code: "\\" # 2 backslashses as Python reads this as 1
+      - code: "B"
+      - code: "C"
+      - code: "D"
+      - code: "E"
+      - code: "G"
+      - code: "H"
+      - code: "I"
+      - code: "J"
+      - code: "L"
+      - code: "M"
+      - code: "N"
+      - code: "O"
+      - code: "P"
+      - code: "R"
+      - code: "S"
+      - code: "T"
+      - code: "U"
+      - code: "V"
+      - code: "W"
+      - code: "X"
+      - code: "Y"
+      - code: "Z"
+      - code: "#"
+      canbeblank: yes
   column_map.summerhalfterm2sessiondetailsonroll.absencesessions:
     type: rename
     description: Rename column in summerhalfterm2sessiondetailsonroll
