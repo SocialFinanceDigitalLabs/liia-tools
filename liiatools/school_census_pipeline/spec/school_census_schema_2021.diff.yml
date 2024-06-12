@@ -1,17 +1,22 @@
 Autumn:
-  column_map.learningaimsonroll.programmeaimsonrolltableid:
+  column_map.learningaimsonroll.progtype:
     type: add
     description: Adds new column for learningaimsonroll
     value:
-      &alphanumeric-not-blank
-      string: "alphanumeric"
-      canbeblank: no
+      &prog-type
+      category:
+      - code: "30"
+      - code: "31"
+      - code: "01"
+      canbeblank: yes
   column_map.programmeaimsonroll:
     type: add
     description: Adds new table for 2021 return
     value:
       programmeaimsonrolltableid:
-        *alphanumeric-not-blank
+        &alphanumeric-not-blank
+        string: "alphanumeric"
+        canbeblank: no
       NativeId:
         *alphanumeric-not-blank
       programmeaimsonrollorderseqcolumn:
@@ -38,7 +43,7 @@ Autumn:
         - code: "3"
         - code: "4"
         canbeblank: yes
-      learningwithdrawalreason:
+      learningaimwithdrawalreason:
         category:
         - code: "1"
         - code: "2"
@@ -57,12 +62,15 @@ Autumn:
           name: "True"
         canbeblank: yes
       progtype:
-        category:
-        - code: "30"
-        - code: "31"
-        - code: "01"
-        canbeblank: yes
-  column_map.pupilnolongeronroll.termlysessionscoronavirus:
+        *prog-type
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove columns from pupilnolongeronroll
+    value:
+      - annualsessionspossible
+      - annualsessionsauthorised
+      - annualsessionsunauthorised
+  column_map.pupilnolongeronroll.tlevelnonqualhrs:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
@@ -70,41 +78,18 @@ Autumn:
       numeric:
         type: "integer"
       canbeblank: yes
-  column_map.pupilnolongeronroll.termlysessionseducational:
-    type: add
-    description: Adds new column for pupilnolongeronroll
-    value:
-      *int-blank
-  column_map.pupilnolongeronroll.termlysessionsexceptional:
-      type: add
-      description: Adds new column for pupilnolongeronroll
-      value:
-        *int-blank
-  column_map.pupilnolongeronroll.tlevelnonqualhrs:
-    type: add
-    description: Adds new column for pupilnolongeronroll
-    value:
-      *int-blank
   column_map.pupilnolongeronroll.tlevelqualhrs:
     type: add
     description: Adds new column for pupilnolongeronroll
     value:
       *int-blank
-  column_map.pupilonroll.termlysessionscoronavirus:
-    type: add
-    description: Adds new column for pupilonroll
+  column_map.pupilonroll:
+    type: remove
+    description: Remove columns from pupilonroll
     value:
-      *int-blank
-  column_map.pupilonroll.termlysessionseducational:
-    type: add
-    description: Adds new column for pupilonroll
-    value:
-      *int-blank
-  column_map.pupilonroll.termlysessionsexceptional:
-    type: add
-    description: Adds new column for pupilonroll
-    value:
-      *int-blank
+      - annualsessionspossible
+      - annualsessionsauthorised
+      - annualsessionsunauthorised
   column_map.pupilonroll.tlevelnonqualhrs:
     type: add
     description: Adds new column for pupilonroll
@@ -172,6 +157,14 @@ Autumn:
     description: Update codes for 2021 schema
     value:
       *attendance-reason
+  column_map.termlyexclusionsoffroll:
+    type: remove
+    description: Remove column termlyexclusionsoffroll
+    value:
+      - reinstatementdate
+      - reviewdate
+      - reviewresult
+      - senexpert
   column_map.termlyexclusionsoffroll.category:
     type: modify
     description: Update codes for 2021 schema
@@ -205,6 +198,14 @@ Autumn:
         - code: "MT"
         - code: "PH"
       canbeblank: yes
+  column_map.termlyexclusionsonroll:
+    type: remove
+    description: Remove column termlyexclusionsoffroll
+    value:
+      - reinstatementdate
+      - reviewdate
+      - reviewresult
+      - senexpert
   column_map.termlyexclusionsonroll.reason:
     type: modify
     description: Update codes for 2021 schema
@@ -281,6 +282,11 @@ Autumn:
         *int-blank
 
 Spring:
+  column_map.classes.ppa:
+    type: rename
+    description: Rename column in termlysessiondetailsoffroll
+    value:
+      ppateachers
   column_map.pupilnolongeronroll.termlysessionscoronavirus:
     type: add
     description: Adds new column for pupilnolongeronroll
@@ -321,6 +327,10 @@ Spring:
     description: Remove column from termlyexclusionsoffroll
     value:
       - reason
+      - reinstatementdate
+      - reviewdate
+      - reviewresult
+      - senexpert
   column_map.termlyexclusionsoffroll.reason1:
     type: add
     description: Adds new column for termlyexclusionsoffroll
@@ -346,6 +356,10 @@ Spring:
     description: Remove column from termlyexclusionsonroll
     value:
       - reason
+      - reinstatementdate
+      - reviewdate
+      - reviewresult
+      - senexpert
   column_map.termlyexclusionsonroll.reason1:
     type: add
     description: Adds new column for termlyexclusionsoffroll
@@ -423,6 +437,10 @@ Summer:
     description: Remove column in termlyexclusionsoffroll
     value:
       - reason
+      - reinstatementdate
+      - reviewdate
+      - reviewresult
+      - senexpert
   column_map.termlyexclusionsoffroll.reason1:
     type: add
     description: Adds new column for termlyexclusionsoffroll
@@ -443,11 +461,15 @@ Summer:
     description: Update codes for 2021 schema
     value:
       *exclusion-category
-  column_map.termlyexclusionsonroll.reason:
+  column_map.termlyexclusionsonroll:
     type: remove
     description: Remove column in termlyexclusionsonroll
     value:
       - reason
+      - reinstatementdate
+      - reviewdate
+      - reviewresult
+      - senexpert
   column_map.termlyexclusionsonroll.reason1:
     type: add
     description: Adds new column for termlyexclusionsoffroll
