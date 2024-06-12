@@ -166,7 +166,7 @@ def add_table_name(event, schema: DataSchema):
         return EventErrors.add_to_event(
             event,
             type="UnidentifiedTable",
-            message=f"Failed to identify table based on headers",
+            message=f"Failed to identify table based on headers, actual headers are {headers}",
         )
 
 
