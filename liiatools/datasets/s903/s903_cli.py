@@ -99,6 +99,31 @@ def la_agg(input, output):
     help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
 )
 @click.option(
+    "--o",
+    "output",
+    required=True,
+    type=str,
+    help="A string specifying the output directory location",
+)
+def episodes_fix(input, output):
+    """
+    Applies fixes to la_agg SSDA903 Episodes files
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+    s903_main_functions.episodes_fix(input, output)
+
+
+@s903.command()
+@click.option(
+    "--i",
+    "input",
+    required=True,
+    type=str,
+    help="A string specifying the input file location, including the file name and suffix, usable by a pathlib Path function",
+)
+@click.option(
     "--la_code",
     required=True,
     type=click.Choice(la_list, case_sensitive=False),

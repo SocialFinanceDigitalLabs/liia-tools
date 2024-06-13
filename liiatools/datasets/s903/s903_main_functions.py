@@ -1,8 +1,8 @@
 from pathlib import Path
-import yaml
 import logging
-import click_log
 from datetime import datetime
+import yaml
+import click_log
 
 # dependencies for cleanfile()
 from liiatools.datasets.s903.lds_ssda903_clean import (
@@ -23,6 +23,9 @@ from liiatools.datasets.s903.lds_ssda903_pan_agg import configuration as pan_con
 # dependencies for sufficiency_output()
 from liiatools.datasets.s903.lds_ssda903_sufficiency import configuration as suff_config
 from liiatools.datasets.s903.lds_ssda903_sufficiency import process as suff_process
+
+# dependencies for episodes fix()
+from liiatools.datasets.s903.lds_ssda903_episodes_fix.process import stage_1, stage_2
 
 from liiatools.spec import common as common_asset_dir
 from liiatools.datasets.shared_functions import (
@@ -200,3 +203,30 @@ def sufficiency_output(input, output):
         minimise = config["minimise"]
         s903_df = suff_process.data_min(s903_df, minimise, table_name)
         suff_process.export_suff_file(output, table_name, s903_df)
+
+
+def episodes_fix(input, output):
+    """
+    Applies fixes to la_agg SSDA903 Episodes files
+    :param input: should specify the input file location, including file name and suffix, and be usable by a Path function
+    :param output: should specify the path to the output folder
+    :return: None
+    """
+
+    # Configuration
+    config = agg_config.Config()
+
+    # Read file and match type
+    s903_df = common_process.read_file(input)
+    column_names = config["column_names"]
+    table_name = common_process.match_load_file(s903_df, column_names)
+
+    # Process stage 1 and 2 rule fixes for Episodes table
+    if table_name == "Episodes":
+        s903_df_stage1_applied = stage_1(s903_df)
+        s903_df_final = stage_2(s903_df_stage1_applied)
+        output_path = Path(output, "SSDA903_episodes_fixed.csv")
+        s903_df_final.to_csv(
+            output_path,
+            index=False,
+        )
