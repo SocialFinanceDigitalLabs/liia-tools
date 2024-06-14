@@ -172,8 +172,9 @@ Autumn:
       &exclusion-category
       category:
       - code: "PERM"
-      - code: "SUSP"
       - code: "LNCH"
+      - code: "SUSP"
+        name: "FIXD"
       canbeblank: yes
   column_map.termlyexclusionsoffroll.reason:
     type: modify
@@ -181,22 +182,22 @@ Autumn:
     value:
       &exclusion-reason
       category:
-        - code: "PP"
-        - code: "PA"
-        - code: "VP"
-        - code: "VA"
-        - code: "OW"
-        - code: "BU"
-        - code: "RA"
-        - code: "LG"
-        - code: "DS"
-        - code: "SM"
-        - code: "DA"
-        - code: "DM"
-        - code: "TH"
-        - code: "DB"
-        - code: "MT"
-        - code: "PH"
+      - code: "PP"
+      - code: "PA"
+      - code: "VP"
+      - code: "VA"
+      - code: "OW"
+      - code: "BU"
+      - code: "RA"
+      - code: "LG"
+      - code: "DS"
+      - code: "SM"
+      - code: "DA"
+      - code: "DM"
+      - code: "TH"
+      - code: "DB"
+      - code: "MT"
+      - code: "PH"
       canbeblank: yes
   column_map.termlyexclusionsonroll:
     type: remove

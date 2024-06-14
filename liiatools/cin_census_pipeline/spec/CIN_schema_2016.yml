@@ -1,464 +1,429 @@
 column_map:
-    AD1:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      DATE_INT:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      DATE_MATCH:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      FOSTER_CARE:
-       category:
-       - code: "0"
-         name: "False"
-       - code: "1"
-         name: "True"
-       canbeblank: no
-      NB_ADOPTR:
-       numeric: 
-         type: "integer"
-       canbeblank: no
-      SEX_ADOPTR:
-       category:
-       - code: "M1"
-       - code: "F1"
-       - code: "MM"
-       - code: "FF"
-       - code: "MF"
-       canbeblank: no
-      LS_ADOPTR:
-       category:
-       - code: "L0"
-       - code: "L11"
-       - code: "L12"
-       - code: "L2"
-       - code: "L3"
-       - code: "L4"
-       canbeblank: no
-    Episodes:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DECOM:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      RNE:
-       category:
-       - code: "S"
-       - code: "L"
-       - code: "P"
-       - code: "T"
-       - code: "B"
-       - code: "U"
-       canbeblank: no
-      LS:
-       category:
-       - code: "C1"
-       - code: "C2"
-       - code: "D1"
-       - code: "E1"
-       - code: "V2"
-       - code: "V3"
-       - code: "V4"
-       - code: "L1"
-       - code: "L2"
-       - code: "L3"
-       - code: "J1"
-       - code: "J2"
-       - code: "J3"
-       canbeblank: no
-      CIN:
-       category:
-       - code: "N1"
-       - code: "N2"
-       - code: "N3"
-       - code: "N4"
-       - code: "N5"
-       - code: "N6"
-       - code: "N7"
-       - code: "N8"
-       canbeblank: no
-      PLACE:
-       category:
-       - code: "A3"
-       - code: "A4"
-       - code: "A5"
-       - code: "A6"
-       - code: "H5"
-       - code: "K1"
-       - code: "K2"
-       - code: "P1"
-       - code: "P2"
-       - code: "P3"
-       - code: "R1"
-       - code: "R2"
-       - code: "R3"
-       - code: "R5"
-       - code: "S1"
-       - code: "T0"
-       - code: "T1"
-       - code: "T2"
-       - code: "T3"
-       - code: "T4"
-       - code: "U1"
-       - code: "U2"
-       - code: "U3"
-       - code: "U4"
-       - code: "U5"
-       - code: "U6"
-       - code: "Z1"
-       canbeblank: no
-      PLACE_PROVIDER:
-       category:
-       - code: "PR0"
-       - code: "PR1"
-       - code: "PR2"
-       - code: "PR3"
-       - code: "PR4"
-       - code: "PR5"
-       canbeblank: yes
-      DEC:
-       date: "%d/%m/%Y"
-       canbeblank: yes
-      REC:
-       category:
-       - code: "X1"
-       - code: "E11"
-       - code: "E12"
-       - code: "E2"
-       - code: "E3"
-       - code: "E4A"
-       - code: "E4B"
-       - code: "E13"
-       - code: "E41"
-       - code: "E43"
-       - code: "E44"
-       - code: "E5"
-       - code: "E6"
-       - code: "E7"
-       - code: "E9"
-       - code: "E14"
-       - code: "E15"
-       - code: "E16"
-       - code: "E17"
-       - code: "E8"
-       canbeblank: yes
-      REASON_PLACE_CHANGE:
-       category:
-       - code: "CARPL"
-       - code: "CLOSE"
-       - code: "ALLEG"
-       - code: "STAND"
-       - code: "APPRR"
-       - code: "CREQB"
-       - code: "CREQO"
-       - code: "CHILD"
-       - code: "LAREQ"
-       - code: "PLACE"
-       - code: "OTHER"
-       canbeblank: yes
-      HOME_POST:
-       string: "postcode"
-       canbeblank: yes
-      PL_POST:
-       string: "postcode"
-       canbeblank: yes
-      URN:
-       string: "alphanumeric"
-       canbeblank: yes
-    Header:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      SEX:
-       category:
-       - code: "1"
-         name: "Male"
-       - code: "2"
-         name: "Female"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      ETHNIC:
-       category:
-       - code: "WBRI"
-         name: "White British"
-       - code: "WIRI"
-         name: "White Irish"
-       - code: "WOTH"
-         name: "Any other White background"
-       - code: "WIRT"
-         name: "Traveller of Irish heritage"
-       - code: "WROM"
-         name: "Gypsy/Roma"
-       - code: "MWBC"
-         name: "White and Black Caribbean"
-       - code: "MWBA"
-         name: "White and Black African"
-       - code: "MWAS"
-         name: "White and Asian"
-       - code: "MOTH"
-         name: "Any other Mixed background"
-       - code: "AIND"
-         name: "Indian"
-       - code: "APKN"
-         name: "Pakistani"
-       - code: "ABAN"
-         name: "Bangladeshi"
-       - code: "AOTH"
-         name: "Any other Asian background"
-       - code: "BCRB"
-         name: "Caribbean"
-       - code: "BAFR"
-         name: "African"
-       - code: "BOTH"
-         name: "Any other Black background"
-       - code: "CHNE"
-         name: "Chinese"
-       - code: "OOTH"
-         name: "Any other ethnic group"
-       - code: "REFU"
-         name: "Refused"
-       - code: "NOBT"
-         name: "Information not yet obtained"
-       canbeblank: no
-      UPN:
-       string: "alphanumeric"
-       canbeblank: no
-      MOTHER:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      MC_DOB:
-       date: "%d/%m/%Y"
-       canbeblank: yes
-    Missing:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      MISSING:
-       category:
-       - code: "M"
-       - code: "A"
-       canbeblank: no
-      MIS_START:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      MIS_END:
-       date: "%d/%m/%Y"
-       canbeblank: yes
-    OC2:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      SDQ_SCORE:
-       numeric: 
-         type: "integer"
-         min_value: 0
-         max_value: 40
-       canbeblank: yes
-      SDQ_REASON:
-       category:
-       - code: "SDQ1"
-       - code: "SDQ2"
-       - code: "SDQ3"
-       - code: "SDQ4"
-       - code: "SDQ5"
-       canbeblank: yes
-      CONVICTED:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      HEALTH_CHECK:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      IMMUNISATIONS:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      TEETH_CHECK:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      HEALTH_ASSESSMENT:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      SUBSTANCE_MISUSE:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      INTERVENTION_RECEIVED:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-      INTERVENTION_OFFERED:
-       category:
-       - code: "0"
-       - code: "1"
-       canbeblank: yes
-    OC3:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      IN_TOUCH:
-       category:
-       - code: "YES"
-       - code: "NO"
-       - code: "DIED"
-       - code: "REFU"
-       - code: "NREQ"
-       - code: "RHOM"
-       canbeblank: no
-      ACTIV:
-       category:
-       - code: "F1"
-       - code: "P1"
-       - code: "F2"
-       - code: "P2"
-       - code: "F3"
-       - code: "P3"
-       - code: "G4"
-       - code: "G5"
-       - code: "G6"
-       - code: "0"
-       canbeblank: no
-      ACCOM:
-       category:
-       - code: "B1"
-       - code: "B2"
-       - code: "C1"
-       - code: "C2"
-       - code: "D1"
-       - code: "D2"
-       - code: "E1"
-       - code: "E2"
-       - code: "G1"
-       - code: "G2"
-       - code: "H1"
-       - code: "H2"
-       - code: "K1"
-       - code: "K2"
-       - code: "R1"
-       - code: "R2"
-       - code: "S1"
-       - code: "S2"
-       - code: "T1"
-       - code: "T2"
-       - code: "U1"
-       - code: "U2"
-       - code: "V1"
-       - code: "V2"
-       - code: "W1"
-       - code: "W2"
-       - code: "X1"
-       - code: "X2"
-       - code: "Y1"
-       - code: "Y2"
-       - code: "Z1"
-       - code: "Z2"
-       - code: "0"
-       canbeblank: no
-    PlacedAdoption:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      DATE_PLACED:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      DATE_PLACED_CEASED:
-       date: "%d/%m/%Y"
-       canbeblank: yes
-      REASON_PLACED_CEASED:
-       category:
-       - code: "RD1"
-       - code: "RD2"
-       - code: "RD3"
-       - code: "RD4"
-       canbeblank: yes
-    PrevPerm:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      PREV_PERM:
-       category:
-       - code: "P1"
-       - code: "P2"
-       - code: "P3"
-       - code: "P4"
-       - code: "Z1"
-       canbeblank: no
-      LA_PERM:
-       string: "alphanumeric"
-       canbeblank: yes
-      DATE_PERM:
-       date: "%d/%m/%Y"
-       canbeblank: yes
-    Reviews:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      REVIEW:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      REVIEW_CODE:
-       category:
-       - code: "PN0"
-       - code: "PN1"
-       - code: "PN2"
-       - code: "PN3"
-       - code: "PN4"
-       - code: "PN5"
-       - code: "PN6"
-       - code: "PN7"
-       canbeblank: no
-    UASC:
-      CHILD:
-       string: "alphanumeric"
-       canbeblank: no
-      DOB:
-       date: "%d/%m/%Y"
-       canbeblank: no
-      SEX:
-       category:
-       - code: "1"
-         name: "Male"
-       - code: "2"
-         name: "Female"
-       canbeblank: no
-      DUC:
-       date: "%d/%m/%Y"
-       canbeblank: yes   
+    assessments:
+        assessmentstableid:
+            &alphanumeric-not-blank
+            string: "alphanumeric"
+            canbeblank: no
+        NativeId:
+            *alphanumeric-not-blank
+        assessmentsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        cindetailstableid:
+            *alphanumeric-not-blank
+        assessmentactualstartdate:
+            &date-not-blank
+            date: "%Y-%b-%d %H:%M:%S"
+            canbeblank: no
+        assessmentinternalreviewdate:
+            &date-blank
+            date: "%Y-%b-%d %H:%M:%S"
+            canbeblank: yes
+        assessmentauthorisationdate:
+            *date-blank
+    child:
+        childtableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        childorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        childreninneedtableid:
+            *alphanumeric-not-blank
+        lachildid:
+            *alphanumeric-not-blank
+        upn:
+            &upn
+            string: "regex"
+            cell_regex: "[A-Za-z]\d{11}(\d|[A-Za-z])"
+            canbeblank: yes
+        formerupn:
+            *upn
+        dob:
+            *date-blank
+        expecteddob:
+            *date-blank
+        persondeathdate:
+            *date-blank
+        upnunknown:
+            category:
+            - code: "UN1"
+            - code: "UN2"
+            - code: "UN3"
+            - code: "UN4"
+            - code: "UN5"
+            - code: "UN6"
+            - code: "UN7"
+            canbeblank: yes
+        gender:
+            category:
+            - code: "1"
+              name: "Male"
+            - code: "2"
+              name: "Female"
+            - code: "0"
+              name: "Not recorded or unborn"
+            - code: "9"
+              name: "Indeterminate"
+            canbeblank: yes
+        ethnicity:
+            category:
+            - code: "WBRI"
+              name: "White British"
+            - code: "WIRI"
+              name: "White Irish"
+            - code: "WIRT"
+              name: "Traveller of Irish heritage"
+            - code: "WOTH"
+              name: "Any other White background"
+            - code: "WROM"
+              name: "Gypsy/Roma"
+            - code: "MWBC"
+              name: "White and Black Caribbean"
+            - code: "MWBA"
+              name: "White and Black African"
+            - code: "MWAS"
+              name: "White and Asian"
+            - code: "MOTH"
+              name: "Any other mixed background"
+            - code: "AIND"
+              name: "Indian"
+            - code: "APKN"
+              name: "Pakistani"
+            - code: "ABAN"
+              name: "Bangladeshi"
+            - code: "AOTH"
+              name: "Any other Asian background"
+            - code: "BCRB"
+              name: "Caribbean"
+            - code: "BAFR"
+              name: "African"
+            - code: "BOTH"
+              name: "Any other black background"
+            - code: "CHNE"
+              name: "Chinese"
+            - code: "OOTH"
+              name: "Any other ethnic group"
+            - code: "REFU"
+              name: "Refused"
+            - code: "NOBT"
+              name: "Information not yet obtained"
+            canbeblank: no
+    childprotectionplans:
+        childprotectionplanstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        childprotectionplansorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        cindetailstableid:
+            *alphanumeric-not-blank
+        cppstartdate:
+            *date-not-blank
+        cppenddate:
+            *date-blank
+        numberofpreviouscpp:
+            &int-not-blank
+            numeric:
+              type: "integer"
+              min_value: 0
+            canbeblank: no
+        seensocialworker:
+            &true-false
+            category:
+            - code: "0"
+              name: "False"
+            - code: "1"
+              name: "True"
+            canbeblank: no
+        initialcategoryofabuse:
+            &category-of-abuse
+            category:
+            - code: "NEG"
+              name: "Neglect"
+            - code: "PHY"
+              name: "Physical abuse"
+            - code: "SAB"
+              name: "Sexual abuse"
+            - code: "EMO"
+              name: "Emotional abuse"
+            - code: "MUL"
+              name: "Multiple/not recommended"
+            canbeblank: no
+        latestcategoryofabuse:
+            *category-of-abuse
+    cindetails:
+        cindetailstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        cindetailsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        childtableid:
+            *alphanumeric-not-blank
+        cinreferraldate:
+            *date-not-blank
+        cinclosuredate:
+            *date-blank
+        dateofinitialcpc:
+            *date-not-blank
+        referralnfa:
+            *true-false
+        referralsource:
+            category:
+            - code: "1A"
+              name: "INDIVIDUAL – family member, relative or carer"
+            - code: "1B"
+              name: "INDIVIDUAL – acquaintance (including neighbours and child minders)"
+            - code: "1C"
+              name: "INDIVIDUAL – self"
+            - code: "1D"
+              name: "INDIVIDUAL – other (including strangers)"
+            - code: "2A"
+              name: "SCHOOLS"
+            - code: "2B"
+              name: "EDUCATION SERVICES"
+            - code: "3A"
+              name: "HEALTH SERVICES – general practitioner (GP)"
+            - code: "3B"
+              name: "HEALTH SERVICES – health visitor"
+            - code: "3C"
+              name: "HEALTH SERVICES – school nurse"
+            - code: "3D"
+              name: "HEALTH SERVICES – other primary health services"
+            - code: "3E"
+              name: "HEALTH SERVICES – A&E (accident and emergency department)"
+            - code: "3F"
+              name: "HEALTH SERVICES – other (for example hospice) "
+            - code: "4"
+              name: "HOUSING - local authority housing or housing association"
+            - code: "5A"
+              name: "LA SERVICES – social care for example adults social care services"
+            - code: "5B"
+              name: "LA SERVICES – other internal (department other than social care in local authorities, for example, youth offending (excluding housing))"
+            - code: "5C"
+              name: "LA SERVICES – external, for example, from another local authority’s adults social care services"
+            - code: "6"
+              name: "POLICE"
+            - code: "7"
+              name: "OTHER LEGAL AGENCY – including courts, probation, immigration, CAFCASS (Children and Family Court Advisory and Support Service) or prison"
+            - code: "8"
+              name: "OTHER – including children’s centres, independent agency providers or voluntary organisations"
+            - code: "9"
+              name: "ANONYMOUS"
+            - code: "10"
+              name: "UNKNOWN"
+            canbeblank: no
+        primaryneedcode:
+            category:
+            - code: "N1"
+              name: "Abuse or neglect"
+            - code: "N2"
+              name: "Child's disability"
+            - code: "N3"
+              name: "Parental disability or illness"
+            - code: "N4"
+              name: "Family in acute stress"
+            - code: "N5"
+              name: "Family dysfunction"
+            - code: "N6"
+              name: "Socially unacceptable behaviour"
+            - code: "N7"
+              name: "Low income"
+            - code: "N8"
+              name: "Absent parenting"
+            - code: "N9"
+              name: "Cases other than children in need"
+            - code: "N0"
+              name: "Not stated"
+            canbeblank: yes
+        reasonforclosure:
+            category:
+            - code: "RC1"
+              name: "Adopted"
+            - code: "RC2"
+              name: "Died"
+            - code: "RC3"
+              name: "Child arrangements order"
+            - code: "RC4"
+              name: "Special guardianship order"
+            - code: "RC5"
+              name: "Transferred to services of another local authority"
+            - code: "RC6"
+              name: "Transferred to adult social care services"
+            - code: "RC7"
+              name: "Services ceased for any other reason, including child no longer in need"
+            - code: "RC8"
+              name: "Case closed after assessment, no further action"
+            canbeblank: yes
+    disabilities:
+        disabilitiestableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        disabilitiesorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        childtableid:
+            *alphanumeric-not-blank
+        disability:
+            category:
+            - code: "NONE"
+              name: "No disability"
+            - code: "MOB"
+              name: "Mobility"
+            - code: "HAND"
+              name: "Hand function"
+            - code: "PC"
+              name: "Personal care"
+            - code: "INC"
+              name: "Incontinence"
+            - code: "COMM"
+              name: "Communication"
+            - code: "LD"
+              name: "Learning"
+            - code: "HEAR"
+              name: "Hearing"
+            - code: "VIS"
+              name: "Vision"
+            - code: "BEH"
+              name: "Behaviour"
+            - code: "CON"
+              name: "Consciousness"
+            - code: "AUT"
+              name: "Autism"
+            - code: "DDA"
+              name: "Other"
+            canbeblank: yes
+    factorsidentifiedatassessment:
+        factorsidentifiedatassessmenttableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        factorsidentifiedatassessmentorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        assessmentstableid:
+            *alphanumeric-not-blank
+        assessmentfactors:
+            category:
+            - code: "1A"
+              name: "Alcohol misuse: concerns about alcohol misuse by the child"
+            - code: "1B"
+              name: "Alcohol misuse: concerns about alcohol misuse by the parent(s)/carer(s)"
+            - code: "1C"
+              name: "Alcohol misuse: concerns about alcohol misuse by another person living in the household"
+            - code: "2A"
+              name: "Drug misuse: concerns about drug misuse by the child"
+            - code: "2B"
+              name: "Drug misuse: concerns about drug misuse by the parent(s)/carer(s)"
+            - code: "2C"
+              name: "Drug misuse: concerns about drug misuse by another person living in the household"
+            - code: "3A"
+              name: "Domestic violence: concerns about the child being the subject of domestic violence"
+            - code: "3B"
+              name: "Domestic violence: concerns about the child’s parent(s)/carer(s) being the subject of domestic violence"
+            - code: "3C"
+              name: "Domestic violence: concerns about another person living in the household being the subject of domestic violence"
+            - code: "4A"
+              name: "Mental health: concerns about the mental health of the child"
+            - code: "4B"
+              name: "Mental health: concerns about the mental health of the parent(s)/carer(s)"
+            - code: "4C"
+              name: "Mental health: concerns about the mental health of another person in the family/household"
+            - code: "5A"
+              name: "Learning disability: concerns about the child’s learning disability"
+            - code: "5B"
+              name: "Learning disability: concerns about the parent(s)/carer(s) learning disability"
+            - code: "5C"
+              name: "Learning disability: concerns about another person in the family/household’s learning disability"
+            - code: "6A"
+              name: "Physical disability or illness: concerns about a physical disability or illness of the child"
+            - code: "6B"
+              name: "Physical disability or illness: concerns about a physical disability or illness of the parent(s)/carer(s)"
+            - code: "6C"
+              name: "Physical disability or illness: concerns about a physical disability or illness of another person in the family/household"
+            - code: "7A"
+              name: "Young carer: concerns that services may be required or the child’s health or development may be impaired due to their caring responsibilities"
+            - code: "8B"
+              name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - overseas children who intend to return"
+            - code: "8C"
+              name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - overseas children who intend to stay"
+            - code: "8D"
+              name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - UK children in educational placements"
+            - code: "8E"
+              name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - UK children making alternative family arrangements"
+            - code: "8F"
+              name: "Privately fostered: concerns that services may be required or the child may be at risk as a privately fostered child - other"
+            - code: "9A"
+              name: "UASC: concerns that services may be required or the child may be at risk of harm as an unaccompanied asylum-seeking child"
+            - code: "10A"
+              name: "Missing: concerns that services may be required or the child may be at risk of harm due to going/being missing"
+            - code: "11A"
+              name: "Child sexual exploitation: concerns that services may be required or the child may be at risk of harm due to child sexual exploitation"
+            - code: "12A"
+              name: "Trafficking: concerns that services may be required or the child may be at risk of harm due to trafficking"
+            - code: "13A"
+              name: "Gangs: concerns that services may be required or the child may be at risk of harm because of involvement in/with gangs"
+            - code: "14A"
+              name: "Socially unacceptable behaviour: concerns that services may be required or the child may be at risk due to their socially unacceptable behaviour"
+            - code: "15A"
+              name: "Self-harm: concerns that services may be required or due to suspected/actual self-harming child may be at risk of harm"
+            - code: "16A"
+              name: "Abuse or neglect – ‘NEGLECT’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect"
+            - code: "17A"
+              name: "Abuse or neglect – ‘EMOTIONAL ABUSE’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect"
+            - code: "18A"
+              name: "Abuse or neglect – ‘PHYSICAL ABUSE’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect."
+            - code: "19A"
+              name: "Abuse or neglect – ‘SEXUAL ABUSE’: concerns that services may be required or the child may be suffering or likely to suffer significant harm due to abuse or neglect."
+            - code: "20"
+              name: "Other"
+            - code: "21"
+              name: "No factors identified - only use this if there is no evidence of any of the factors above and no further action is being taken"
+            - code: "22A"
+              name: "Female genital mutilation (FGM) - concerns that services may be required or the child may be at risk due to female genital mutilation"
+            - code: "23A"
+              name: "Abuse linked to faith or belief - concerns that services may be required or the child may be at risk due to abuse linked to faith or belief"
+            canbeblank: yes
+    reviews:
+        reviewstableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        reviewsorderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        childprotectionplanstableid:
+            *alphanumeric-not-blank
+        cppreviewdate:
+            *date-blank
+    section47:
+        section47tableid:
+            *alphanumeric-not-blank
+        NativeId:
+            *alphanumeric-not-blank
+        section47orderseqcolumn:
+            *alphanumeric-not-blank
+        sourceid:
+            *alphanumeric-not-blank
+        cindetailstableid:
+            *alphanumeric-not-blank
+        s47actualstartdate:
+            *date-not-blank
+        initialcpctargetdate:
+            *date-blank
+        dateofinitialcpc:
+            *date-blank
+        icpcnotrequired:
+            *true-false

@@ -75,11 +75,6 @@ Autumn:
         *alphanumeric-not-blank
       pupilnolongeronrolltableid:
         *alphanumeric-not-blank
-      learnerfamhours:
-        &int-blank
-        numeric:
-          type: "integer"
-        canbeblank: yes
       learnerfamtype:
         &learner-fam-type
         category:
@@ -106,12 +101,29 @@ Autumn:
         *alphanumeric-not-blank
       pupilonrolltableid:
         *alphanumeric-not-blank
-      learnerfamhours:
-        *int-blank
       learnerfamtype:
         *learner-fam-type
       learnerfamcode:
         *learner-fam-code
+  column_map.learningaimsoffroll.pupilnolongeronrolltableid:
+    type: rename
+    description: Rename column in learningaimsoffroll
+    value:
+      programmeaimsoffrolltableid
+  column_map.learningaimsoffroll.progtype:
+    type: add
+    description: Adds new column for learningaimsoffroll
+    value:
+      category:
+        - code: "30"
+        - code: "31"
+        - code: "01"
+      canbeblank: yes
+  column_map.learningaimsonroll.pupilonrolltableid:
+    type: rename
+    description: Rename column in learningaimsonroll
+    value:
+      programmeaimsonrolltableid
   column_map.programmeaimsoffroll:
     type: add
     description: Adds new table for 2022 return
@@ -167,6 +179,31 @@ Autumn:
         - code: "31"
         - code: "01"
         canbeblank: yes
+  column_map.programmeaimsonroll.learningstartdate:
+    type: rename
+    description: Rename column in programmeaimsonroll
+    value:
+      programmestartdate
+  column_map.programmeaimsonroll.learningplannedenddate:
+    type: rename
+    description: Rename column in programmeaimsonroll
+    value:
+      programmeplannedenddate
+  column_map.programmeaimsonroll.learningactualenddate:
+    type: rename
+    description: Rename column in programmeaimsonroll
+    value:
+      programmeactualenddate
+  column_map.programmeaimsonroll.learningaimstatus:
+    type: rename
+    description: Rename column in programmeaimsonroll
+    value:
+      programmeaimstatus
+  column_map.programmeaimsonroll.learningaimwithdrawalreason:
+    type: rename
+    description: Rename column in programmeaimsonroll
+    value:
+      programmeaimwithdrawalreason
   column_map.pupilnolongeronroll.englishgcsepriorattainmentyeargroup:
     type: rename
     description: Rename column in pupilnolongeronroll
@@ -192,11 +229,69 @@ Autumn:
     description: Update codes for 2022 schema
     value:
       *sen-provision
+  column_map.termlyexclusionsoffroll:
+    type: remove
+    description: Remove column from termlyexclusionsoffroll
+    value:
+      - reason
+  column_map.termlyexclusionsoffroll.reason1:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      &exclusion-reason
+      category:
+      - code: "PP"
+      - code: "PA"
+      - code: "VP"
+      - code: "VA"
+      - code: "OW"
+      - code: "BU"
+      - code: "RA"
+      - code: "LG"
+      - code: "DS"
+      - code: "SM"
+      - code: "DA"
+      - code: "DM"
+      - code: "TH"
+      - code: "DB"
+      - code: "MT"
+      - code: "PH"
+      canbeblank: yes
+  column_map.termlyexclusionsoffroll.reason2:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *exclusion-reason
+  column_map.termlyexclusionsoffroll.reason3:
+    type: add
+    description: Adds new column for termlyexclusionsoffroll
+    value:
+      *exclusion-reason
   column_map.termlyexclusionsoffroll.senprovision:
     type: modify
     description: Update codes for 2022 schema
     value:
       *sen-provision
+  column_map.termlyexclusionsonroll:
+    type: remove
+    description: Remove column from termlyexclusionsonroll
+    value:
+      - reason
+  column_map.termlyexclusionsonroll.reason1:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *exclusion-reason
+  column_map.termlyexclusionsonroll.reason2:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *exclusion-reason
+  column_map.termlyexclusionsonroll.reason3:
+    type: add
+    description: Adds new column for termlyexclusionsonroll
+    value:
+      *exclusion-reason
   column_map.termlyexclusionsonroll.senprovision:
     type: modify
     description: Update codes for 2022 schema
@@ -259,7 +354,10 @@ Spring:
       pupilnolongeronrolltableid:
         *alphanumeric-not-blank
       learnerfamhours:
-        *int-blank
+        &int-blank
+        numeric:
+          type: "integer"
+        canbeblank: yes
       learnerfamtype:
         *learner-fam-type
       learnerfamcode:
