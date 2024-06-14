@@ -38,7 +38,7 @@ column_map:
         upn:
             &upn
             string: "regex"
-            cell_regex: "[A-Za-z]\d{11}(\d|[A-Za-z])"
+            cell_regex: "[A-Za-z]\\d{11}(\\d|[A-Za-z])"
             canbeblank: yes
         formerupn:
             *upn
@@ -128,7 +128,6 @@ column_map:
         cppenddate:
             *date-blank
         numberofpreviouscpp:
-            &int-not-blank
             numeric:
               type: "integer"
               min_value: 0

@@ -1,0 +1,23 @@
+column_map.cindetails.reasonforclosure:
+  type: modify
+  description: Updated reasonforclosure codes for 2023 schema
+  value:
+    category:
+    - code: "RC1"
+      name: "Adopted"
+    - code: "RC2"
+      name: "Died"
+    - code: "RC3"
+      name: "Child arrangements order"
+    - code: "RC4"
+      name: "Special guardianship order"
+    - code: "RC5"
+      name: "Transferred to services of another local authority"
+    - code: "RC6"
+      name: "Transferred to adult social care services"
+    - code: "RC7"
+      name: "Services ceased for any other reason, including child no longer in need"
+    - code: "RC8"
+      name: "Case closed after assessment, no further action"
+    - code: "RC9"
+      name: "Case closed after assessment, referred to early help"

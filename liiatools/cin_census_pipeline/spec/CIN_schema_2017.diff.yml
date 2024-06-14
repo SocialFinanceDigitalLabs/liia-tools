@@ -1,0 +1,5 @@
+column_map.childprotectionplans:
+  type: remove
+  description: Remove column from childprotectionplans
+  value:
+    - seensocialworker

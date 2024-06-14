@@ -15,10 +15,14 @@ from liiatools.common.transform import degrade_data, enrich_data, prepare_export
 
 from liiatools.cin_census_pipeline.spec import (
     load_pipeline_config,
-    load_schema,
+    load_xml_schema,
+    load_csv_schema,
     load_schema_path,
 )
-from liiatools.cin_census_pipeline.stream_pipeline import task_cleanfile
+from liiatools.cin_census_pipeline.stream_pipeline import (
+    task_xml_cleanfile,
+    task_csv_cleanfile,
+)
 from liiatools.cin_census_pipeline.reports import reports
 
 
@@ -55,13 +59,21 @@ def process_file(
     uuid = file_locator.meta["uuid"]
 
     # Load schema and set on processing metadata
-    schema = load_schema(year=year)
-    schema_path = load_schema_path(year=year)
+    if file_locator.name.endswith(".xml"):
+        schema = load_xml_schema(year=year)
+        schema_path = load_schema_path(year=year)
+    elif file_locator.name.endswith(".csv"):
+        schema = load_csv_schema(year=year)
+
     metadata = dict(year=year, schema=schema, la_code=la_code)
 
     # Normalise the data and export to the session 'cleaned' folder
     try:
-        cleanfile_result = task_cleanfile(file_locator, schema, schema_path)
+        cleanfile_result = (
+            task_xml_cleanfile(file_locator, schema, schema_path)
+            if file_locator.name.endswith(".xml")
+            else task_csv_cleanfile(file_locator, schema)
+        )
     except Exception as e:
         logger.exception(f"Error cleaning file {file_locator.name}")
         errors.append(
@@ -155,19 +167,19 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
         report_data.data.export(report_folder, "cin_census_", "csv")
 
     # Run report analysis
-    analysis_data = report_data.data["CIN"]
-
-    expanded_assessment_factors = reports.expanded_assessment_factors(analysis_data)
-    referral_outcomes = reports.referral_outcomes(analysis_data)
-    s47_journeys = reports.s47_journeys(analysis_data)
-
-    analysis_data = DataContainer(
-        {
-            "factors": expanded_assessment_factors,
-            "referrals": referral_outcomes,
-            "S47_journeys": s47_journeys,
-        }
-    )
-
-    analysis_folder = export_folder.makedirs("REPORTS", recreate=True)
-    analysis_data.export(analysis_folder, "cin_census_", "csv")
+    # analysis_data = report_data.data["CIN"]
+    #
+    # expanded_assessment_factors = reports.expanded_assessment_factors(analysis_data)
+    # referral_outcomes = reports.referral_outcomes(analysis_data)
+    # s47_journeys = reports.s47_journeys(analysis_data)
+    #
+    # analysis_data = DataContainer(
+    #     {
+    #         "factors": expanded_assessment_factors,
+    #         "referrals": referral_outcomes,
+    #         "S47_journeys": s47_journeys,
+    #     }
+    # )
+    #
+    # analysis_folder = export_folder.makedirs("REPORTS", recreate=True)
+    # analysis_data.export(analysis_folder, "cin_census_", "csv")

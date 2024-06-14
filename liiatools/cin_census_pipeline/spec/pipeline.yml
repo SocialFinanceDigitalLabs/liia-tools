@@ -89,3 +89,240 @@ table_list:
     type: numeric
     enrich: year
     sort: 0
+- id: assessments
+  retain:
+  - PAN
+  columns:
+  - id: assessmentstableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: assessmentsorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: cindetailstableid
+    type: string
+  - id: assessmentactualstartdate
+    type: date
+  - id: assessmentinternalreviewdate
+    type: date
+  - id: assessmentauthorisationdate
+    type: date
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: child
+  retain:
+  - PAN
+  columns:
+  - id: childtableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: childorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: childreninneedtableid
+    type: string
+  - id: lachildid
+    type: string
+    unique_key: true
+    enrich: [integer, add_la_suffix]
+  - id: upn
+    type: string
+  - id: formerupn
+    type: string
+  - id: dob
+    type: date
+    degrade: first_of_month
+  - id: expecteddob
+    type: date
+    degrade: first_of_month
+  - id: persondeathdate
+    type: date
+    degrade: first_of_month
+  - id: upnunknown
+    type: category
+  - id: gender
+    type: category
+  - id: ethnicity
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: childprotectionplans
+  retain:
+  - PAN
+  columns:
+  - id: childprotectionplanstableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: childprotectionplansorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: cindetailstableid
+    type: string
+  - id: cppstartdate
+    type: date
+  - id: cppenddate
+    type: date
+  - id: numberofpreviouscpp
+    type: numeric
+  - id: seensocialworker
+    type: category
+  - id: initialcategoryofabuse
+    type: category
+  - id: latestcategoryofabuse
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: cindetails
+  retain:
+  - PAN
+  columns:
+  - id: cindetailstableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: cindetailsorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: childtableid
+    type: string
+  - id: cinreferraldate
+    type: date
+  - id: cinclosuredate
+    type: date
+  - id: dateofinitialcpc
+    type: date
+  - id: referralnfa
+    type: category
+  - id: referralsource
+    type: category
+  - id: primaryneedcode
+    type: category
+  - id: reasonforclosure
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: disabilities
+  retain:
+  - PAN
+  columns:
+  - id: disabilitiestableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: disabilitiesorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: childtableid
+    type: string
+  - id: disability
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: factorsidentifiedatassessment
+  retain:
+  - PAN
+  columns:
+  - id: factorsidentifiedatassessmenttableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: factorsidentifiedatassessmentorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: assessmentstableid
+    type: string
+  - id: assessmentfactors
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: reviews
+  retain:
+  - PAN
+  columns:
+  - id: reviewstableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: reviewsorderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: childprotectionplanstableid
+    type: string
+  - id: cppreviewdate
+    type: date
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
+- id: section47
+  retain:
+  - PAN
+  columns:
+  - id: section47tableid
+    type: string
+  - id: NativeId
+    type: string
+  - id: section47orderseqcolumn
+    type: string
+  - id: sourceid
+    type: string
+  - id: cindetailstableid
+    type: string
+  - id: s47actualstartdate
+    type: date
+  - id: initialcpctargetdate
+    type: date
+  - id: dateofinitialcpc
+    type: date
+  - id: icpcnotrequired
+    type: category
+  - id: LA
+    type: string
+    enrich: la_name
+  - id: Year
+    type: numeric
+    enrich: year
+    sort: 0
