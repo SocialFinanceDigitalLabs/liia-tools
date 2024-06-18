@@ -9,6 +9,32 @@ Autumn:
     description: Rename column in pupilonroll
     value:
       sex
+  column_map.schoolarrangedapdetailoffroll.applacementpostcode:
+    type: add
+    description: Adds new column for schoolarrangedapdetailoffroll
+    value:
+      &postcode-blank
+      string: "postcode"
+      canbeblank: yes
+  column_map.schoolarrangedapdetailoffroll.companynumber:
+    type: add
+    description: Adds new column for schoolarrangedapdetailoffroll
+    value:
+      &company-number
+      string: "regex"
+      cell_regex:
+        - ([A-Za-z]{2}|\d{2})\d{6}
+      canbeblank: yes
+  column_map.schoolarrangedapdetailonroll.applacementpostcode:
+    type: add
+    description: Adds new column for schoolarrangedapdetailonroll
+    value:
+      *postcode-blank
+  column_map.schoolarrangedapdetailonroll.companynumber:
+    type: add
+    description: Adds new column for schoolarrangedapdetailonroll
+    value:
+      *company-number
 
 Spring:
   column_map.pupilnolongeronroll.gender:

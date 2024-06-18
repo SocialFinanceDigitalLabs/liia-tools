@@ -12,6 +12,107 @@ Autumn:
       - code: "C"
       - code: "O"
       canbeblank: yes
+  column_map.schoolarrangedapdetailoffroll:
+    type: add
+    description: Adds new table for 2023 return
+    value:
+      schoolarrangedapdetailoffrolltableid:
+        &alphanumeric-not-blank
+        string: "alphanumeric"
+        canbeblank: no
+      NativeId:
+        *alphanumeric-not-blank
+      schoolarrangedapdetailoffrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilnolongeronrolltableid:
+        *alphanumeric-not-blank
+      urn:
+        &int-blank
+        numeric:
+          type: "integer"
+        canbeblank: yes
+      ukprn:
+        *int-blank
+      entrydate:
+        &date
+        date: "%Y-%b-%d %H:%M:%S"
+        canbeblank: yes
+      leavingdate:
+        *date
+      apsessionsperweek:
+        *int-blank
+      apsettingtype:
+        &ap-setting
+        category:
+          - code: "NFE"
+          - code: "OOT"
+          - code: "OTH"
+          - code: "WBP"
+        canbeblank: yes
+      placementreason:
+        &placement-reason
+        category:
+          - code: "BHS"
+          - code: "SUS"
+          - code: "EXR"
+          - code: "MHN"
+          - code: "OTH"
+          - code: "PHN"
+        canbeblank: yes
+      senprovisionentry:
+        &sen-provision
+        category:
+          - code: "N"
+          - code: "E"
+          - code: "K"
+          - code: "S"
+          - code: "A"
+          - code: "P"
+        canbeblank: yes
+      senprovisionleaving:
+        *sen-provision
+      apattendancepattern:
+        &attendance-pattern
+        category:
+          - code: "FT"
+          - code: "PT"
+        canbeblank: yes
+  column_map.schoolarrangedapdetailonroll:
+    type: add
+    description: Adds new table for 2023 return
+    value:
+      schoolarrangedapdetailonrolltableid:
+        *alphanumeric-not-blank
+      NativeId:
+        *alphanumeric-not-blank
+      schoolarrangedapdetailonrollorderseqcolumn:
+        *alphanumeric-not-blank
+      sourceid:
+        *alphanumeric-not-blank
+      pupilonrolltableid:
+        *alphanumeric-not-blank
+      urn:
+        *int-blank
+      ukprn:
+        *int-blank
+      entrydate:
+        *date
+      leavingdate:
+        *date
+      apsessionsperweek:
+        *int-blank
+      apsettingtype:
+        *ap-setting
+      placementreason:
+        *placement-reason
+      senprovisionentry:
+        *sen-provision
+      senprovisionleaving:
+        *sen-provision
+      apattendancepattern:
+        *attendance-pattern
 
 Spring:
   column_map.pupilnolongeronroll:
