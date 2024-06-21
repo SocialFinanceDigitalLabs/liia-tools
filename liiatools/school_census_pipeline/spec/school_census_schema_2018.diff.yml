@@ -5,6 +5,13 @@ Autumn:
     value:
       - annualsessiondetailsoffroll
       - annualsessiondetailsonroll
+  column_map.pupilnolongeronroll:
+    type: remove
+    description: Remove columns from pupilnolongeronroll
+    value:
+      - annualsessionspossible
+      - annualsessionsauthorised
+      - annualsessionsunauthorised
   column_map.pupilonroll.dafindicator:
     type: add
     description: Adds new column for pupilonroll
@@ -43,6 +50,9 @@ Autumn:
     description: Remove column from pupilonroll
     value:
       - proficiencyinenglish
+      - annualsessionspossible
+      - annualsessionsauthorised
+      - annualsessionsunauthorised
   column_map.pupilonroll.resourcedprovisionindicator:
     type: add
     description: Adds new column for pupilonroll

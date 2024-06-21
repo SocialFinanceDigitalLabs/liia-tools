@@ -63,13 +63,6 @@ Autumn:
         canbeblank: yes
       progtype:
         *prog-type
-  column_map.pupilnolongeronroll:
-    type: remove
-    description: Remove columns from pupilnolongeronroll
-    value:
-      - annualsessionspossible
-      - annualsessionsauthorised
-      - annualsessionsunauthorised
   column_map.pupilnolongeronroll.tlevelnonqualhrs:
     type: add
     description: Adds new column for pupilnolongeronroll
@@ -83,13 +76,6 @@ Autumn:
     description: Adds new column for pupilnolongeronroll
     value:
       *int-blank
-  column_map.pupilonroll:
-    type: remove
-    description: Remove columns from pupilonroll
-    value:
-      - annualsessionspossible
-      - annualsessionsauthorised
-      - annualsessionsunauthorised
   column_map.pupilonroll.tlevelnonqualhrs:
     type: add
     description: Adds new column for pupilonroll
@@ -157,14 +143,6 @@ Autumn:
     description: Update codes for 2021 schema
     value:
       *attendance-reason
-  column_map.termlyexclusionsoffroll:
-    type: remove
-    description: Remove column termlyexclusionsoffroll
-    value:
-      - reinstatementdate
-      - reviewdate
-      - reviewresult
-      - senexpert
   column_map.termlyexclusionsoffroll.category:
     type: modify
     description: Update codes for 2021 schema
@@ -199,14 +177,6 @@ Autumn:
       - code: "MT"
       - code: "PH"
       canbeblank: yes
-  column_map.termlyexclusionsonroll:
-    type: remove
-    description: Remove column termlyexclusionsoffroll
-    value:
-      - reinstatementdate
-      - reviewdate
-      - reviewresult
-      - senexpert
   column_map.termlyexclusionsonroll.reason:
     type: modify
     description: Update codes for 2021 schema
@@ -283,11 +253,6 @@ Autumn:
         *int-blank
 
 Spring:
-  column_map.classes.ppa:
-    type: rename
-    description: Rename column in termlysessiondetailsoffroll
-    value:
-      ppateachers
   column_map.pupilnolongeronroll.termlysessionscoronavirus:
     type: add
     description: Adds new column for pupilnolongeronroll

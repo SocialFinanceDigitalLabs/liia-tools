@@ -75,6 +75,28 @@ Autumn:
       - code: "A"
       - code: "P"
       canbeblank: yes
+  column_map.termlyexclusionsoffroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+  column_map.termlyexclusionsonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
+
+Spring:
+  column_map.classes.ppa:
+    type: rename
+    description: Rename column in classes
+    value:
+      ppateachers
+  column_map.pupilonroll.senprovision:
+    type: modify
+    description: Update codes for 2020 schema
+    value:
+      *sen-provision
   column_map.termlyexclusionsoffroll.reinstatementdate:
     type: add
     description: Adds new column for termlyexclusionsoffroll
@@ -125,63 +147,6 @@ Autumn:
       - code: "N"
         name: "No"
       canbeblank: yes
-  column_map.termlyexclusionsoffroll.senprovision:
-    type: modify
-    description: Update codes for 2020 schema
-    value:
-      *sen-provision
-  column_map.termlyexclusionsonroll.reinstatementdate:
-    type: add
-    description: Adds new column for termlyexclusionsonroll
-    value:
-      *date
-  column_map.termlyexclusionsonroll.reviewdate:
-    type: add
-    description: Adds new column for termlyexclusionsonroll
-    value:
-      *date
-  column_map.termlyexclusionsonroll.reviewresult:
-    type: add
-    description: Adds new column for termlyexclusionsonroll
-    value:
-      *review-result
-  column_map.termlyexclusionsonroll.senexpert:
-    type: add
-    description: Adds new column for termlyexclusionsonroll
-    value:
-      *sen-expert
-  column_map.termlyexclusionsonroll.senprovision:
-    type: modify
-    description: Update codes for 2020 schema
-    value:
-      *sen-provision
-
-Spring:
-  column_map.pupilonroll.senprovision:
-    type: modify
-    description: Update codes for 2020 schema
-    value:
-      *sen-provision
-  column_map.termlyexclusionsoffroll.reinstatementdate:
-    type: add
-    description: Adds new column for termlyexclusionsoffroll
-    value:
-      *date
-  column_map.termlyexclusionsoffroll.reviewdate:
-    type: add
-    description: Adds new column for termlyexclusionsoffroll
-    value:
-      *date
-  column_map.termlyexclusionsoffroll.reviewresult:
-    type: add
-    description: Adds new column for termlyexclusionsoffroll
-    value:
-      *review-result
-  column_map.termlyexclusionsoffroll.senexpert:
-    type: add
-    description: Adds new column for termlyexclusionsoffroll
-    value:
-      *sen-expert
   column_map.termlyexclusionsoffroll.senprovision:
     type: modify
     description: Update codes for 2020 schema
