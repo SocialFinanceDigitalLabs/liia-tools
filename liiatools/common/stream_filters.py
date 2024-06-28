@@ -2,6 +2,7 @@ import logging
 import xmlschema
 import tablib
 import pandas as pd
+import numpy as np
 import xml.etree.ElementTree as ET
 from io import BytesIO, StringIO
 from typing import Iterable, Union, Any, Dict, List
@@ -105,6 +106,9 @@ def _pandas_dataframe_to_stream(dataset: pd.DataFrame, **kwargs):
     for r_ix, row in enumerate(dataset.itertuples(index=False)):
         yield events.StartRow()
         for c_ix, cell in enumerate(row[0:]):
+            if isinstance(cell, float):
+                if np.isnan(cell):
+                    cell = ""
             yield events.Cell(
                 r_ix=r_ix,
                 c_ix=c_ix,
