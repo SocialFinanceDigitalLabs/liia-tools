@@ -38,8 +38,14 @@ def school_census():
     "-i",
     type=click.Path(exists=True, file_okay=False, readable=True),
 )
+@click.option(
+    "--filename",
+    "-f",
+    type=str,
+    help="Name of files you want to clean"
+)
 @click_log.simple_verbosity_option(log)
-def pipeline(input, la_code, output):
+def pipeline(input, la_code, output, filename):
     """Runs the full pipeline on a file or folder"""
 
     # Source FS is the filesystem containing the input files
@@ -48,4 +54,4 @@ def pipeline(input, la_code, output):
     # Get the output filesystem
     output_fs = open_fs(output)
 
-    process_session(source_fs, output_fs, la_code)
+    process_session(source_fs, output_fs, la_code, filename)
