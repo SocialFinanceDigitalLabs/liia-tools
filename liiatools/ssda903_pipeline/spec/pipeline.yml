@@ -1,5 +1,7 @@
 table_list:
 - id: AD1
+  retain:
+  - PAN
   columns:
   - id: CHILD
     type: string
@@ -227,6 +229,8 @@ table_list:
     enrich: year
     sort: 0
 - id: PlacedAdoption
+  retain:
+  - PAN
   columns:
   - id: CHILD
     type: string
