@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Message" type="MessageType"/>
+  <xs:complexType name="CollectionDetailsType">
+    <xs:sequence>
+      <xs:element name="Collection" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="SEN2"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Year" type="xs:gYear" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReferenceDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SourceType">
+    <xs:sequence>
+      <xs:element name="SourceLevel" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="L"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="LEA" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{3}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="SoftwareCode" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="xs:string" name="Release" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SerialNo" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{3}\d*"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DateTime" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DMO" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Y"/>
+            <xs:enumeration value="N"/>
+            <xs:enumeration value="R"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="DCO" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Y"/>
+            <xs:enumeration value="N"/>
+            <xs:enumeration value="R"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HeaderType">
+    <xs:sequence>
+      <xs:element type="CollectionDetailsType" name="CollectionDetails" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="SourceType" name="Source" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PlanDetailType">
+    <xs:sequence>
+      <xs:element name="URN" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{6}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="UKPRN" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{8}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element><xs:element type="sensettingtype" name="SENSetting" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="SENSettingOther" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="ranktype" name="PlacementRank" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="SENunitIndicator" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="ResourcedProvisionIndicator" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NamedPlanType">
+    <xs:sequence>
+      <xs:element type="xs:date" name="StartDate" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="PlanDetailType" name="PlanDetail" maxOccurs="2" minOccurs="1"/>
+      <xs:element type="restype" name="PlanRes" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="wbptype" name="PlanWBP" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="PB" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="OA" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="dptype" name="DP" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="xs:date" name="CeaseDate" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="ceasereasontype" name="CeaseReason" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AssessmentType">
+    <xs:sequence>
+      <xs:element type="assessmentoutcometype" name="AssessmentOutcome" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:date" name="AssessmentOutcomeDate" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="AssessmentMediation" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="AssessmentTribunal" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="OtherMediation" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="OtherTribunal" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="Week20" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="NamedPlanType" name="NamedPlan" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PlacementDetailType">
+    <xs:sequence>
+      <xs:element name="URN" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{6}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="UKPRN" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{8}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element><xs:element type="sensettingtype" name="SENSetting" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="SENSettingOther" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="ranktype" name="PlacementRank" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:date" name="EntryDate" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:date" name="LeavingDate" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="SENunitIndicator" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="ResourcedProvisionIndicator" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="restype" name="Res" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="wbptype" name="WBP" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SENneedType">
+    <xs:sequence>
+      <xs:element type="sentype" name="SENtype" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="ranktype" name="SENtypeRank" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ActivePlansType">
+    <xs:sequence>
+      <xs:element name="TransferLA" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{3}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="PlacementDetailType" name="PlacementDetail" minOccurs="1" maxOccurs="2"/>
+      <xs:element type="SENneedType" name="SENneed" minOccurs="1" maxOccurs="2"/>
+      <xs:element type="xs:date" name="ReviewMeeting" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="reviewoutcometype" name="ReviewOutcome" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="xs:date" name="LastReview" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RequestsType">
+    <xs:sequence>
+      <xs:element type="xs:date" name="ReceivedDate" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="RYA" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="xs:date" name="RequestOutcomeDate" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="requestoutcometype" name="RequestOutcome" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="RequestMediation" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="yesnotype" name="RequestTribunal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Exported" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string" >
+            <xs:pattern value="\d{3}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="AssessmentType" name="Assessment" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="ActivePlansType" name="ActivePlans" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PersonType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="Surname"/>
+      <xs:element type="xs:string" name="Forename"/>
+      <xs:element type="xs:date" name="PersonBirthDate"/>
+      <xs:element type="sextype" name="Sex" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="ethnicitytype" name="Ethnicity" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="PostCode"/>
+      <xs:element type="upntype" name="UPN" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="ulntype" name="UniqueLearnerNumber" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="unknownupntype" name="UPNunknown" minOccurs="0" maxOccurs="1"/>
+      <xs:element type="RequestsType" name="Requests" maxOccurs="unbounded" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PersonsType">
+    <xs:sequence>
+      <xs:element type="PersonType" name="Person" maxOccurs="unbounded" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MessageType">
+    <xs:sequence>
+      <xs:element type="HeaderType" name="Header" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="PersonsType" name="Persons" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="yesnotype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="true" />
+      <xs:enumeration value="false" />
+	  <xs:enumeration value="TRUE" />
+      <xs:enumeration value="FALSE" />
+      <xs:enumeration value="0" />
+      <xs:enumeration value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ranktype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="upntype">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Za-z]\d{12}"/>
+      <xs:pattern value="[A-Za-z]\d{11}[A-Za-z]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="unknownupntype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UN1" />
+      <xs:enumeration value="UN2" />
+      <xs:enumeration value="UN3" />
+      <xs:enumeration value="UN4" />
+      <xs:enumeration value="UN5" />
+      <xs:enumeration value="UN6" />
+      <xs:enumeration value="UN7" />
+      <xs:enumeration value="UN8" />
+      <xs:enumeration value="UN9" />
+      <xs:enumeration value="UN10" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ulntype">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d{10}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sextype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="M">
+        <xs:annotation><xs:documentation>Male</xs:documentation></xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="F">
+        <xs:annotation><xs:documentation>Female</xs:documentation></xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="U">
+        <xs:annotation><xs:documentation>Unknown</xs:documentation></xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="ethnicitytype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="WBRI"><xs:annotation><xs:documentation>White British</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WIRI"><xs:annotation><xs:documentation>White Irish</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WIRT"><xs:annotation><xs:documentation>Traveller of Irish heritage</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WOTH"><xs:annotation><xs:documentation>Any other White background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="WROM"><xs:annotation><xs:documentation>Gypsy/Roma</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MWBC"><xs:annotation><xs:documentation>White and Black Caribbean</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MWBA"><xs:annotation><xs:documentation>White and Black African</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MWAS"><xs:annotation><xs:documentation>White and Asian</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MOTH"><xs:annotation><xs:documentation>Any other mixed background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="AIND"><xs:annotation><xs:documentation>Indian</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="APKN"><xs:annotation><xs:documentation>Pakistani</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="ABAN"><xs:annotation><xs:documentation>Bangladeshi</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="AOTH"><xs:annotation><xs:documentation>Any other Asian background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BCRB"><xs:annotation><xs:documentation>Caribbean</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BAFR"><xs:annotation><xs:documentation>African</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BOTH"><xs:annotation><xs:documentation>Any other black background</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="CHNE"><xs:annotation><xs:documentation>Chinese</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="OOTH"><xs:annotation><xs:documentation>Any other ethnic group</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="REFU"><xs:annotation><xs:documentation>Refused</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="NOBT"><xs:annotation><xs:documentation>Information not yet obtained</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="disabilitytype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="NONE"><xs:annotation><xs:documentation>No disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MOB"><xs:annotation><xs:documentation>Mobility</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="HAND"><xs:annotation><xs:documentation>Hand function</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="PC"><xs:annotation><xs:documentation>Personal care</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="INC"><xs:annotation><xs:documentation>Incontinence</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="COMM"><xs:annotation><xs:documentation>Communication</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="LD"><xs:annotation><xs:documentation>Learning</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="HEAR"><xs:annotation><xs:documentation>Hearing</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="VIS"><xs:annotation><xs:documentation>Vision</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="BEH"><xs:annotation><xs:documentation>Behaviour</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="CON"><xs:annotation><xs:documentation>Consciousness</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="AUT"><xs:annotation><xs:documentation>Autism</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="DDA"><xs:annotation><xs:documentation>Other</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="requestoutcometype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="Y"><xs:annotation><xs:documentation>LA proceeded with an assessment</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N"><xs:annotation><xs:documentation>LA decided not to proceed with an assessment</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="A"><xs:annotation><xs:documentation>Decision yet to be made</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="W"><xs:annotation><xs:documentation>Request withdrawn or ceased before decision to assess was made</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="H"><xs:annotation><xs:documentation>Historical – Decision to issue was made before the latest collection period</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="reviewoutcometype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="A"><xs:annotation><xs:documentation>Amend the EHC plan</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="C"><xs:annotation><xs:documentation>Cease the EHC plan</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="M"><xs:annotation><xs:documentation>Maintain the EHC plan</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sentype">
+    <xs:restriction base="nonEmptyString">
+      <xs:enumeration value="SPLD"><xs:annotation><xs:documentation>Specific learning difficulty</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MLD"><xs:annotation><xs:documentation>Moderate learning difficulty</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="SLD"><xs:annotation><xs:documentation>Severe learning difficulty</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="PMLD"><xs:annotation><xs:documentation>Profound and multiple learning difficulty</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="SEMH"><xs:annotation><xs:documentation>Social, emotional and mental health</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="SLCN"><xs:annotation><xs:documentation>Speech, language and communication needs</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="HI"><xs:annotation><xs:documentation>Hearing impairment</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="VI"><xs:annotation><xs:documentation>Vision impairment</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="MSI"><xs:annotation><xs:documentation>Multi-sensory impairment</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="PD"><xs:annotation><xs:documentation>Physical disability</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="ASD"><xs:annotation><xs:documentation>Autistic spectrum disorder</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="OTH"><xs:annotation><xs:documentation>Other difficulty</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sensettingtype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OLA" />
+      <xs:enumeration value="EHE" />
+      <xs:enumeration value="EYP" />
+      <xs:enumeration value="OPA" />
+      <xs:enumeration value="OTH" />
+      <xs:enumeration value="NEET" />
+      <xs:enumeration value="NIEC" />
+      <xs:enumeration value="NIEO" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="restype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A"><xs:annotation><xs:documentation>38 to 51 weeks</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="B"><xs:annotation><xs:documentation>52 weeks</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="wbptype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A"><xs:annotation><xs:documentation>Apprenticeships</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="T"><xs:annotation><xs:documentation>Traineeships</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="S"><xs:annotation><xs:documentation>Supported internships</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="assessmentoutcometype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Y"><xs:annotation><xs:documentation>It was decided an EHC plan would be issued</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="N"><xs:annotation><xs:documentation>It was decided an EHC plan would not be issued</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="A"><xs:annotation><xs:documentation>Decision has not yet been made</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="W"><xs:annotation><xs:documentation>Request withdrawn or ceased before decision whether to issue was made</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="H"><xs:annotation><xs:documentation>Historical - Decision to issue was made before the latest collection period or plan has been transferred from another local authority</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="dptype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="E"><xs:annotation><xs:documentation>Education only</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="S"><xs:annotation><xs:documentation>Social care only</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="H"><xs:annotation><xs:documentation>Health only</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="I"><xs:annotation><xs:documentation>Integrated payment for a combination of the above</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ceasereasontype">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="1"><xs:annotation><xs:documentation>Reached maximum age</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="2"><xs:annotation><xs:documentation>Ongoing educational or training needs being met without an EHC plan</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="3"><xs:annotation><xs:documentation>Moved on to higher education</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="4"><xs:annotation><xs:documentation>Moved on to paid employment, excluding apprenticeships</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="5"><xs:annotation><xs:documentation>Transferred to another LA</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="6"><xs:annotation><xs:documentation>Young person no longer wishes to engage in education</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="7"><xs:annotation><xs:documentation>Child or young person has moved abroad</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="8"><xs:annotation><xs:documentation>Child or young person deceased</xs:documentation></xs:annotation></xs:enumeration>
+      <xs:enumeration value="9"><xs:annotation><xs:documentation>Other</xs:documentation></xs:annotation></xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
