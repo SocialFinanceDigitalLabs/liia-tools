@@ -115,8 +115,8 @@ def cleanfile(input, la_code, la_log_dir, output):
         return
 
     # Check year is within acceptable range for data retention policy
-    years_to_go_back = 6
-    year_start_month = 6
+    years_to_go_back = 7
+    year_start_month = 1
     reference_date = datetime.now()
     if (
         check_year_within_range(
@@ -253,33 +253,33 @@ def la_agg(input, flat_output, analysis_output):
     # Output flatfile
     agg_process.export_flatfile(flat_output, flatfile)
 
-    # Create and output factors file
-    factors = agg_process.filter_flatfile(
-        flatfile, filter="AssessmentAuthorisationDate"
-    )
-    if len(factors) > 0:
-        factors = agg_process.split_factors(factors)
-        agg_process.export_factfile(analysis_output, factors)
+    # # Create and output factors file
+    # factors = agg_process.filter_flatfile(
+    #     flatfile, filter="AssessmentAuthorisationDate"
+    # )
+    # if len(factors) > 0:
+    #     factors = agg_process.split_factors(factors)
+    #     agg_process.export_factfile(analysis_output, factors)
 
-    # Create referral file
-    ref, s17, s47 = agg_process.referral_inputs(flatfile)
-    if len(s17) > 0 and len(s47) > 0:
-        ref_assessment = config["ref_assessment"]
-        ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
-        ref_s47 = agg_process.merge_ref_s47(ref, s47, ref_assessment)
-        ref_outs = agg_process.ref_outcomes(ref, ref_s17, ref_s47)
-        agg_process.export_reffile(analysis_output, ref_outs)
+    # # Create referral file
+    # ref, s17, s47 = agg_process.referral_inputs(flatfile)
+    # if len(s17) > 0 and len(s47) > 0:
+    #     ref_assessment = config["ref_assessment"]
+    #     ref_s17 = agg_process.merge_ref_s17(ref, s17, ref_assessment)
+    #     ref_s47 = agg_process.merge_ref_s47(ref, s47, ref_assessment)
+    #     ref_outs = agg_process.ref_outcomes(ref, ref_s17, ref_s47)
+    #     agg_process.export_reffile(analysis_output, ref_outs)
 
-    # Create journey file
-    icpc_cpp_days = config["icpc_cpp_days"]
-    s47_cpp_days = config["s47_cpp_days"]
-    s47_j, cpp = agg_process.journey_inputs(flatfile)
-    if len(s47_j) > 0 and len(cpp) > 0:
-        s47_outs = agg_process.journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days)
-        s47_day_limit = config["s47_day_limit"]
-        icpc_day_limit = config["icpc_day_limit"]
-        s47_journey = agg_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
-        agg_process.export_journeyfile(analysis_output, s47_journey)
+    # # Create journey file
+    # icpc_cpp_days = config["icpc_cpp_days"]
+    # s47_cpp_days = config["s47_cpp_days"]
+    # s47_j, cpp = agg_process.journey_inputs(flatfile)
+    # if len(s47_j) > 0 and len(cpp) > 0:
+    #     s47_outs = agg_process.journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days)
+    #     s47_day_limit = config["s47_day_limit"]
+    #     icpc_day_limit = config["icpc_day_limit"]
+    #     s47_journey = agg_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
+    #     agg_process.export_journeyfile(analysis_output, s47_journey)
 
 
 @sen2.command()
@@ -332,30 +332,30 @@ def pan_agg(input, la_code, flat_output, analysis_output):
     # Output flatfile
     pan_process.export_flatfile(flat_output, flatfile)
 
-    # Create and output factors file
-    factors = pan_process.filter_flatfile(
-        flatfile, filter="AssessmentAuthorisationDate"
-    )
-    if len(factors) > 0:
-        factors = pan_process.split_factors(factors)
-        pan_process.export_factfile(analysis_output, factors)
+    # # Create and output factors file
+    # factors = pan_process.filter_flatfile(
+    #     flatfile, filter="AssessmentAuthorisationDate"
+    # )
+    # if len(factors) > 0:
+    #     factors = pan_process.split_factors(factors)
+    #     pan_process.export_factfile(analysis_output, factors)
 
-    # Create referral file
-    ref, s17, s47 = pan_process.referral_inputs(flatfile)
-    if len(s17) > 0 and len(s47) > 0:
-        ref_assessment = config["ref_assessment"]
-        ref_s17 = pan_process.merge_ref_s17(ref, s17, ref_assessment)
-        ref_s47 = pan_process.merge_ref_s47(ref, s47, ref_assessment)
-        ref_outs = pan_process.ref_outcomes(ref, ref_s17, ref_s47)
-        pan_process.export_reffile(analysis_output, ref_outs)
+    # # Create referral file
+    # ref, s17, s47 = pan_process.referral_inputs(flatfile)
+    # if len(s17) > 0 and len(s47) > 0:
+    #     ref_assessment = config["ref_assessment"]
+    #     ref_s17 = pan_process.merge_ref_s17(ref, s17, ref_assessment)
+    #     ref_s47 = pan_process.merge_ref_s47(ref, s47, ref_assessment)
+    #     ref_outs = pan_process.ref_outcomes(ref, ref_s17, ref_s47)
+    #     pan_process.export_reffile(analysis_output, ref_outs)
 
-    # Create journey file
-    icpc_cpp_days = config["icpc_cpp_days"]
-    s47_cpp_days = config["s47_cpp_days"]
-    s47_j, cpp = pan_process.journey_inputs(flatfile)
-    if len(s47_j) > 0 and len(cpp) > 0:
-        s47_outs = pan_process.journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days)
-        s47_day_limit = config["s47_day_limit"]
-        icpc_day_limit = config["icpc_day_limit"]
-        s47_journey = pan_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
-        pan_process.export_journeyfile(analysis_output, s47_journey)
+    # # Create journey file
+    # icpc_cpp_days = config["icpc_cpp_days"]
+    # s47_cpp_days = config["s47_cpp_days"]
+    # s47_j, cpp = pan_process.journey_inputs(flatfile)
+    # if len(s47_j) > 0 and len(cpp) > 0:
+    #     s47_outs = pan_process.journey_merge(s47_j, cpp, icpc_cpp_days, s47_cpp_days)
+    #     s47_day_limit = config["s47_day_limit"]
+    #     icpc_day_limit = config["icpc_day_limit"]
+    #     s47_journey = pan_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
+    #     pan_process.export_journeyfile(analysis_output, s47_journey)

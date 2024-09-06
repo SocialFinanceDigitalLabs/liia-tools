@@ -5,6 +5,7 @@ from liiatools.datasets.cin_census.cin_cli import cin_census
 from liiatools.datasets.s903.s903_cli import s903
 from liiatools.datasets.social_work_workforce.csww_cli import csww
 from liiatools.datasets.s251.s251_cli import s251
+from liiatools.datasets.sen2.sen2_cli import sen2
 
 
 @click.group()
@@ -17,6 +18,7 @@ cli.add_command(cin_census)
 cli.add_command(s903)
 cli.add_command(csww)
 cli.add_command(s251)
+cli.add_command(sen2)
 
 if __name__ == "__main__":
     cli()
