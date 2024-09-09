@@ -156,38 +156,24 @@ def cleanfile(input, la_code, la_log_dir, output):
     # Clean stream
     stream = converter.convert_true_false(stream)
     tags = [
-        "LAchildID",
-        "UPN",
-        "FormerUPN",
-        "UPNunknown",
-        "PersonBirthDate",
-        "GenderCurrent",
-        "PersonDeathDate",
-        "Ethnicity",
-        "Disability",
-        "sen2referralDate",
-        "ReferralSource",
-        "PrimaryNeedCode",
-        "sen2closureDate",
-        "ReasonForClosure",
-        "DateOfInitialCPC",
-        "AssessmentActualStartDate",
-        "AssessmentInternalReviewDate",
-        "AssessmentAuthorisationDate",
-        "AssessmentFactors",
-        "sen2PlanStartDate",
-        "sen2PlanEndDate",
-        "S47ActualStartDate",
-        "InitialCPCtarget",
-        "DateOfInitialCPC",
-        "ICPCnotRequired",
-        "ReferralNFA",
-        "CPPstartDate",
-        "CPPendDate",
-        "InitialCategoryOfAbuse",
-        "LatestCategoryOfAbuse",
-        "NumberOfPreviousCPP",
-        "CPPreviewDate",
+    "Surname",
+    "Forename",
+    "PersonBirthDate",
+    "Sex",
+    "Ethnicity",
+    "Postcode",
+    "UPN",
+    "UniqueLearnerNumber",
+    "UPNunknown",
+    "ReceivedDate",
+    "RequestSource",
+    "RYA",
+    "RequestOutcomeDate",
+    "RequestOutcome",
+    "RequestMediation",
+    "RequestTribunal",
+    "Exported",
+    # etc.etc.
     ]
     stream = validator.remove_invalid(stream, tag_list=tags)
 
@@ -359,3 +345,5 @@ def pan_agg(input, la_code, flat_output, analysis_output):
     #     icpc_day_limit = config["icpc_day_limit"]
     #     s47_journey = pan_process.s47_paths(s47_outs, s47_day_limit, icpc_day_limit)
     #     pan_process.export_journeyfile(analysis_output, s47_journey)
+
+# poetry run python liiatools sen2 cleanfile --la_code "BAD" --la_log_dir "/workspaces/liia-tools/liiatools/spec/sen2/samples/" --o "/workspaces/liia-tools/liiatools/spec/sen2/samples/"  --i "/workspaces/liia-tools/liiatools/spec/sen2/samples/SEN2-2024-mockup.xml"

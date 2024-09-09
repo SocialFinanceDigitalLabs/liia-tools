@@ -22,9 +22,9 @@
 			<Forename>TestFirstname1</Forename>
 			<PersonBirthDate>2002-01-01</PersonBirthDate>
 			<Sex>M</Sex>
-			<Ethnicity>BBRI</Ethnicity>
+			<Ethnicity>WBRI</Ethnicity>
 			<PostCode>AA11AA</PostCode>
-			<UPN>X1234567898765</UPN>
+			<UPN>X123456789875</UPN>
 			<UniqueLearnerNumber>1234567890</UniqueLearnerNumber>
 			<UPNunknown></UPNunknown>
 			<Requests>
@@ -119,9 +119,9 @@
 			<Forename>TestFirstname2</Forename>
 			<PersonBirthDate>2003-11-11</PersonBirthDate>
 			<Sex>F</Sex>
-			<Ethnicity>BBRI</Ethnicity>
+			<Ethnicity>BAFR</Ethnicity>
 			<PostCode>AB11CD</PostCode>
-			<UPN>X1234567898321</UPN>
+			<UPN>X123456789832</UPN>
 			<UniqueLearnerNumber>1234567089</UniqueLearnerNumber>
 			<UPNunknown></UPNunknown>
 			<Requests>

@@ -47,7 +47,7 @@ def add_la_name(data, la_name):
 
 
 def la_prefix(data, la_code):
-    data["Surname"] = data["Surname"] + "_" + la_code
+    data["Surname"] = data["Surname"] + "_" + la_code # Temporarily using Surname as there is no Child ID in the return
     return data
 
 
