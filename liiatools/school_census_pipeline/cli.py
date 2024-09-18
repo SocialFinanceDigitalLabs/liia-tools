@@ -42,7 +42,7 @@ def school_census():
     "--filename",
     "-f",
     type=str,
-    help="Name of files you want to clean"
+    help="Name of files you want to clean separted by commas"
 )
 @click_log.simple_verbosity_option(log)
 def pipeline(input, la_code, output, filename):
