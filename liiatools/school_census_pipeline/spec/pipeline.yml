@@ -338,6 +338,8 @@ table_list:
     type: category
   - id: keystage
     type: category
+  - id: ppa
+    type: numeric
   - id: LA
     type: string
     enrich: la_name
@@ -560,6 +562,8 @@ table_list:
     type: string
   - id: programmeaimsoffrolltableid
     type: string
+  - id: pupilnolongeronrolltableid
+    type: string
   - id: qn
     type: string
   - id: qan
@@ -610,7 +614,11 @@ table_list:
     type: string
   - id: programmeaimsonrolltableid
     type: string
+  - id: pupilonrolltableid
+    type: string
   - id: qn
+    type: string
+  - id: qan
     type: string
   - id: coreaim
     type: category
@@ -625,6 +633,8 @@ table_list:
   - id: learningactualenddate
     type: date
   - id: scc
+    type: string
+  - id: disccode
     type: string
   - id: learningaimwithdrawalreason
     type: category
@@ -784,6 +794,16 @@ table_list:
     type: category
   - id: progtype
     type: category
+  - id: learningaimstatus
+    type: category
+  - id: learningactualenddate
+    type: date
+  - id: learningaimwithdrawalreason
+    type: category
+  - id: learningstartdate
+    type: date
+  - id: learningplannedenddate
+    type: date
   - id: LA
     type: string
     enrich: la_name
@@ -928,6 +948,16 @@ table_list:
   - id: mathsgcsehighestpriorattainmentpreviousyear
     type: category
   - id: englishgcsehighestpriorattainmentpreviousyear
+    type: category
+  - id: countryofbirth
+    type: category
+  - id: annualsessionspossible
+    type: numeric
+  - id: annualsessionsunauthorised
+    type: numeric
+  - id: annualsessionsauthorised
+    type: numeric
+  - id: youngcarer
     type: category
   - id: LA
     type: string
@@ -1094,6 +1124,16 @@ table_list:
     type: category
   - id: eyppbf
     type: category
+  - id: countryofbirth
+    type: category
+  - id: annualsessionspossible
+    type: numeric
+  - id: annualsessionsunauthorised
+    type: numeric
+  - id: annualsessionsauthorised
+    type: numeric
+  - id: proficiencyinenglish
+    type: category
   - id: LA
     type: string
     enrich: la_name
@@ -1208,6 +1248,33 @@ table_list:
     type: category
   - id: accommodation
     type: category
+  - id: saon
+    type: string
+  - id: addressline1
+    type: string
+  - id: addressline2
+    type: string
+  - id: addressline3
+    type: string
+  - id: addressline4
+    type: string
+  - id: addressline5
+    type: string
+  - id: administrativearea
+    type: string
+  - id: town
+    type: string
+  - id: posttown
+    type: string
+  - id: postcode
+    type: postcode
+    degrade: short_postcode
+  - id: paon
+    type: string
+  - id: street
+    type: string
+  - id: locality
+    type: string
   - id: LA
     type: string
     enrich: la_name
@@ -1252,6 +1319,11 @@ table_list:
     type: category
   - id: apattendancepattern
     type: category
+  - id: applacementpostcode
+    type: postcode
+    degrade: short_postcode
+  - id: companynumber
+    type: string
   - id: LA
     type: string
     enrich: la_name
@@ -1296,6 +1368,11 @@ table_list:
     type: category
   - id: apattendancepattern
     type: category
+  - id: applacementpostcode
+    type: postcode
+    degrade: short_postcode
+  - id: companynumber
+    type: string
   - id: LA
     type: string
     enrich: la_name
@@ -1400,6 +1477,8 @@ table_list:
     type: string
   - id: sessions
     type: numeric
+  - id: absencesessions
+    type: numeric
   - id: attendancereason
     type: category
   - id: LA
@@ -1427,6 +1506,8 @@ table_list:
   - id: pupilonrolltableid
     type: string
   - id: sessions
+    type: numeric
+  - id: absencesessions
     type: numeric
   - id: attendancereason
     type: category
@@ -1470,6 +1551,16 @@ table_list:
     type: category
   - id: senprovision
     type: category
+  - id: reviewdate
+    type: date
+  - id: reinstatementdate
+    type: date
+  - id: incare
+    type: category
+  - id: senexpert
+    type: category
+  - id: reviewresult
+    type: category
   - id: LA
     type: string
     enrich: la_name
@@ -1510,6 +1601,16 @@ table_list:
     type: category
   - id: senprovision
     type: category
+  - id: reviewdate
+    type: date
+  - id: reinstatementdate
+    type: date
+  - id: incare
+    type: category
+  - id: senexpert
+    type: category
+  - id: reviewresult
+    type: category
   - id: LA
     type: string
     enrich: la_name
@@ -1535,6 +1636,8 @@ table_list:
   - id: pupilnolongeronrolltableid
     type: string
   - id: sessions
+    type: numeric
+  - id: absencesessions
     type: numeric
   - id: attendancereason
     type: category
@@ -1562,7 +1665,11 @@ table_list:
     type: string
   - id: pupilonrolltableid
     type: string
+  - id: absencesessions
+    type: numeric
   - id: sessions
+    type: numeric
+  - id: absencesessions
     type: numeric
   - id: attendancereason
     type: category
