@@ -71,6 +71,10 @@ def process_file(
             )
             return ProcessResult(data=None, errors=errors)
 
+        cleanfile_result.data = prepare_export(
+            cleanfile_result.data, pipeline_config, profile="PAN"
+        )
+
         # Export the cleaned data to the session 'cleaned' folder
         cleanfile_result.data.export(
             session_folder, f"{SessionNames.CLEANED_FOLDER}/{uuid}_", "parquet"
@@ -146,4 +150,4 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, filename: str):
     for report in ["PAN"]:
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
-        report_data.data.export(report_folder, "school_census_", "csv")
+        report_data.export(report_folder, "school_census_", "csv")

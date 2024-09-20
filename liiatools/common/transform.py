@@ -105,7 +105,7 @@ def degrade_data(
 
 def prepare_export(
     data: DataContainer, config: PipelineConfig, profile: str = None
-) -> ProcessResult:
+) -> DataContainer:
     """
     Prepare data for export by removing columns that are not required for the given profile
     or for all configured tables if no profile is given.
@@ -145,4 +145,4 @@ def prepare_export(
             # Return the subset
             data_container[table_name] = table[table_columns].copy()
 
-    return ProcessResult(data=data_container, errors=None)
+    return data_container

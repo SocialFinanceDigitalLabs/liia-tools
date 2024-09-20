@@ -196,9 +196,9 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, public_fs: FileL
     for report in ["PAN"]:
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
-        report_data.data.export(report_folder, "csww_", "csv")
+        report_data.export(report_folder, "csww_", "csv")
 
     # Run MET analysis
-    met_data = met_analysis(report_data.data["Worker"], public_fs)
+    met_data = met_analysis(report_data["Worker"], public_fs)
     met_folder = export_folder.makedirs("MET", recreate=True)
     met_data.export(met_folder, "csww_", "csv")

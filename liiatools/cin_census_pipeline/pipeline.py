@@ -164,7 +164,7 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str):
     for report in ["PAN"]:
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
-        report_data.data.export(report_folder, "cin_census_", "csv")
+        report_data.export(report_folder, "cin_census_", "csv")
 
     # Run report analysis
     # analysis_data = report_data.data["CIN"]
