@@ -28,6 +28,9 @@ def process_file(
 ) -> ProcessResult:
     errors = ErrorContainer()
     if filename is None or any(file in file_locator.name for file in filename.split(",")):
+
+        print(f"\n{file_locator.name}\n")
+
         year = pl.discover_year(file_locator)
         if year is None:
             errors.append(
