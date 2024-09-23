@@ -1669,8 +1669,6 @@ table_list:
     type: numeric
   - id: sessions
     type: numeric
-  - id: absencesessions
-    type: numeric
   - id: attendancereason
     type: category
   - id: LA
