@@ -9,8 +9,8 @@ class ProcessNames(StrEnum):
 
     SESSIONS_FOLDER = "sessions"
     ARCHIVE_FOLDER = "archive"
-    CURRENT_FOLDER = "current"
-    EXPORT_FOLDER = "export"
+    CURRENT_FOLDER = "cur"
+    EXPORT_FOLDER = "exp"
 
 
 class SessionNames(StrEnum):

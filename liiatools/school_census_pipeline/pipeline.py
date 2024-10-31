@@ -145,7 +145,7 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, filename: str):
     # Export the current snapshot of the archive
     current_data = archive.current()
     current_data.export(
-        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "school_census_current_", "csv"
+        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "sc_current_", "csv"
     )
 
     # Create the different reports
@@ -153,4 +153,4 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, filename: str):
     for report in ["PAN"]:
         report_data = prepare_export(current_data, pipeline_config, profile=report)
         report_folder = export_folder.makedirs(report, recreate=True)
-        report_data.export(report_folder, "school_census_", "csv")
+        report_data.export(report_folder, "sc_", "csv")
