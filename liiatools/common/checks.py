@@ -78,12 +78,21 @@ def check_term(filename):
     :return: A tern within the string
     :raises ValueError: If no term is found
     """
-    match = re.search(
+    match_short = re.search(
         f"{Term.OCT.name}|{Term.JAN.name}|{Term.MAY.name}",
         filename,
         re.IGNORECASE,
     )
-    if match:
-        return Term[match.group(0).upper()].value
+    if match_short:
+        return Term[match_short.group(0).upper()].value
+
+    match_long = re.search(
+        f"{Term.OCT.value}|{Term.JAN.value}|{Term.MAY.value}",
+        filename,
+        re.IGNORECASE,
+    )
+
+    if match_long:
+        return match_long.group(0).title()
 
     raise ValueError

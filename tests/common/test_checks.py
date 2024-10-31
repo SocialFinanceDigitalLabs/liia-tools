@@ -34,6 +34,10 @@ def test_check_term():
     assert check_term(r"jan_16/2015_16/addresses.csv") == Term.JAN.value
     assert check_term(r"MAY_16/2015_16/addresses.csv") == Term.MAY.value
 
+    assert check_term(r"autumn_15/2015_16/addresses.csv") == Term.OCT.value
+    assert check_term(r"Spring_16/2015_16/addresses.csv") == Term.JAN.value
+    assert check_term(r"SUMMER_16/2015_16/addresses.csv") == Term.MAY.value
+
 
 class TestCheckTerm(unittest.TestCase):
     def test_check_term(self):
