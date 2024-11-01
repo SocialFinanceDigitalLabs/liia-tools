@@ -145,7 +145,7 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, filename: str):
     # Export the current snapshot of the archive
     current_data = archive.current()
     current_data.export(
-        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "sc_current_", "csv"
+        output_fs.opendir(ProcessNames.CURRENT_FOLDER), "sc_c_", "csv"
     )
 
     # Create the different reports
