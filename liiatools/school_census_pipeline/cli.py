@@ -3,6 +3,7 @@ import logging
 import click as click
 import click_log
 from fs import open_fs
+import time
 
 from liiatools.common.reference import authorities
 
@@ -46,6 +47,7 @@ def school_census():
 )
 @click_log.simple_verbosity_option(log)
 def pipeline(input, la_code, output, filename):
+    tic = time.perf_counter()
     """Runs the full pipeline on a file or folder"""
 
     # Source FS is the filesystem containing the input files
@@ -55,3 +57,5 @@ def pipeline(input, la_code, output, filename):
     output_fs = open_fs(output)
 
     process_session(source_fs, output_fs, la_code, filename)
+    toc = time.perf_counter()
+    print(f"Processed the files in {toc - tic:0.1f} seconds")

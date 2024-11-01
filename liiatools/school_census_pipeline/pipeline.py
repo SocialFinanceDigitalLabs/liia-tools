@@ -112,35 +112,35 @@ def process_session(source_fs: FS, output_fs: FS, la_code: str, filename: str):
     pipeline_config = load_pipeline_config()
 
     # Ensure all processing folders exist
-    pl.create_process_folders(output_fs)
-
-    # Create session folder
-    session_folder, session_id = pl.create_session_folder(output_fs)
-
-    # Move files into session folder
-    locator_list = pl.move_files_for_processing(source_fs, session_folder)
-
-    # Process each incoming file
-    processed_files = [
-        process_file(locator, session_folder, pipeline_config, la_code, filename)
-        for locator in locator_list
-    ]
+    # pl.create_process_folders(output_fs)
+    #
+    # # Create session folder
+    # session_folder, session_id = pl.create_session_folder(output_fs)
+    #
+    # # Move files into session folder
+    # locator_list = pl.move_files_for_processing(source_fs, session_folder)
+    #
+    # # Process each incoming file
+    # processed_files = [
+    #     process_file(locator, session_folder, pipeline_config, la_code, filename)
+    #     for locator in locator_list
+    # ]
 
     # Add processed files to archive
     archive = DataframeArchive(
         output_fs.opendir(ProcessNames.ARCHIVE_FOLDER), pipeline_config
     )
-    for result in processed_files:
-        if result.data:
-            archive.add(result.data)
-
-    # Write the error summary
-    error_summary = ErrorContainer(
-        [error for result in processed_files for error in result.errors]
-    )
-    error_summary.set_property("session_id", session_id)
-    with session_folder.open("error_summary.csv", "w") as FILE:
-        error_summary.to_dataframe().to_csv(FILE, index=False)
+    # for result in processed_files:
+    #     if result.data:
+    #         archive.add(result.data)
+    #
+    # # Write the error summary
+    # error_summary = ErrorContainer(
+    #     [error for result in processed_files for error in result.errors]
+    # )
+    # error_summary.set_property("session_id", session_id)
+    # with session_folder.open("error_summary.csv", "w") as FILE:
+    #     error_summary.to_dataframe().to_csv(FILE, index=False)
 
     # Export the current snapshot of the archive
     current_data = archive.current()
