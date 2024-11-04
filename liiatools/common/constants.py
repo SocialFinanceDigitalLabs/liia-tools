@@ -9,7 +9,7 @@ class ProcessNames(StrEnum):
 
     SESSIONS_FOLDER = "sessions"
     ARCHIVE_FOLDER = "archive"
-    CURRENT_FOLDER = "cur"
+    CURRENT_FOLDER = "c"
     EXPORT_FOLDER = "exp"
 
 

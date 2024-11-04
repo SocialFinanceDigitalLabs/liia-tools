@@ -95,12 +95,3 @@ def load_schema(year: int, term: Term) -> DataSchema:
 
     # Now we can parse the full schema into a DataSchema object from the dict
     return DataSchema(**term_schema)
-
-
-year = 2018
-term = "Autumn"
-x = ['pupilonrolltableid', 'NativeId', 'pupilonrollorderseqcolumn', 'sourceid', 'schoolcensustableid', 'upn', 'formerupn', 'surname', 'forename', 'middlenames', 'preferredsurname', 'uniquelearnernumber', 'formersurname', 'dob', 'hoursatsetting', 'schoollunchtaken', 'parttime', 'entrydate', 'topupfunding', 'termlysessionspossible', 'termlysessionsauthorised', 'termlysessionsunauthorised', 'qualhrs', 'senunitindicator', 'resourcedprovisionindicator', 'nonqualhrs', 'ftemp', 'moveoffrollflag', 'fundedhours', 'missingaddress', 'duplicatenotfunded', 'summerhalfterm2sessionspossible', 'extendedhours', 'thirtyhourcode', 'summerhalfterm2sessionsauthorised', 'summerhalfterm2sessionsunauthorised', 'dafindicator', 'gender', 'yssa', 'servicechild', 'language', 'classtype', 'enrolstatus', 'boarder', 'plaa', 'senprovision', 'ncyearactual', 'mathsgcsehighestpriorattainment', 'mathsgcsepriorattainmentyeargroup', 'englishgcsehighestpriorattainment', 'englishgcsepriorattainmentyeargroup', 'mathsgcsefundingexemption', 'englishgcsefundingexemption']
-y = load_schema(year, term).column_map["pupilonroll"].keys()
-
-print(year, term, set(y) - set(x))
-print(year, term, set(x) - set(y))
