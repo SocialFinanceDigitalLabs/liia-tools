@@ -132,7 +132,6 @@ table_list:
     type: string
   - id: lachildid
     type: string
-    unique_key: true
     enrich: [integer, add_la_suffix]
   - id: upn
     type: string
